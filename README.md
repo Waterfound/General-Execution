@@ -12,7 +12,9 @@ ExecutionSpec
   -> durable capacity lease
   -> durable dispatch intent
   -> live dispatch permit
-  -> provider reconciliation / idempotent submission
+  -> provider reconciliation
+  -> provider contract attestation
+  -> attested same-invocation resubmission permit
   -> observation / receipt
   -> durable capacity release
   -> execution ledger
@@ -29,34 +31,37 @@ ExecutionSpec
 - **v0.0.5 — Durable Head & Restart Recovery:** SQLite-backed canonical capacity heads, transactional CAS, replay-verified snapshots, and unresolved in-flight lease recovery. See [`docs/v0.0.5-durable-restart-recovery.md`](docs/v0.0.5-durable-restart-recovery.md).
 - **v0.0.6 — Durable Dispatch Intent & Ambiguity Recovery:** durable outbox state, crash-safe submission ambiguity, live capacity-bound transport permits, and fail-closed restart reconciliation. See [`docs/v0.0.6-durable-dispatch-intent.md`](docs/v0.0.6-durable-dispatch-intent.md).
 - **v0.0.7 — Provider Idempotency & Reconciliation:** stable invocation-key reconciliation, explicit duplicate semantics, evidence-bound provider status, and conservative resubmission decisions. See [`docs/v0.0.7-provider-reconciliation.md`](docs/v0.0.7-provider-reconciliation.md).
+- **v0.0.8 — Provider Reconciliation Conformance & Attestation:** contract/evidence separation, immutable adapter-revision attestation, production-equivalent certification, and attested same-invocation-only resubmission permits. See [`docs/v0.0.8-provider-conformance-attestation.md`](docs/v0.0.8-provider-conformance-attestation.md).
 
-## v0.0.7 invariants
+## v0.0.8 invariants
 
-`SUBMISSION_UNKNOWN` can no longer collapse into retry merely because a coordinator restarted or time passed. Provider reconciliation is keyed by the exact existing `invocation_id` and request digest.
+A provider's idempotency declaration is no longer sufficient to elevate a v0.0.7 reconciliation decision into transport eligibility.
 
-A provider reports one of four states:
+Two independent evidence lineages are preserved:
 
 ```text
-ABSENT | ACCEPTED | TERMINAL | UNKNOWN
+invocation-specific reconciliation evidence
+        +
+provider/adapter conformance evidence
 ```
 
 The core enforces:
 
-- reconciliation only from a durable `SUBMISSION_UNKNOWN` state;
-- the physical authorization must reproduce the dispatch intent exactly;
-- provider / adapter / adapter-version contract binding;
-- query binding to dispatch state, dispatch permit, authorization, invocation and request digest;
-- provider observations are revalidated at decision time, even when wrapped in an Evidence object;
-- same idempotency key with a different request must be rejected by contract;
-- `may_duplicate` providers are reconciliation-capable but never eligible for automatic resubmission;
-- `ABSENT` permits same-invocation resubmission only under strong idempotency **and** a fresh `LiveDispatchPermit` bound to the current durable capacity head;
-- stale live permits after revocation/capacity changes fail closed;
-- `ACCEPTED` means poll the existing operation, never resubmit;
-- `TERMINAL` routes to evidence admission only when terminal evidence is retrievable;
-- `UNKNOWN` remains hold even when the provider claims strong idempotency;
-- reconciliation resubmission preserves the same physical invocation identity and is distinct from native retry.
+- conformance evidence binds the exact reconciliation-contract digest and immutable adapter revision;
+- required conformance cases are unique and fail closed when missing;
+- contracts claiming terminal evidence lookup must prove `terminal_evidence_binding`;
+- sandbox evidence can establish logical conformance but can never certify safe production resubmission;
+- `safe_resubmission_certified` requires all required cases passing in `production_equivalent` scope and a contract with strong idempotency semantics;
+- `ProviderContractAttestation.authority = NONE`;
+- manually altered attestations fail deterministic re-verification;
+- a provisional `resubmit_same_invocation` decision still requires a fresh current `LiveDispatchPermit` at the attestation gate;
+- `AttestedResubmissionPermit` binds the decision digest, reconciliation-evidence digest, conformance-evidence digest, contract, attestation, live permit and immutable adapter revision;
+- attested permit authority is only `IDEMPOTENT_RESUBMIT_ONLY`;
+- attested resubmission preserves the exact invocation ID and request digest;
+- attested resubmission can never authorize a new physical-attempt ordinal;
+- revocation or durable capacity change invalidates a stale live permit even when provider conformance remains valid.
 
-No concrete remote provider transport is enabled by v0.0.7.
+No concrete remote provider transport is enabled by v0.0.8.
 
 ## First client
 
@@ -72,27 +77,29 @@ python -m pip install -e . --no-build-isolation --no-deps
 
 The core has no non-stdlib runtime dependencies.
 
-## Current v0.0.7 evidence
+## Current v0.0.8 evidence
 
-The branch adds a 14-scenario focused reconciliation bank spanning contract identity binding, unsafe-provider discrimination, ABSENT resubmission gates, stale live permits, ACCEPTED/TERMINAL/UNKNOWN routing, terminal-evidence capability, observation mismatch rejection and decision-time evidence revalidation.
+The candidate adds a focused 15-scenario attestation bank covering production-equivalent certification, sandbox non-certification, required/missing/duplicate/failed cases, unsafe-provider contracts, conditional terminal-evidence requirements, contract/revision/attestation mismatch, stale live permits, same-invocation-only permit issuance, permit tampering, and explicit separation of reconciliation versus conformance evidence.
 
-As with v0.0.6, the current environment does not provide a repository execution runtime without using GitHub Actions or creating external infrastructure. The implementation therefore records static API/boundary review and the committed conformance bank, but does not claim that external pytest ran here.
+The current environment still does not provide a repository execution runtime without consuming GitHub Actions or creating external infrastructure. The implementation therefore records static API/boundary review and a committed test bank; it does **not** claim an external pytest execution here.
 
 ## Next ceiling
 
-The next highest-value boundary is **provider reconciliation conformance & attestation**.
+The next highest-value boundary is an **executable provider conformance harness**.
 
-A provider adapter must not become transport-eligible merely by declaring strong idempotency. General Execution should independently exercise the exact adapter revision and prove:
+`production_equivalent` is currently a property of supplied evidence. Before any concrete remote transport exists, General Execution should make the conformance suite itself executable against a reference adapter/provider and generate the evidence artifacts mechanically.
 
-- same `invocation_id` + same request never creates a second operation;
-- same `invocation_id` + different request is rejected;
-- lookup is bound to invocation + request identity;
-- ABSENT semantics are stable and do not hide accepted work;
-- ACCEPTED resolves to one stable provider operation;
-- TERMINAL evidence can be retrieved and bound back to the invocation when claimed.
+The harness should prove at minimum:
 
-The resulting attestation should bind the provider contract digest, adapter revision and conformance evidence digest. Concrete remote transport should remain disabled until that gate exists.
+- same invocation + same request has the declared duplicate semantics;
+- same invocation + different request is rejected;
+- lookup remains bound to invocation + request identity;
+- an accepted operation cannot later be falsely reported as absent;
+- terminal evidence, when claimed, is retrievable and bound to the same invocation;
+- repeated clean-room runs produce the same semantic verdict.
+
+A provider-specific adapter should become eligible for transport integration only after the executable harness produces evidence bound to its exact immutable revision.
 
 ## Status
 
-**v0.0.7 Provider Idempotency & Reconciliation: implementation candidate complete in branch; focused conformance bank and static boundary review recorded; external pytest remains unclaimed.**
+**v0.0.8 Provider Reconciliation Conformance & Attestation: implementation candidate complete in branch; focused attestation bank and static boundary review recorded; executable conformance harness remains the next gate.**
