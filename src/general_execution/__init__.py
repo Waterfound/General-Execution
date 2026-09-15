@@ -17,6 +17,13 @@ from .adapter import (
     verify_invocation_bundle,
 )
 from .canonical import canonical_json, sha256_digest, stable_id
+from .canonical_cold import (
+    CanonicalColdError,
+    CanonicalColdPreparationReceipt,
+    CanonicalColdRecoveryReport,
+    prepare_canonical_cold_ambiguity,
+    recover_canonical_cold_ambiguity,
+)
 from .capacity import (
     CapacityError,
     CapacityLease,
@@ -42,6 +49,7 @@ from .capacity import (
     verify_capacity_state,
     verify_capacity_transition_record,
 )
+from .cold_guard import bootstrap_cold_coordinator_strict
 from .conformance import (
     AttestedResubmissionPermit,
     ConformanceError,
@@ -61,6 +69,19 @@ from .conformance_harness import (
     ProviderConformanceTarget,
     ReferenceConformanceTarget,
     run_provider_conformance,
+)
+from .coordinator_context import (
+    ColdCoordinatorBinding,
+    CoordinatorContextCommitReceipt,
+    CoordinatorContextConflict,
+    CoordinatorContextError,
+    CoordinatorContextIntegrityError,
+    DurableCoordinatorContext,
+    SqliteCoordinatorContextStore,
+    build_coordinator_context,
+    deserialize_coordinator_context,
+    serialize_coordinator_context,
+    verify_coordinator_context,
 )
 from .dispatch import (
     DispatchIntent,
@@ -152,6 +173,9 @@ __all__ = [
     "AdapterReceipt",
     "ArtifactRef",
     "AttestedResubmissionPermit",
+    "CanonicalColdError",
+    "CanonicalColdPreparationReceipt",
+    "CanonicalColdRecoveryReport",
     "CapacityError",
     "CapacityLease",
     "CapacityLeaseGrant",
@@ -159,10 +183,15 @@ __all__ = [
     "CapacityReleaseGrant",
     "CapacityTransition",
     "CapacityTransitionRecord",
+    "ColdCoordinatorBinding",
     "ConformanceError",
     "ConformanceHarnessError",
     "ConformanceLookupResult",
     "ConformanceSubmitResult",
+    "CoordinatorContextCommitReceipt",
+    "CoordinatorContextConflict",
+    "CoordinatorContextError",
+    "CoordinatorContextIntegrityError",
     "DispatchIntent",
     "DispatchIntentError",
     "DispatchIntentState",
@@ -173,6 +202,7 @@ __all__ = [
     "DuplicatePhysicalAttempt",
     "DurableCapacityError",
     "DurableCapacityHead",
+    "DurableCoordinatorContext",
     "ExecutionLedger",
     "ExecutionSession",
     "ExecutionSpec",
@@ -211,6 +241,7 @@ __all__ = [
     "RunnerRegistry",
     "SessionError",
     "SqliteCapacityHeadStore",
+    "SqliteCoordinatorContextStore",
     "SqliteDispatchIntentStore",
     "VALID_TRANSPORT_STATUSES",
     "admit_observation",
@@ -223,6 +254,8 @@ __all__ = [
     "authorize_physical_attempt",
     "authorize_retry",
     "bind_session",
+    "bootstrap_cold_coordinator_strict",
+    "build_coordinator_context",
     "build_dispatch_request",
     "canonical_json",
     "capacity_snapshot",
@@ -234,6 +267,7 @@ __all__ = [
     "create_reconciliation_query",
     "decide_reconciliation",
     "deserialize_capacity_snapshot",
+    "deserialize_coordinator_context",
     "deserialize_dispatch_state",
     "dispatch_state_from_dict",
     "dispatch_state_to_dict",
@@ -244,6 +278,7 @@ __all__ = [
     "observe_completed",
     "observe_failure",
     "plan_execution",
+    "prepare_canonical_cold_ambiguity",
     "prepare_dispatch_intent",
     "propose_capacity_reservation",
     "propose_outcome_release",
@@ -253,6 +288,7 @@ __all__ = [
     "record_invocation",
     "record_physical_attempt",
     "recover_capacity_after_restart",
+    "recover_canonical_cold_ambiguity",
     "recover_dispatch_after_restart",
     "reference_runner",
     "release_capacity_for_outcome",
@@ -261,6 +297,7 @@ __all__ = [
     "revoke_session",
     "run_provider_conformance",
     "serialize_capacity_snapshot",
+    "serialize_coordinator_context",
     "serialize_dispatch_state",
     "sha256_digest",
     "stable_id",
@@ -271,6 +308,7 @@ __all__ = [
     "verify_capacity_release_grant",
     "verify_capacity_state",
     "verify_capacity_transition_record",
+    "verify_coordinator_context",
     "verify_dispatch_permit",
     "verify_dispatch_recovery",
     "verify_dispatch_request",
@@ -286,4 +324,4 @@ __all__ = [
     "verify_retry_chain",
 ]
 
-__version__ = "0.0.9"
+__version__ = "0.0.10"

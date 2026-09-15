@@ -4,14 +4,20 @@
 
 General Execution performs bounded work that another system has already authorized. It does **not** decide what should be built, whether a result is correct, whether it should be integrated, or whether it should be released.
 
+> **Execution consumes authority. It does not create authority.**
+
+## Protocol line
+
 ```text
 ExecutionSpec
   -> deterministic plan
   -> logical Session
   -> physical authorization
-  -> durable capacity lease
-  -> durable dispatch intent
-  -> live dispatch permit
+  -> durable coordinator context
+  -> durable dispatch PREPARED
+  -> canonical capacity lease
+  -> SUBMISSION_UNKNOWN
+  -> cold coordinator recovery
   -> provider reconciliation
   -> executable provider conformance
   -> provider contract attestation
@@ -21,44 +27,54 @@ ExecutionSpec
   -> execution ledger
 ```
 
-> **Execution consumes authority. It does not create authority.**
+## Milestones
 
-## Protocol milestones
+- **v0.0.1 — Execution Kernel** — deterministic identity, planning, Sessions, result binding, ledger.
+- **v0.0.2 — Provider-neutral Adapter Contract** — authorization, transport, and evidence admission separation.
+- **v0.0.3 — Physical Failure Semantics** — logical versus physical attempts and explicit retry lineage.
+- **v0.0.4 — Capacity & Lease Semantics** — bounded parallelism, deterministic slots, CAS capacity state.
+- **v0.0.5 — Durable Head & Restart Recovery** — SQLite canonical capacity head and conservative unresolved recovery.
+- **v0.0.6 — Durable Dispatch Intent & Ambiguity Recovery** — `PREPARED -> SUBMISSION_UNKNOWN -> OBSERVED` and live dispatch permits.
+- **v0.0.7 — Provider Idempotency & Reconciliation** — stable invocation reconciliation without blind retry.
+- **v0.0.8 — Provider Conformance & Attestation** — independent evidence bound to exact adapter revisions.
+- **v0.0.9 — Executable Provider Conformance Harness** — mechanically generated provider-contract evidence.
+- **v0.0.10 — Canonical Cold Coordinator Bootstrap** — durable coordinator context, fail-safe ordering, replay-safe preparation, and cold reconstruction into the existing dispatch/reconciliation stack. See [`docs/v0.0.10-canonical-cold-bootstrap.md`](docs/v0.0.10-canonical-cold-bootstrap.md).
 
-- **v0.0.1 — Execution Kernel:** immutable request identity, deterministic capability matching, retry-safe logical attempts, result binding, and ledger. See [`docs/v0.0.1-kernel.md`](docs/v0.0.1-kernel.md).
-- **v0.0.2 — Provider-neutral Adapter Contract:** authorization, transport, and evidence admission are separate. See [`docs/v0.0.2-reference-adapter.md`](docs/v0.0.2-reference-adapter.md).
-- **v0.0.3 — Physical Failure Semantics:** logical and physical attempts are distinct; physical outcomes and retry lineage are explicit. See [`docs/v0.0.3-physical-failure-semantics.md`](docs/v0.0.3-physical-failure-semantics.md).
-- **v0.0.4 — Capacity & Lease Semantics:** `max_parallelism`, deterministic slots, compare-and-swap capacity state, explicit release, and retry-capacity ordering. See [`docs/v0.0.4-capacity-lease-semantics.md`](docs/v0.0.4-capacity-lease-semantics.md).
-- **v0.0.5 — Durable Head & Restart Recovery:** SQLite-backed canonical capacity heads, transactional CAS, replay-verified snapshots, and unresolved in-flight lease recovery. See [`docs/v0.0.5-durable-restart-recovery.md`](docs/v0.0.5-durable-restart-recovery.md).
-- **v0.0.6 — Durable Dispatch Intent & Ambiguity Recovery:** durable outbox state, crash-safe submission ambiguity, live capacity-bound transport permits, and fail-closed restart reconciliation. See [`docs/v0.0.6-durable-dispatch-intent.md`](docs/v0.0.6-durable-dispatch-intent.md).
-- **v0.0.7 — Provider Idempotency & Reconciliation:** stable invocation-key reconciliation, explicit duplicate semantics, evidence-bound provider status, and conservative resubmission decisions. See [`docs/v0.0.7-provider-reconciliation.md`](docs/v0.0.7-provider-reconciliation.md).
-- **v0.0.8 — Provider Reconciliation Conformance & Attestation:** contract/evidence separation, immutable adapter-revision attestation, production-equivalent certification, and attested same-invocation-only resubmission permits. See [`docs/v0.0.8-provider-conformance-attestation.md`](docs/v0.0.8-provider-conformance-attestation.md).
-- **v0.0.9 — Executable Provider Conformance Harness:** provider-neutral executable cases, transcript-bound evidence generation, deterministic sandbox reference target, and false-contract detection. See [`docs/v0.0.9-executable-provider-conformance.md`](docs/v0.0.9-executable-provider-conformance.md).
+## v0.0.10 invariants
 
-## v0.0.9 invariants
+`DurableCoordinatorContext` binds the exact Spec, Registry, Plan, running Session, Physical Authorization, active Capacity Lease identity, and canonical Dispatch Intent.
 
-Conformance evidence no longer needs to be assembled manually to exercise the protocol. `run_provider_conformance()` executes the target behavior and generates the case evidence from observed transcripts.
+The fail-safe persistence order is:
 
-The harness enforces:
+```text
+coordinator context
+  -> dispatch PREPARED
+  -> canonical capacity reservation CAS
+  -> dispatch SUBMISSION_UNKNOWN
+```
 
-- target provider / adapter / adapter-version identity must match the reconciliation contract before tests run;
-- target adapter revision must be immutable lowercase hex;
-- request and evidence digests are validated at the target boundary;
-- each case runs from a reset target state;
-- same-invocation/same-request behavior is measured against the exact declared semantics;
-- same invocation with a different request must be explicitly rejected;
-- lookup must remain bound to both invocation and request identity;
-- an accepted invocation cannot subsequently be reported as absent;
-- terminal evidence, when claimed, must resolve to the same provider operation and exact terminal-evidence digest;
-- each case evidence digest binds the harness version, case identity, and observed transcript;
-- `ProviderConformanceRun` binds the exact contract, adapter revision, environment scope, case results, generated evidence digest, and all-pass verdict;
-- conforming `may_duplicate` behavior remains correctly measurable while still being unsafe for automatic resubmission under the v0.0.7/v0.0.8 policy gates.
+Consequences:
 
-The included `ReferenceConformanceTarget` is an in-memory sandbox target for validating the harness mechanism. It is not a production-equivalent provider and does not enable remote transport.
+- context-only or context+PREPARED material is inert before canonical capacity activation;
+- once capacity is active, its context and dispatch identity must already be durable;
+- an active lease without a matching dispatch intent is an integrity failure;
+- `SUBMISSION_UNKNOWN` cold-recovers as `reconcile_provider`, never as blind retry;
+- cold recovery infers zero provider outcomes;
+- lost-ack replay returns the same preparation receipt without advancing capacity or dispatch state;
+- corrupt capacity/context metadata and schema drift fail closed.
+
+The provider-neutral boundary remains:
+
+```text
+restart != failure
+restart != completion
+SUBMISSION_UNKNOWN != retry
+provider not_found != failure
+```
 
 ## First client
 
-Build Colony remains the first client identity. It translates bounded Work Packages into `ExecutionSpec` objects. General Execution governs execution mechanics and capacity; Build Colony keeps evidence-verification and integration authority. See [`docs/build-colony-first-client.md`](docs/build-colony-first-client.md).
+Build Colony remains the first client. It translates bounded Work Packages into `ExecutionSpec` objects. General Execution owns execution mechanics, capacity, durable execution identity, restart recovery, reconciliation, and provider conformance; Build Colony retains evidence-verification and integration authority.
 
 ## Development
 
@@ -70,33 +86,20 @@ python -m pip install -e . --no-build-isolation --no-deps
 
 The core has no non-stdlib runtime dependencies.
 
-## Current v0.0.9 evidence
+## v0.0.10 targeted evidence
 
-v0.0.9 adds a focused executable-harness bank covering mechanically generated sandbox evidence, deterministic repeated runs, false same-request declarations, matching duplicate-rejected semantics, conformant-but-unsafe `may_duplicate`, identity mismatch, malformed adapter revision, lookup identity failure, absence failure, terminal-evidence failure, conditional terminal-case execution, and distinct request identities.
+The focused 12-case canonical-cold bank passed locally: **12 passed in 0.51 s**. `compileall` also passed.
 
-The repository execution environment remains unavailable here without consuming GitHub Actions or introducing external infrastructure, so no full external pytest run is claimed. The new harness itself is implementation code plus a committed test bank; its reference target remains sandbox-only in intended use.
+The offline harness used byte-identical Git blobs for the canonical base modules plus `context_codec.py`, `cold_guard.py`, and `canonical_cold.py`. `coordinator_context.py` and the test driver were reconstructed locally with equivalent logic to make execution possible without network access. This is therefore strong targeted evidence, but it is **not** claimed as the complete historical repository regression or a byte-for-byte checkout execution.
 
-## Remaining trust boundary
-
-An executable harness materially improves evidence quality, but an ordinary in-process evidence object is still not cryptographic proof that an external provider test actually ran. No concrete remote transport consumes the artifacts yet.
-
-Production-equivalent provider integration therefore still requires trustworthy run provenance binding at least:
-
-- exact harness revision;
-- exact adapter revision;
-- provider/environment identity;
-- conformance-run digest;
-- generated conformance-evidence digest;
-- the execution mechanism that produced them.
-
-The system should not equate a self-asserted `production_equivalent` field with proof of execution.
+No GitHub Actions were consumed.
 
 ## Next ceiling
 
-The next evidence capable of materially changing the verdict is **provider-specific sandbox execution with trustworthy conformance-run provenance**.
+The next local evidence boundary is **process-separated canonical cold recovery**: preparation and recovery in distinct Python interpreter processes with SQLite files as the only bridge.
 
-Purely local provider-neutral modeling now has diminishing returns. A concrete provider adapter should first implement the v0.0.9 target contract and run the harness in an independently identifiable sandbox/equivalent environment. Only after that evidence is bound to the exact adapter revision should General Execution consider enabling real remote transport.
+After that, confidence should increasingly come from complete historical regression and provider-specific execution with trustworthy conformance-run provenance rather than more provider-neutral recovery abstractions.
 
 ## Status
 
-**v0.0.9 Executable Provider Conformance Harness is integrated in `main`. The provider-neutral/local development ceiling is reached; the next material gate is provider-specific execution with trustworthy run provenance.**
+**v0.0.10 Canonical Cold Coordinator Bootstrap: targeted local conformance green; full historical regression still pending.**
