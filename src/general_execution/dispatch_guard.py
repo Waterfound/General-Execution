@@ -3,8 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from .canonical import sha256_digest, stable_id
-from .capacity import RunnerCapacityState, verify_capacity_state
 from .dispatch import DispatchIntentError, DispatchIntentState, DispatchPermit, verify_dispatch_permit
+from .durable import DurableCapacityError, SqliteCapacityHeadStore
 from .models import RunnerCapabilities
 
 LIVE_PERMIT_SCHEMA = "ge.live-dispatch-permit.v1"
@@ -18,7 +18,9 @@ class LiveDispatchPermit:
     dispatch_permit_digest: str
     runner_id: str
     runner_capability_digest: str
+    capacity_head_digest: str
     capacity_state_digest: str
+    capacity_snapshot_digest: str
     capacity_generation: int
     lease_id: str
     lease_digest: str
@@ -41,7 +43,9 @@ class LiveDispatchPermit:
             "dispatch_permit_digest",
             "runner_id",
             "runner_capability_digest",
+            "capacity_head_digest",
             "capacity_state_digest",
+            "capacity_snapshot_digest",
             "lease_id",
             "lease_digest",
             "authorization_id",
@@ -61,18 +65,20 @@ class LiveDispatchPermit:
         return sha256_digest(self)
 
 
-def _active_bound_lease(
+def _load_active_bound_lease(
     state: DispatchIntentState,
     permit: DispatchPermit,
-    capacity_state: RunnerCapacityState,
+    capacity_store: SqliteCapacityHeadStore,
     runner: RunnerCapabilities,
 ):
     if state.status != "submission_unknown":
         raise DispatchIntentError("live dispatch requires submission_unknown durable state")
     if not verify_dispatch_permit(state, permit):
         raise DispatchIntentError("durable dispatch permit does not reproduce")
-    if not verify_capacity_state(capacity_state, runner):
-        raise DispatchIntentError("capacity state does not replay for runner")
+    try:
+        capacity_state, capacity_head = capacity_store.load(runner)
+    except DurableCapacityError as exc:
+        raise DispatchIntentError("canonical durable capacity head is unavailable") from exc
 
     intent = state.intent
     if intent.runner_id != runner.runner_id or intent.runner_capability_digest != runner.digest:
@@ -84,7 +90,7 @@ def _active_bound_lease(
         if lease.lease_id == intent.lease_id and lease.digest == intent.lease_digest
     )
     if len(matches) != 1:
-        raise DispatchIntentError("dispatch lease is no longer active")
+        raise DispatchIntentError("dispatch lease is no longer active in canonical durable capacity")
     lease = matches[0]
     if (
         lease.runner_id != intent.runner_id
@@ -96,17 +102,22 @@ def _active_bound_lease(
         or lease.session_id != intent.session_id
         or lease.logical_attempt != intent.logical_attempt
     ):
-        raise DispatchIntentError("active capacity lease no longer reproduces dispatch intent")
-    return lease
+        raise DispatchIntentError("active durable capacity lease no longer reproduces dispatch intent")
+    return capacity_state, capacity_head, lease
 
 
 def authorize_live_dispatch(
     state: DispatchIntentState,
     permit: DispatchPermit,
-    capacity_state: RunnerCapacityState,
+    capacity_store: SqliteCapacityHeadStore,
     runner: RunnerCapabilities,
 ) -> LiveDispatchPermit:
-    lease = _active_bound_lease(state, permit, capacity_state, runner)
+    capacity_state, capacity_head, lease = _load_active_bound_lease(
+        state,
+        permit,
+        capacity_store,
+        runner,
+    )
     intent = state.intent
     return LiveDispatchPermit(
         intent_id=intent.intent_id,
@@ -115,7 +126,9 @@ def authorize_live_dispatch(
         dispatch_permit_digest=permit.digest,
         runner_id=runner.runner_id,
         runner_capability_digest=runner.digest,
+        capacity_head_digest=capacity_head.digest,
         capacity_state_digest=capacity_state.digest,
+        capacity_snapshot_digest=capacity_head.snapshot_digest,
         capacity_generation=capacity_state.generation,
         lease_id=lease.lease_id,
         lease_digest=lease.digest,
@@ -131,11 +144,11 @@ def verify_live_dispatch_permit(
     state: DispatchIntentState,
     permit: DispatchPermit,
     live_permit: LiveDispatchPermit,
-    capacity_state: RunnerCapacityState,
+    capacity_store: SqliteCapacityHeadStore,
     runner: RunnerCapabilities,
 ) -> bool:
     try:
-        expected = authorize_live_dispatch(state, permit, capacity_state, runner)
-    except (DispatchIntentError, ValueError):
+        expected = authorize_live_dispatch(state, permit, capacity_store, runner)
+    except (DispatchIntentError, DurableCapacityError, ValueError):
         return False
     return live_permit == expected
