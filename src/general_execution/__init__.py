@@ -75,7 +75,6 @@ from .physical import (
     PhysicalObservation,
     PhysicalOutcomeBundle,
     PhysicalReceipt,
-    ProviderObservation,
     VALID_TRANSPORT_STATUSES,
     admit_physical_observation,
     authorize_physical_attempt,
