@@ -76,6 +76,18 @@ from .durable import (
     verify_restart_recovery,
 )
 from .ledger import ExecutionLedger, LedgerEvent, append_event, verify_ledger
+from .lifecycle_settlement import (
+    LifecyclePreparationReceipt,
+    LifecycleSettlementError,
+    LifecycleSettlementIntegrityError,
+    LogicalLifecycleAssessment,
+    LogicalSettlementReceipt,
+    PhysicalSettlementReport,
+    assess_reference_logical_lifecycle,
+    prepare_reference_cold_lifecycle,
+    resume_reference_completed_physical_settlement,
+    settle_reference_reconciled_result,
+)
 from .models import (
     ArtifactRef,
     DispatchPlan,
@@ -230,6 +242,11 @@ __all__ = [
     "InvocationBundle",
     "InvocationRecord",
     "LedgerEvent",
+    "LifecyclePreparationReceipt",
+    "LifecycleSettlementError",
+    "LifecycleSettlementIntegrityError",
+    "LogicalLifecycleAssessment",
+    "LogicalSettlementReceipt",
     "PROVIDER_REATTACHMENT_CAPABILITY",
     "PersistenceCommitReceipt",
     "PersistenceConflict",
@@ -241,6 +258,7 @@ __all__ = [
     "PhysicalObservation",
     "PhysicalOutcomeBundle",
     "PhysicalReceipt",
+    "PhysicalSettlementReport",
     "ProviderObservation",
     "ProviderReattachmentAssessment",
     "ProviderReattachmentKey",
@@ -296,6 +314,7 @@ __all__ = [
     "append_event",
     "assess_provider_status",
     "assess_reference_cutpoint",
+    "assess_reference_logical_lifecycle",
     "authorize_physical_attempt",
     "authorize_retry",
     "bind_session",
@@ -323,6 +342,7 @@ __all__ = [
     "plan_execution",
     "plan_provider_outcome_reconciliation",
     "plan_revocation_reconciliation",
+    "prepare_reference_cold_lifecycle",
     "prepare_reference_cold_restart",
     "prepare_reference_cutpoint",
     "propose_capacity_reservation",
@@ -344,12 +364,14 @@ __all__ = [
     "release_capacity_for_revocation",
     "reserve_capacity",
     "resume_reference_cold_restart",
+    "resume_reference_completed_physical_settlement",
     "revoke_session",
     "run_reference_cold_restart_rehearsal",
     "run_reference_store_reopen_rehearsal",
     "serialize_durable_snapshot",
     "serialize_recovery_context",
     "serialize_session_record",
+    "settle_reference_reconciled_result",
     "sha256_digest",
     "stable_id",
     "start_session",
@@ -377,4 +399,4 @@ __all__ = [
     "verify_status_probe",
 ]
 
-__version__ = "0.0.13"
+__version__ = "0.0.14"
