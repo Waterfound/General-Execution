@@ -13,6 +13,8 @@ ExecutionSpec
   -> external provider
   -> observation / receipt
   -> capacity release
+  -> durable capacity head
+  -> restart recovery
   -> execution ledger
 ```
 
@@ -24,28 +26,29 @@ ExecutionSpec
 - **v0.0.2 — Provider-neutral Adapter Contract:** authorization, transport, and evidence admission are separate. See [`docs/v0.0.2-reference-adapter.md`](docs/v0.0.2-reference-adapter.md).
 - **v0.0.3 — Physical Failure Semantics:** logical and physical attempts are distinct; physical outcomes and retry lineage are explicit. See [`docs/v0.0.3-physical-failure-semantics.md`](docs/v0.0.3-physical-failure-semantics.md).
 - **v0.0.4 — Capacity & Lease Semantics:** `max_parallelism`, deterministic slots, compare-and-swap capacity state, explicit release, and retry-capacity ordering. See [`docs/v0.0.4-capacity-lease-semantics.md`](docs/v0.0.4-capacity-lease-semantics.md).
+- **v0.0.5 — Durable Head & Restart Recovery:** canonical capacity snapshots, durable-head continuity, strict state decoding, and conservative recovery of in-flight leases. See [`docs/v0.0.5-durable-restart-recovery.md`](docs/v0.0.5-durable-restart-recovery.md).
 
-## v0.0.4 invariants
+## v0.0.5 invariants
 
-Each runner has a replayable `RunnerCapacityState`. Reserve/release proposals bind to one exact `expected_state_digest`; after one proposal commits, another proposal created from the older snapshot is stale.
-
-A committed `CapacityLeaseGrant` binds the exact runner, slot, logical Session, physical authorization, invocation ID, physical-attempt ordinal, and capacity-state revision.
+A `DurableCapacitySnapshot` binds one exact replayable `RunnerCapacityState` to a durable head containing runner identity, generation, state digest, payload digest, and optional previous-head digest.
 
 The core enforces:
 
-- active canonical leases never exceed `RunnerCapabilities.max_parallelism`;
-- one logical Session attempt has at most one active canonical physical lease;
-- retry capacity is unavailable until the preceding physical attempt has been canonically released;
-- a completed predecessor is not a retry source;
-- terminal physical outcomes and explicit Session revocation release capacity through auditable transitions;
-- capacity state can be replayed from runner genesis;
-- capacity transitions can be recorded as `CAPACITY_RESERVED` / `CAPACITY_RELEASED` ledger events.
+- canonical JSON serialization of capacity state;
+- strict schema versions during reconstruction;
+- full capacity replay before a stored snapshot is admitted;
+- optional exact-head matching through `expected_head_digest`;
+- append-only durable-head continuity across later snapshots;
+- no backward generation when a previous durable head is supplied;
+- no automatic capacity release during restart recovery;
+- active leases return as `in_flight_unknown` and retain their slots;
+- clean recovery is possible only when no active leases remain.
 
-There is no wall-clock lease expiry in the core. A future durable store must maintain one canonical capacity head per runner and apply the expected-state-digest rule atomically.
+The persistence backend is still responsible for atomically maintaining one canonical durable head. General Execution defines the protocol state and verification rules, not the storage engine.
 
 ## First client
 
-Build Colony remains the first client identity. It translates bounded Work Packages into `ExecutionSpec` objects. General Execution governs execution mechanics and capacity; Build Colony keeps evidence-verification and integration authority. See [`docs/build-colony-first-client.md`](docs/build-colony-first-client.md).
+Build Colony remains the first client identity. It translates bounded Work Packages into `ExecutionSpec` objects. General Execution governs execution mechanics, capacity, and recovery state; Build Colony keeps evidence-verification and integration authority. See [`docs/build-colony-first-client.md`](docs/build-colony-first-client.md).
 
 ## Development
 
@@ -57,14 +60,14 @@ python -m pip install -e . --no-build-isolation --no-deps
 
 The core has no non-stdlib runtime dependencies.
 
-## Current v0.0.4 evidence
+## Current v0.0.5 conformance bank
 
-The capacity candidate passed 14 targeted local conformance tests covering capacity exhaustion, deterministic multi-slot allocation, stale reserve/release proposals, retry ordering, Session revocation, competing retry proposals, execution-context binding, state replay, and capacity-ledger recording.
+The repository includes recovery tests for deterministic round-trip, exact-head reload, in-flight lease preservation, clean restart after explicit release, outdated-head rejection, malformed payload rejection, schema-version rejection, wrong-runner rejection, durable successor continuity, backward-generation rejection, previous-head mismatch, deterministic serialization, and recovery-report consistency.
 
 ## Next ceiling
 
-The next highest-value boundary is **durable head & restart recovery**: serialize/reload canonical capacity state, replay it after coordinator restart, and reconcile an in-flight lease without fabricating a physical outcome. Concrete remote transport should depend on capacity only after this recovery boundary is proven.
+After the v0.0.5 recovery boundary is validated, the next highest-value milestone is a **concrete persistence adapter** that performs atomic canonical-head compare-and-swap and crash-safe replacement while preserving the durable protocol unchanged.
 
 ## Status
 
-**v0.0.4 Capacity & Lease Semantics: implementation candidate locally validated.**
+**v0.0.5 Durable Head & Restart Recovery: implementation candidate under final validation.**
