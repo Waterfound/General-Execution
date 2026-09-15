@@ -16,6 +16,7 @@ ExecutionSpec
   -> durable capacity head
   -> restart recovery
   -> SQLite canonical-head persistence
+  -> post-restart reconciliation
   -> execution ledger
 ```
 
@@ -29,29 +30,29 @@ ExecutionSpec
 - **v0.0.4 — Capacity & Lease Semantics:** `max_parallelism`, deterministic slots, compare-and-swap capacity state, explicit release, and retry-capacity ordering. See [`docs/v0.0.4-capacity-lease-semantics.md`](docs/v0.0.4-capacity-lease-semantics.md).
 - **v0.0.5 — Durable Head & Restart Recovery:** canonical capacity snapshots, durable-head continuity, strict state decoding, and conservative recovery of in-flight leases. See [`docs/v0.0.5-durable-restart-recovery.md`](docs/v0.0.5-durable-restart-recovery.md).
 - **v0.0.6 — SQLite Durable Head Persistence:** filesystem-backed SQLite storage, atomic canonical-head compare-and-swap, exact in-transaction verification, and idempotent replay after lost acknowledgement. See [`docs/v0.0.6-sqlite-persistence.md`](docs/v0.0.6-sqlite-persistence.md).
+- **v0.0.7 — Post-Restart Provider Reconciliation:** deterministic source-to-target reconciliation plans for recovered leases, provider-outcome/revocation resolution, atomic CAS commit, and idempotent replay. See [`docs/v0.0.7-recovery-reconciliation.md`](docs/v0.0.7-recovery-reconciliation.md).
 
-## v0.0.6 invariants
+## v0.0.7 invariants
 
-`SQLiteDurableHeadStore` persists one canonical durable snapshot per runner while preserving the v0.0.5 protocol as the source of truth.
+A recovered `in_flight_unknown` lease stays occupied until one explicit resolution is proven. Reconciliation never infers provider state from coordinator restart, silence, elapsed time, or local timeout.
 
-The adapter enforces:
+The core enforces:
 
-- one canonical row per `runner_id`;
-- `BEGIN IMMEDIATE` write serialization plus exact expected-head comparison;
-- full v0.0.5 snapshot verification before storage;
-- exact candidate verification inside the same SQLite transaction before commit;
-- stale writers cannot replace a later canonical head;
-- exact replay of an already-committed snapshot is idempotent;
-- stored metadata must reproduce the serialized snapshot;
-- runner capability changes cannot silently adopt an existing head;
-- WAL journaling and `synchronous=FULL` for the reference file-backed adapter;
-- `:memory:` is rejected because this milestone is specifically about restart durability.
+- the complete source durable snapshot is embedded in each reconciliation plan;
+- the exact recovered lease must still be active in that source snapshot;
+- provider outcomes must reproduce through the existing physical-outcome and capacity-release protocols;
+- Session revocation must already be explicit and must own the exact recovered lease;
+- a target snapshot is a direct durable successor adding exactly one release transition;
+- source and target are re-verified even during idempotent lost-ack replay;
+- the v0.0.6 SQLite CAS adapter admits only one canonical successor from a recovered head;
+- competing provider-outcome and revocation plans cannot both become canonical;
+- completed physical outcomes release occupancy but do not automatically submit the logical Session result.
 
-SQLite supplies durable atomic storage. It does not gain authority over execution, evidence, verification, integration, or release decisions.
+Reconciliation resolves execution occupancy. It does not gain application-domain verification, integration, release, or consensus authority.
 
 ## First client
 
-Build Colony remains the first client identity. It translates bounded Work Packages into `ExecutionSpec` objects. General Execution governs execution mechanics, capacity, recovery state, and persistence protocol; Build Colony keeps evidence-verification and integration authority. See [`docs/build-colony-first-client.md`](docs/build-colony-first-client.md).
+Build Colony remains the first client identity. It translates bounded Work Packages into `ExecutionSpec` objects. General Execution governs execution mechanics, capacity, recovery state, persistence, and reconciliation protocol; Build Colony keeps evidence-verification and integration authority. See [`docs/build-colony-first-client.md`](docs/build-colony-first-client.md).
 
 ## Development
 
@@ -63,20 +64,18 @@ python -m pip install -e . --no-build-isolation --no-deps
 
 The core has no non-stdlib runtime dependencies; SQLite comes from Python's standard library.
 
-## Current v0.0.6 evidence
+## Current v0.0.7 conformance bank
 
-The repository includes persistence tests for restart reload, successor commit, concurrent two-writer CAS, idempotent replay, stale-head rejection, predecessor requirements, rollback rejection, runner-capability binding, independent runner heads, stored metadata consistency, store-schema checks, initial expected-head handling, and receipt schema validation.
-
-A separate local SQLite harness confirmed one-winner concurrent CAS, stale-writer rejection, idempotent replay, and persistence after close/reopen without GitHub Actions.
+The repository includes reconciliation tests for provider-outcome resolution, durable-head advancement, idempotent replay, explicit revocation, unrevoked-Session rejection, recovered-lease mismatch, foreign physical outcomes, competing outcome/revocation plans, stale-plan rejection, completed-outcome capacity release without automatic Session submission, receipt consistency, and release-digest consistency.
 
 ## Admission state
 
-v0.0.6 is intentionally stacked on the v0.0.5 candidate branch. The canonical `main` remains at v0.0.4 until the full historical repository regression for v0.0.5 can be executed in a complete runner environment.
+v0.0.7 is intentionally stacked on the v0.0.5 and v0.0.6 candidate line. The canonical `main` remains at v0.0.4 until the full historical repository regression for the stacked line can be executed in a complete runner environment.
 
 ## Next ceiling
 
-After v0.0.5 and the stacked v0.0.6 persistence adapter are admitted, the next high-value boundary is **post-restart provider reconciliation**: match a persisted `in_flight_unknown` lease with later provider evidence without creating duplicate canonical execution.
+After the stacked line is admitted, the next high-value milestone is **provider reattachment semantics**: allow a concrete provider to report the status of an already-dispatched `provider_invocation_id` after restart without turning status polling into execution authority.
 
 ## Status
 
-**v0.0.6 SQLite persistence: stacked implementation candidate under validation.**
+**v0.0.7 recovery reconciliation: stacked implementation candidate under validation.**

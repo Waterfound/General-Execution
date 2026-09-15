@@ -98,6 +98,17 @@ from .physical import (
 )
 from .planner import plan_execution, verify_plan
 from .provenance import InvocationRecord, record_invocation, verify_invocation_record
+from .reconciliation import (
+    ReconciliationConflict,
+    ReconciliationError,
+    RecoveryReconciliationPlan,
+    RecoveryReconciliationReceipt,
+    commit_reconciliation,
+    plan_provider_outcome_reconciliation,
+    plan_revocation_reconciliation,
+    verify_reconciliation_plan,
+    verify_reconciliation_receipt,
+)
 from .session import SessionError, bind_session, revoke_session, start_session, submit_result
 
 __all__ = [
@@ -139,6 +150,10 @@ __all__ = [
     "REFERENCE_EVIDENCE",
     "REFERENCE_TASK_KIND",
     "RecoveredInFlightLease",
+    "RecoveryReconciliationPlan",
+    "RecoveryReconciliationReceipt",
+    "ReconciliationConflict",
+    "ReconciliationError",
     "RestartRecoveryReport",
     "ResultEnvelope",
     "RunnerCapabilities",
@@ -159,6 +174,7 @@ __all__ = [
     "canonical_json",
     "commit_capacity_reservation",
     "commit_outcome_release",
+    "commit_reconciliation",
     "commit_revocation_release",
     "identify_duplicate_physical_attempt",
     "initialize_capacity_state",
@@ -167,6 +183,8 @@ __all__ = [
     "observe_completed",
     "observe_failure",
     "plan_execution",
+    "plan_provider_outcome_reconciliation",
+    "plan_revocation_reconciliation",
     "propose_capacity_reservation",
     "propose_outcome_release",
     "propose_revocation_release",
@@ -198,8 +216,10 @@ __all__ = [
     "verify_physical_attempt_record",
     "verify_physical_outcome",
     "verify_plan",
+    "verify_reconciliation_plan",
+    "verify_reconciliation_receipt",
     "verify_restart_recovery",
     "verify_retry_chain",
 ]
 
-__version__ = "0.0.6"
+__version__ = "0.0.7"
