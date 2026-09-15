@@ -183,6 +183,18 @@ from .rehearsal import (
     run_reference_store_reopen_rehearsal,
 )
 from .session import SessionError, bind_session, revoke_session, start_session, submit_result
+from .session_settlement import (
+    SESSION_RECORD_SCHEMA,
+    SESSION_SETTLEMENT_STORE_SCHEMA,
+    DurableSessionRecord,
+    SessionSettlementConflict,
+    SessionSettlementError,
+    SessionSettlementIntegrityError,
+    SessionSettlementReceipt,
+    SQLiteSessionSettlementStore,
+    load_session_record,
+    serialize_session_record,
+)
 
 __all__ = [
     "AdapterDispatchRequest",
@@ -209,6 +221,7 @@ __all__ = [
     "DurableCapacityHead",
     "DurableCapacitySnapshot",
     "DurableRecoveryContext",
+    "DurableSessionRecord",
     "DurableStateError",
     "ExecutionLedger",
     "ExecutionSession",
@@ -263,11 +276,18 @@ __all__ = [
     "RunnerCapabilities",
     "RunnerCapacityState",
     "RunnerRegistry",
+    "SESSION_RECORD_SCHEMA",
+    "SESSION_SETTLEMENT_STORE_SCHEMA",
     "SQLiteDurableHeadStore",
     "SQLiteRecoveryContextStore",
     "SQLiteReferenceJobRegistry",
+    "SQLiteSessionSettlementStore",
     "STORE_SCHEMA_VERSION",
     "SessionError",
+    "SessionSettlementConflict",
+    "SessionSettlementError",
+    "SessionSettlementIntegrityError",
+    "SessionSettlementReceipt",
     "StoreReopenRehearsalReport",
     "VALID_CUT_POINTS",
     "VALID_TRANSPORT_STATUSES",
@@ -293,6 +313,7 @@ __all__ = [
     "initialize_capacity_state",
     "load_durable_snapshot",
     "load_recovery_context",
+    "load_session_record",
     "make_reference_observation",
     "observe_completed",
     "observe_failure",
@@ -328,6 +349,7 @@ __all__ = [
     "run_reference_store_reopen_rehearsal",
     "serialize_durable_snapshot",
     "serialize_recovery_context",
+    "serialize_session_record",
     "sha256_digest",
     "stable_id",
     "start_session",
@@ -355,4 +377,4 @@ __all__ = [
     "verify_status_probe",
 ]
 
-__version__ = "0.0.12"
+__version__ = "0.0.13"
