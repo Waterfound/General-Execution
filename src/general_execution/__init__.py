@@ -71,6 +71,7 @@ from .persistence import (
     PersistenceConflict,
     PersistenceError,
     PersistenceIntegrityError,
+    ReconciliationPersistenceReceipt,
     SQLiteDurableHeadStore,
     STORE_SCHEMA_VERSION,
 )
@@ -98,6 +99,15 @@ from .physical import (
 )
 from .planner import plan_execution, verify_plan
 from .provenance import InvocationRecord, record_invocation, verify_invocation_record
+from .reconciliation import (
+    ReconciliationCandidate,
+    ReconciliationError,
+    ReconciliationRecord,
+    prepare_restart_reconciliation,
+    reconciliation_record_from_dict,
+    reconciliation_record_to_dict,
+    verify_reconciliation_candidate,
+)
 from .session import SessionError, bind_session, revoke_session, start_session, submit_result
 
 __all__ = [
@@ -139,6 +149,10 @@ __all__ = [
     "REFERENCE_EVIDENCE",
     "REFERENCE_TASK_KIND",
     "RecoveredInFlightLease",
+    "ReconciliationCandidate",
+    "ReconciliationError",
+    "ReconciliationPersistenceReceipt",
+    "ReconciliationRecord",
     "RestartRecoveryReport",
     "ResultEnvelope",
     "RunnerCapabilities",
@@ -167,9 +181,12 @@ __all__ = [
     "observe_completed",
     "observe_failure",
     "plan_execution",
+    "prepare_restart_reconciliation",
     "propose_capacity_reservation",
     "propose_outcome_release",
     "propose_revocation_release",
+    "reconciliation_record_from_dict",
+    "reconciliation_record_to_dict",
     "record_capacity_transition",
     "record_duplicate_physical_attempt",
     "record_invocation",
@@ -198,8 +215,9 @@ __all__ = [
     "verify_physical_attempt_record",
     "verify_physical_outcome",
     "verify_plan",
+    "verify_reconciliation_candidate",
     "verify_restart_recovery",
     "verify_retry_chain",
 ]
 
-__version__ = "0.0.6"
+__version__ = "0.0.7"

@@ -4,7 +4,7 @@ import sqlite3
 from dataclasses import dataclass
 from pathlib import Path
 
-from .canonical import sha256_digest
+from .canonical import canonical_json, sha256_digest
 from .durable import (
     DurableCapacitySnapshot,
     DurableStateError,
@@ -14,8 +14,16 @@ from .durable import (
     verify_durable_successor,
 )
 from .models import RunnerCapabilities
+from .reconciliation import (
+    ReconciliationCandidate,
+    ReconciliationRecord,
+    reconciliation_record_from_dict,
+    reconciliation_record_to_dict,
+    verify_reconciliation_candidate,
+)
 
-STORE_SCHEMA_VERSION = "ge.sqlite-durable-head-store.v1"
+STORE_SCHEMA_VERSION = "ge.sqlite-durable-head-store.v2"
+PREVIOUS_STORE_SCHEMA_VERSION = "ge.sqlite-durable-head-store.v1"
 
 
 class PersistenceError(ValueError):
@@ -66,6 +74,37 @@ class PersistenceCommitReceipt:
         return sha256_digest(self)
 
 
+@dataclass(frozen=True, slots=True)
+class ReconciliationPersistenceReceipt:
+    runner_id: str
+    authorization_id: str
+    reconciliation_id: str
+    reconciliation_digest: str
+    previous_head_digest: str
+    committed_head_digest: str
+    generation: int
+    idempotent: bool
+    schema_version: str = "ge.reconciliation-persistence-receipt.v1"
+
+    def __post_init__(self) -> None:
+        if self.schema_version != "ge.reconciliation-persistence-receipt.v1":
+            raise ValueError("unsupported reconciliation persistence receipt schema")
+        if not self.runner_id or not self.runner_id.strip():
+            raise ValueError("runner_id must be non-empty")
+        if not self.authorization_id or not self.authorization_id.strip():
+            raise ValueError("authorization_id must be non-empty")
+        if not self.reconciliation_id or not self.reconciliation_id.strip():
+            raise ValueError("reconciliation_id must be non-empty")
+        if self.generation < 1:
+            raise ValueError("generation must be >= 1")
+        for name in ("reconciliation_digest", "previous_head_digest", "committed_head_digest"):
+            _require_sha256(name, getattr(self, name))
+
+    @property
+    def digest(self) -> str:
+        return sha256_digest(self)
+
+
 class SQLiteDurableHeadStore:
     """Concrete durable-head adapter using SQLite transactions and compare-and-swap."""
 
@@ -91,14 +130,11 @@ class SQLiteDurableHeadStore:
         return connection
 
     def _initialize(self) -> None:
-        with self._connect() as connection:
+        connection = self._connect()
+        try:
+            connection.execute("BEGIN IMMEDIATE")
             connection.execute(
-                """
-                CREATE TABLE IF NOT EXISTS ge_store_metadata (
-                    key TEXT PRIMARY KEY,
-                    value TEXT NOT NULL
-                )
-                """
+                "CREATE TABLE IF NOT EXISTS ge_store_metadata (key TEXT PRIMARY KEY, value TEXT NOT NULL)"
             )
             connection.execute(
                 """
@@ -112,11 +148,42 @@ class SQLiteDurableHeadStore:
                 """
             )
             connection.execute(
-                "INSERT OR IGNORE INTO ge_store_metadata(key, value) "
-                "VALUES('schema_version', ?)",
-                (STORE_SCHEMA_VERSION,),
+                """
+                CREATE TABLE IF NOT EXISTS ge_reconciliations (
+                    runner_id TEXT NOT NULL,
+                    authorization_id TEXT NOT NULL,
+                    reconciliation_id TEXT NOT NULL UNIQUE,
+                    reconciliation_digest TEXT NOT NULL,
+                    previous_head_digest TEXT NOT NULL,
+                    committed_head_digest TEXT NOT NULL,
+                    record_payload TEXT NOT NULL,
+                    PRIMARY KEY (runner_id, authorization_id)
+                )
+                """
             )
+            row = connection.execute(
+                "SELECT value FROM ge_store_metadata WHERE key = 'schema_version'"
+            ).fetchone()
+            if row is None:
+                connection.execute(
+                    "INSERT INTO ge_store_metadata(key, value) VALUES('schema_version', ?)",
+                    (STORE_SCHEMA_VERSION,),
+                )
+            elif row["value"] == PREVIOUS_STORE_SCHEMA_VERSION:
+                connection.execute(
+                    "UPDATE ge_store_metadata SET value = ? WHERE key = 'schema_version'",
+                    (STORE_SCHEMA_VERSION,),
+                )
+            elif row["value"] != STORE_SCHEMA_VERSION:
+                raise PersistenceIntegrityError("unsupported SQLite durable-head store schema")
             self._verify_store_schema(connection)
+            connection.commit()
+        except Exception:
+            if connection.in_transaction:
+                connection.rollback()
+            raise
+        finally:
+            connection.close()
 
     def _verify_store_schema(self, connection: sqlite3.Connection) -> None:
         row = connection.execute(
@@ -135,12 +202,29 @@ class SQLiteDurableHeadStore:
             )
         except DurableStateError as exc:
             raise PersistenceIntegrityError("stored durable snapshot failed verification") from exc
-        if (
-            snapshot.head.generation != row["generation"]
-            or snapshot.digest != row["snapshot_digest"]
-        ):
+        if snapshot.head.generation != row["generation"] or snapshot.digest != row["snapshot_digest"]:
             raise PersistenceIntegrityError("stored durable-head metadata does not match snapshot")
         return snapshot
+
+    @staticmethod
+    def _decode_reconciliation_row(row: sqlite3.Row) -> ReconciliationRecord:
+        import json
+
+        try:
+            data = json.loads(row["record_payload"])
+            record = reconciliation_record_from_dict(data)
+        except (ValueError, TypeError) as exc:
+            raise PersistenceIntegrityError("stored reconciliation record is invalid") from exc
+        if (
+            record.runner_id != row["runner_id"]
+            or record.authorization_id != row["authorization_id"]
+            or record.reconciliation_id != row["reconciliation_id"]
+            or record.digest != row["reconciliation_digest"]
+            or record.source_head_digest != row["previous_head_digest"]
+            or record.successor_head_digest != row["committed_head_digest"]
+        ):
+            raise PersistenceIntegrityError("stored reconciliation metadata does not match record")
+        return record
 
     def load_current(self, runner: RunnerCapabilities) -> DurableCapacitySnapshot | None:
         with self._connect() as connection:
@@ -153,6 +237,19 @@ class SQLiteDurableHeadStore:
             if row is None:
                 return None
             return self._decode_row(row, runner)
+
+    def load_reconciliation(self, runner: RunnerCapabilities, authorization_id: str) -> ReconciliationRecord | None:
+        with self._connect() as connection:
+            self._verify_store_schema(connection)
+            row = connection.execute(
+                "SELECT runner_id, authorization_id, reconciliation_id, reconciliation_digest, "
+                "previous_head_digest, committed_head_digest, record_payload "
+                "FROM ge_reconciliations WHERE runner_id = ? AND authorization_id = ?",
+                (runner.runner_id, authorization_id),
+            ).fetchone()
+            if row is None:
+                return None
+            return self._decode_reconciliation_row(row)
 
     def compare_and_swap(
         self,
@@ -187,13 +284,7 @@ class SQLiteDurableHeadStore:
                     "INSERT INTO ge_durable_heads "
                     "(runner_id, head_digest, generation, snapshot_digest, snapshot_payload) "
                     "VALUES (?, ?, ?, ?, ?)",
-                    (
-                        runner.runner_id,
-                        snapshot.head.digest,
-                        snapshot.head.generation,
-                        snapshot_digest,
-                        payload,
-                    ),
+                    (runner.runner_id, snapshot.head.digest, snapshot.head.generation, snapshot_digest, payload),
                 )
                 previous_head_digest = None
                 idempotent = False
@@ -204,11 +295,7 @@ class SQLiteDurableHeadStore:
                     raise PersistenceConflict("expected durable head does not match canonical head")
 
                 if snapshot.head.digest == current_head_digest:
-                    if (
-                        snapshot != current
-                        or snapshot_digest != row["snapshot_digest"]
-                        or payload != row["snapshot_payload"]
-                    ):
+                    if snapshot != current or snapshot_digest != row["snapshot_digest"] or payload != row["snapshot_payload"]:
                         raise PersistenceIntegrityError("same head digest maps to different stored snapshot")
                     previous_head_digest = current_head_digest
                     idempotent = True
@@ -216,9 +303,8 @@ class SQLiteDurableHeadStore:
                     if not verify_durable_successor(current, snapshot, runner):
                         raise PersistenceConflict("candidate snapshot is not a valid successor of canonical head")
                     cursor = connection.execute(
-                        "UPDATE ge_durable_heads SET head_digest = ?, generation = ?, "
-                        "snapshot_digest = ?, snapshot_payload = ? "
-                        "WHERE runner_id = ? AND head_digest = ?",
+                        "UPDATE ge_durable_heads SET head_digest = ?, generation = ?, snapshot_digest = ?, "
+                        "snapshot_payload = ? WHERE runner_id = ? AND head_digest = ?",
                         (
                             snapshot.head.digest,
                             snapshot.head.generation,
@@ -258,4 +344,127 @@ class SQLiteDurableHeadStore:
             generation=snapshot.head.generation,
             snapshot_digest=snapshot.digest,
             idempotent=idempotent,
+        )
+
+    def commit_reconciliation(
+        self,
+        candidate: ReconciliationCandidate,
+        runner: RunnerCapabilities,
+    ) -> ReconciliationPersistenceReceipt:
+        if not verify_reconciliation_candidate(candidate, runner):
+            raise PersistenceIntegrityError("reconciliation candidate failed intrinsic verification")
+
+        record = candidate.record
+        record_payload = canonical_json(reconciliation_record_to_dict(record))
+        successor = candidate.successor_snapshot
+        successor_payload = serialize_durable_snapshot(successor)
+        connection = self._connect()
+        try:
+            connection.execute("BEGIN IMMEDIATE")
+            self._verify_store_schema(connection)
+
+            existing_row = connection.execute(
+                "SELECT runner_id, authorization_id, reconciliation_id, reconciliation_digest, "
+                "previous_head_digest, committed_head_digest, record_payload "
+                "FROM ge_reconciliations WHERE runner_id = ? AND authorization_id = ?",
+                (runner.runner_id, record.authorization_id),
+            ).fetchone()
+            if existing_row is not None:
+                existing = self._decode_reconciliation_row(existing_row)
+                if existing != record or existing_row["record_payload"] != record_payload:
+                    raise PersistenceConflict("authorization already has a different canonical reconciliation")
+                connection.commit()
+                return ReconciliationPersistenceReceipt(
+                    runner_id=runner.runner_id,
+                    authorization_id=record.authorization_id,
+                    reconciliation_id=record.reconciliation_id,
+                    reconciliation_digest=record.digest,
+                    previous_head_digest=record.source_head_digest,
+                    committed_head_digest=record.successor_head_digest,
+                    generation=successor.head.generation,
+                    idempotent=True,
+                )
+
+            current_row = connection.execute(
+                "SELECT runner_id, head_digest, generation, snapshot_digest, snapshot_payload "
+                "FROM ge_durable_heads WHERE runner_id = ?",
+                (runner.runner_id,),
+            ).fetchone()
+            if current_row is None:
+                raise PersistenceConflict("reconciliation requires an existing canonical durable head")
+            current = self._decode_row(current_row, runner)
+            if current != candidate.source_snapshot:
+                raise PersistenceConflict("reconciliation source is not the canonical durable head")
+            if not verify_durable_successor(current, successor, runner):
+                raise PersistenceIntegrityError("reconciliation successor is not a valid durable successor")
+
+            cursor = connection.execute(
+                "UPDATE ge_durable_heads SET head_digest = ?, generation = ?, snapshot_digest = ?, "
+                "snapshot_payload = ? WHERE runner_id = ? AND head_digest = ?",
+                (
+                    successor.head.digest,
+                    successor.head.generation,
+                    successor.digest,
+                    successor_payload,
+                    runner.runner_id,
+                    current.head.digest,
+                ),
+            )
+            if cursor.rowcount != 1:
+                raise PersistenceConflict("canonical durable head changed before reconciliation commit")
+
+            connection.execute(
+                "INSERT INTO ge_reconciliations "
+                "(runner_id, authorization_id, reconciliation_id, reconciliation_digest, "
+                "previous_head_digest, committed_head_digest, record_payload) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?)",
+                (
+                    runner.runner_id,
+                    record.authorization_id,
+                    record.reconciliation_id,
+                    record.digest,
+                    record.source_head_digest,
+                    record.successor_head_digest,
+                    record_payload,
+                ),
+            )
+
+            committed_head_row = connection.execute(
+                "SELECT runner_id, head_digest, generation, snapshot_digest, snapshot_payload "
+                "FROM ge_durable_heads WHERE runner_id = ?",
+                (runner.runner_id,),
+            ).fetchone()
+            committed_record_row = connection.execute(
+                "SELECT runner_id, authorization_id, reconciliation_id, reconciliation_digest, "
+                "previous_head_digest, committed_head_digest, record_payload "
+                "FROM ge_reconciliations WHERE runner_id = ? AND authorization_id = ?",
+                (runner.runner_id, record.authorization_id),
+            ).fetchone()
+            if committed_head_row is None or committed_record_row is None:
+                raise PersistenceIntegrityError("reconciliation transaction is incomplete")
+            if self._decode_row(committed_head_row, runner) != successor:
+                raise PersistenceIntegrityError("reconciliation transaction head does not match successor")
+            if self._decode_reconciliation_row(committed_record_row) != record:
+                raise PersistenceIntegrityError("reconciliation transaction record does not match candidate")
+            connection.commit()
+        except sqlite3.IntegrityError as exc:
+            if connection.in_transaction:
+                connection.rollback()
+            raise PersistenceConflict("reconciliation uniqueness constraint rejected the commit") from exc
+        except Exception:
+            if connection.in_transaction:
+                connection.rollback()
+            raise
+        finally:
+            connection.close()
+
+        return ReconciliationPersistenceReceipt(
+            runner_id=runner.runner_id,
+            authorization_id=record.authorization_id,
+            reconciliation_id=record.reconciliation_id,
+            reconciliation_digest=record.digest,
+            previous_head_digest=record.source_head_digest,
+            committed_head_digest=record.successor_head_digest,
+            generation=successor.head.generation,
+            idempotent=False,
         )
