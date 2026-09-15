@@ -9,10 +9,10 @@ ExecutionSpec
   -> deterministic plan
   -> logical Session
   -> physical authorization
-  -> capacity lease
+  -> durable capacity lease
   -> external provider
   -> observation / receipt
-  -> capacity release
+  -> durable capacity release
   -> execution ledger
 ```
 
@@ -24,24 +24,26 @@ ExecutionSpec
 - **v0.0.2 — Provider-neutral Adapter Contract:** authorization, transport, and evidence admission are separate. See [`docs/v0.0.2-reference-adapter.md`](docs/v0.0.2-reference-adapter.md).
 - **v0.0.3 — Physical Failure Semantics:** logical and physical attempts are distinct; physical outcomes and retry lineage are explicit. See [`docs/v0.0.3-physical-failure-semantics.md`](docs/v0.0.3-physical-failure-semantics.md).
 - **v0.0.4 — Capacity & Lease Semantics:** `max_parallelism`, deterministic slots, compare-and-swap capacity state, explicit release, and retry-capacity ordering. See [`docs/v0.0.4-capacity-lease-semantics.md`](docs/v0.0.4-capacity-lease-semantics.md).
+- **v0.0.5 — Durable Head & Restart Recovery:** SQLite-backed canonical capacity heads, transactional CAS, replay-verified snapshots, and unresolved in-flight lease recovery. See [`docs/v0.0.5-durable-restart-recovery.md`](docs/v0.0.5-durable-restart-recovery.md).
 
-## v0.0.4 invariants
+## v0.0.5 invariants
 
-Each runner has a replayable `RunnerCapacityState`. Reserve/release proposals bind to one exact `expected_state_digest`; after one proposal commits, another proposal created from the older snapshot is stale.
+Each runner has at most one durable canonical capacity head. A durable commit must extend that head by exactly one replayable transition and must match the current `expected_state_digest` inside the same SQLite write transaction.
 
-A committed `CapacityLeaseGrant` binds the exact runner, slot, logical Session, physical authorization, invocation ID, physical-attempt ordinal, and capacity-state revision.
+A coordinator restart does not release capacity and does not imply any provider outcome. Active leases recover as `in_flight_unresolved` with the same slot, Session, authorization and invocation identity.
 
 The core enforces:
 
-- active canonical leases never exceed `RunnerCapabilities.max_parallelism`;
-- one logical Session attempt has at most one active canonical physical lease;
-- retry capacity is unavailable until the preceding physical attempt has been canonically released;
-- a completed predecessor is not a retry source;
-- terminal physical outcomes and explicit Session revocation release capacity through auditable transitions;
-- capacity state can be replayed from runner genesis;
-- capacity transitions can be recorded as `CAPACITY_RESERVED` / `CAPACITY_RELEASED` ledger events.
+- durable snapshot digest and native capacity-state digest both verify on reload;
+- full capacity history replays against the exact `RunnerCapabilities`;
+- persisted metadata must agree with reconstructed snapshot state;
+- capability drift fails closed;
+- stale competing writers cannot both advance one durable head;
+- a commit cannot skip generations or replace canonical transition history;
+- restart recovery fabricates zero physical outcomes and zero capacity releases;
+- a recovered active lease remains capacity-consuming until real evidence or explicit Session revocation produces the native release transition.
 
-There is no wall-clock lease expiry in the core. A future durable store must maintain one canonical capacity head per runner and apply the expected-state-digest rule atomically.
+There is still no wall-clock lease expiry in the core.
 
 ## First client
 
@@ -57,14 +59,24 @@ python -m pip install -e . --no-build-isolation --no-deps
 
 The core has no non-stdlib runtime dependencies.
 
-## Current v0.0.4 evidence
+## Current v0.0.5 evidence
 
-The capacity candidate passed 14 targeted local conformance tests covering capacity exhaustion, deterministic multi-slot allocation, stale reserve/release proposals, retry ordering, Session revocation, competing retry proposals, execution-context binding, state replay, and capacity-ledger recording.
+The durable-recovery candidate adds 10 focused conformance scenarios covering snapshot round-trip, restart-stable reload, active-lease survival, post-restart capacity blocking, real outcome release after restart, stale CAS across independent store connections, generation-skip rejection, snapshot and metadata tamper detection, capability drift, and idempotent initialization.
+
+An isolated local SQLite/CAS harness additionally exercised `genesis -> reserve -> restart -> stale-CAS rejection -> real release -> second restart` successfully without GitHub Actions.
 
 ## Next ceiling
 
-The next highest-value boundary is **durable head & restart recovery**: serialize/reload canonical capacity state, replay it after coordinator restart, and reconcile an in-flight lease without fabricating a physical outcome. Concrete remote transport should depend on capacity only after this recovery boundary is proven.
+The next highest-value boundary is **durable dispatch intent & ambiguity recovery**.
+
+v0.0.5 can recover that a lease is still active, but after a crash it intentionally cannot infer whether the external provider actually received the invocation. Before adding concrete remote transport, General Execution should durably bind a dispatch intent to the active lease and distinguish at least:
+
+- prepared but not submitted;
+- submission attempted but provider acceptance unknown;
+- provider identity/receipt observed.
+
+Restart recovery must never blindly re-submit an ambiguous invocation. Concrete remote transport should be introduced only after this outbox/reconciliation boundary is proven.
 
 ## Status
 
-**v0.0.4 Capacity & Lease Semantics: implementation candidate locally validated.**
+**v0.0.5 Durable Head & Restart Recovery: implementation candidate locally validated at the SQLite/CAS boundary.**
