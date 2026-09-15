@@ -34,60 +34,61 @@ ExecutionSpec
 - **v0.0.9 — Reattachable Reference Provider**
 - **v0.0.10 — Durable Store Reopen Rehearsal** (`context_mode=caller_retained`)
 - **v0.0.11 — Durable Recovery Context**
-- **v0.0.12 — Cold Coordinator Reconstruction Rehearsal** (`context_mode=cold_reconstructed`). See [`docs/v0.0.12-cold-restart-rehearsal.md`](docs/v0.0.12-cold-restart-rehearsal.md).
+- **v0.0.12 — Cold Coordinator Reconstruction Rehearsal** (`context_mode=cold_reconstructed`)
+- **v0.0.13 — Restart Cut-Point Matrix**: deterministic safe-state classification across context-only, capacity-without-provider, provider-running, terminal persistence, volatile reconciliation planning, and final reconciliation CAS. See [`docs/v0.0.13-restart-cutpoint-matrix.md`](docs/v0.0.13-restart-cutpoint-matrix.md).
 
-## v0.0.12 boundary
+## v0.0.13 recovery matrix
 
-v0.0.12 separates preparation and recovery into different APIs.
-
-```text
-prepare_reference_cold_restart(paths...)
-  -> recovery context durable first
-  -> capacity head committed second
-  -> provider identity registered third
-  -> returns only a preparation receipt
-
-resume_reference_cold_restart(paths...)
-  -> receives only three store paths
-  -> reconstructs runner + Spec + registry + plan + Session + authorization
-  -> queries provider state
-  -> admits terminal physical outcome
-  -> reconciles capacity
-```
-
-No protocol object from the preparation phase is an argument to `resume_reference_cold_restart(...)`.
-
-The recovered report freezes:
+The matrix freezes six durable cut points:
 
 ```text
-context_mode = cold_reconstructed
+context_only
+  -> capacity_committed
+  -> provider_running
+  -> terminal_persisted
+  -> reconciliation_planned
+  -> reconciled
 ```
 
-This is deliberately stronger than v0.0.10's caller-retained store reopen.
-
-## Recovery ordering
-
-The safe preparation order is:
+Their required safe dispositions are:
 
 ```text
-recovery context
-  -> capacity head
-  -> provider identity
+orphan_context
+  -> remain_unknown
+  -> keep_running
+  -> terminal_pending_reconciliation
+  -> terminal_plan_reproducible
+  -> reconciled
 ```
 
-If the coordinator stops after context persistence but before the capacity commit, the result is an orphan context and no active lease. Once an active recoverable capacity head exists, its execution context was already durable.
+The important boundaries are explicit:
 
-Provider `running` remains `keep_running`; it creates no outcome and releases no capacity. A terminal state is admitted through the existing v0.0.8 physical protocol and released only through v0.0.7 reconciliation.
+- context without a capacity head is an inert orphan;
+- active capacity with missing provider identity remains occupied and unknown;
+- provider `running` cannot create an outcome or retry opportunity;
+- terminal provider persistence does not release capacity;
+- reconciliation planning does not mutate durable state;
+- a lost volatile reconciliation plan must rederive with the same digest;
+- only canonical reconciliation CAS removes the active lease.
+
+Therefore:
+
+```text
+provider not_found != failure
+terminal persistence != capacity release
+reconciliation planning != capacity release
+only reconciliation CAS releases canonical capacity
+```
 
 ## Authority boundary
 
-Even a reconstructed completed physical attempt does not submit the logical Session result automatically:
+Recovery and restart handling preserve identity and occupancy. They do not create permission to execute again, verify domain correctness, integrate outputs, approve releases, or automatically submit logical results.
+
+The existing result boundary remains:
 
 ```text
 physical completion != logical result submission
 ```
-
-`submit_result(...)` remains a separate explicit step. Cold recovery does not authorize retry, domain verification, integration, or release.
 
 ## Development
 
@@ -99,20 +100,20 @@ python -m pip install -e . --no-build-isolation --no-deps
 
 The core has no non-stdlib runtime dependencies; SQLite comes from Python's standard library.
 
-## Current v0.0.12 conformance bank
+## Current v0.0.13 conformance bank
 
-The repository includes tests for cold timeout reconstruction, cold completion with explicit later result submission, preparation receipts spanning context/capacity/provider durability, deterministic replay across fresh stores, three-store separation, invalid terminal-mode handling, and rejection of a second resume after canonical reconciliation.
+The repository includes cut-point tests for canonical safe-state ordering, orphan context behavior, provider-missing conservative recovery, running occupancy preservation, terminal persistence without release, deterministic reconciliation-plan reproduction after volatile loss, reconciliation-only capacity release, and report determinism across fresh directories.
 
 ## Evidence and admission state
 
-v0.0.12 proves a protocol-level cold reconstruction boundary because the resume API receives only durable store paths. It is not yet an operating-system process-separation test and does not replace the still-pending full historical repository regression.
+The v0.0.5-v0.0.13 line remains stacked. Canonical `main` remains at v0.0.4 because the complete historical repository regression has not yet been executed in a complete runner environment.
 
-The v0.0.5-v0.0.12 line therefore remains stacked. Canonical `main` remains at v0.0.4.
+v0.0.13 closes the major local **restart semantics** gaps, but one high-value local evidence boundary remains: process-separated cold recovery, where preparation occurs in one Python process and resume occurs in a different process that receives only durable paths.
 
 ## Next ceiling
 
-The next highest-value milestone is a **restart cut-point matrix** over the three durable layers: context-only, context+capacity, provider-running, terminal persistence, and reconciliation CAS. Each cut point must converge to one explicit safe state without duplicate canonical execution.
+The next milestone is **process-separated cold recovery**. After that, further confidence should come primarily from complete regression and real provider/host evidence rather than more restart-state semantics.
 
 ## Status
 
-**v0.0.12 Cold Coordinator Reconstruction Rehearsal: stacked implementation candidate under validation.**
+**v0.0.13 Restart Cut-Point Matrix: stacked implementation candidate under validation.**
