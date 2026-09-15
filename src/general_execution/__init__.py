@@ -42,6 +42,12 @@ from .capacity import (
     verify_capacity_state,
     verify_capacity_transition_record,
 )
+from .coherence import (
+    CoherentSQLiteSessionRegistry,
+    ExecutionCoherenceReport,
+    assess_execution_coherence,
+    inspect_sqlite_execution_coherence,
+)
 from .durable import (
     DurableCapacityHead,
     DurableCapacitySnapshot,
@@ -157,11 +163,13 @@ __all__ = [
     "CapacityReleaseGrant",
     "CapacityTransition",
     "CapacityTransitionRecord",
+    "CoherentSQLiteSessionRegistry",
     "DispatchPlan",
     "DuplicatePhysicalAttempt",
     "DurableCapacityHead",
     "DurableCapacitySnapshot",
     "DurableStateError",
+    "ExecutionCoherenceReport",
     "ExecutionLedger",
     "ExecutionSession",
     "ExecutionSpec",
@@ -212,6 +220,7 @@ __all__ = [
     "admit_observation",
     "admit_physical_observation",
     "append_event",
+    "assess_execution_coherence",
     "authorize_physical_attempt",
     "authorize_retry",
     "bind_session",
@@ -223,6 +232,7 @@ __all__ = [
     "commit_revocation_release",
     "identify_duplicate_physical_attempt",
     "initialize_capacity_state",
+    "inspect_sqlite_execution_coherence",
     "load_durable_snapshot",
     "logical_result_submission_from_dict",
     "logical_result_submission_to_dict",
@@ -285,4 +295,4 @@ __all__ = [
     "verify_session_registry_transition",
 ]
 
-__version__ = "0.0.9"
+__version__ = "0.0.10"

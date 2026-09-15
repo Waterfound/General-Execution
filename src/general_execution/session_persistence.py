@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from .canonical import canonical_json, sha256_digest
+from .durable import load_durable_snapshot
 from .models import ExecutionSession, RunnerCapabilities
 from .persistence import SQLiteDurableHeadStore
 from .reconciliation import reconciliation_record_from_dict
@@ -269,6 +270,72 @@ class SQLiteSessionRegistry:
         ):
             raise SessionPersistenceIntegrityError("submit_result registry transition does not match persisted handoff")
 
+    def _cross_layer_state_locked(
+        self,
+        connection: sqlite3.Connection,
+        session: ExecutionSession,
+        runner: RunnerCapabilities,
+    ) -> tuple[tuple[object, ...], bool, bool]:
+        row = connection.execute(
+            "SELECT head_digest, generation, snapshot_digest, snapshot_payload FROM ge_durable_heads WHERE runner_id = ?",
+            (runner.runner_id,),
+        ).fetchone()
+        active_leases: tuple[object, ...] = ()
+        if row is not None:
+            try:
+                snapshot = load_durable_snapshot(
+                    row["snapshot_payload"],
+                    runner,
+                    expected_head_digest=row["head_digest"],
+                )
+            except ValueError as exc:
+                raise SessionPersistenceIntegrityError("durable capacity head is invalid during Session transition") from exc
+            if snapshot.head.generation != row["generation"] or snapshot.digest != row["snapshot_digest"]:
+                raise SessionPersistenceIntegrityError("durable capacity metadata does not match snapshot")
+            active_leases = tuple(
+                lease
+                for lease in snapshot.state.active_leases
+                if lease.session_id == session.session_id and lease.logical_attempt == session.attempt
+            )
+        pending_exists = connection.execute(
+            "SELECT 1 FROM ge_pending_results WHERE runner_id = ? AND session_id = ? AND logical_attempt = ?",
+            (runner.runner_id, session.session_id, session.attempt),
+        ).fetchone() is not None
+        submission_exists = connection.execute(
+            "SELECT 1 FROM ge_result_submissions WHERE runner_id = ? AND session_id = ? AND logical_attempt = ?",
+            (runner.runner_id, session.session_id, session.attempt),
+        ).fetchone() is not None
+        return active_leases, pending_exists, submission_exists
+
+    def _cross_layer_guard_locked(
+        self,
+        connection: sqlite3.Connection,
+        transition: SessionRegistryTransition,
+        runner: RunnerCapabilities,
+    ) -> None:
+        reference = transition.source_session or transition.target_session
+        active_leases, pending_exists, submission_exists = self._cross_layer_state_locked(
+            connection,
+            reference,
+            runner,
+        )
+        if transition.kind == "register":
+            if active_leases or pending_exists or submission_exists:
+                raise SessionPersistenceConflict("cannot retroactively synthesize Session history over existing execution state")
+            return
+        if transition.kind == "start":
+            if pending_exists or submission_exists:
+                raise SessionPersistenceConflict("bound Session cannot start after result handoff state already exists")
+            return
+        if transition.kind == "revoke":
+            if active_leases:
+                raise SessionPersistenceConflict("active capacity must be canonically released before Session revocation")
+            if pending_exists or submission_exists:
+                raise SessionPersistenceConflict("Session with durable result handoff state cannot be revoked")
+            return
+        if transition.kind == "submit_result" and active_leases:
+            raise SessionPersistenceConflict("active capacity must be released before logical result submission")
+
     def _history_locked(
         self,
         connection: sqlite3.Connection,
@@ -389,6 +456,7 @@ class SQLiteSessionRegistry:
                     or sha256_digest(current) != transition.expected_session_digest
                 ):
                     raise SessionPersistenceConflict("Session transition predecessor is stale")
+            self._cross_layer_guard_locked(connection, transition, runner)
             self._verify_submit_binding(connection, transition, runner)
             connection.execute(
                 "INSERT INTO ge_session_transitions (runner_id, session_id, revision, transition_id, transition_digest, transition_payload) "
