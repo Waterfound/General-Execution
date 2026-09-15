@@ -27,6 +27,7 @@ from general_execution import (
     reserve_capacity,
     serialize_capacity_snapshot,
     start_session,
+    verify_restart_recovery,
 )
 
 D = "sha256:" + "d" * 64
@@ -112,13 +113,18 @@ def test_active_lease_survives_restart_and_still_consumes_capacity(tmp_path):
 
     restarted = SqliteCapacityHeadStore(tmp_path / "capacity.db")
     recovered, report = recover_capacity_after_restart(restarted, runner)
+    _, head = restarted.load(runner)
     assert recovered == reserved
     assert recovered.active_leases == (grant.lease,)
     assert report.active_lease_count == 1
     assert report.unresolved_leases[0].lease_id == grant.lease.lease_id
+    assert report.unresolved_leases[0].authorization_id == grant.lease.authorization_id
+    assert report.unresolved_leases[0].authorization_digest == grant.lease.authorization_digest
     assert report.unresolved_leases[0].status == "in_flight_unresolved"
     assert report.physical_outcomes_fabricated == 0
     assert report.capacity_releases_fabricated == 0
+    assert verify_restart_recovery(recovered, head, report)
+    assert not verify_restart_recovery(recovered, head, replace(report, state_digest=D))
     with pytest.raises(CapacityError):
         reserve_capacity(recovered, *second[:4], runner, second[4])
 
@@ -227,6 +233,8 @@ def test_tampered_head_metadata_is_rejected(tmp_path):
         )
     with pytest.raises(DurableCapacityError, match="metadata mismatch"):
         store.load(runner)
+    with pytest.raises(DurableCapacityError, match="metadata mismatch"):
+        store.initialize(runner)
 
 
 def test_runner_capability_drift_is_rejected(tmp_path):
