@@ -13,6 +13,7 @@ ExecutionSpec
   -> durable dispatch intent
   -> live dispatch permit
   -> provider reconciliation
+  -> executable provider conformance
   -> provider contract attestation
   -> attested same-invocation resubmission permit
   -> observation / receipt
@@ -32,36 +33,28 @@ ExecutionSpec
 - **v0.0.6 — Durable Dispatch Intent & Ambiguity Recovery:** durable outbox state, crash-safe submission ambiguity, live capacity-bound transport permits, and fail-closed restart reconciliation. See [`docs/v0.0.6-durable-dispatch-intent.md`](docs/v0.0.6-durable-dispatch-intent.md).
 - **v0.0.7 — Provider Idempotency & Reconciliation:** stable invocation-key reconciliation, explicit duplicate semantics, evidence-bound provider status, and conservative resubmission decisions. See [`docs/v0.0.7-provider-reconciliation.md`](docs/v0.0.7-provider-reconciliation.md).
 - **v0.0.8 — Provider Reconciliation Conformance & Attestation:** contract/evidence separation, immutable adapter-revision attestation, production-equivalent certification, and attested same-invocation-only resubmission permits. See [`docs/v0.0.8-provider-conformance-attestation.md`](docs/v0.0.8-provider-conformance-attestation.md).
+- **v0.0.9 — Executable Provider Conformance Harness:** provider-neutral executable cases, transcript-bound evidence generation, deterministic sandbox reference target, and false-contract detection. See [`docs/v0.0.9-executable-provider-conformance.md`](docs/v0.0.9-executable-provider-conformance.md).
 
-## v0.0.8 invariants
+## v0.0.9 invariants
 
-A provider's idempotency declaration is no longer sufficient to elevate a v0.0.7 reconciliation decision into transport eligibility.
+Conformance evidence no longer needs to be assembled manually to exercise the protocol. `run_provider_conformance()` executes the target behavior and generates the case evidence from observed transcripts.
 
-Two independent evidence lineages are preserved:
+The harness enforces:
 
-```text
-invocation-specific reconciliation evidence
-        +
-provider/adapter conformance evidence
-```
+- target provider / adapter / adapter-version identity must match the reconciliation contract before tests run;
+- target adapter revision must be immutable lowercase hex;
+- request and evidence digests are validated at the target boundary;
+- each case runs from a reset target state;
+- same-invocation/same-request behavior is measured against the exact declared semantics;
+- same invocation with a different request must be explicitly rejected;
+- lookup must remain bound to both invocation and request identity;
+- an accepted invocation cannot subsequently be reported as absent;
+- terminal evidence, when claimed, must resolve to the same provider operation and exact terminal-evidence digest;
+- each case evidence digest binds the harness version, case identity, and observed transcript;
+- `ProviderConformanceRun` binds the exact contract, adapter revision, environment scope, case results, generated evidence digest, and all-pass verdict;
+- conforming `may_duplicate` behavior remains correctly measurable while still being unsafe for automatic resubmission under the v0.0.7/v0.0.8 policy gates.
 
-The core enforces:
-
-- conformance evidence binds the exact reconciliation-contract digest and immutable adapter revision;
-- required conformance cases are unique and fail closed when missing;
-- contracts claiming terminal evidence lookup must prove `terminal_evidence_binding`;
-- sandbox evidence can establish logical conformance but can never certify safe production resubmission;
-- `safe_resubmission_certified` requires all required cases passing in `production_equivalent` scope and a contract with strong idempotency semantics;
-- `ProviderContractAttestation.authority = NONE`;
-- manually altered attestations fail deterministic re-verification;
-- a provisional `resubmit_same_invocation` decision still requires a fresh current `LiveDispatchPermit` at the attestation gate;
-- `AttestedResubmissionPermit` binds the decision digest, reconciliation-evidence digest, conformance-evidence digest, contract, attestation, live permit and immutable adapter revision;
-- attested permit authority is only `IDEMPOTENT_RESUBMIT_ONLY`;
-- attested resubmission preserves the exact invocation ID and request digest;
-- attested resubmission can never authorize a new physical-attempt ordinal;
-- revocation or durable capacity change invalidates a stale live permit even when provider conformance remains valid.
-
-No concrete remote provider transport is enabled by v0.0.8.
+The included `ReferenceConformanceTarget` is an in-memory sandbox target for validating the harness mechanism. It is not a production-equivalent provider and does not enable remote transport.
 
 ## First client
 
@@ -77,29 +70,33 @@ python -m pip install -e . --no-build-isolation --no-deps
 
 The core has no non-stdlib runtime dependencies.
 
-## Current v0.0.8 evidence
+## Current v0.0.9 evidence
 
-The candidate adds a focused 15-scenario attestation bank covering production-equivalent certification, sandbox non-certification, required/missing/duplicate/failed cases, unsafe-provider contracts, conditional terminal-evidence requirements, contract/revision/attestation mismatch, stale live permits, same-invocation-only permit issuance, permit tampering, and explicit separation of reconciliation versus conformance evidence.
+The candidate adds a focused executable-harness bank covering mechanically generated sandbox evidence, deterministic repeated runs, false same-request declarations, matching duplicate-rejected semantics, conformant-but-unsafe `may_duplicate`, identity mismatch, malformed adapter revision, lookup identity failure, absence failure, terminal-evidence failure, conditional terminal-case execution, and distinct request identities.
 
-The current environment still does not provide a repository execution runtime without consuming GitHub Actions or creating external infrastructure. The implementation therefore records static API/boundary review and a committed test bank; it does **not** claim an external pytest execution here.
+The repository execution environment remains unavailable here without consuming GitHub Actions or introducing external infrastructure, so no full external pytest run is claimed. The new harness itself is implementation code plus a committed test bank; its reference target remains sandbox-only in intended use.
+
+## Remaining trust boundary
+
+An executable harness materially improves evidence quality, but an ordinary in-process evidence object is still not cryptographic proof that an external provider test actually ran. No concrete remote transport consumes the artifacts yet.
+
+Production-equivalent provider integration therefore still requires trustworthy run provenance binding at least:
+
+- exact harness revision;
+- exact adapter revision;
+- provider/environment identity;
+- conformance-run digest;
+- generated conformance-evidence digest;
+- the execution mechanism that produced them.
+
+The system should not equate a self-asserted `production_equivalent` field with proof of execution.
 
 ## Next ceiling
 
-The next highest-value boundary is an **executable provider conformance harness**.
+The next evidence capable of materially changing the verdict is **provider-specific sandbox execution with trustworthy conformance-run provenance**.
 
-`production_equivalent` is currently a property of supplied evidence. Before any concrete remote transport exists, General Execution should make the conformance suite itself executable against a reference adapter/provider and generate the evidence artifacts mechanically.
-
-The harness should prove at minimum:
-
-- same invocation + same request has the declared duplicate semantics;
-- same invocation + different request is rejected;
-- lookup remains bound to invocation + request identity;
-- an accepted operation cannot later be falsely reported as absent;
-- terminal evidence, when claimed, is retrievable and bound to the same invocation;
-- repeated clean-room runs produce the same semantic verdict.
-
-A provider-specific adapter should become eligible for transport integration only after the executable harness produces evidence bound to its exact immutable revision.
+Purely local provider-neutral modeling is now approaching diminishing returns. A concrete provider adapter should first implement the v0.0.9 target contract and run the harness in an independently identifiable sandbox/equivalent environment. Only after that evidence is bound to the exact adapter revision should General Execution consider enabling real remote transport.
 
 ## Status
 
-**v0.0.8 Provider Reconciliation Conformance & Attestation: implementation candidate complete in branch; focused attestation bank and static boundary review recorded; executable conformance harness remains the next gate.**
+**v0.0.9 Executable Provider Conformance Harness: implementation candidate complete in branch; reference sandbox harness and adversarial test bank recorded; provider-specific execution/provenance is the next material gate.**
