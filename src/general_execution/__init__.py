@@ -127,6 +127,22 @@ from .reconciliation import (
     verify_reconciliation_plan,
     verify_reconciliation_receipt,
 )
+from .reference_bridge import (
+    ReferenceBridgeError,
+    ReferenceRegistrationReceipt,
+    query_reference_status,
+    reattachable_reference_runner,
+    record_reference_terminal,
+    register_reference_invocation,
+)
+from .reference_registry import (
+    REFERENCE_JOB_REGISTRY_SCHEMA,
+    ReferenceJobRecord,
+    ReferenceRegistryConflict,
+    ReferenceRegistryError,
+    ReferenceRegistryIntegrityError,
+    SQLiteReferenceJobRegistry,
+)
 from .session import SessionError, bind_session, revoke_session, start_session, submit_result
 
 __all__ = [
@@ -171,6 +187,7 @@ __all__ = [
     "ProviderStatusProbe",
     "REFERENCE_CAPABILITY",
     "REFERENCE_EVIDENCE",
+    "REFERENCE_JOB_REGISTRY_SCHEMA",
     "REFERENCE_TASK_KIND",
     "RecoveredInFlightLease",
     "RecoveryReconciliationPlan",
@@ -178,12 +195,19 @@ __all__ = [
     "ReattachmentError",
     "ReconciliationConflict",
     "ReconciliationError",
+    "ReferenceBridgeError",
+    "ReferenceJobRecord",
+    "ReferenceRegistrationReceipt",
+    "ReferenceRegistryConflict",
+    "ReferenceRegistryError",
+    "ReferenceRegistryIntegrityError",
     "RestartRecoveryReport",
     "ResultEnvelope",
     "RunnerCapabilities",
     "RunnerCapacityState",
     "RunnerRegistry",
     "SQLiteDurableHeadStore",
+    "SQLiteReferenceJobRegistry",
     "STORE_SCHEMA_VERSION",
     "SessionError",
     "VALID_TRANSPORT_STATUSES",
@@ -217,14 +241,18 @@ __all__ = [
     "propose_capacity_reservation",
     "propose_outcome_release",
     "propose_revocation_release",
+    "query_reference_status",
+    "reattachable_reference_runner",
     "reattachment_key_from_authorization",
     "reattachment_key_from_recovered",
     "record_capacity_transition",
     "record_duplicate_physical_attempt",
     "record_invocation",
     "record_physical_attempt",
+    "record_reference_terminal",
     "recover_after_restart",
     "reference_runner",
+    "register_reference_invocation",
     "release_capacity_for_outcome",
     "release_capacity_for_revocation",
     "reserve_capacity",
@@ -256,4 +284,4 @@ __all__ = [
     "verify_status_probe",
 ]
 
-__version__ = "0.0.8"
+__version__ = "0.0.9"
