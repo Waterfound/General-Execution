@@ -158,6 +158,7 @@ from .reconciliation import (
     create_reconciliation_query,
     decide_reconciliation,
 )
+from .recovery_driver import RecoveryDriverError, RecoveryDriverResult, apply_recovery_step
 from .session import SessionError, bind_session, revoke_session, start_session, submit_result
 from .session_recovery import (
     SessionRecoveryError,
@@ -226,6 +227,8 @@ __all__ = [
     "RecoveredLease",
     "ReconciliationDecision",
     "ReconciliationError",
+    "RecoveryDriverError",
+    "RecoveryDriverResult",
     "ReferenceConformanceTarget",
     "RestartRecoveryReport",
     "ResultEnvelope",
@@ -243,6 +246,7 @@ __all__ = [
     "admit_physical_observation",
     "admit_reconciliation_observation",
     "append_event",
+    "apply_recovery_step",
     "attest_provider_contract",
     "authorize_attested_resubmission",
     "authorize_live_dispatch",
@@ -318,4 +322,4 @@ __all__ = [
     "verify_retry_chain",
 ]
 
-__version__ = "0.0.11"
+__version__ = "0.0.12"

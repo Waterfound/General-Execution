@@ -20,6 +20,7 @@ ExecutionSpec
   -> durable full observed outcome
   -> restart-safe capacity release
   -> deterministic Session recovery projection
+  -> bounded mechanical recovery driver
   -> execution ledger
 ```
 
@@ -38,37 +39,41 @@ ExecutionSpec
 - **v0.0.9 — Executable Provider Conformance Harness:** provider-neutral executable cases, transcript-bound evidence generation, deterministic sandbox reference target, and false-contract detection. See [`docs/v0.0.9-executable-provider-conformance.md`](docs/v0.0.9-executable-provider-conformance.md).
 - **v0.0.10 — Durable Observed Outcome:** atomically retain the complete admitted `PhysicalOutcomeBundle` with the `observed` dispatch transition and use it to finish canonical capacity release after restart. See [`docs/v0.0.10-durable-observed-outcome.md`](docs/v0.0.10-durable-observed-outcome.md).
 - **v0.0.11 — Deterministic Session Recovery Projection:** reconstruct the logical Session from durable capacity/dispatch/outcome evidence instead of adding a second Session database. See [`docs/v0.0.11-session-recovery-projection.md`](docs/v0.0.11-session-recovery-projection.md).
+- **v0.0.12 — Bounded Recovery Driver:** consume one exact recovery projection and execute at most one named mechanical catch-up action without acquiring transport or retry authority. See [`docs/v0.0.12-bounded-recovery-driver.md`](docs/v0.0.12-bounded-recovery-driver.md).
 
-## v0.0.11 invariants
+## v0.0.12 invariants
 
-`project_session_after_restart()` starts from the same immutable `ExecutionSpec`, registry, plan, runner and logical-attempt identity, loads the canonical capacity head and durable dispatch/outcome state, and derives what those durable facts prove about the Session.
+`apply_recovery_step()` accepts only an exact current `SessionRecoveryProjection`. It recomputes that projection from durable state before doing anything; stale projections fail closed.
 
-The projection enforces:
+The driver enforces:
 
-- no physical history -> deterministic `bound` Session with a safe `start_session` replay action;
-- active capacity lease with no durable dispatch intent -> `running`, action `prepare_dispatch_intent`;
-- prepared dispatch -> `running`, action `begin_submission`;
-- `submission_unknown` -> `running`, action `reconcile_provider` and no blind resubmission;
-- observed outcome with active lease -> `running`, action `release_observed_capacity`;
-- terminal physical failure with complete durable prior outcome -> `running`, `retry_eligible=true`, but no automatic retry authority;
-- terminal completed outcome with complete durable result -> deterministic reproduction of `submit_result(running, result)` and projected `result_submitted`;
-- canonical Session-revocation release -> deterministic reproduction of `revoke_session(running)` and projected `revoked`;
-- physical retry ordinals remain separate from the logical Session attempt;
-- terminal legacy releases that lack v0.0.10 complete outcome bytes never fabricate a result or retry source and remain `legacy_untracked`.
+- `coherent + none` -> no action;
+- `start_session` -> deterministic in-memory `bound -> running` only;
+- `prepare_dispatch_intent` -> reconstruct the exact first/retry physical authorization and persist only the deterministic dispatch intent;
+- retry authorization must reproduce the exact durable predecessor invocation and receipt digest;
+- `begin_submission` may advance the durable outbox and return a `DispatchPermit`, but that permit still has no transport authority;
+- `reconcile_provider` returns `external_input_required` and does not contact or mutate provider state;
+- `release_observed_capacity` uses the v0.0.10 durable full outcome path and existing capacity CAS/idempotency gates;
+- `legacy_untracked` and `inconsistent` projections are refused;
+- `retry_eligible=true` never becomes automatic retry policy;
+- every `RecoveryDriverResult` has `transport_authority=false` and `automatic_retry_authorized=false`;
+- after a durable mutation, the result Session comes from the freshly recomputed post-action projection, so concurrent terminal transitions cannot be reported as stale `running` state;
+- a concurrent revocation can leave a conservative prepared intent, but the missing active lease prevents `begin_submission` and transport resurrection.
 
-This removes the immediate need for the parallel prototype's additional Session-head database. Durable execution evidence remains the source of truth; the Session becomes a deterministic projection over that evidence.
+The driver applies recovery mechanics only. It never decides whether execution should be retried, whether provider evidence is trustworthy, whether a result is correct, or whether anything should be integrated or released.
 
-## v0.0.10 durable outcome boundary
+## Recovery stack
 
-The v0.0.10 path remains the prerequisite for restart-complete terminal projection. `SqliteDurableObservedOutcomeStore` atomically stores the complete physical outcome with the `observed` dispatch transition and `release_observed_capacity_after_restart()` finishes the exact capacity release idempotently.
+The restart path is now deliberately layered:
 
-The older `SqliteDispatchIntentStore` remains available for compatibility, but a terminal release created without complete durable outcome bytes cannot be upgraded into a reconstructed result by v0.0.11.
+```text
+canonical durable evidence
+        -> v0.0.11 Session projection
+        -> v0.0.12 one-step bounded driver
+        -> fresh projection
+```
 
-## Relationship to provider conformance
-
-v0.0.7–v0.0.9 govern provider ambiguity and provider-contract evidence. v0.0.10 retains an already-admitted outcome. v0.0.11 only projects local logical state from those durable facts.
-
-None of these layers decide domain correctness, engineering verification, integration, or release approval.
+Provider ambiguity stays outside this automatic path. A `submission_unknown` state stops at `external_input_required`; provider-specific reconciliation/conformance must provide the next evidence.
 
 ## First client
 
@@ -86,18 +91,24 @@ The core has no non-stdlib runtime dependencies.
 
 ## Current candidate evidence
 
-The stacked candidate line contains the 14-case v0.0.10 durable-outcome bank plus 10 focused v0.0.11 Session-projection tests covering every restart phase from no physical history through active retry, terminal failure, revocation, completed result, and legacy incomplete evidence.
+The stacked candidate line contains:
 
-The complete branch cannot currently be materialized in the local runner without external infrastructure or GitHub Actions, so these banks are **present but not claimed as executed 14/14 or 10/10 evidence**.
+- v0.0.10: 14 focused durable-observed-outcome tests;
+- v0.0.11: 10 focused deterministic Session-projection tests;
+- v0.0.12: 12 focused bounded-driver tests, including stale projections, exact retry reconstruction, external provider-reconciliation boundary, terminal outcome recovery, no automatic retry, and revocation races.
+
+The complete branch still cannot be materialized in the local runner without external infrastructure or GitHub Actions, so these banks are **present but not claimed as executed 14/14, 10/10, or 12/12 evidence**.
 
 ## Remaining trust boundary
 
-Provider-specific production evidence remains separate. A local deterministic projection does not prove that a real provider fulfilled its conformance contract; it only consumes provider outcomes that have already passed the relevant admission boundary.
+Provider-specific production evidence remains separate. Local durable state, projection, and recovery do not prove that a real provider fulfilled its conformance contract.
+
+Production-equivalent provider integration still requires trustworthy run provenance binding the exact harness revision, adapter revision, provider/environment identity, conformance-run digest, generated evidence digest, and execution mechanism.
 
 ## Next ceiling
 
-After executable regression, the next highest-value component is a **bounded recovery driver**. It may consume a `recovery_required` projection and execute only the single named mechanical action. It must refuse `legacy_untracked` and `inconsistent` state, and it must never convert `retry_eligible` into automatic retry policy.
+Pure provider-neutral/local recovery modeling is now near diminishing returns. After executable regression, the next material development gate is **provider-specific sandbox execution with trustworthy conformance-run provenance**, exercised end-to-end through the v0.0.10–v0.0.12 recovery path before any real remote transport is enabled.
 
 ## Status
 
-**v0.0.11 Session Recovery Projection is stacked on the v0.0.10 canonical-mainline candidate. `main` remains on v0.0.9 until executable regression evidence is available.**
+**v0.0.12 Bounded Recovery Driver is stacked on the canonical-mainline candidate. `main` remains on v0.0.9 until executable regression evidence is available.**
