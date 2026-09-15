@@ -52,6 +52,8 @@ class RecoveredLease:
     slot: int
     session_id: str
     logical_attempt: int
+    authorization_id: str
+    authorization_digest: str
     invocation_id: str
     physical_attempt: int
     status: RecoveryLeaseStatus = "in_flight_unresolved"
@@ -77,6 +79,7 @@ class RestartRecoveryReport:
     runner_id: str
     runner_capability_digest: str
     state_digest: str
+    snapshot_digest: str
     generation: int
     active_lease_count: int
     unresolved_leases: tuple[RecoveredLease, ...]
@@ -97,8 +100,8 @@ class RestartRecoveryReport:
         return sha256_digest(self)
 
 
-def _require_schema(data: dict[str, Any], expected: str, label: str) -> None:
-    if data.get("schema_version") != expected:
+def _require_schema(data: Any, expected: str, label: str) -> None:
+    if not isinstance(data, dict) or data.get("schema_version") != expected:
         raise DurableCapacityError(f"unsupported {label} schema")
 
 
@@ -168,6 +171,8 @@ def deserialize_capacity_snapshot(snapshot_json: str, runner: RunnerCapabilities
         raise DurableCapacityError("durable capacity snapshot is not valid JSON") from exc
     if not isinstance(data, dict):
         raise DurableCapacityError("durable capacity snapshot must be an object")
+    if set(data) != {"schema_version", "state", "state_digest", "snapshot_digest"}:
+        raise DurableCapacityError("durable capacity snapshot fields mismatch")
     _require_schema(data, SNAPSHOT_SCHEMA, "capacity snapshot")
     snapshot_digest = data.get("snapshot_digest")
     if not isinstance(snapshot_digest, str):
@@ -195,6 +200,20 @@ def _head(state: RunnerCapacityState, snapshot_digest: str) -> DurableCapacityHe
         generation=state.generation,
         snapshot_digest=snapshot_digest,
     )
+
+
+def _decode_head_row(row: tuple[Any, ...], runner: RunnerCapabilities) -> tuple[RunnerCapacityState, DurableCapacityHead]:
+    capability_digest, state_digest, generation, stored_snapshot_digest, snapshot_json = row
+    if capability_digest != runner.digest:
+        raise DurableCapacityError("durable capacity head runner capabilities changed")
+    state, snapshot_digest = deserialize_capacity_snapshot(snapshot_json, runner)
+    if (
+        state.digest != state_digest
+        or state.generation != generation
+        or snapshot_digest != stored_snapshot_digest
+    ):
+        raise DurableCapacityError("durable capacity head metadata mismatch")
+    return state, _head(state, snapshot_digest)
 
 
 class SqliteCapacityHeadStore:
@@ -235,15 +254,18 @@ class SqliteCapacityHeadStore:
         try:
             connection.execute("BEGIN IMMEDIATE")
             row = connection.execute(
-                "SELECT snapshot_json FROM capacity_heads WHERE runner_id = ?",
+                """
+                SELECT runner_capability_digest, state_digest, generation, snapshot_digest, snapshot_json
+                FROM capacity_heads WHERE runner_id = ?
+                """,
                 (runner.runner_id,),
             ).fetchone()
             if row is not None:
-                existing, existing_snapshot_digest = deserialize_capacity_snapshot(row[0], runner)
+                existing, existing_head = _decode_head_row(row, runner)
                 if existing != state:
                     raise DurableCapacityError("durable capacity head already exists with different state")
                 connection.commit()
-                return _head(existing, existing_snapshot_digest)
+                return existing_head
             connection.execute(
                 """
                 INSERT INTO capacity_heads
@@ -278,17 +300,7 @@ class SqliteCapacityHeadStore:
             ).fetchone()
         if row is None:
             raise DurableCapacityError("durable capacity head does not exist")
-        capability_digest, state_digest, generation, stored_snapshot_digest, snapshot_json = row
-        if capability_digest != runner.digest:
-            raise DurableCapacityError("durable capacity head runner capabilities changed")
-        state, snapshot_digest = deserialize_capacity_snapshot(snapshot_json, runner)
-        if (
-            state.digest != state_digest
-            or state.generation != generation
-            or snapshot_digest != stored_snapshot_digest
-        ):
-            raise DurableCapacityError("durable capacity head metadata mismatch")
-        return state, _head(state, snapshot_digest)
+        return _decode_head_row(row, runner)
 
     def commit(
         self,
@@ -302,16 +314,16 @@ class SqliteCapacityHeadStore:
         try:
             connection.execute("BEGIN IMMEDIATE")
             row = connection.execute(
-                "SELECT state_digest, generation, snapshot_json FROM capacity_heads WHERE runner_id = ?",
+                """
+                SELECT runner_capability_digest, state_digest, generation, snapshot_digest, snapshot_json
+                FROM capacity_heads WHERE runner_id = ?
+                """,
                 (runner.runner_id,),
             ).fetchone()
             if row is None:
                 raise DurableCapacityError("durable capacity head does not exist")
-            current_digest, current_generation, current_snapshot_json = row
-            current_state, _ = deserialize_capacity_snapshot(current_snapshot_json, runner)
-            if current_state.digest != current_digest or current_state.generation != current_generation:
-                raise DurableCapacityError("durable capacity head metadata mismatch")
-            if current_digest != expected_state_digest:
+            current_state, _ = _decode_head_row(row, runner)
+            if current_state.digest != expected_state_digest:
                 raise DurableCapacityError("stale durable capacity head")
             if new_state.generation != current_state.generation + 1:
                 raise DurableCapacityError("durable capacity commit must advance exactly one generation")
@@ -350,11 +362,7 @@ class SqliteCapacityHeadStore:
             connection.close()
 
 
-def recover_capacity_after_restart(
-    store: SqliteCapacityHeadStore,
-    runner: RunnerCapabilities,
-) -> tuple[RunnerCapacityState, RestartRecoveryReport]:
-    state, _ = store.load(runner)
+def _recovery_report(state: RunnerCapacityState, head: DurableCapacityHead) -> RestartRecoveryReport:
     unresolved = tuple(
         RecoveredLease(
             lease_id=lease.lease_id,
@@ -363,17 +371,42 @@ def recover_capacity_after_restart(
             slot=lease.slot,
             session_id=lease.session_id,
             logical_attempt=lease.logical_attempt,
+            authorization_id=lease.authorization_id,
+            authorization_digest=lease.authorization_digest,
             invocation_id=lease.invocation_id,
             physical_attempt=lease.physical_attempt,
         )
         for lease in state.active_leases
     )
-    report = RestartRecoveryReport(
+    return RestartRecoveryReport(
         runner_id=state.runner_id,
         runner_capability_digest=state.runner_capability_digest,
         state_digest=state.digest,
+        snapshot_digest=head.snapshot_digest,
         generation=state.generation,
         active_lease_count=len(unresolved),
         unresolved_leases=unresolved,
     )
+
+
+def verify_restart_recovery(
+    state: RunnerCapacityState,
+    head: DurableCapacityHead,
+    report: RestartRecoveryReport,
+) -> bool:
+    if state.digest != head.state_digest or state.generation != head.generation:
+        return False
+    if state.runner_id != head.runner_id or state.runner_capability_digest != head.runner_capability_digest:
+        return False
+    return report == _recovery_report(state, head)
+
+
+def recover_capacity_after_restart(
+    store: SqliteCapacityHeadStore,
+    runner: RunnerCapabilities,
+) -> tuple[RunnerCapacityState, RestartRecoveryReport]:
+    state, head = store.load(runner)
+    report = _recovery_report(state, head)
+    if not verify_restart_recovery(state, head, report):
+        raise DurableCapacityError("restart recovery report does not reproduce")
     return state, report
