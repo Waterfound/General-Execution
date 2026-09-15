@@ -42,6 +42,19 @@ from .capacity import (
     verify_capacity_state,
     verify_capacity_transition_record,
 )
+from .durable import (
+    DurableCapacityError,
+    DurableCapacityHead,
+    RecoveredLease,
+    RestartRecoveryReport,
+    SqliteCapacityHeadStore,
+    capacity_snapshot,
+    capacity_state_from_dict,
+    capacity_state_to_dict,
+    deserialize_capacity_snapshot,
+    recover_capacity_after_restart,
+    serialize_capacity_snapshot,
+)
 from .ledger import ExecutionLedger, LedgerEvent, append_event, verify_ledger
 from .models import (
     ArtifactRef,
@@ -92,6 +105,8 @@ __all__ = [
     "CapacityTransitionRecord",
     "DispatchPlan",
     "DuplicatePhysicalAttempt",
+    "DurableCapacityError",
+    "DurableCapacityHead",
     "ExecutionLedger",
     "ExecutionSession",
     "ExecutionSpec",
@@ -109,11 +124,14 @@ __all__ = [
     "REFERENCE_CAPABILITY",
     "REFERENCE_EVIDENCE",
     "REFERENCE_TASK_KIND",
+    "RecoveredLease",
+    "RestartRecoveryReport",
     "ResultEnvelope",
     "RunnerCapabilities",
     "RunnerCapacityState",
     "RunnerRegistry",
     "SessionError",
+    "SqliteCapacityHeadStore",
     "VALID_TRANSPORT_STATUSES",
     "admit_observation",
     "admit_physical_observation",
@@ -123,9 +141,13 @@ __all__ = [
     "bind_session",
     "build_dispatch_request",
     "canonical_json",
+    "capacity_snapshot",
+    "capacity_state_from_dict",
+    "capacity_state_to_dict",
     "commit_capacity_reservation",
     "commit_outcome_release",
     "commit_revocation_release",
+    "deserialize_capacity_snapshot",
     "identify_duplicate_physical_attempt",
     "initialize_capacity_state",
     "make_reference_observation",
@@ -139,11 +161,13 @@ __all__ = [
     "record_duplicate_physical_attempt",
     "record_invocation",
     "record_physical_attempt",
+    "recover_capacity_after_restart",
     "reference_runner",
     "release_capacity_for_outcome",
     "release_capacity_for_revocation",
     "reserve_capacity",
     "revoke_session",
+    "serialize_capacity_snapshot",
     "sha256_digest",
     "stable_id",
     "start_session",
@@ -162,4 +186,4 @@ __all__ = [
     "verify_retry_chain",
 ]
 
-__version__ = "0.0.4"
+__version__ = "0.0.5"
