@@ -109,6 +109,12 @@ from .models import (
     RunnerCapabilities,
     RunnerRegistry,
 )
+from .observed import (
+    DurableObservedOutcome,
+    ObservedOutcomeReleaseRecovery,
+    SqliteDurableObservedOutcomeStore,
+    release_observed_capacity_after_restart,
+)
 from .physical import (
     DuplicatePhysicalAttempt,
     FAILURE_TRANSPORT_STATUSES,
@@ -130,6 +136,14 @@ from .physical import (
     verify_physical_attempt_record,
     verify_physical_outcome,
     verify_retry_chain,
+)
+from .physical_wire import (
+    PHYSICAL_OUTCOME_WIRE_SCHEMA,
+    PhysicalOutcomeCodecError,
+    deserialize_physical_outcome,
+    physical_outcome_from_dict,
+    physical_outcome_to_dict,
+    serialize_physical_outcome,
 )
 from .planner import plan_execution, verify_plan
 from .provenance import InvocationRecord, record_invocation, verify_invocation_record
@@ -173,6 +187,7 @@ __all__ = [
     "DuplicatePhysicalAttempt",
     "DurableCapacityError",
     "DurableCapacityHead",
+    "DurableObservedOutcome",
     "ExecutionLedger",
     "ExecutionSession",
     "ExecutionSpec",
@@ -181,11 +196,14 @@ __all__ = [
     "InvocationRecord",
     "LedgerEvent",
     "LiveDispatchPermit",
+    "ObservedOutcomeReleaseRecovery",
+    "PHYSICAL_OUTCOME_WIRE_SCHEMA",
     "PhysicalAttemptAuthorization",
     "PhysicalAttemptError",
     "PhysicalAttemptRecord",
     "PhysicalObservation",
     "PhysicalOutcomeBundle",
+    "PhysicalOutcomeCodecError",
     "PhysicalReceipt",
     "ProviderConformanceCaseResult",
     "ProviderConformanceEvidence",
@@ -212,6 +230,7 @@ __all__ = [
     "SessionError",
     "SqliteCapacityHeadStore",
     "SqliteDispatchIntentStore",
+    "SqliteDurableObservedOutcomeStore",
     "VALID_TRANSPORT_STATUSES",
     "admit_observation",
     "admit_physical_observation",
@@ -235,6 +254,7 @@ __all__ = [
     "decide_reconciliation",
     "deserialize_capacity_snapshot",
     "deserialize_dispatch_state",
+    "deserialize_physical_outcome",
     "dispatch_state_from_dict",
     "dispatch_state_to_dict",
     "identify_duplicate_physical_attempt",
@@ -243,6 +263,8 @@ __all__ = [
     "make_reference_observation",
     "observe_completed",
     "observe_failure",
+    "physical_outcome_from_dict",
+    "physical_outcome_to_dict",
     "plan_execution",
     "prepare_dispatch_intent",
     "propose_capacity_reservation",
@@ -257,11 +279,13 @@ __all__ = [
     "reference_runner",
     "release_capacity_for_outcome",
     "release_capacity_for_revocation",
+    "release_observed_capacity_after_restart",
     "reserve_capacity",
     "revoke_session",
     "run_provider_conformance",
     "serialize_capacity_snapshot",
     "serialize_dispatch_state",
+    "serialize_physical_outcome",
     "sha256_digest",
     "stable_id",
     "start_session",
@@ -286,4 +310,4 @@ __all__ = [
     "verify_retry_chain",
 ]
 
-__version__ = "0.0.9"
+__version__ = "0.0.10"

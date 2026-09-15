@@ -17,7 +17,8 @@ ExecutionSpec
   -> provider contract attestation
   -> attested same-invocation resubmission permit
   -> observation / receipt
-  -> durable capacity release
+  -> durable full observed outcome
+  -> restart-safe capacity release
   -> execution ledger
 ```
 
@@ -34,27 +35,33 @@ ExecutionSpec
 - **v0.0.7 — Provider Idempotency & Reconciliation:** stable invocation-key reconciliation, explicit duplicate semantics, evidence-bound provider status, and conservative resubmission decisions. See [`docs/v0.0.7-provider-reconciliation.md`](docs/v0.0.7-provider-reconciliation.md).
 - **v0.0.8 — Provider Reconciliation Conformance & Attestation:** contract/evidence separation, immutable adapter-revision attestation, production-equivalent certification, and attested same-invocation-only resubmission permits. See [`docs/v0.0.8-provider-conformance-attestation.md`](docs/v0.0.8-provider-conformance-attestation.md).
 - **v0.0.9 — Executable Provider Conformance Harness:** provider-neutral executable cases, transcript-bound evidence generation, deterministic sandbox reference target, and false-contract detection. See [`docs/v0.0.9-executable-provider-conformance.md`](docs/v0.0.9-executable-provider-conformance.md).
+- **v0.0.10 — Durable Observed Outcome:** atomically retain the complete admitted `PhysicalOutcomeBundle` with the `observed` dispatch transition and use it to finish canonical capacity release after restart. See [`docs/v0.0.10-durable-observed-outcome.md`](docs/v0.0.10-durable-observed-outcome.md).
 
-## v0.0.9 invariants
+## v0.0.10 invariants
 
-Conformance evidence no longer needs to be assembled manually to exercise the protocol. `run_provider_conformance()` executes the target behavior and generates the case evidence from observed transcripts.
+The earlier durable outbox proved which physical outcome had been observed by storing hashes, but hashes alone cannot recreate the exact object required by `release_capacity_for_outcome()` after a process restart. v0.0.10 closes that gap without weakening any provider-reconciliation gate.
 
-The harness enforces:
+The canonical v0.0.10 path enforces:
 
-- target provider / adapter / adapter-version identity must match the reconciliation contract before tests run;
-- target adapter revision must be immutable lowercase hex;
-- request and evidence digests are validated at the target boundary;
-- each case runs from a reset target state;
-- same-invocation/same-request behavior is measured against the exact declared semantics;
-- same invocation with a different request must be explicitly rejected;
-- lookup must remain bound to both invocation and request identity;
-- an accepted invocation cannot subsequently be reported as absent;
-- terminal evidence, when claimed, must resolve to the same provider operation and exact terminal-evidence digest;
-- each case evidence digest binds the harness version, case identity, and observed transcript;
-- `ProviderConformanceRun` binds the exact contract, adapter revision, environment scope, case results, generated evidence digest, and all-pass verdict;
-- conforming `may_duplicate` behavior remains correctly measurable while still being unsafe for automatic resubmission under the v0.0.7/v0.0.8 policy gates.
+- the complete physical authorization, observation, receipt, and optional `ResultEnvelope` have a canonical JSON representation;
+- deserialization must pass the existing intrinsic physical-outcome verifier;
+- `SqliteDurableObservedOutcomeStore.record_observed()` changes the dispatch state and inserts the complete outcome under one `BEGIN IMMEDIATE` transaction;
+- observed-state metadata and stored outcome bytes must reproduce the same runner, lease, authorization, invocation, request, physical attempt, observation, receipt, outcome, and transport status;
+- exact replay after a lost acknowledgement is idempotent;
+- a conflicting second outcome for the same durable dispatch fails closed;
+- an `observed` dispatch with missing or inconsistent outcome bytes fails closed;
+- restart release reruns `verify_physical_outcome()` against the supplied execution context before touching capacity;
+- recovery can release only the exact active lease bound to the durable outcome;
+- replay after the exact release is already canonical is idempotent;
+- concurrent recovery that loses the capacity CAS succeeds only if the winning state contains that same exact canonical release.
 
-The included `ReferenceConformanceTarget` is an in-memory sandbox target for validating the harness mechanism. It is not a production-equivalent provider and does not enable remote transport.
+The legacy `SqliteDispatchIntentStore` remains available for compatibility with the v0.0.6–v0.0.9 surface. Restart-complete v0.0.10 observed-outcome durability requires `SqliteDurableObservedOutcomeStore`.
+
+## Relationship to provider conformance
+
+v0.0.7–v0.0.9 determine whether provider reconciliation and same-invocation behavior are trustworthy enough to admit or resubmit provider work. v0.0.10 begins only after a `PhysicalOutcomeBundle` has already been admitted.
+
+It therefore complements, rather than replaces, the provider-specific evidence gate. Provider reconciliation remains responsible for ambiguity; durable outcome storage is responsible for not forgetting an admitted outcome before local capacity state is finished.
 
 ## First client
 
@@ -70,33 +77,22 @@ python -m pip install -e . --no-build-isolation --no-deps
 
 The core has no non-stdlib runtime dependencies.
 
-## Current v0.0.9 evidence
+## Current v0.0.10 conformance bank
 
-v0.0.9 adds a focused executable-harness bank covering mechanically generated sandbox evidence, deterministic repeated runs, false same-request declarations, matching duplicate-rejected semantics, conformant-but-unsafe `may_duplicate`, identity mismatch, malformed adapter revision, lookup identity failure, absence failure, terminal-evidence failure, conditional terminal-case execution, and distinct request identities.
+The candidate branch contains 14 focused tests covering canonical failure/completed outcome round trips, complete-result preservation, nested tamper rejection, atomic observed-outcome persistence, lost-ack replay, conflicting outcomes, missing/corrupt outcome state, runner recovery, restart-driven capacity release, idempotent release replay, wrong-context rejection, and completed-outcome release.
 
-The repository execution environment remains unavailable here without consuming GitHub Actions or introducing external infrastructure, so no full external pytest run is claimed. The new harness itself is implementation code plus a committed test bank; its reference target remains sandbox-only in intended use.
+The repository execution environment remains unavailable here without consuming GitHub Actions or introducing external infrastructure, so the 14-case bank is **not** described as an executed 14/14 result.
 
 ## Remaining trust boundary
 
-An executable harness materially improves evidence quality, but an ordinary in-process evidence object is still not cryptographic proof that an external provider test actually ran. No concrete remote transport consumes the artifacts yet.
+The v0.0.9 provider-specific provenance requirement remains unchanged. A durable local copy of an admitted physical outcome is not proof that a provider-specific conformance run occurred correctly.
 
-Production-equivalent provider integration therefore still requires trustworthy run provenance binding at least:
-
-- exact harness revision;
-- exact adapter revision;
-- provider/environment identity;
-- conformance-run digest;
-- generated conformance-evidence digest;
-- the execution mechanism that produced them.
-
-The system should not equate a self-asserted `production_equivalent` field with proof of execution.
+Production-equivalent provider integration still requires trustworthy run provenance binding the exact harness revision, adapter revision, provider/environment identity, conformance-run digest, generated evidence digest, and execution mechanism.
 
 ## Next ceiling
 
-The next evidence capable of materially changing the verdict is **provider-specific sandbox execution with trustworthy conformance-run provenance**.
-
-Purely local provider-neutral modeling now has diminishing returns. A concrete provider adapter should first implement the v0.0.9 target contract and run the harness in an independently identifiable sandbox/equivalent environment. Only after that evidence is bound to the exact adapter revision should General Execution consider enabling real remote transport.
+After v0.0.10 receives executable regression evidence, the next convergence step is a durable logical Session/result lifecycle adapted to the canonical dispatch/provider architecture. The parallel lifecycle prototype should be used as design evidence only, not merged wholesale, because its v0.0.5–v0.0.10 names and persistence modules evolved on a different branch from the canonical provider-conformance line.
 
 ## Status
 
-**v0.0.9 Executable Provider Conformance Harness is integrated in `main`. The provider-neutral/local development ceiling is reached; the next material gate is provider-specific execution with trustworthy run provenance.**
+**v0.0.10 Durable Observed Outcome is a canonical-mainline candidate branch. `main` remains on v0.0.9 until executable regression evidence is available.**
