@@ -12,7 +12,7 @@ ExecutionSpec
   -> durable capacity lease
   -> durable dispatch intent
   -> live dispatch permit
-  -> external provider
+  -> provider reconciliation / idempotent submission
   -> observation / receipt
   -> durable capacity release
   -> execution ledger
@@ -28,34 +28,35 @@ ExecutionSpec
 - **v0.0.4 — Capacity & Lease Semantics:** `max_parallelism`, deterministic slots, compare-and-swap capacity state, explicit release, and retry-capacity ordering. See [`docs/v0.0.4-capacity-lease-semantics.md`](docs/v0.0.4-capacity-lease-semantics.md).
 - **v0.0.5 — Durable Head & Restart Recovery:** SQLite-backed canonical capacity heads, transactional CAS, replay-verified snapshots, and unresolved in-flight lease recovery. See [`docs/v0.0.5-durable-restart-recovery.md`](docs/v0.0.5-durable-restart-recovery.md).
 - **v0.0.6 — Durable Dispatch Intent & Ambiguity Recovery:** durable outbox state, crash-safe submission ambiguity, live capacity-bound transport permits, and fail-closed restart reconciliation. See [`docs/v0.0.6-durable-dispatch-intent.md`](docs/v0.0.6-durable-dispatch-intent.md).
+- **v0.0.7 — Provider Idempotency & Reconciliation:** stable invocation-key reconciliation, explicit duplicate semantics, evidence-bound provider status, and conservative resubmission decisions. See [`docs/v0.0.7-provider-reconciliation.md`](docs/v0.0.7-provider-reconciliation.md).
 
-## v0.0.6 invariants
+## v0.0.7 invariants
 
-An active physical authorization is not enough to justify remote submission after a crash. General Execution now durably distinguishes:
+`SUBMISSION_UNKNOWN` can no longer collapse into retry merely because a coordinator restarted or time passed. Provider reconciliation is keyed by the exact existing `invocation_id` and request digest.
+
+A provider reports one of four states:
 
 ```text
-PREPARED -> SUBMISSION_UNKNOWN -> OBSERVED
+ABSENT | ACCEPTED | TERMINAL | UNKNOWN
 ```
-
-`PREPARED` means the intent exists durably but transport has not begun. `SUBMISSION_UNKNOWN` is persisted before a future provider side effect is allowed and survives restart as ambiguity. `OBSERVED` means native provider evidence has been admitted and bound to the exact authorization.
 
 The core enforces:
 
-- one durable dispatch intent per active capacity lease;
-- immutable runner / lease / Session / authorization / invocation lineage;
-- transactional compare-and-swap intent transitions;
-- persisted `intent_id`, `runner_id`, `lease_id`, state digest and revision must reconcile with canonical state;
-- restart recovery scans and validates all durable rows so metadata corruption cannot hide an ambiguous invocation;
-- `SUBMISSION_UNKNOWN` recovers as `reconcile_provider`, never blind re-submission;
-- recovery fabricates zero provider outcomes;
-- `DispatchPermit` explicitly has `transport_authority = false`;
-- only `LiveDispatchPermit` is eligible for a future transport boundary;
-- a live permit binds the exact current capacity-state digest and generation;
-- Session revocation / capacity release invalidates an earlier live permit;
-- even unrelated capacity-generation change makes a live permit stale and requires revalidation;
-- late provider evidence may still be recorded because observation is evidence, not new execution authority.
+- reconciliation only from a durable `SUBMISSION_UNKNOWN` state;
+- the physical authorization must reproduce the dispatch intent exactly;
+- provider / adapter / adapter-version contract binding;
+- query binding to dispatch state, dispatch permit, authorization, invocation and request digest;
+- provider observations are revalidated at decision time, even when wrapped in an Evidence object;
+- same idempotency key with a different request must be rejected by contract;
+- `may_duplicate` providers are reconciliation-capable but never eligible for automatic resubmission;
+- `ABSENT` permits same-invocation resubmission only under strong idempotency **and** a fresh `LiveDispatchPermit` bound to the current durable capacity head;
+- stale live permits after revocation/capacity changes fail closed;
+- `ACCEPTED` means poll the existing operation, never resubmit;
+- `TERMINAL` routes to evidence admission only when terminal evidence is retrievable;
+- `UNKNOWN` remains hold even when the provider claims strong idempotency;
+- reconciliation resubmission preserves the same physical invocation identity and is distinct from native retry.
 
-There is still no wall-clock lease expiry and no concrete remote transport in the core.
+No concrete remote provider transport is enabled by v0.0.7.
 
 ## First client
 
@@ -71,25 +72,27 @@ python -m pip install -e . --no-build-isolation --no-deps
 
 The core has no non-stdlib runtime dependencies.
 
-## Current v0.0.6 evidence
+## Current v0.0.7 evidence
 
-The branch adds a 14-scenario focused conformance bank spanning prepared/ambiguous/observed restart states, no-blind-resubmit recovery, live-permit binding, revocation invalidation, generation refresh, stale CAS, provider-outcome closure, serialized-state tampering, row-metadata reconciliation, hidden-row recovery, and explicit non-authority of the durable dispatch permit.
+The branch adds a 14-scenario focused reconciliation bank spanning contract identity binding, unsafe-provider discrimination, ABSENT resubmission gates, stale live permits, ACCEPTED/TERMINAL/UNKNOWN routing, terminal-evidence capability, observation mismatch rejection and decision-time evidence revalidation.
 
-The implementation has also received static API/import review in-chat without consuming GitHub Actions. A full external pytest execution has not been claimed for v0.0.6 in this environment.
+As with v0.0.6, the current environment does not provide a repository execution runtime without using GitHub Actions or creating external infrastructure. The implementation therefore records static API/boundary review and the committed conformance bank, but does not claim that external pytest ran here.
 
 ## Next ceiling
 
-The next highest-value boundary is **provider idempotency & reconciliation**.
+The next highest-value boundary is **provider reconciliation conformance & attestation**.
 
-A local SQLite transaction cannot be atomic with an arbitrary remote provider side effect. Before adding a real remote adapter, General Execution should define and prove a provider-neutral reconciliation contract keyed by the stable invocation identity that can distinguish at least:
+A provider adapter must not become transport-eligible merely by declaring strong idempotency. General Execution should independently exercise the exact adapter revision and prove:
 
-- definitively absent / never accepted;
-- accepted or currently running;
-- terminal with retrievable evidence;
-- provider state still unknown.
+- same `invocation_id` + same request never creates a second operation;
+- same `invocation_id` + different request is rejected;
+- lookup is bound to invocation + request identity;
+- ABSENT semantics are stable and do not hide accepted work;
+- ACCEPTED resolves to one stable provider operation;
+- TERMINAL evidence can be retrieved and bound back to the invocation when claimed.
 
-Any re-submission path must be explicitly idempotent or supported by provider evidence that proves absence. `SUBMISSION_UNKNOWN` must never degrade into blind retry merely because time passed or the coordinator restarted.
+The resulting attestation should bind the provider contract digest, adapter revision and conformance evidence digest. Concrete remote transport should remain disabled until that gate exists.
 
 ## Status
 
-**v0.0.6 Durable Dispatch Intent & Ambiguity Recovery: implementation candidate complete in branch; static boundary review complete; full external pytest execution remains unclaimed.**
+**v0.0.7 Provider Idempotency & Reconciliation: implementation candidate complete in branch; focused conformance bank and static boundary review recorded; external pytest remains unclaimed.**
