@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "general-execution"
-version = "0.0.12"
+version = "0.0.13"
 description = "Provider-neutral, deterministic execution substrate for bounded authorized work"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -14,6 +14,7 @@ dependencies = []
 
 [project.optional-dependencies]
 dev = ["pytest>=8"]
+vercel-sandbox = ["vercel"]
 
 [tool.setuptools]
 package-dir = {"" = "src"}

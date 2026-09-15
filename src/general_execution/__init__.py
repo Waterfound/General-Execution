@@ -165,6 +165,17 @@ from .session_recovery import (
     SessionRecoveryProjection,
     project_session_after_restart,
 )
+from .vercel_sandbox import (
+    GENERAL_EXECUTION_REPOSITORY_URL,
+    VERCEL_SANDBOX_PROVIDER,
+    VERCEL_SANDBOX_RUNTIME,
+    SandboxCommandEvidence,
+    VercelSandboxConformanceError,
+    VercelSandboxConformanceRun,
+    VercelSandboxConformanceSpec,
+    run_vercel_sandbox_conformance,
+    verify_vercel_sandbox_conformance_run,
+)
 
 __all__ = [
     "AdapterDispatchRequest",
@@ -198,6 +209,7 @@ __all__ = [
     "ExecutionSession",
     "ExecutionSpec",
     "FAILURE_TRANSPORT_STATUSES",
+    "GENERAL_EXECUTION_REPOSITORY_URL",
     "InvocationBundle",
     "InvocationRecord",
     "LedgerEvent",
@@ -235,6 +247,7 @@ __all__ = [
     "RunnerCapabilities",
     "RunnerCapacityState",
     "RunnerRegistry",
+    "SandboxCommandEvidence",
     "SessionError",
     "SessionRecoveryError",
     "SessionRecoveryProjection",
@@ -242,6 +255,11 @@ __all__ = [
     "SqliteDispatchIntentStore",
     "SqliteDurableObservedOutcomeStore",
     "VALID_TRANSPORT_STATUSES",
+    "VERCEL_SANDBOX_PROVIDER",
+    "VERCEL_SANDBOX_RUNTIME",
+    "VercelSandboxConformanceError",
+    "VercelSandboxConformanceRun",
+    "VercelSandboxConformanceSpec",
     "admit_observation",
     "admit_physical_observation",
     "admit_reconciliation_observation",
@@ -295,6 +313,7 @@ __all__ = [
     "reserve_capacity",
     "revoke_session",
     "run_provider_conformance",
+    "run_vercel_sandbox_conformance",
     "serialize_capacity_snapshot",
     "serialize_dispatch_state",
     "serialize_physical_outcome",
@@ -320,6 +339,7 @@ __all__ = [
     "verify_provider_attestation",
     "verify_restart_recovery",
     "verify_retry_chain",
+    "verify_vercel_sandbox_conformance_run",
 ]
 
-__version__ = "0.0.12"
+__version__ = "0.0.13"
