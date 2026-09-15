@@ -114,6 +114,12 @@ from .physical import (
     verify_retry_chain,
 )
 from .planner import plan_execution, verify_plan
+from .process_harness import (
+    ProcessHarnessError,
+    ProcessSeparatedRecoveryReport,
+    ProcessWorkerResult,
+    run_process_separated_cold_recovery,
+)
 from .provenance import InvocationRecord, record_invocation, verify_invocation_record
 from .reattachment import (
     PROVIDER_REATTACHMENT_CAPABILITY,
@@ -194,7 +200,8 @@ __all__ = [
     "InvocationBundle", "InvocationRecord", "LedgerEvent", "PROVIDER_REATTACHMENT_CAPABILITY",
     "PersistenceCommitReceipt", "PersistenceConflict", "PersistenceError", "PersistenceIntegrityError",
     "PhysicalAttemptAuthorization", "PhysicalAttemptError", "PhysicalAttemptRecord",
-    "PhysicalObservation", "PhysicalOutcomeBundle", "PhysicalReceipt", "ProviderObservation",
+    "PhysicalObservation", "PhysicalOutcomeBundle", "PhysicalReceipt", "ProcessHarnessError",
+    "ProcessSeparatedRecoveryReport", "ProcessWorkerResult", "ProviderObservation",
     "ProviderReattachmentAssessment", "ProviderReattachmentKey", "ProviderStatusObservation",
     "ProviderStatusProbe", "RECOVERY_CONTEXT_SCHEMA", "RECOVERY_CONTEXT_STORE_SCHEMA",
     "REFERENCE_CAPABILITY", "REFERENCE_EVIDENCE", "REFERENCE_JOB_REGISTRY_SCHEMA",
@@ -226,16 +233,17 @@ __all__ = [
     "record_physical_attempt", "record_reference_terminal", "recover_after_restart",
     "reference_runner", "register_reference_invocation", "release_capacity_for_outcome",
     "release_capacity_for_revocation", "reserve_capacity", "resume_reference_cold_restart",
-    "revoke_session", "run_reference_cut_point_matrix", "run_reference_store_reopen_rehearsal",
-    "serialize_durable_snapshot", "serialize_recovery_context", "sha256_digest", "stable_id",
-    "start_session", "submit_result", "verify_active_lease_grant",
-    "verify_capacity_release_grant", "verify_capacity_state", "verify_capacity_transition_record",
-    "verify_dispatch_request", "verify_durable_snapshot", "verify_durable_successor",
-    "verify_invocation_bundle", "verify_invocation_record", "verify_ledger",
-    "verify_physical_attempt_record", "verify_physical_outcome", "verify_plan",
-    "verify_reattachment_key", "verify_reconciliation_plan", "verify_reconciliation_receipt",
-    "verify_recovery_context", "verify_restart_recovery", "verify_retry_chain",
-    "verify_status_observation", "verify_status_probe",
+    "revoke_session", "run_process_separated_cold_recovery", "run_reference_cut_point_matrix",
+    "run_reference_store_reopen_rehearsal", "serialize_durable_snapshot",
+    "serialize_recovery_context", "sha256_digest", "stable_id", "start_session",
+    "submit_result", "verify_active_lease_grant", "verify_capacity_release_grant",
+    "verify_capacity_state", "verify_capacity_transition_record", "verify_dispatch_request",
+    "verify_durable_snapshot", "verify_durable_successor", "verify_invocation_bundle",
+    "verify_invocation_record", "verify_ledger", "verify_physical_attempt_record",
+    "verify_physical_outcome", "verify_plan", "verify_reattachment_key",
+    "verify_reconciliation_plan", "verify_reconciliation_receipt", "verify_recovery_context",
+    "verify_restart_recovery", "verify_retry_chain", "verify_status_observation",
+    "verify_status_probe",
 ]
 
-__version__ = "0.0.13"
+__version__ = "0.0.14"

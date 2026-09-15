@@ -35,56 +35,53 @@ ExecutionSpec
 - **v0.0.10 — Durable Store Reopen Rehearsal** (`context_mode=caller_retained`)
 - **v0.0.11 — Durable Recovery Context**
 - **v0.0.12 — Cold Coordinator Reconstruction Rehearsal** (`context_mode=cold_reconstructed`)
-- **v0.0.13 — Restart Cut-Point Matrix**: deterministic safe-state classification across context-only, capacity-without-provider, provider-running, terminal persistence, volatile reconciliation planning, and final reconciliation CAS. See [`docs/v0.0.13-restart-cutpoint-matrix.md`](docs/v0.0.13-restart-cutpoint-matrix.md).
+- **v0.0.13 — Restart Cut-Point Matrix**
+- **v0.0.14 — Process-Separated Cold Recovery**: preparation and resume execute in distinct Python interpreter processes connected only by the three durable stores. See [`docs/v0.0.14-process-separated-recovery.md`](docs/v0.0.14-process-separated-recovery.md).
 
-## v0.0.13 recovery matrix
+## v0.0.14 process boundary
 
-The matrix freezes six durable cut points:
+The QA harness launches two fixed worker processes:
 
 ```text
-context_only
-  -> capacity_committed
-  -> provider_running
-  -> terminal_persisted
-  -> reconciliation_planned
-  -> reconciled
+Python process A
+  -> prepare_reference_cold_restart(...)
+  -> exits completely
+
+Python process B
+  -> receives only capacity/context/provider paths
+  -> resume_reference_cold_restart(...)
 ```
 
-Their required safe dispositions are:
+The workers are launched with `sys.executable -m general_execution.process_worker` and `shell=False`. The worker module exposes only bounded `prepare` and `resume` rehearsal phases; it is not a general command runner.
+
+Each worker returns canonical JSON with a process token, PID/PPID, bounded payload and payload digest. The final process report requires both workers to be distinct direct children of the harness and different from the harness process.
+
+## Deterministic protocol vs process evidence
+
+Process identifiers and process tokens are execution-specific. They are deliberately not part of the deterministic recovery protocol identity.
+
+With identical protocol inputs in fresh stores, the underlying cold-recovery evidence must still reproduce the same:
 
 ```text
-orphan_context
-  -> remain_unknown
-  -> keep_running
-  -> terminal_pending_reconciliation
-  -> terminal_plan_reproducible
-  -> reconciled
+cold report digest
+recovery context digest
+physical outcome digest
 ```
 
-The important boundaries are explicit:
+while the worker process tokens differ.
 
-- context without a capacity head is an inert orphan;
-- active capacity with missing provider identity remains occupied and unknown;
-- provider `running` cannot create an outcome or retry opportunity;
-- terminal provider persistence does not release capacity;
-- reconciliation planning does not mutate durable state;
-- a lost volatile reconciliation plan must rederive with the same digest;
-- only canonical reconciliation CAS removes the active lease.
-
-Therefore:
+This separates:
 
 ```text
-provider not_found != failure
-terminal persistence != capacity release
-reconciliation planning != capacity release
-only reconciliation CAS releases canonical capacity
+process evidence = run-specific
+protocol evidence = deterministic
 ```
 
 ## Authority boundary
 
-Recovery and restart handling preserve identity and occupancy. They do not create permission to execute again, verify domain correctness, integrate outputs, approve releases, or automatically submit logical results.
+The process harness adds evidence about memory separation only. It does not grant arbitrary process execution to General Execution and does not change execution, verification, integration, release, or result-submission authority.
 
-The existing result boundary remains:
+The result boundary remains:
 
 ```text
 physical completion != logical result submission
@@ -100,20 +97,27 @@ python -m pip install -e . --no-build-isolation --no-deps
 
 The core has no non-stdlib runtime dependencies; SQLite comes from Python's standard library.
 
-## Current v0.0.13 conformance bank
+## Current v0.0.14 conformance bank
 
-The repository includes cut-point tests for canonical safe-state ordering, orphan context behavior, provider-missing conservative recovery, running occupancy preservation, terminal persistence without release, deterministic reconciliation-plan reproduction after volatile loss, reconciliation-only capacity release, and report determinism across fresh directories.
+The repository includes tests for distinct prepare/resume interpreter identities, direct-child process binding, recovery-context identity across the process boundary, completed physical result with logical Session still running, timeout without logical result, and deterministic protocol digests despite non-deterministic process evidence.
 
 ## Evidence and admission state
 
-The v0.0.5-v0.0.13 line remains stacked. Canonical `main` remains at v0.0.4 because the complete historical repository regression has not yet been executed in a complete runner environment.
+The v0.0.5-v0.0.14 line remains stacked. Canonical `main` remains at v0.0.4 because the complete historical regression has not yet been executed in a complete runner environment.
 
-v0.0.13 closes the major local **restart semantics** gaps, but one high-value local evidence boundary remains: process-separated cold recovery, where preparation occurs in one Python process and resume occurs in a different process that receives only durable paths.
+The v0.0.14 process harness and tests are implemented, but process separation should be described as **observed evidence only after this conformance bank is actually executed**. Until then it is an implemented evidence mechanism, not a passed gate.
 
-## Next ceiling
+## Ceiling
 
-The next milestone is **process-separated cold recovery**. After that, further confidence should come primarily from complete regression and real provider/host evidence rather than more restart-state semantics.
+At v0.0.14, the local restart/recovery architecture is effectively at its **semantic ceiling**. Further restart-specific semantics should not be added without evidence revealing a concrete gap.
+
+The next material progress is evidence-driven:
+
+1. execute the v0.0.14 process-separated conformance bank;
+2. execute the complete historical regression for the stacked line;
+3. exercise a real provider/host implementation of the reattachment contract;
+4. add contention/multi-host evidence where it materially changes confidence.
 
 ## Status
 
-**v0.0.13 Restart Cut-Point Matrix: stacked implementation candidate under validation.**
+**v0.0.14 Process-Separated Cold Recovery: implementation candidate; execution evidence pending.**
