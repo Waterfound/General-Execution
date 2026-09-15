@@ -42,6 +42,17 @@ from .capacity import (
     verify_capacity_state,
     verify_capacity_transition_record,
 )
+from .conformance import (
+    AttestedResubmissionPermit,
+    ConformanceError,
+    ProviderConformanceCaseResult,
+    ProviderConformanceEvidence,
+    ProviderContractAttestation,
+    attest_provider_contract,
+    authorize_attested_resubmission,
+    verify_attested_resubmission_permit,
+    verify_provider_attestation,
+)
 from .dispatch import (
     DispatchIntent,
     DispatchIntentError,
@@ -131,6 +142,7 @@ __all__ = [
     "AdapterError",
     "AdapterReceipt",
     "ArtifactRef",
+    "AttestedResubmissionPermit",
     "CapacityError",
     "CapacityLease",
     "CapacityLeaseGrant",
@@ -138,6 +150,7 @@ __all__ = [
     "CapacityReleaseGrant",
     "CapacityTransition",
     "CapacityTransitionRecord",
+    "ConformanceError",
     "DispatchIntent",
     "DispatchIntentError",
     "DispatchIntentState",
@@ -162,6 +175,9 @@ __all__ = [
     "PhysicalObservation",
     "PhysicalOutcomeBundle",
     "PhysicalReceipt",
+    "ProviderConformanceCaseResult",
+    "ProviderConformanceEvidence",
+    "ProviderContractAttestation",
     "ProviderObservation",
     "ProviderReconciliationContract",
     "ProviderReconciliationEvidence",
@@ -186,6 +202,8 @@ __all__ = [
     "admit_physical_observation",
     "admit_reconciliation_observation",
     "append_event",
+    "attest_provider_contract",
+    "authorize_attested_resubmission",
     "authorize_live_dispatch",
     "authorize_physical_attempt",
     "authorize_retry",
@@ -233,6 +251,7 @@ __all__ = [
     "start_session",
     "submit_result",
     "verify_active_lease_grant",
+    "verify_attested_resubmission_permit",
     "verify_capacity_release_grant",
     "verify_capacity_state",
     "verify_capacity_transition_record",
@@ -246,8 +265,9 @@ __all__ = [
     "verify_physical_attempt_record",
     "verify_physical_outcome",
     "verify_plan",
+    "verify_provider_attestation",
     "verify_restart_recovery",
     "verify_retry_chain",
 ]
 
-__version__ = "0.0.7"
+__version__ = "0.0.8"
