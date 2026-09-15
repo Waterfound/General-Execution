@@ -123,6 +123,12 @@ class DispatchIntentState:
 
 @dataclass(frozen=True, slots=True)
 class DispatchPermit:
+    """Proof that the durable outbox entered SUBMISSION_UNKNOWN.
+
+    This is deliberately not sufficient transport authority. A future transport
+    must additionally require a LiveDispatchPermit bound to current capacity.
+    """
+
     intent_id: str
     intent_digest: str
     state_digest: str
@@ -130,7 +136,12 @@ class DispatchPermit:
     request_digest: str
     authorization_id: str
     authorization_digest: str
+    transport_authority: bool = False
     schema_version: str = PERMIT_SCHEMA
+
+    def __post_init__(self) -> None:
+        if self.transport_authority:
+            raise ValueError("durable dispatch permit cannot grant transport authority")
 
     @property
     def digest(self) -> str:
@@ -338,7 +349,7 @@ def _permit(state: DispatchIntentState) -> DispatchPermit:
 
 
 def verify_dispatch_permit(state: DispatchIntentState, permit: DispatchPermit) -> bool:
-    if state.status != "submission_unknown":
+    if state.status != "submission_unknown" or permit.transport_authority:
         return False
     return permit == _permit(state)
 
@@ -376,11 +387,22 @@ class SqliteDispatchIntentStore:
 
     @staticmethod
     def _decode_row(row: tuple[Any, ...]) -> DispatchIntentState:
-        state_digest, revision, state_json = row
+        intent_id, runner_id, lease_id, state_digest, revision, state_json = row
         state = deserialize_dispatch_state(state_json)
-        if state.digest != state_digest or state.revision != revision:
+        intent = state.intent
+        if (
+            intent.intent_id != intent_id
+            or intent.runner_id != runner_id
+            or intent.lease_id != lease_id
+            or state.digest != state_digest
+            or state.revision != revision
+        ):
             raise DispatchIntentError("durable dispatch row metadata mismatch")
         return state
+
+    @staticmethod
+    def _select_columns() -> str:
+        return "intent_id, runner_id, lease_id, state_digest, revision, state_json"
 
     def initialize(self, intent: DispatchIntent) -> DispatchIntentState:
         state = initial_dispatch_state(intent)
@@ -388,7 +410,7 @@ class SqliteDispatchIntentStore:
         try:
             connection.execute("BEGIN IMMEDIATE")
             row = connection.execute(
-                "SELECT state_digest, revision, state_json FROM dispatch_intents WHERE intent_id = ?",
+                f"SELECT {self._select_columns()} FROM dispatch_intents WHERE intent_id = ?",
                 (intent.intent_id,),
             ).fetchone()
             if row is not None:
@@ -428,7 +450,7 @@ class SqliteDispatchIntentStore:
     def load(self, intent_id: str) -> DispatchIntentState:
         with self._connect() as connection:
             row = connection.execute(
-                "SELECT state_digest, revision, state_json FROM dispatch_intents WHERE intent_id = ?",
+                f"SELECT {self._select_columns()} FROM dispatch_intents WHERE intent_id = ?",
                 (intent_id,),
             ).fetchone()
         if row is None:
@@ -436,15 +458,14 @@ class SqliteDispatchIntentStore:
         return self._decode_row(row)
 
     def load_for_runner(self, runner_id: str) -> tuple[DispatchIntentState, ...]:
+        # Full-table decode is deliberate: metadata corruption must not be able to
+        # hide a submission_unknown row merely by changing its runner_id column.
         with self._connect() as connection:
             rows = connection.execute(
-                """
-                SELECT state_digest, revision, state_json
-                FROM dispatch_intents WHERE runner_id = ? ORDER BY intent_id
-                """,
-                (runner_id,),
+                f"SELECT {self._select_columns()} FROM dispatch_intents ORDER BY intent_id"
             ).fetchall()
-        return tuple(self._decode_row(row) for row in rows)
+        decoded = tuple(self._decode_row(row) for row in rows)
+        return tuple(state for state in decoded if state.intent.runner_id == runner_id)
 
     def _commit(self, current: DispatchIntentState, new_state: DispatchIntentState) -> DispatchIntentState:
         if new_state.intent != current.intent:
@@ -455,7 +476,7 @@ class SqliteDispatchIntentStore:
         try:
             connection.execute("BEGIN IMMEDIATE")
             row = connection.execute(
-                "SELECT state_digest, revision, state_json FROM dispatch_intents WHERE intent_id = ?",
+                f"SELECT {self._select_columns()} FROM dispatch_intents WHERE intent_id = ?",
                 (current.intent.intent_id,),
             ).fetchone()
             if row is None:
@@ -467,13 +488,16 @@ class SqliteDispatchIntentStore:
                 """
                 UPDATE dispatch_intents
                 SET state_digest = ?, revision = ?, state_json = ?
-                WHERE intent_id = ? AND state_digest = ? AND revision = ?
+                WHERE intent_id = ? AND runner_id = ? AND lease_id = ?
+                  AND state_digest = ? AND revision = ?
                 """,
                 (
                     new_state.digest,
                     new_state.revision,
                     serialize_dispatch_state(new_state),
                     current.intent.intent_id,
+                    current.intent.runner_id,
+                    current.intent.lease_id,
                     current.digest,
                     current.revision,
                 ),
