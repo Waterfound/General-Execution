@@ -53,6 +53,15 @@ from .conformance import (
     verify_attested_resubmission_permit,
     verify_provider_attestation,
 )
+from .conformance_harness import (
+    ConformanceHarnessError,
+    ConformanceLookupResult,
+    ConformanceSubmitResult,
+    ProviderConformanceRun,
+    ProviderConformanceTarget,
+    ReferenceConformanceTarget,
+    run_provider_conformance,
+)
 from .dispatch import (
     DispatchIntent,
     DispatchIntentError,
@@ -151,6 +160,9 @@ __all__ = [
     "CapacityTransition",
     "CapacityTransitionRecord",
     "ConformanceError",
+    "ConformanceHarnessError",
+    "ConformanceLookupResult",
+    "ConformanceSubmitResult",
     "DispatchIntent",
     "DispatchIntentError",
     "DispatchIntentState",
@@ -177,6 +189,8 @@ __all__ = [
     "PhysicalReceipt",
     "ProviderConformanceCaseResult",
     "ProviderConformanceEvidence",
+    "ProviderConformanceRun",
+    "ProviderConformanceTarget",
     "ProviderContractAttestation",
     "ProviderObservation",
     "ProviderReconciliationContract",
@@ -189,6 +203,7 @@ __all__ = [
     "RecoveredLease",
     "ReconciliationDecision",
     "ReconciliationError",
+    "ReferenceConformanceTarget",
     "RestartRecoveryReport",
     "ResultEnvelope",
     "RunnerCapabilities",
@@ -244,6 +259,7 @@ __all__ = [
     "release_capacity_for_revocation",
     "reserve_capacity",
     "revoke_session",
+    "run_provider_conformance",
     "serialize_capacity_snapshot",
     "serialize_dispatch_state",
     "sha256_digest",
@@ -270,4 +286,4 @@ __all__ = [
     "verify_retry_chain",
 ]
 
-__version__ = "0.0.8"
+__version__ = "0.0.9"
