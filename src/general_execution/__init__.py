@@ -159,6 +159,11 @@ from .reconciliation import (
     decide_reconciliation,
 )
 from .session import SessionError, bind_session, revoke_session, start_session, submit_result
+from .session_recovery import (
+    SessionRecoveryError,
+    SessionRecoveryProjection,
+    project_session_after_restart,
+)
 
 __all__ = [
     "AdapterDispatchRequest",
@@ -228,6 +233,8 @@ __all__ = [
     "RunnerCapacityState",
     "RunnerRegistry",
     "SessionError",
+    "SessionRecoveryError",
+    "SessionRecoveryProjection",
     "SqliteCapacityHeadStore",
     "SqliteDispatchIntentStore",
     "SqliteDurableObservedOutcomeStore",
@@ -267,6 +274,7 @@ __all__ = [
     "physical_outcome_to_dict",
     "plan_execution",
     "prepare_dispatch_intent",
+    "project_session_after_restart",
     "propose_capacity_reservation",
     "propose_outcome_release",
     "propose_revocation_release",
@@ -310,4 +318,4 @@ __all__ = [
     "verify_retry_chain",
 ]
 
-__version__ = "0.0.10"
+__version__ = "0.0.11"
