@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from typing import Literal, Protocol, runtime_checkable
 
@@ -29,6 +30,8 @@ LOOKUP_SCHEMA = "ge.conformance-lookup-result.v1"
 RUN_SCHEMA = "ge.provider-conformance-run.v1"
 REFERENCE_TARGET_SCHEMA = "ge.reference-conformance-target.v1"
 HARNESS_VERSION = "ge.provider-conformance-harness.v1"
+SHA256 = re.compile(r"^sha256:[a-f0-9]{64}$")
+REVISION = re.compile(r"^(?:[a-f0-9]{40}|[a-f0-9]{64})$")
 
 
 class ConformanceHarnessError(ValueError):
@@ -38,6 +41,16 @@ class ConformanceHarnessError(ValueError):
 def _nonempty(name: str, value: str) -> None:
     if not value or not value.strip():
         raise ValueError(f"{name} must be non-empty")
+
+
+def _sha256(name: str, value: str) -> None:
+    if not isinstance(value, str) or not SHA256.fullmatch(value):
+        raise ValueError(f"{name} must be sha256:<64-lowercase-hex>")
+
+
+def _revision(name: str, value: str) -> None:
+    if not isinstance(value, str) or not REVISION.fullmatch(value):
+        raise ValueError(f"{name} must be immutable 40- or 64-lowercase-hex")
 
 
 @dataclass(frozen=True, slots=True)
@@ -51,8 +64,8 @@ class ConformanceSubmitResult:
 
     def __post_init__(self) -> None:
         _nonempty("invocation_id", self.invocation_id)
-        _nonempty("request_digest", self.request_digest)
-        _nonempty("evidence_digest", self.evidence_digest)
+        _sha256("request_digest", self.request_digest)
+        _sha256("evidence_digest", self.evidence_digest)
         if self.status == "accepted" and not self.provider_invocation_id:
             raise ValueError("accepted submit requires provider invocation identity")
         if self.status in {"duplicate_rejected", "different_request_rejected"} and self.provider_invocation_id is not None:
@@ -75,8 +88,10 @@ class ConformanceLookupResult:
 
     def __post_init__(self) -> None:
         _nonempty("invocation_id", self.invocation_id)
-        _nonempty("request_digest", self.request_digest)
-        _nonempty("evidence_digest", self.evidence_digest)
+        _sha256("request_digest", self.request_digest)
+        _sha256("evidence_digest", self.evidence_digest)
+        if self.terminal_evidence_digest is not None:
+            _sha256("terminal_evidence_digest", self.terminal_evidence_digest)
         if self.status == "accepted":
             if not self.provider_invocation_id or self.terminal_evidence_digest is not None:
                 raise ValueError("accepted lookup requires provider invocation and no terminal evidence")
@@ -131,11 +146,18 @@ class ProviderConformanceRun:
     def __post_init__(self) -> None:
         if self.harness_version != HARNESS_VERSION:
             raise ValueError("unsupported provider conformance harness version")
+        _sha256("contract_digest", self.contract_digest)
+        _sha256("conformance_evidence_digest", self.conformance_evidence_digest)
+        _revision("adapter_revision", self.adapter_revision)
         if self.environment_scope not in {"sandbox", "production_equivalent"}:
             raise ValueError("unsupported conformance run environment")
+        for name in ("provider", "adapter", "adapter_version"):
+            _nonempty(name, getattr(self, name))
         ids = [case.case_id for case in self.case_results]
         if len(ids) != len(set(ids)):
             raise ValueError("conformance run case IDs must be unique")
+        if self.all_required_cases_passed != all(case.passed for case in self.case_results):
+            raise ValueError("conformance run all-pass flag does not reconcile")
 
     @property
     def run_id(self) -> str:
@@ -169,12 +191,10 @@ def _identity(contract: ProviderReconciliationContract, target: ProviderConforma
         raise ConformanceHarnessError("conformance target identity does not match provider contract")
     if target.environment_scope not in {"sandbox", "production_equivalent"}:
         raise ConformanceHarnessError("conformance target environment scope is unsupported")
-    if not target.adapter_revision or len(target.adapter_revision) not in {40, 64}:
-        raise ConformanceHarnessError("conformance target must expose immutable adapter revision")
     try:
-        int(target.adapter_revision, 16)
+        _revision("adapter_revision", target.adapter_revision)
     except ValueError as exc:
-        raise ConformanceHarnessError("adapter revision must be hexadecimal") from exc
+        raise ConformanceHarnessError(str(exc)) from exc
 
 
 def _same_request_case(contract, target, invocation_id, request_digest):
@@ -285,6 +305,10 @@ def run_provider_conformance(
     terminal_evidence_digest: str = "sha256:" + "3" * 64,
 ) -> tuple[ProviderConformanceEvidence, ProviderConformanceRun]:
     _identity(contract, target)
+    _nonempty("invocation_id", invocation_id)
+    _sha256("request_digest", request_digest)
+    _sha256("different_request_digest", different_request_digest)
+    _sha256("terminal_evidence_digest", terminal_evidence_digest)
     if request_digest == different_request_digest:
         raise ConformanceHarnessError("conformance requests must have distinct digests")
 
@@ -343,6 +367,7 @@ class ReferenceConformanceTarget:
     ):
         if same_key_same_request not in {"same_operation", "duplicate_rejected", "may_duplicate"}:
             raise ValueError("unsupported reference duplicate semantics")
+        _revision("adapter_revision", adapter_revision)
         self.adapter_revision = adapter_revision
         self.same_key_same_request = same_key_same_request
         self.reset()
@@ -375,6 +400,8 @@ class ReferenceConformanceTarget:
         return operation
 
     def submit(self, invocation_id: str, request_digest: str) -> ConformanceSubmitResult:
+        _nonempty("invocation_id", invocation_id)
+        _sha256("request_digest", request_digest)
         existing = self._operations.get(invocation_id, [])
         if existing:
             canonical = existing[0]
@@ -410,6 +437,8 @@ class ReferenceConformanceTarget:
         )
 
     def lookup(self, invocation_id: str, request_digest: str) -> ConformanceLookupResult:
+        _nonempty("invocation_id", invocation_id)
+        _sha256("request_digest", request_digest)
         existing = self._operations.get(invocation_id, [])
         if not existing:
             return ConformanceLookupResult(
@@ -466,6 +495,9 @@ class ReferenceConformanceTarget:
         request_digest: str,
         terminal_evidence_digest: str,
     ) -> None:
+        _nonempty("invocation_id", invocation_id)
+        _sha256("request_digest", request_digest)
+        _sha256("terminal_evidence_digest", terminal_evidence_digest)
         existing = self._operations.get(invocation_id, [])
         if len(existing) != 1 or existing[0].request_digest != request_digest:
             raise ConformanceHarnessError("reference target cannot terminalize unknown or ambiguous invocation")
