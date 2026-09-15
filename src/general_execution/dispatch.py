@@ -8,6 +8,7 @@ from typing import Any, Literal
 
 from .canonical import canonical_json, sha256_digest, stable_id
 from .capacity import CapacityLease, RunnerCapacityState, verify_capacity_state
+from .durable import DurableCapacityError, SqliteCapacityHeadStore
 from .models import DispatchPlan, ExecutionSession, ExecutionSpec, RunnerCapabilities, RunnerRegistry
 from .physical import (
     VALID_TRANSPORT_STATUSES,
@@ -516,7 +517,7 @@ class SqliteDispatchIntentStore:
         self,
         intent_id: str,
         expected_state_digest: str,
-        capacity_state: RunnerCapacityState,
+        capacity_store: SqliteCapacityHeadStore,
         runner: RunnerCapabilities,
     ) -> tuple[DispatchIntentState, DispatchPermit]:
         current = self.load(intent_id)
@@ -524,6 +525,10 @@ class SqliteDispatchIntentStore:
             raise DispatchIntentError("stale durable dispatch intent state")
         if current.status != "prepared":
             raise DispatchIntentError("only prepared dispatch intent may begin submission")
+        try:
+            capacity_state, _ = capacity_store.load(runner)
+        except DurableCapacityError as exc:
+            raise DispatchIntentError("canonical durable capacity head is unavailable") from exc
         _validate_intent_against_capacity(current.intent, capacity_state, runner)
         new_state = DispatchIntentState(
             intent=current.intent,
