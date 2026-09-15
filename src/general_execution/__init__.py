@@ -113,6 +113,17 @@ from .physical import (
 )
 from .planner import plan_execution, verify_plan
 from .provenance import InvocationRecord, record_invocation, verify_invocation_record
+from .reconciliation import (
+    ProviderReconciliationContract,
+    ProviderReconciliationEvidence,
+    ProviderReconciliationObservation,
+    ProviderReconciliationQuery,
+    ReconciliationDecision,
+    ReconciliationError,
+    admit_reconciliation_observation,
+    create_reconciliation_query,
+    decide_reconciliation,
+)
 from .session import SessionError, bind_session, revoke_session, start_session, submit_result
 
 __all__ = [
@@ -152,10 +163,16 @@ __all__ = [
     "PhysicalOutcomeBundle",
     "PhysicalReceipt",
     "ProviderObservation",
+    "ProviderReconciliationContract",
+    "ProviderReconciliationEvidence",
+    "ProviderReconciliationObservation",
+    "ProviderReconciliationQuery",
     "REFERENCE_CAPABILITY",
     "REFERENCE_EVIDENCE",
     "REFERENCE_TASK_KIND",
     "RecoveredLease",
+    "ReconciliationDecision",
+    "ReconciliationError",
     "RestartRecoveryReport",
     "ResultEnvelope",
     "RunnerCapabilities",
@@ -167,6 +184,7 @@ __all__ = [
     "VALID_TRANSPORT_STATUSES",
     "admit_observation",
     "admit_physical_observation",
+    "admit_reconciliation_observation",
     "append_event",
     "authorize_live_dispatch",
     "authorize_physical_attempt",
@@ -180,6 +198,8 @@ __all__ = [
     "commit_capacity_reservation",
     "commit_outcome_release",
     "commit_revocation_release",
+    "create_reconciliation_query",
+    "decide_reconciliation",
     "deserialize_capacity_snapshot",
     "deserialize_dispatch_state",
     "dispatch_state_from_dict",
@@ -230,4 +250,4 @@ __all__ = [
     "verify_retry_chain",
 ]
 
-__version__ = "0.0.6"
+__version__ = "0.0.7"
