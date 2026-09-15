@@ -72,7 +72,7 @@ The core has no non-stdlib runtime dependencies.
 
 ## Current v0.0.9 evidence
 
-The candidate adds a focused executable-harness bank covering mechanically generated sandbox evidence, deterministic repeated runs, false same-request declarations, matching duplicate-rejected semantics, conformant-but-unsafe `may_duplicate`, identity mismatch, malformed adapter revision, lookup identity failure, absence failure, terminal-evidence failure, conditional terminal-case execution, and distinct request identities.
+v0.0.9 adds a focused executable-harness bank covering mechanically generated sandbox evidence, deterministic repeated runs, false same-request declarations, matching duplicate-rejected semantics, conformant-but-unsafe `may_duplicate`, identity mismatch, malformed adapter revision, lookup identity failure, absence failure, terminal-evidence failure, conditional terminal-case execution, and distinct request identities.
 
 The repository execution environment remains unavailable here without consuming GitHub Actions or introducing external infrastructure, so no full external pytest run is claimed. The new harness itself is implementation code plus a committed test bank; its reference target remains sandbox-only in intended use.
 
@@ -95,8 +95,8 @@ The system should not equate a self-asserted `production_equivalent` field with 
 
 The next evidence capable of materially changing the verdict is **provider-specific sandbox execution with trustworthy conformance-run provenance**.
 
-Purely local provider-neutral modeling is now approaching diminishing returns. A concrete provider adapter should first implement the v0.0.9 target contract and run the harness in an independently identifiable sandbox/equivalent environment. Only after that evidence is bound to the exact adapter revision should General Execution consider enabling real remote transport.
+Purely local provider-neutral modeling now has diminishing returns. A concrete provider adapter should first implement the v0.0.9 target contract and run the harness in an independently identifiable sandbox/equivalent environment. Only after that evidence is bound to the exact adapter revision should General Execution consider enabling real remote transport.
 
 ## Status
 
-**v0.0.9 Executable Provider Conformance Harness: implementation candidate complete in branch; reference sandbox harness and adversarial test bank recorded; provider-specific execution/provenance is the next material gate.**
+**v0.0.9 Executable Provider Conformance Harness is integrated in `main`. The provider-neutral/local development ceiling is reached; the next material gate is provider-specific execution with trustworthy run provenance.**
