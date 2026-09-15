@@ -66,6 +66,14 @@ from .models import (
     RunnerCapabilities,
     RunnerRegistry,
 )
+from .persistence import (
+    PersistenceCommitReceipt,
+    PersistenceConflict,
+    PersistenceError,
+    PersistenceIntegrityError,
+    SQLiteDurableHeadStore,
+    STORE_SCHEMA_VERSION,
+)
 from .physical import (
     DuplicatePhysicalAttempt,
     FAILURE_TRANSPORT_STATUSES,
@@ -116,6 +124,10 @@ __all__ = [
     "InvocationBundle",
     "InvocationRecord",
     "LedgerEvent",
+    "PersistenceCommitReceipt",
+    "PersistenceConflict",
+    "PersistenceError",
+    "PersistenceIntegrityError",
     "PhysicalAttemptAuthorization",
     "PhysicalAttemptError",
     "PhysicalAttemptRecord",
@@ -132,6 +144,8 @@ __all__ = [
     "RunnerCapabilities",
     "RunnerCapacityState",
     "RunnerRegistry",
+    "SQLiteDurableHeadStore",
+    "STORE_SCHEMA_VERSION",
     "SessionError",
     "VALID_TRANSPORT_STATUSES",
     "admit_observation",
@@ -188,4 +202,4 @@ __all__ = [
     "verify_retry_chain",
 ]
 
-__version__ = "0.0.5"
+__version__ = "0.0.6"
