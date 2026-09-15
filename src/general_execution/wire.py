@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from .models import ArtifactRef, ExecutionSpec, ResultEnvelope
+from .models import ArtifactRef, ExecutionSession, ExecutionSpec, ResultEnvelope
 
 
 def artifact_to_dict(artifact: ArtifactRef) -> dict[str, Any]:
@@ -48,6 +48,39 @@ def spec_from_dict(data: dict[str, Any]) -> ExecutionSpec:
         inputs=tuple(artifact_from_dict(item) for item in data.get("inputs", [])),
         authority_ref=artifact_from_dict(authority) if authority else None,
         metadata=tuple((str(key), str(value)) for key, value in data.get("metadata", [])),
+    )
+
+
+def session_to_dict(session: ExecutionSession) -> dict[str, Any]:
+    return {
+        "schema_version": session.schema_version,
+        "spec_id": session.spec_id,
+        "spec_digest": session.spec_digest,
+        "plan_id": session.plan_id,
+        "plan_digest": session.plan_digest,
+        "runner_id": session.runner_id,
+        "runner_capability_digest": session.runner_capability_digest,
+        "mode": session.mode,
+        "attempt": session.attempt,
+        "state": session.state,
+        "result_digest": session.result_digest,
+    }
+
+
+def session_from_dict(data: dict[str, Any]) -> ExecutionSession:
+    if data.get("schema_version") != "ge.execution-session.v1":
+        raise ValueError("unsupported execution session schema")
+    return ExecutionSession(
+        spec_id=str(data["spec_id"]),
+        spec_digest=str(data["spec_digest"]),
+        plan_id=str(data["plan_id"]),
+        plan_digest=str(data["plan_digest"]),
+        runner_id=str(data["runner_id"]),
+        runner_capability_digest=str(data["runner_capability_digest"]),
+        mode=str(data["mode"]),
+        attempt=int(data["attempt"]),
+        state=str(data["state"]),
+        result_digest=str(data["result_digest"]) if data.get("result_digest") is not None else None,
     )
 
 

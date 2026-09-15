@@ -17,6 +17,7 @@ ExecutionSpec
   -> restart recovery
   -> SQLite canonical-head persistence
   -> post-restart reconciliation
+  -> durable logical result handoff
   -> execution ledger
 ```
 
@@ -31,30 +32,31 @@ ExecutionSpec
 - **v0.0.5 — Durable Head & Restart Recovery:** canonical capacity snapshots, durable-head continuity, strict state decoding, and conservative recovery of in-flight leases. See [`docs/v0.0.5-durable-restart-recovery.md`](docs/v0.0.5-durable-restart-recovery.md).
 - **v0.0.6 — SQLite Durable Head Persistence:** filesystem-backed SQLite storage, atomic canonical-head compare-and-swap, exact in-transaction verification, and idempotent replay after lost acknowledgement. See [`docs/v0.0.6-sqlite-persistence.md`](docs/v0.0.6-sqlite-persistence.md).
 - **v0.0.7 — Post-Restart Provider Reconciliation:** exact recovered-lease/provider-outcome binding plus atomic reconciliation-record and durable-head commit. See [`docs/v0.0.7-restart-reconciliation.md`](docs/v0.0.7-restart-reconciliation.md).
+- **v0.0.8 — Durable Logical Result Handoff:** atomically retain a reconciled `ResultEnvelope`, explicitly apply `submit_result`, and persist the resulting logical Session across later restarts. See [`docs/v0.0.8-durable-result-handoff.md`](docs/v0.0.8-durable-result-handoff.md).
 
-## v0.0.7 invariants
+## v0.0.8 invariants
 
-A recovered `in_flight_unknown` lease can be resolved only by an admitted physical outcome that reproduces from the exact `ExecutionSpec`, registry, plan, Session, runner, authorization, and recovered lease.
+A completed physical reconciliation cannot become canonical without preserving the complete logical `ResultEnvelope` in the same transaction.
 
-The core enforces:
+The protocol enforces:
 
-- reconciliation candidates rerun physical-outcome verification before persistence;
-- recovered lease, authorization, outcome, receipt, release, and successor durable head are bound into one record;
-- changing the Session context or provider outcome invalidates the candidate;
-- SQLite stores the reconciliation record and successor durable head in one transaction;
-- one physical authorization has at most one canonical reconciliation per runner;
-- conflicting outcomes for one authorization cannot both become canonical;
-- stale source heads are rejected unless the exact reconciliation was already committed;
-- lost-ack replay is idempotent even after later durable heads advance;
-- failed physical outcomes preserve retry lineage after capacity release;
-- completed physical outcomes release capacity but do not implicitly submit the logical Session result;
-- the v0.0.6 SQLite metadata store migrates transactionally from schema v1 to v2.
+- `PendingLogicalResult` stores the complete reconciled result, not only its digest;
+- pending result and reconciliation are mutually bound by runner, Session, attempt, spec, authorization, reconciliation digest, and result digest;
+- a transport failure with no `ResultEnvelope` creates no pending logical result;
+- `submit_result` remains the existing explicit Session transition and is not replaced by persistence;
+- `LogicalResultSubmission` binds the source running Session and the exact `result_submitted` Session returned by `submit_result`;
+- submission persistence is append-only and exact lost-ack replay is idempotent;
+- pending and submitted logical state survive separate coordinator restarts;
+- missing or inconsistent reconciliation/pending/submission state fails closed;
+- SQLite store schema v3 adds durable pending-result and submission registries;
+- v2 completed reconciliations without their original full `ResultEnvelope` cannot migrate by digest alone;
+- v2 failure-only reconciliations can migrate safely.
 
-Persistence and reconciliation remain execution mechanics. They do not acquire evidence-verification, integration, or release authority.
+The handoff persists protocol state. It does not grant domain verification, integration, approval, or release authority.
 
 ## First client
 
-Build Colony remains the first client identity. It translates bounded Work Packages into `ExecutionSpec` objects. General Execution governs execution mechanics, capacity, restart state, persistence, and reconciliation; Build Colony keeps engineering evidence-verification and integration authority. See [`docs/build-colony-first-client.md`](docs/build-colony-first-client.md).
+Build Colony remains the first client identity. It translates bounded Work Packages into `ExecutionSpec` objects. General Execution governs execution mechanics and durable lifecycle state; Build Colony keeps engineering evidence-verification and integration authority. See [`docs/build-colony-first-client.md`](docs/build-colony-first-client.md).
 
 ## Development
 
@@ -66,18 +68,18 @@ python -m pip install -e . --no-build-isolation --no-deps
 
 The core has no non-stdlib runtime dependencies; SQLite comes from Python's standard library.
 
-## Current v0.0.7 conformance bank
+## Current v0.0.8 conformance bank
 
-The repository includes targeted reconciliation tests for failed and completed outcomes, retry lineage, foreign authorization rejection, record tamper detection, changed Session context, changed provider outcome, atomic record/head persistence, lost-ack idempotency, conflicting outcomes, stale source heads, replay after later head advancement, v1-to-v2 store migration, and persistence across reopen.
+The repository includes 16 targeted handoff tests covering atomic pending creation, failure-without-pending behavior, restart recovery, exact Session submission, wrong-Session rejection, durable submission recovery, lost-ack replay, absent and inconsistent pending state, metadata consistency, logical failed-result preservation, orphan-pending rejection, fail-closed completed v2 migration, and safe failure-only v2 migration.
 
 ## Admission state
 
-v0.0.7 is intentionally stacked on the v0.0.5 and v0.0.6 candidates. The canonical `main` remains at v0.0.4 until the full historical repository regression can be executed in a complete runner environment.
+v0.0.8 is intentionally stacked on the v0.0.5-v0.0.7 candidate line. The canonical `main` remains at v0.0.4 until the full historical repository regression can be executed in a complete runner environment.
 
 ## Next ceiling
 
-The next high-value boundary is **durable logical-session/result recovery**: a completed reconciled physical outcome must survive another coordinator restart before logical result submission without being forgotten or double-submitted.
+The next high-value milestone is a **durable logical Session registry** covering the complete lifecycle `bound -> running -> revoked/result_submitted`, so clients no longer need to reconstruct the pre-result logical Session after coordinator restart.
 
 ## Status
 
-**v0.0.7 restart reconciliation: stacked implementation candidate under validation.**
+**v0.0.8 durable logical result handoff: stacked implementation candidate under validation.**

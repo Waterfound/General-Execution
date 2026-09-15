@@ -67,6 +67,7 @@ from .models import (
     RunnerRegistry,
 )
 from .persistence import (
+    LogicalResultPersistenceReceipt,
     PersistenceCommitReceipt,
     PersistenceConflict,
     PersistenceError,
@@ -108,7 +109,21 @@ from .reconciliation import (
     reconciliation_record_to_dict,
     verify_reconciliation_candidate,
 )
+from .result_handoff import (
+    LogicalResultSubmission,
+    PendingLogicalResult,
+    ResultHandoffError,
+    logical_result_submission_from_dict,
+    logical_result_submission_to_dict,
+    pending_logical_result_from_dict,
+    pending_logical_result_from_reconciliation,
+    pending_logical_result_to_dict,
+    prepare_logical_result_submission,
+    verify_logical_result_submission,
+    verify_pending_logical_result,
+)
 from .session import SessionError, bind_session, revoke_session, start_session, submit_result
+from .wire import session_from_dict, session_to_dict
 
 __all__ = [
     "AdapterDispatchRequest",
@@ -134,6 +149,9 @@ __all__ = [
     "InvocationBundle",
     "InvocationRecord",
     "LedgerEvent",
+    "LogicalResultPersistenceReceipt",
+    "LogicalResultSubmission",
+    "PendingLogicalResult",
     "PersistenceCommitReceipt",
     "PersistenceConflict",
     "PersistenceError",
@@ -155,6 +173,7 @@ __all__ = [
     "ReconciliationRecord",
     "RestartRecoveryReport",
     "ResultEnvelope",
+    "ResultHandoffError",
     "RunnerCapabilities",
     "RunnerCapacityState",
     "RunnerRegistry",
@@ -177,10 +196,16 @@ __all__ = [
     "identify_duplicate_physical_attempt",
     "initialize_capacity_state",
     "load_durable_snapshot",
+    "logical_result_submission_from_dict",
+    "logical_result_submission_to_dict",
     "make_reference_observation",
     "observe_completed",
     "observe_failure",
+    "pending_logical_result_from_dict",
+    "pending_logical_result_from_reconciliation",
+    "pending_logical_result_to_dict",
     "plan_execution",
+    "prepare_logical_result_submission",
     "prepare_restart_reconciliation",
     "propose_capacity_reservation",
     "propose_outcome_release",
@@ -198,6 +223,8 @@ __all__ = [
     "reserve_capacity",
     "revoke_session",
     "serialize_durable_snapshot",
+    "session_from_dict",
+    "session_to_dict",
     "sha256_digest",
     "stable_id",
     "start_session",
@@ -212,6 +239,8 @@ __all__ = [
     "verify_invocation_bundle",
     "verify_invocation_record",
     "verify_ledger",
+    "verify_logical_result_submission",
+    "verify_pending_logical_result",
     "verify_physical_attempt_record",
     "verify_physical_outcome",
     "verify_plan",
@@ -220,4 +249,4 @@ __all__ = [
     "verify_retry_chain",
 ]
 
-__version__ = "0.0.7"
+__version__ = "0.0.8"
