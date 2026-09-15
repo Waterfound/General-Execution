@@ -52,6 +52,15 @@ from .cold_rehearsal import (
     resume_reference_cold_restart,
     run_reference_cold_restart_rehearsal,
 )
+from .cutpoint_matrix import (
+    VALID_CUT_POINTS,
+    CutPointAssessment,
+    CutPointMatrixError,
+    CutPointMatrixIntegrityError,
+    CutPointPreparationReceipt,
+    assess_reference_cutpoint,
+    prepare_reference_cutpoint,
+)
 from .durable import (
     DurableCapacityHead,
     DurableCapacitySnapshot,
@@ -191,6 +200,10 @@ __all__ = [
     "ColdRehearsalError",
     "ColdRestartPreparationReceipt",
     "ColdRestartReport",
+    "CutPointAssessment",
+    "CutPointMatrixError",
+    "CutPointMatrixIntegrityError",
+    "CutPointPreparationReceipt",
     "DispatchPlan",
     "DuplicatePhysicalAttempt",
     "DurableCapacityHead",
@@ -256,11 +269,13 @@ __all__ = [
     "STORE_SCHEMA_VERSION",
     "SessionError",
     "StoreReopenRehearsalReport",
+    "VALID_CUT_POINTS",
     "VALID_TRANSPORT_STATUSES",
     "admit_observation",
     "admit_physical_observation",
     "append_event",
     "assess_provider_status",
+    "assess_reference_cutpoint",
     "authorize_physical_attempt",
     "authorize_retry",
     "bind_session",
@@ -288,6 +303,7 @@ __all__ = [
     "plan_provider_outcome_reconciliation",
     "plan_revocation_reconciliation",
     "prepare_reference_cold_restart",
+    "prepare_reference_cutpoint",
     "propose_capacity_reservation",
     "propose_outcome_release",
     "propose_revocation_release",
@@ -339,4 +355,4 @@ __all__ = [
     "verify_status_probe",
 ]
 
-__version__ = "0.0.11"
+__version__ = "0.0.12"

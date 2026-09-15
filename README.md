@@ -16,6 +16,7 @@ ExecutionSpec
   -> cold bootstrap
   -> provider reattachment
   -> reconciliation
+  -> cut-point recovery assessment
   -> execution ledger
 ```
 
@@ -33,72 +34,62 @@ ExecutionSpec
 - **v0.0.8 — Provider Reattachment Semantics:** deterministic pre-dispatch reattachment keys and conservative status probes.
 - **v0.0.9 — Reattachable Reference Provider:** durable provider identity/status control plane.
 - **v0.0.10 — Durable Store Reopen Rehearsal:** two-store reopen QA with execution context explicitly caller-retained.
-- **v0.0.11 — Durable Recovery Context + Cold Bootstrap:** immutable reconstruction of Spec, registry, plan, Session, physical authorization, runner definition and lease anchor, followed by a stores-only cold coordinator rehearsal. See [`docs/v0.0.11-durable-recovery-context.md`](docs/v0.0.11-durable-recovery-context.md).
+- **v0.0.11 — Durable Recovery Context + Cold Bootstrap:** stores-only reconstruction of runner, Spec, registry, plan, Session and physical authorization, followed by true cold provider reattachment and reconciliation. See [`docs/v0.0.11-durable-recovery-context.md`](docs/v0.0.11-durable-recovery-context.md).
+- **v0.0.12 — Cross-Store Cut-Point Failure Matrix:** deterministic reconstruction of the exact safe state at every persistence/reconciliation boundary, including lost post-CAS acknowledgement. See [`docs/v0.0.12-cutpoint-failure-matrix.md`](docs/v0.0.12-cutpoint-failure-matrix.md).
 
-## v0.0.11 invariants
+## v0.0.12 cut-point states
 
-`DurableRecoveryContext` contains the complete typed execution identity needed to re-enter the existing recovery protocols after volatile coordinator memory is gone.
+The matrix freezes five canonical durable boundaries:
 
-The context binds:
+| Cut point | Reconstructed state |
+| --- | --- |
+| recovery context persisted | `orphan_context` |
+| capacity head committed | `active_provider_unknown` |
+| provider identity registered | `active_provider_running` |
+| provider terminal state persisted | `terminal_pending_reconciliation` |
+| reconciliation CAS committed | `settled_terminal_reconciliation` |
 
-- exact `ExecutionSpec`;
-- exact `RunnerRegistry` and selected `RunnerCapabilities`;
-- deterministic `DispatchPlan`;
-- running `ExecutionSession`;
-- exact `PhysicalAttemptAuthorization`, including retry predecessor bindings;
-- an anchor `DurableCapacitySnapshot` containing the active lease;
-- exact recovered lease ID and digest.
+These states are derived from durable records only; the matrix does not use wall-clock expiry, sleeps, or timing assumptions.
 
-The serialized form is canonical JSON. Loading reconstructs typed objects and re-runs existing plan, dispatch-request, capacity replay, authorization, and lease bindings.
+### Conservative provider absence
 
-### Anchor, not frozen head
-
-The recovery context is anchored to the snapshot at which the attempt became recoverable. A later current capacity head may contain unrelated transitions from other slots while the same lease stays active.
-
-The context remains valid only when the current capacity history extends the full anchor transition prefix and the exact lease is still active and unchanged.
-
-### Safe persistence order
+If the capacity head is canonical but the provider key is absent, lookup produces `not_found` and the state remains `active_provider_unknown`.
 
 ```text
-reserve candidate in memory
-  -> build anchor snapshot + recovery context
-  -> persist recovery context
-  -> commit durable capacity head
-  -> register provider identity
+not_found -> remain_unknown
 ```
 
-A crash after context persistence but before capacity commit leaves an orphan context, which cold bootstrap ignores. Once a recoverable active capacity head exists, its recovery context was already durable.
+No physical failure is fabricated, capacity stays occupied, and retry is not authorized.
 
-### True cold bootstrap and resume
+### Lost reconciliation acknowledgement
 
-`bootstrap_active_recovery_contexts(...)` starts from only the recovery-context store and durable capacity-head store and reconstructs active execution bindings.
+If reconciliation CAS committed and the coordinator lost the acknowledgement, the active lease is already gone. v0.0.12 reconstructs the historical settlement from:
 
-The reference rehearsal is deliberately split:
+- immutable recovery-context anchor;
+- current canonical capacity history;
+- exact canonical release;
+- durable terminal provider observation;
+- re-admitted physical outcome.
+
+The state is `settled_terminal_reconciliation` only when the canonical release contains the exact same physical `outcome_digest` and receipt digest.
+
+### Invalid ordering fails closed
+
+Provider identity without a canonical capacity head violates the persistence order and is rejected. The supported ordering remains:
 
 ```text
-prepare_reference_cold_restart(...)
-  -> persist recovery context
-  -> persist capacity head
-  -> persist provider identity
-
-[cold coordinator boundary]
-
-resume_reference_cold_restart(paths only)
-  -> reconstruct runner / Spec / registry / plan / Session / authorization
-  -> recover in_flight_unknown lease
-  -> provider running => keep_running
-  -> terminal provider status
-  -> physical outcome admission
+recovery context
+  -> capacity head
+  -> provider identity
+  -> terminal provider state
   -> reconciliation CAS
 ```
 
-The resume API receives no live execution objects from preparation. Its report marks `context_mode="cold_reconstructed"`.
-
-A completed physical outcome still leaves the reconstructed Session `running`; logical submission remains a separate explicit `submit_result(...)` operation.
-
 ## Authority boundary
 
-Recovery context preserves identity; it does not create permission to retry, release capacity without terminal/revocation evidence, submit a logical result automatically, verify application evidence, integrate changes, or approve release.
+The failure matrix is recovery evidence only. It does not create retry, verification, integration, or release authority.
+
+The logical boundary is unchanged:
 
 ```text
 physical completion != logical result submission
@@ -114,18 +105,18 @@ python -m pip install -e . --no-build-isolation --no-deps
 
 The core has no non-stdlib runtime dependencies; SQLite comes from Python's standard library.
 
-## Current v0.0.11 conformance bank
+## Current v0.0.12 conformance bank
 
-The repository includes context round-trip and exact reconstruction, unrelated-head advancement, lease-removal rejection, schema/binding checks, context persistence and idempotency, re-anchor conflict, cold bootstrap from stores only, corruption rejection, orphan/historical context handling, stores-only cold resume, completed cold recovery without automatic logical submission, provider identity reconstruction, deterministic replay across fresh files, invalid-mode preservation, distinct-store enforcement, and final report binding.
+The repository includes all five canonical cut-point classifications, safe orphan recovery, conservative provider `not_found`, terminal persistence without premature capacity release, post-CAS lost-ack reconstruction, invalid provider-before-capacity ordering, terminal-payload corruption rejection, and deterministic assessments across fresh filesystem paths.
 
 ## Admission state
 
-v0.0.11 remains stacked above the v0.0.5-v0.0.10 candidate line. Canonical `main` remains at v0.0.4 until the full historical repository regression for the stacked line can be executed in a complete runner environment.
+v0.0.12 remains stacked above the v0.0.5-v0.0.11 candidate line. Canonical `main` remains at v0.0.4 until the full historical repository regression for the stacked line can be executed in a complete runner environment.
 
 ## Next ceiling
 
-The next highest-value milestone is a **cross-store cut-point failure matrix** around recovery-context persistence, capacity-head commit, provider registration, terminal-state persistence, and reconciliation CAS. Each cut point must prove the exact safe recovery state without timing assumptions.
+The next highest-value boundary is **durable logical Session settlement**. Physical completion and capacity reconciliation now survive cold restart and lost acknowledgements, but explicit `submit_result(...)` still changes only an in-memory `ExecutionSession`. A crash before or after logical submission therefore needs a durable, idempotent settlement protocol.
 
 ## Status
 
-**v0.0.11 Durable Recovery Context + true cold coordinator rehearsal: stacked implementation candidate under validation.**
+**v0.0.12 Cross-Store Cut-Point Failure Matrix: stacked implementation candidate under validation.**
