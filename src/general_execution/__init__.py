@@ -123,6 +123,26 @@ from .result_handoff import (
     verify_pending_logical_result,
 )
 from .session import SessionError, bind_session, revoke_session, start_session, submit_result
+from .session_persistence import (
+    SESSION_REGISTRY_SCHEMA_VERSION,
+    SQLiteSessionRegistry,
+    SessionPersistenceConflict,
+    SessionPersistenceError,
+    SessionPersistenceIntegrityError,
+    SessionRegistryCommitReceipt,
+)
+from .session_registry import (
+    SessionRegistryError,
+    SessionRegistryTransition,
+    register_session_transition,
+    revoke_session_transition,
+    session_registry_transition_from_dict,
+    session_registry_transition_to_dict,
+    start_session_transition,
+    submit_session_transition,
+    verify_session_registry_chain,
+    verify_session_registry_transition,
+)
 from .wire import session_from_dict, session_to_dict
 
 __all__ = [
@@ -177,9 +197,17 @@ __all__ = [
     "RunnerCapabilities",
     "RunnerCapacityState",
     "RunnerRegistry",
+    "SESSION_REGISTRY_SCHEMA_VERSION",
     "SQLiteDurableHeadStore",
+    "SQLiteSessionRegistry",
     "STORE_SCHEMA_VERSION",
     "SessionError",
+    "SessionPersistenceConflict",
+    "SessionPersistenceError",
+    "SessionPersistenceIntegrityError",
+    "SessionRegistryCommitReceipt",
+    "SessionRegistryError",
+    "SessionRegistryTransition",
     "VALID_TRANSPORT_STATUSES",
     "admit_observation",
     "admit_physical_observation",
@@ -218,17 +246,23 @@ __all__ = [
     "record_physical_attempt",
     "recover_after_restart",
     "reference_runner",
+    "register_session_transition",
     "release_capacity_for_outcome",
     "release_capacity_for_revocation",
     "reserve_capacity",
     "revoke_session",
+    "revoke_session_transition",
     "serialize_durable_snapshot",
     "session_from_dict",
+    "session_registry_transition_from_dict",
+    "session_registry_transition_to_dict",
     "session_to_dict",
     "sha256_digest",
     "stable_id",
     "start_session",
+    "start_session_transition",
     "submit_result",
+    "submit_session_transition",
     "verify_active_lease_grant",
     "verify_capacity_release_grant",
     "verify_capacity_state",
@@ -247,6 +281,8 @@ __all__ = [
     "verify_reconciliation_candidate",
     "verify_restart_recovery",
     "verify_retry_chain",
+    "verify_session_registry_chain",
+    "verify_session_registry_transition",
 ]
 
-__version__ = "0.0.8"
+__version__ = "0.0.9"
