@@ -5,7 +5,6 @@ from pathlib import Path
 
 from .attempt_history import (
     AttemptHistoryEntry,
-    AttemptHistoryError,
     assess_attempt_history,
     contexts_by_authorization,
     reconstruct_terminal_outcome,
@@ -14,8 +13,7 @@ from .canonical import sha256_digest, stable_id
 from .capacity import reserve_capacity
 from .cold_bootstrap import bootstrap_active_recovery_contexts
 from .durable import build_durable_snapshot, recover_after_restart
-from .lifecycle_settlement import LifecycleSettlementIntegrityError
-from .persistence import PersistenceConflict, SQLiteDurableHeadStore
+from .persistence import SQLiteDurableHeadStore
 from .physical import authorize_retry, observe_failure
 from .reattachment import assess_provider_status, build_status_probe, reattachment_key_from_authorization
 from .reconciliation import commit_reconciliation, plan_provider_outcome_reconciliation
@@ -134,17 +132,42 @@ class RetryPreparationReceipt:
         return sha256_digest(self)
 
 
-def _one_running_session_record(session_store: SQLiteSessionSettlementStore, history_entries):
-    session_ids = {entry.session_id for entry in history_entries if entry.state != "orphan_context"}
+def _committed_session_ids(entries) -> set[str]:
+    return {entry.session_id for entry in entries if entry.state != "orphan_context"}
+
+
+def _one_session_record(
+    session_store: SQLiteSessionSettlementStore,
+    history_entries,
+    *,
+    require_running: bool,
+):
+    session_ids = _committed_session_ids(history_entries)
     if len(session_ids) != 1:
         raise RetryLifecycleError("reference retry lifecycle requires exactly one committed logical Session")
-    session_id = next(iter(session_ids))
-    record = session_store.load(session_id)
+    record = session_store.load(next(iter(session_ids)))
     if record is None:
         raise RetryLifecycleIntegrityError("retry Session has no durable logical state")
-    if record.current_session.state != "running" or record != DurableSessionRecord(record.source_session, record.source_session):
-        raise RetryLifecycleError("retry requires durable logical Session to remain running")
+    if require_running:
+        expected = DurableSessionRecord(record.source_session, record.source_session)
+        if record.current_session.state != "running" or record != expected:
+            raise RetryLifecycleError("retry requires durable logical Session to remain running")
     return record
+
+
+def _latest_failure(history, session_id: str) -> AttemptHistoryEntry:
+    failures = [entry for entry in history.for_session(session_id) if entry.state == "settled_failure"]
+    if not failures:
+        raise RetryLifecycleError("no canonically settled physical failure is available for retry")
+    return max(failures, key=lambda entry: entry.physical_attempt)
+
+
+def _active_entries(history, session_id: str):
+    return tuple(
+        entry
+        for entry in history.for_session(session_id)
+        if entry.state in {"active_provider_unknown", "active_provider_running", "active_provider_terminal"}
+    )
 
 
 def settle_active_reference_failure(
@@ -173,10 +196,12 @@ def settle_active_reference_failure(
     if len(bindings) != 1:
         raise RetryLifecycleError("failure settlement requires exactly one active physical attempt")
     binding = bindings[0]
-    context = binding.context
-    runner = binding.runner
-    source = binding.current_snapshot
-    recovered = binding.recovered_lease
+    context, runner, source, recovered = (
+        binding.context,
+        binding.runner,
+        binding.current_snapshot,
+        binding.recovered_lease,
+    )
 
     session_record = session_store.load(context.session.session_id)
     if session_record is None or session_record != DurableSessionRecord(context.session, context.session):
@@ -219,8 +244,8 @@ def settle_active_reference_failure(
         outcome,
     )
     committed, _, _ = commit_reconciliation(capacity_store, runner, plan)
-    if committed.state.active_leases:
-        raise RetryLifecycleIntegrityError("failure reconciliation did not release active capacity")
+    if any(lease.authorization_id == context.authorization.authorization_id for lease in committed.state.active_leases):
+        raise RetryLifecycleIntegrityError("failure reconciliation did not release failed authorization")
     still_running = session_store.load(context.session.session_id)
     if still_running != session_record:
         raise RetryLifecycleIntegrityError("physical failure unexpectedly changed logical Session")
@@ -233,25 +258,6 @@ def settle_active_reference_failure(
         physical_receipt_digest=outcome.receipt.digest,
         committed_head_digest=committed.head.digest,
         session_record_digest=still_running.digest,
-    )
-
-
-def _latest_failure(history, session_id: str) -> AttemptHistoryEntry:
-    failures = [
-        entry
-        for entry in history.for_session(session_id)
-        if entry.state == "settled_failure"
-    ]
-    if not failures:
-        raise RetryLifecycleError("no canonically settled physical failure is available for retry")
-    return max(failures, key=lambda entry: entry.physical_attempt)
-
-
-def _active_entries(history, session_id: str):
-    return tuple(
-        entry
-        for entry in history.for_session(session_id)
-        if entry.state in {"active_provider_unknown", "active_provider_running", "active_provider_terminal"}
     )
 
 
@@ -273,7 +279,7 @@ def prepare_retry_from_durable_failure(
     provider_store = SQLiteReferenceJobRegistry(provider_registry_path)
 
     history = assess_attempt_history(capacity_store_path, provider_registry_path, recovery_context_store_path)
-    session_record = _one_running_session_record(session_store, history.entries)
+    session_record = _one_session_record(session_store, history.entries, require_running=True)
     session_id = session_record.session_id
     prior_entry = _latest_failure(history, session_id)
     contexts = contexts_by_authorization(context_store)
@@ -322,7 +328,7 @@ def prepare_retry_from_durable_failure(
             committed_head_digest=current.head.digest,
             provider_key=key.provider_key,
             provider_job_id=registration.job_id,
-            idempotent=True,
+            idempotent=registration.idempotent,
         )
 
     current = capacity_store.load_current(runner)
@@ -372,12 +378,10 @@ def prepare_retry_from_durable_failure(
         recovered[0],
     )
 
-    # Context-first persistence makes a failed capacity CAS leave only a harmless orphan context.
+    # If this CAS loses to an unrelated writer, the saved context is a safe orphan.
+    # A later retry call derives a new authorization from the then-current head digest.
     context_store.save(retry_context, anchor)
-    try:
-        capacity_store.compare_and_swap(anchor, runner, expected_head_digest=current.head.digest)
-    except PersistenceConflict:
-        raise
+    capacity_store.compare_and_swap(anchor, runner, expected_head_digest=current.head.digest)
     key = reattachment_key_from_authorization(auth, runner)
     registered_key, registration = register_reference_invocation(provider_store, auth, runner)
     if registered_key != key:
@@ -413,7 +417,7 @@ def settle_latest_completed_result(
     )
     history = assess_attempt_history(capacity_store_path, provider_registry_path, recovery_context_store_path)
     session_store = SQLiteSessionSettlementStore(session_store_path)
-    record = _one_running_session_record(session_store, history.entries)
+    record = _one_session_record(session_store, history.entries, require_running=False)
     if _active_entries(history, record.session_id):
         raise RetryLifecycleError("logical result cannot settle while a physical attempt remains active")
     completed = [
@@ -425,6 +429,8 @@ def settle_latest_completed_result(
         raise RetryLifecycleError("no canonically settled completed physical attempt exists")
     latest = max(completed, key=lambda entry: entry.physical_attempt)
     contexts = contexts_by_authorization(SQLiteRecoveryContextStore(recovery_context_store_path))
+    if latest.authorization_id not in contexts:
+        raise RetryLifecycleIntegrityError("latest completed authorization has no durable context")
     context, runner = contexts[latest.authorization_id]
     outcome = reconstruct_terminal_outcome(
         context,
@@ -435,4 +441,4 @@ def settle_latest_completed_result(
         raise RetryLifecycleIntegrityError("latest completed history entry does not reproduce logical result")
     if context.session != record.source_session:
         raise RetryLifecycleIntegrityError("completed physical attempt Session differs from durable logical Session")
-    return session_store.submit_result(context.session, outcome.result)
+    return session_store.submit_result(record.source_session, outcome.result)
