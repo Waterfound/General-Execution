@@ -54,6 +54,7 @@ from .durable import (
     deserialize_capacity_snapshot,
     recover_capacity_after_restart,
     serialize_capacity_snapshot,
+    verify_restart_recovery,
 )
 from .ledger import ExecutionLedger, LedgerEvent, append_event, verify_ledger
 from .models import (
@@ -74,6 +75,7 @@ from .physical import (
     PhysicalObservation,
     PhysicalOutcomeBundle,
     PhysicalReceipt,
+    ProviderObservation,
     VALID_TRANSPORT_STATUSES,
     admit_physical_observation,
     authorize_physical_attempt,
@@ -183,6 +185,7 @@ __all__ = [
     "verify_physical_attempt_record",
     "verify_physical_outcome",
     "verify_plan",
+    "verify_restart_recovery",
     "verify_retry_chain",
 ]
 
