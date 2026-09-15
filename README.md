@@ -17,7 +17,7 @@ ExecutionSpec
   -> dispatch PREPARED
   -> canonical capacity lease
   -> SUBMISSION_UNKNOWN
-  -> process-separated cold recovery
+  -> process-separated / crash-safe cold recovery
   -> provider reconciliation
   -> executable provider conformance
   -> provider contract attestation
@@ -38,22 +38,20 @@ ExecutionSpec
 - **v0.0.7 — Provider Idempotency & Reconciliation**
 - **v0.0.8 — Provider Conformance & Attestation**
 - **v0.0.9 — Executable Provider Conformance Harness**
-- **v0.0.10 — Canonical Cold Coordinator Bootstrap** — durable execution context, fail-safe ordering, lost-ack replay, strict cold reconstruction. See [`docs/v0.0.10-canonical-cold-bootstrap.md`](docs/v0.0.10-canonical-cold-bootstrap.md).
-- **v0.0.11 — Process-Separated Canonical Cold Recovery** — preparation and recovery in different Python interpreters with only SQLite paths crossing the restart boundary. See [`docs/v0.0.11-canonical-process-separated-recovery.md`](docs/v0.0.11-canonical-process-separated-recovery.md).
+- **v0.0.10 — Canonical Cold Coordinator Bootstrap** — durable context, fail-safe ordering, lost-ack replay, strict cold reconstruction.
+- **v0.0.11 — Process-Separated Canonical Cold Recovery** — different Python interpreters with only SQLite paths crossing the restart boundary.
+- **v0.0.12 — Process Crash Cut-Point Matrix** — abrupt `os._exit(91)` after every pre-provider durable cut point followed by fresh-process recovery. See [`docs/v0.0.12-process-crash-cutpoint-matrix.md`](docs/v0.0.12-process-crash-cutpoint-matrix.md).
 
-## v0.0.11 boundary
-
-The preparation process persists:
+## v0.0.12 crash matrix
 
 ```text
-coordinator context
-  -> dispatch PREPARED
-  -> canonical capacity reservation CAS
-  -> dispatch SUBMISSION_UNKNOWN
-  -> process exits
+context_only        -> inert_orphan
+prepared            -> inert_orphan
+capacity_committed  -> begin_submission
+submission_unknown  -> reconcile_provider
 ```
 
-A second interpreter receives only:
+The cut worker terminates abruptly after the selected durable stage. A separate recovery interpreter receives only:
 
 ```text
 capacity.db
@@ -61,18 +59,16 @@ context.db
 dispatch.db
 ```
 
-It reconstructs the exact execution identity and must recover:
+The matrix therefore verifies that:
 
-```text
-context_mode = cold_reconstructed
-recovery_action = reconcile_provider
-blind_resubmissions_authorized = 0
-provider_outcomes_inferred = 0
-```
+- pre-capacity context/dispatch material cannot create occupancy;
+- once capacity is committed, recoverable context + dispatch identity already exist;
+- `SUBMISSION_UNKNOWN` remains ambiguity, never retry;
+- restart never fabricates provider outcomes;
+- restart never silently releases capacity;
+- PID/token evidence is run-specific and remains outside canonical semantic identity.
 
-Process PID/token evidence is intentionally separate from canonical protocol identity: fresh runs produce the same semantic digest but different execution-evidence digests.
-
-The existing authority boundaries remain:
+The authority boundaries remain:
 
 ```text
 restart != failure
@@ -99,17 +95,18 @@ The core has no non-stdlib runtime dependencies.
 
 - **v0.0.10 canonical-cold bank:** 12 passed in 0.51 s; `compileall` green.
 - **v0.0.11 process-separated bank:** 5 passed in 13.25 s; `compileall` green.
+- **v0.0.12 process-crash matrix:** 5 passed in 14.34 s; `compileall` green.
 
-These runs used an offline reconstructed local workspace because the container cannot resolve GitHub hosts. Canonical base modules were verified against their Git blob identities; some newly added files/test drivers were reconstructed with equivalent logic. This is targeted evidence, not a complete historical byte-for-byte checkout regression. No GitHub Actions were consumed.
+These runs used an offline reconstructed local workspace because this container cannot reach GitHub directly. Canonical base modules were verified against their Git blob identities; some newly added files/test drivers were reconstructed with equivalent logic. This is targeted evidence, not a complete historical byte-for-byte checkout regression. No GitHub Actions were consumed.
 
-## Next ceiling
+## Ceiling
 
-Provider-neutral restart/recovery is now at diminishing returns. The next material gates are:
+Provider-neutral restart/recovery is now at the **effective local ceiling**. The next material gates are evidence/external rather than additional restart abstractions:
 
-1. complete historical repository regression on the canonical stacked line;
+1. complete historical repository regression on a full checkout;
 2. provider-specific execution of the v0.0.9 conformance harness with trustworthy run provenance;
 3. only after those gates, consideration of concrete remote transport.
 
 ## Status
 
-**v0.0.11 Process-Separated Canonical Cold Recovery: targeted local conformance green; full historical regression and provider-specific provenance remain pending.**
+**v0.0.12 Process Crash Cut-Point Matrix: targeted local conformance green; restart/recovery local ceiling reached.**

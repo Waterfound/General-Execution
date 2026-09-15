@@ -24,6 +24,14 @@ from .canonical_cold import (
     prepare_canonical_cold_ambiguity,
     recover_canonical_cold_ambiguity,
 )
+from .canonical_crash_matrix import (
+    CanonicalCrashCutPointEvidence,
+    CanonicalCrashMatrixError,
+    CrashWorkerEnvelope,
+    EXPECTED_DISPOSITION,
+    run_process_crash_cut_point,
+    run_process_crash_matrix,
+)
 from .canonical_process_harness import (
     CanonicalProcessHarnessError,
     CanonicalProcessSeparatedEvidence,
@@ -182,6 +190,8 @@ __all__ = [
     "CanonicalColdError",
     "CanonicalColdPreparationReceipt",
     "CanonicalColdRecoveryReport",
+    "CanonicalCrashCutPointEvidence",
+    "CanonicalCrashMatrixError",
     "CanonicalProcessHarnessError",
     "CanonicalProcessSeparatedEvidence",
     "CanonicalProcessWorkerResult",
@@ -201,6 +211,7 @@ __all__ = [
     "CoordinatorContextConflict",
     "CoordinatorContextError",
     "CoordinatorContextIntegrityError",
+    "CrashWorkerEnvelope",
     "DispatchIntent",
     "DispatchIntentError",
     "DispatchIntentState",
@@ -212,6 +223,7 @@ __all__ = [
     "DurableCapacityError",
     "DurableCapacityHead",
     "DurableCoordinatorContext",
+    "EXPECTED_DISPOSITION",
     "ExecutionLedger",
     "ExecutionSession",
     "ExecutionSpec",
@@ -304,6 +316,8 @@ __all__ = [
     "release_capacity_for_revocation",
     "reserve_capacity",
     "revoke_session",
+    "run_process_crash_cut_point",
+    "run_process_crash_matrix",
     "run_process_separated_canonical_cold_recovery",
     "run_provider_conformance",
     "serialize_capacity_snapshot",
@@ -334,4 +348,4 @@ __all__ = [
     "verify_retry_chain",
 ]
 
-__version__ = "0.0.11"
+__version__ = "0.0.12"
