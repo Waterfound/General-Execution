@@ -143,6 +143,12 @@ from .reference_registry import (
     ReferenceRegistryIntegrityError,
     SQLiteReferenceJobRegistry,
 )
+from .rehearsal import (
+    ReferenceStoreReopenRehearsal,
+    RehearsalError,
+    StoreReopenRehearsalReport,
+    run_reference_store_reopen_rehearsal,
+)
 from .session import SessionError, bind_session, revoke_session, start_session, submit_result
 
 __all__ = [
@@ -201,6 +207,8 @@ __all__ = [
     "ReferenceRegistryConflict",
     "ReferenceRegistryError",
     "ReferenceRegistryIntegrityError",
+    "ReferenceStoreReopenRehearsal",
+    "RehearsalError",
     "RestartRecoveryReport",
     "ResultEnvelope",
     "RunnerCapabilities",
@@ -210,6 +218,7 @@ __all__ = [
     "SQLiteReferenceJobRegistry",
     "STORE_SCHEMA_VERSION",
     "SessionError",
+    "StoreReopenRehearsalReport",
     "VALID_TRANSPORT_STATUSES",
     "admit_observation",
     "admit_physical_observation",
@@ -257,6 +266,7 @@ __all__ = [
     "release_capacity_for_revocation",
     "reserve_capacity",
     "revoke_session",
+    "run_reference_store_reopen_rehearsal",
     "serialize_durable_snapshot",
     "sha256_digest",
     "stable_id",
@@ -284,4 +294,4 @@ __all__ = [
     "verify_status_probe",
 ]
 
-__version__ = "0.0.9"
+__version__ = "0.0.10"
