@@ -2,7 +2,7 @@
 
 **Provider-neutral deterministic execution substrate**
 
-General Execution performs bounded work that another system has already authorized. It does **not** decide what should be built, whether a result is correct, whether it should be integrated, or whether it should be released.
+General Execution performs bounded work another system has already authorized. It does **not** decide what should be built, whether a result is correct, whether it should be integrated, or whether it should be released.
 
 > **Execution consumes authority. It does not create authority.**
 
@@ -14,10 +14,10 @@ ExecutionSpec
   -> logical Session
   -> physical authorization
   -> durable coordinator context
-  -> durable dispatch PREPARED
+  -> dispatch PREPARED
   -> canonical capacity lease
   -> SUBMISSION_UNKNOWN
-  -> cold coordinator recovery
+  -> process-separated cold recovery
   -> provider reconciliation
   -> executable provider conformance
   -> provider contract attestation
@@ -29,41 +29,50 @@ ExecutionSpec
 
 ## Milestones
 
-- **v0.0.1 — Execution Kernel** — deterministic identity, planning, Sessions, result binding, ledger.
-- **v0.0.2 — Provider-neutral Adapter Contract** — authorization, transport, and evidence admission separation.
-- **v0.0.3 — Physical Failure Semantics** — logical versus physical attempts and explicit retry lineage.
-- **v0.0.4 — Capacity & Lease Semantics** — bounded parallelism, deterministic slots, CAS capacity state.
-- **v0.0.5 — Durable Head & Restart Recovery** — SQLite canonical capacity head and conservative unresolved recovery.
-- **v0.0.6 — Durable Dispatch Intent & Ambiguity Recovery** — `PREPARED -> SUBMISSION_UNKNOWN -> OBSERVED` and live dispatch permits.
-- **v0.0.7 — Provider Idempotency & Reconciliation** — stable invocation reconciliation without blind retry.
-- **v0.0.8 — Provider Conformance & Attestation** — independent evidence bound to exact adapter revisions.
-- **v0.0.9 — Executable Provider Conformance Harness** — mechanically generated provider-contract evidence.
-- **v0.0.10 — Canonical Cold Coordinator Bootstrap** — durable coordinator context, fail-safe ordering, replay-safe preparation, and cold reconstruction into the existing dispatch/reconciliation stack. See [`docs/v0.0.10-canonical-cold-bootstrap.md`](docs/v0.0.10-canonical-cold-bootstrap.md).
+- **v0.0.1 — Execution Kernel**
+- **v0.0.2 — Provider-neutral Adapter Contract**
+- **v0.0.3 — Physical Failure Semantics**
+- **v0.0.4 — Capacity & Lease Semantics**
+- **v0.0.5 — Durable Head & Restart Recovery**
+- **v0.0.6 — Durable Dispatch Intent & Ambiguity Recovery**
+- **v0.0.7 — Provider Idempotency & Reconciliation**
+- **v0.0.8 — Provider Conformance & Attestation**
+- **v0.0.9 — Executable Provider Conformance Harness**
+- **v0.0.10 — Canonical Cold Coordinator Bootstrap** — durable execution context, fail-safe ordering, lost-ack replay, strict cold reconstruction. See [`docs/v0.0.10-canonical-cold-bootstrap.md`](docs/v0.0.10-canonical-cold-bootstrap.md).
+- **v0.0.11 — Process-Separated Canonical Cold Recovery** — preparation and recovery in different Python interpreters with only SQLite paths crossing the restart boundary. See [`docs/v0.0.11-canonical-process-separated-recovery.md`](docs/v0.0.11-canonical-process-separated-recovery.md).
 
-## v0.0.10 invariants
+## v0.0.11 boundary
 
-`DurableCoordinatorContext` binds the exact Spec, Registry, Plan, running Session, Physical Authorization, active Capacity Lease identity, and canonical Dispatch Intent.
-
-The fail-safe persistence order is:
+The preparation process persists:
 
 ```text
 coordinator context
   -> dispatch PREPARED
   -> canonical capacity reservation CAS
   -> dispatch SUBMISSION_UNKNOWN
+  -> process exits
 ```
 
-Consequences:
+A second interpreter receives only:
 
-- context-only or context+PREPARED material is inert before canonical capacity activation;
-- once capacity is active, its context and dispatch identity must already be durable;
-- an active lease without a matching dispatch intent is an integrity failure;
-- `SUBMISSION_UNKNOWN` cold-recovers as `reconcile_provider`, never as blind retry;
-- cold recovery infers zero provider outcomes;
-- lost-ack replay returns the same preparation receipt without advancing capacity or dispatch state;
-- corrupt capacity/context metadata and schema drift fail closed.
+```text
+capacity.db
+context.db
+dispatch.db
+```
 
-The provider-neutral boundary remains:
+It reconstructs the exact execution identity and must recover:
+
+```text
+context_mode = cold_reconstructed
+recovery_action = reconcile_provider
+blind_resubmissions_authorized = 0
+provider_outcomes_inferred = 0
+```
+
+Process PID/token evidence is intentionally separate from canonical protocol identity: fresh runs produce the same semantic digest but different execution-evidence digests.
+
+The existing authority boundaries remain:
 
 ```text
 restart != failure
@@ -74,7 +83,7 @@ provider not_found != failure
 
 ## First client
 
-Build Colony remains the first client. It translates bounded Work Packages into `ExecutionSpec` objects. General Execution owns execution mechanics, capacity, durable execution identity, restart recovery, reconciliation, and provider conformance; Build Colony retains evidence-verification and integration authority.
+Build Colony remains the first client. It translates bounded Work Packages into `ExecutionSpec` objects. General Execution owns execution mechanics, capacity, durable identity, restart recovery, reconciliation, and provider conformance; Build Colony retains evidence-verification and integration authority.
 
 ## Development
 
@@ -86,20 +95,21 @@ python -m pip install -e . --no-build-isolation --no-deps
 
 The core has no non-stdlib runtime dependencies.
 
-## v0.0.10 targeted evidence
+## Targeted evidence
 
-The focused 12-case canonical-cold bank passed locally: **12 passed in 0.51 s**. `compileall` also passed.
+- **v0.0.10 canonical-cold bank:** 12 passed in 0.51 s; `compileall` green.
+- **v0.0.11 process-separated bank:** 5 passed in 13.25 s; `compileall` green.
 
-The offline harness used byte-identical Git blobs for the canonical base modules plus `context_codec.py`, `cold_guard.py`, and `canonical_cold.py`. `coordinator_context.py` and the test driver were reconstructed locally with equivalent logic to make execution possible without network access. This is therefore strong targeted evidence, but it is **not** claimed as the complete historical repository regression or a byte-for-byte checkout execution.
-
-No GitHub Actions were consumed.
+These runs used an offline reconstructed local workspace because the container cannot resolve GitHub hosts. Canonical base modules were verified against their Git blob identities; some newly added files/test drivers were reconstructed with equivalent logic. This is targeted evidence, not a complete historical byte-for-byte checkout regression. No GitHub Actions were consumed.
 
 ## Next ceiling
 
-The next local evidence boundary is **process-separated canonical cold recovery**: preparation and recovery in distinct Python interpreter processes with SQLite files as the only bridge.
+Provider-neutral restart/recovery is now at diminishing returns. The next material gates are:
 
-After that, confidence should increasingly come from complete historical regression and provider-specific execution with trustworthy conformance-run provenance rather than more provider-neutral recovery abstractions.
+1. complete historical repository regression on the canonical stacked line;
+2. provider-specific execution of the v0.0.9 conformance harness with trustworthy run provenance;
+3. only after those gates, consideration of concrete remote transport.
 
 ## Status
 
-**v0.0.10 Canonical Cold Coordinator Bootstrap: targeted local conformance green; full historical regression still pending.**
+**v0.0.11 Process-Separated Canonical Cold Recovery: targeted local conformance green; full historical regression and provider-specific provenance remain pending.**

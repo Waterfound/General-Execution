@@ -24,6 +24,12 @@ from .canonical_cold import (
     prepare_canonical_cold_ambiguity,
     recover_canonical_cold_ambiguity,
 )
+from .canonical_process_harness import (
+    CanonicalProcessHarnessError,
+    CanonicalProcessSeparatedEvidence,
+    CanonicalProcessWorkerResult,
+    run_process_separated_canonical_cold_recovery,
+)
 from .capacity import (
     CapacityError,
     CapacityLease,
@@ -176,6 +182,9 @@ __all__ = [
     "CanonicalColdError",
     "CanonicalColdPreparationReceipt",
     "CanonicalColdRecoveryReport",
+    "CanonicalProcessHarnessError",
+    "CanonicalProcessSeparatedEvidence",
+    "CanonicalProcessWorkerResult",
     "CapacityError",
     "CapacityLease",
     "CapacityLeaseGrant",
@@ -295,6 +304,7 @@ __all__ = [
     "release_capacity_for_revocation",
     "reserve_capacity",
     "revoke_session",
+    "run_process_separated_canonical_cold_recovery",
     "run_provider_conformance",
     "serialize_capacity_snapshot",
     "serialize_coordinator_context",
@@ -324,4 +334,4 @@ __all__ = [
     "verify_retry_chain",
 ]
 
-__version__ = "0.0.10"
+__version__ = "0.0.11"
