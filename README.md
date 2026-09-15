@@ -10,6 +10,8 @@ ExecutionSpec
   -> logical Session
   -> physical authorization
   -> durable capacity lease
+  -> durable dispatch intent
+  -> live dispatch permit
   -> external provider
   -> observation / receipt
   -> durable capacity release
@@ -25,25 +27,35 @@ ExecutionSpec
 - **v0.0.3 — Physical Failure Semantics:** logical and physical attempts are distinct; physical outcomes and retry lineage are explicit. See [`docs/v0.0.3-physical-failure-semantics.md`](docs/v0.0.3-physical-failure-semantics.md).
 - **v0.0.4 — Capacity & Lease Semantics:** `max_parallelism`, deterministic slots, compare-and-swap capacity state, explicit release, and retry-capacity ordering. See [`docs/v0.0.4-capacity-lease-semantics.md`](docs/v0.0.4-capacity-lease-semantics.md).
 - **v0.0.5 — Durable Head & Restart Recovery:** SQLite-backed canonical capacity heads, transactional CAS, replay-verified snapshots, and unresolved in-flight lease recovery. See [`docs/v0.0.5-durable-restart-recovery.md`](docs/v0.0.5-durable-restart-recovery.md).
+- **v0.0.6 — Durable Dispatch Intent & Ambiguity Recovery:** durable outbox state, crash-safe submission ambiguity, live capacity-bound transport permits, and fail-closed restart reconciliation. See [`docs/v0.0.6-durable-dispatch-intent.md`](docs/v0.0.6-durable-dispatch-intent.md).
 
-## v0.0.5 invariants
+## v0.0.6 invariants
 
-Each runner has at most one durable canonical capacity head. A durable commit must extend that head by exactly one replayable transition and must match the current `expected_state_digest` inside the same SQLite write transaction.
+An active physical authorization is not enough to justify remote submission after a crash. General Execution now durably distinguishes:
 
-A coordinator restart does not release capacity and does not imply any provider outcome. Active leases recover as `in_flight_unresolved` with the same slot, Session, authorization and invocation identity.
+```text
+PREPARED -> SUBMISSION_UNKNOWN -> OBSERVED
+```
+
+`PREPARED` means the intent exists durably but transport has not begun. `SUBMISSION_UNKNOWN` is persisted before a future provider side effect is allowed and survives restart as ambiguity. `OBSERVED` means native provider evidence has been admitted and bound to the exact authorization.
 
 The core enforces:
 
-- durable snapshot digest and native capacity-state digest both verify on reload;
-- full capacity history replays against the exact `RunnerCapabilities`;
-- persisted metadata must agree with reconstructed snapshot state;
-- capability drift fails closed;
-- stale competing writers cannot both advance one durable head;
-- a commit cannot skip generations or replace canonical transition history;
-- restart recovery fabricates zero physical outcomes and zero capacity releases;
-- a recovered active lease remains capacity-consuming until real evidence or explicit Session revocation produces the native release transition.
+- one durable dispatch intent per active capacity lease;
+- immutable runner / lease / Session / authorization / invocation lineage;
+- transactional compare-and-swap intent transitions;
+- persisted `intent_id`, `runner_id`, `lease_id`, state digest and revision must reconcile with canonical state;
+- restart recovery scans and validates all durable rows so metadata corruption cannot hide an ambiguous invocation;
+- `SUBMISSION_UNKNOWN` recovers as `reconcile_provider`, never blind re-submission;
+- recovery fabricates zero provider outcomes;
+- `DispatchPermit` explicitly has `transport_authority = false`;
+- only `LiveDispatchPermit` is eligible for a future transport boundary;
+- a live permit binds the exact current capacity-state digest and generation;
+- Session revocation / capacity release invalidates an earlier live permit;
+- even unrelated capacity-generation change makes a live permit stale and requires revalidation;
+- late provider evidence may still be recorded because observation is evidence, not new execution authority.
 
-There is still no wall-clock lease expiry in the core.
+There is still no wall-clock lease expiry and no concrete remote transport in the core.
 
 ## First client
 
@@ -59,24 +71,25 @@ python -m pip install -e . --no-build-isolation --no-deps
 
 The core has no non-stdlib runtime dependencies.
 
-## Current v0.0.5 evidence
+## Current v0.0.6 evidence
 
-The durable-recovery candidate adds 10 focused conformance scenarios covering snapshot round-trip, restart-stable reload, active-lease survival, post-restart capacity blocking, real outcome release after restart, stale CAS across independent store connections, generation-skip rejection, snapshot and metadata tamper detection, capability drift, and idempotent initialization.
+The branch adds a 14-scenario focused conformance bank spanning prepared/ambiguous/observed restart states, no-blind-resubmit recovery, live-permit binding, revocation invalidation, generation refresh, stale CAS, provider-outcome closure, serialized-state tampering, row-metadata reconciliation, hidden-row recovery, and explicit non-authority of the durable dispatch permit.
 
-An isolated local SQLite/CAS harness additionally exercised `genesis -> reserve -> restart -> stale-CAS rejection -> real release -> second restart` successfully without GitHub Actions.
+The implementation has also received static API/import review in-chat without consuming GitHub Actions. A full external pytest execution has not been claimed for v0.0.6 in this environment.
 
 ## Next ceiling
 
-The next highest-value boundary is **durable dispatch intent & ambiguity recovery**.
+The next highest-value boundary is **provider idempotency & reconciliation**.
 
-v0.0.5 can recover that a lease is still active, but after a crash it intentionally cannot infer whether the external provider actually received the invocation. Before adding concrete remote transport, General Execution should durably bind a dispatch intent to the active lease and distinguish at least:
+A local SQLite transaction cannot be atomic with an arbitrary remote provider side effect. Before adding a real remote adapter, General Execution should define and prove a provider-neutral reconciliation contract keyed by the stable invocation identity that can distinguish at least:
 
-- prepared but not submitted;
-- submission attempted but provider acceptance unknown;
-- provider identity/receipt observed.
+- definitively absent / never accepted;
+- accepted or currently running;
+- terminal with retrievable evidence;
+- provider state still unknown.
 
-Restart recovery must never blindly re-submit an ambiguous invocation. Concrete remote transport should be introduced only after this outbox/reconciliation boundary is proven.
+Any re-submission path must be explicitly idempotent or supported by provider evidence that proves absence. `SUBMISSION_UNKNOWN` must never degrade into blind retry merely because time passed or the coordinator restarted.
 
 ## Status
 
-**v0.0.5 Durable Head & Restart Recovery: implementation candidate locally validated at the SQLite/CAS boundary.**
+**v0.0.6 Durable Dispatch Intent & Ambiguity Recovery: implementation candidate complete in branch; static boundary review complete; full external pytest execution remains unclaimed.**
