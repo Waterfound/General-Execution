@@ -5,134 +5,47 @@
 General Execution performs bounded work that another system has already authorized. It does **not** decide what should be built, whether a result is correct, whether it should be integrated, or whether it should be released.
 
 ```text
-Authorized ExecutionSpec
-        -> Runner Registry
-        -> Deterministic Dispatch Plan
-        -> Retry-safe Logical Session
-        -> Physical Attempt Authorization
-        -> External Provider / Transport
-        -> Physical Observation
-        -> Bound Receipt / Result-or-Failure
-        -> Verifiable Execution Ledger
+ExecutionSpec
+  -> deterministic plan
+  -> logical Session
+  -> physical authorization
+  -> capacity lease
+  -> external provider
+  -> observation / receipt
+  -> capacity release
+  -> execution ledger
 ```
 
 > **Execution consumes authority. It does not create authority.**
 
-## Why it exists
+## Protocol milestones
 
-Build Colony evolved strong execution mechanics while solving a narrower engineering-coordination problem. General Execution separates the reusable execution substrate from Build Colony's project intelligence.
+- **v0.0.1 — Execution Kernel:** immutable request identity, deterministic capability matching, retry-safe logical attempts, result binding, and ledger. See [`docs/v0.0.1-kernel.md`](docs/v0.0.1-kernel.md).
+- **v0.0.2 — Provider-neutral Adapter Contract:** authorization, transport, and evidence admission are separate. See [`docs/v0.0.2-reference-adapter.md`](docs/v0.0.2-reference-adapter.md).
+- **v0.0.3 — Physical Failure Semantics:** logical and physical attempts are distinct; physical outcomes and retry lineage are explicit. See [`docs/v0.0.3-physical-failure-semantics.md`](docs/v0.0.3-physical-failure-semantics.md).
+- **v0.0.4 — Capacity & Lease Semantics:** `max_parallelism`, deterministic slots, compare-and-swap capacity state, explicit release, and retry-capacity ordering. See [`docs/v0.0.4-capacity-lease-semantics.md`](docs/v0.0.4-capacity-lease-semantics.md).
 
-Build Colony retains ownership of ceiling mapping, work decomposition, dependency semantics, engineering evidence gates, independent verification, serialized integration, and ceiling assessment. General Execution owns only the provider-neutral mechanics needed to express an already bounded execution request and verify returned provenance-bound evidence.
+## v0.0.4 invariants
 
-The same boundary permits DI, CII, Project Assurance, or future systems to use the substrate without inheriting Build Colony's engineering semantics.
+Each runner has a replayable `RunnerCapacityState`. Reserve/release proposals bind to one exact `expected_state_digest`; after one proposal commits, another proposal created from the older snapshot is stale.
 
-## Non-goals
+A committed `CapacityLeaseGrant` binds the exact runner, slot, logical Session, physical authorization, invocation ID, physical-attempt ordinal, and capacity-state revision.
 
-General Execution is not a project manager, architecture authority, domain verifier, integration controller, release/consensus authority, translator that invents missing semantics, or unrestricted command runner.
+The core enforces:
 
-A runner/provider cannot grant itself `verified`, `integrated`, `approved`, `released`, or equivalent authority through the core protocol.
+- active canonical leases never exceed `RunnerCapabilities.max_parallelism`;
+- one logical Session attempt has at most one active canonical physical lease;
+- retry capacity is unavailable until the preceding physical attempt has been canonically released;
+- a completed predecessor is not a retry source;
+- terminal physical outcomes and explicit Session revocation release capacity through auditable transitions;
+- capacity state can be replayed from runner genesis;
+- capacity transitions can be recorded as `CAPACITY_RESERVED` / `CAPACITY_RELEASED` ledger events.
 
-## v0.0.1 — Execution Kernel
+There is no wall-clock lease expiry in the core. A future durable store must maintain one canonical capacity head per runner and apply the expected-state-digest rule atomically.
 
-The first kernel froze immutable request identity, deterministic capability matching, fail-closed dispatch, retry-safe logical attempts, exact result binding, and an append-only deterministic ledger.
+## First client
 
-## v0.0.2 — Provider-neutral Adapter Contract
-
-v0.0.2 separated **authorization**, **transport**, and **evidence admission**.
-
-```text
-ExecutionSpec + Plan + running Session
-              -> AdapterDispatchRequest
-              -> external provider / transport
-              -> ProviderObservation
-              -> coordinator-side admission
-              -> AdapterReceipt + InvocationBundle
-```
-
-General Execution does not need to launch an operating-system process or remote job itself. A provider may be local, remote, hosted, agent-backed, or otherwise external to the kernel.
-
-## v0.0.3 — Physical Failure Semantics
-
-v0.0.3 separates a **logical Session attempt** from the physical attempts used to realize it.
-
-```text
-Logical Session attempt 1
-        |
-        +-> physical attempt 1 -> timed_out
-        |                         |
-        |                         +-> receipt digest
-        |
-        +-> physical attempt 2 -> transport_failed
-        |                         |
-        |                         +-> receipt digest
-        |
-        +-> physical attempt 3 -> completed -> ResultEnvelope
-```
-
-The following terminal transport outcomes are explicit protocol data rather than exceptional or forgotten control flow:
-
-- `completed`
-- `rejected`
-- `timed_out`
-- `cancelled`
-- `transport_failed`
-
-A physical failure does **not** silently fail or advance the logical Session. The Session remains `running` until the caller either submits a valid result or explicitly revokes it.
-
-### Retry lineage
-
-A retry gets:
-
-- a new `invocation_id`;
-- an incremented `physical_attempt` ordinal;
-- the same logical `session_id` and logical attempt;
-- `previous_invocation_id` bound to the prior physical attempt;
-- `previous_receipt_digest` bound to the exact prior receipt.
-
-A completed physical attempt cannot be retried. A retry chain cannot jump over, rewrite, or substitute an earlier receipt without failing verification.
-
-### Duplicate physical execution
-
-Two distinct provider invocations that execute the same physical authorization are represented as explicit `DuplicatePhysicalAttempt` evidence. Duplicate evidence cannot replace the canonical attempt or become a second admissible result by accident.
-
-### Provenance
-
-Every physical attempt records four deterministic ledger events:
-
-```text
-PHYSICAL_DISPATCH
-  -> PHYSICAL_OBSERVATION
-  -> PHYSICAL_RECEIPT
-  -> PHYSICAL_RESULT
-```
-
-or, for a terminal transport failure:
-
-```text
-PHYSICAL_DISPATCH
-  -> PHYSICAL_OBSERVATION
-  -> PHYSICAL_RECEIPT
-  -> PHYSICAL_TERMINAL_FAILURE
-```
-
-Re-recording the same physical authorization is rejected rather than overwriting or duplicating canonical history.
-
-## First client: Build Colony
-
-Build Colony remains the first client identity:
-
-```text
-Build Colony Work Package
-        -> client-side translation
-        -> ExecutionSpec
-        -> General Execution logical Session
-        -> one or more physical attempts
-        -> ResultEnvelope or auditable terminal failure
-        -> Build Colony evidence admission
-        -> independent verification/integration outside General Execution
-```
-
-General Execution therefore executes for Build Colony without importing Build Colony or acquiring Build Colony authority.
+Build Colony remains the first client identity. It translates bounded Work Packages into `ExecutionSpec` objects. General Execution governs execution mechanics and capacity; Build Colony keeps evidence-verification and integration authority. See [`docs/build-colony-first-client.md`](docs/build-colony-first-client.md).
 
 ## Development
 
@@ -144,25 +57,14 @@ python -m pip install -e . --no-build-isolation --no-deps
 
 The core has no non-stdlib runtime dependencies.
 
-## Current evidence
+## Current v0.0.4 evidence
 
-- 39/39 full local conformance tests GREEN;
-- 33 public regression/conformance tests included in the repository after v0.0.3;
-- `compileall` GREEN;
-- editable offline install GREEN;
-- all four failure transport statuses admitted without fabricating a result;
-- physical failure leaves the logical Session active;
-- retry predecessor binding GREEN;
-- completed-attempt retry rejection GREEN;
-- changed observation/result/retry-lineage rejection GREEN;
-- duplicate physical execution represented explicitly;
-- physical attempt ledger record verification GREEN;
-- v0.0.1 and v0.0.2 compatibility tests remain GREEN.
+The capacity candidate passed 14 targeted local conformance tests covering capacity exhaustion, deterministic multi-slot allocation, stale reserve/release proposals, retry ordering, Session revocation, competing retry proposals, execution-context binding, state replay, and capacity-ledger recording.
 
 ## Next ceiling
 
-The next highest-value milestone is **v0.0.4 — Capacity & Lease Semantics**. `RunnerCapabilities.max_parallelism` already exists, but runtime physical-attempt capacity is not yet enforced by General Execution. Before adding a concrete remote transport, the core should prove that concurrent dispatch, capacity reservation, release, cancellation, retry, and duplicate-delivery races cannot oversubscribe a runner or silently create two canonical attempts.
+The next highest-value boundary is **durable head & restart recovery**: serialize/reload canonical capacity state, replay it after coordinator restart, and reconcile an in-flight lease without fabricating a physical outcome. Concrete remote transport should depend on capacity only after this recovery boundary is proven.
 
 ## Status
 
-**v0.0.3 Physical Failure Semantics: implemented and locally validated.**
+**v0.0.4 Capacity & Lease Semantics: implementation candidate locally validated.**
