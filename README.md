@@ -10,16 +10,12 @@ ExecutionSpec
   -> logical Session
   -> physical authorization
   -> capacity lease
-  -> external provider
-  -> observation / receipt
-  -> capacity release
+  -> durable recovery context
   -> durable capacity head
-  -> restart recovery
-  -> SQLite canonical-head persistence
-  -> post-restart reconciliation
-  -> provider reattachment probe
-  -> durable reference provider registry / bridge
-  -> durable-store reopen rehearsal
+  -> provider identity / status
+  -> cold bootstrap
+  -> provider reattachment
+  -> reconciliation
   -> execution ledger
 ```
 
@@ -27,49 +23,86 @@ ExecutionSpec
 
 ## Protocol milestones
 
-- **v0.0.1 — Execution Kernel:** immutable request identity, deterministic capability matching, retry-safe logical attempts, result binding, and ledger. See [`docs/v0.0.1-kernel.md`](docs/v0.0.1-kernel.md).
-- **v0.0.2 — Provider-neutral Adapter Contract:** authorization, transport, and evidence admission are separate. See [`docs/v0.0.2-reference-adapter.md`](docs/v0.0.2-reference-adapter.md).
-- **v0.0.3 — Physical Failure Semantics:** logical and physical attempts are distinct; physical outcomes and retry lineage are explicit. See [`docs/v0.0.3-physical-failure-semantics.md`](docs/v0.0.3-physical-failure-semantics.md).
-- **v0.0.4 — Capacity & Lease Semantics:** `max_parallelism`, deterministic slots, compare-and-swap capacity state, explicit release, and retry-capacity ordering. See [`docs/v0.0.4-capacity-lease-semantics.md`](docs/v0.0.4-capacity-lease-semantics.md).
-- **v0.0.5 — Durable Head & Restart Recovery:** canonical capacity snapshots, durable-head continuity, strict state decoding, and conservative recovery of in-flight leases. See [`docs/v0.0.5-durable-restart-recovery.md`](docs/v0.0.5-durable-restart-recovery.md).
-- **v0.0.6 — SQLite Durable Head Persistence:** filesystem-backed SQLite storage, atomic canonical-head compare-and-swap, exact in-transaction verification, and idempotent replay after lost acknowledgement. See [`docs/v0.0.6-sqlite-persistence.md`](docs/v0.0.6-sqlite-persistence.md).
-- **v0.0.7 — Post-Restart Provider Reconciliation:** deterministic source-to-target reconciliation plans for recovered leases, provider-outcome/revocation resolution, atomic CAS commit, and idempotent replay. See [`docs/v0.0.7-recovery-reconciliation.md`](docs/v0.0.7-recovery-reconciliation.md).
-- **v0.0.8 — Provider Reattachment Semantics:** deterministic client-generated reattachment keys, status-only probes, conservative `running` / `not_found` handling, and terminal physical-outcome admission. See [`docs/v0.0.8-provider-reattachment.md`](docs/v0.0.8-provider-reattachment.md).
-- **v0.0.9 — Reattachable Reference Provider:** a filesystem-backed reference job registry plus protocol bridge proving durable provider identity, restart lookup, immutable terminal status, and handoff into v0.0.8/v0.0.7. See [`docs/v0.0.9-reattachable-reference-provider.md`](docs/v0.0.9-reattachable-reference-provider.md).
-- **v0.0.10 — Durable Store Reopen Rehearsal:** a deterministic QA scenario reopening durable capacity/provider stores while the immutable execution context is explicitly caller-retained. See [`docs/v0.0.10-store-reopen-rehearsal.md`](docs/v0.0.10-store-reopen-rehearsal.md).
+- **v0.0.1 — Execution Kernel:** immutable request identity, deterministic capability matching, retry-safe logical attempts, result binding, and ledger.
+- **v0.0.2 — Provider-neutral Adapter Contract:** authorization, transport, and evidence admission are separate.
+- **v0.0.3 — Physical Failure Semantics:** logical and physical attempts are distinct; physical outcomes and retry lineage are explicit.
+- **v0.0.4 — Capacity & Lease Semantics:** `max_parallelism`, deterministic slots, compare-and-swap capacity state, explicit release, and retry-capacity ordering.
+- **v0.0.5 — Durable Head & Restart Recovery:** replayable capacity snapshots and conservative `in_flight_unknown` recovery.
+- **v0.0.6 — SQLite Durable Head Persistence:** filesystem-backed canonical-head CAS.
+- **v0.0.7 — Post-Restart Provider Reconciliation:** explicit source-to-target recovery plans and atomic reconciliation.
+- **v0.0.8 — Provider Reattachment Semantics:** deterministic pre-dispatch reattachment keys and conservative status probes.
+- **v0.0.9 — Reattachable Reference Provider:** durable provider identity/status control plane.
+- **v0.0.10 — Durable Store Reopen Rehearsal:** two-store reopen QA with execution context explicitly caller-retained.
+- **v0.0.11 — Durable Recovery Context + Cold Bootstrap:** immutable reconstruction of Spec, registry, plan, Session, physical authorization, runner definition and lease anchor, followed by a stores-only cold coordinator rehearsal. See [`docs/v0.0.11-durable-recovery-context.md`](docs/v0.0.11-durable-recovery-context.md).
 
-## v0.0.10 evidence boundary
+## v0.0.11 invariants
 
-v0.0.10 does **not** claim a cold coordinator restart. `ExecutionSpec`, runner registry, dispatch plan, logical Session, and physical authorization remain available from the caller during the store-reopen rehearsal. Every report therefore records:
+`DurableRecoveryContext` contains the complete typed execution identity needed to re-enter the existing recovery protocols after volatile coordinator memory is gone.
+
+The context binds:
+
+- exact `ExecutionSpec`;
+- exact `RunnerRegistry` and selected `RunnerCapabilities`;
+- deterministic `DispatchPlan`;
+- running `ExecutionSession`;
+- exact `PhysicalAttemptAuthorization`, including retry predecessor bindings;
+- an anchor `DurableCapacitySnapshot` containing the active lease;
+- exact recovered lease ID and digest.
+
+The serialized form is canonical JSON. Loading reconstructs typed objects and re-runs existing plan, dispatch-request, capacity replay, authorization, and lease bindings.
+
+### Anchor, not frozen head
+
+The recovery context is anchored to the snapshot at which the attempt became recoverable. A later current capacity head may contain unrelated transitions from other slots while the same lease stays active.
+
+The context remains valid only when the current capacity history extends the full anchor transition prefix and the exact lease is still active and unchanged.
+
+### Safe persistence order
 
 ```text
-context_mode = caller_retained
+reserve candidate in memory
+  -> build anchor snapshot + recovery context
+  -> persist recovery context
+  -> commit durable capacity head
+  -> register provider identity
 ```
 
-Within that boundary, the rehearsal proves:
+A crash after context persistence but before capacity commit leaves an orphan context, which cold bootstrap ignores. Once a recoverable active capacity head exists, its recovery context was already durable.
 
-- the persisted capacity head reproduces exactly after reopen;
-- one `in_flight_unknown` lease is reconstructed from durable capacity state;
-- the same deterministic provider key/job identity survives provider-registry reopen;
-- provider `running` is admitted as `keep_running` with no outcome and no capacity release;
-- terminal provider state is persisted and admitted through v0.0.8 as a physical outcome;
-- v0.0.7 reconciliation advances the durable capacity head and removes the recovered lease;
-- a `timed_out` physical terminal does not create a logical result;
-- a `completed` physical terminal exposes a `ResultEnvelope` but leaves the logical Session `running`;
-- logical result submission remains a separate explicit `submit_result(...)` operation;
-- fresh stores with identical protocol inputs reproduce the same report independent of filesystem path;
-- capacity and provider stores are distinct;
-- the final rehearsal object rebinds report, recovered lease, physical outcome, result, and reconciliation receipt.
+### True cold bootstrap and resume
 
-The central authority boundary remains:
+`bootstrap_active_recovery_contexts(...)` starts from only the recovery-context store and durable capacity-head store and reconstructs active execution bindings.
+
+The reference rehearsal is deliberately split:
+
+```text
+prepare_reference_cold_restart(...)
+  -> persist recovery context
+  -> persist capacity head
+  -> persist provider identity
+
+[cold coordinator boundary]
+
+resume_reference_cold_restart(paths only)
+  -> reconstruct runner / Spec / registry / plan / Session / authorization
+  -> recover in_flight_unknown lease
+  -> provider running => keep_running
+  -> terminal provider status
+  -> physical outcome admission
+  -> reconciliation CAS
+```
+
+The resume API receives no live execution objects from preparation. Its report marks `context_mode="cold_reconstructed"`.
+
+A completed physical outcome still leaves the reconstructed Session `running`; logical submission remains a separate explicit `submit_result(...)` operation.
+
+## Authority boundary
+
+Recovery context preserves identity; it does not create permission to retry, release capacity without terminal/revocation evidence, submit a logical result automatically, verify application evidence, integrate changes, or approve release.
 
 ```text
 physical completion != logical result submission
 ```
-
-## First client
-
-Build Colony remains the first client identity. It translates bounded Work Packages into `ExecutionSpec` objects. General Execution governs execution mechanics, capacity, recovery state, persistence, reconciliation, provider-status mechanics, and reference rehearsals; Build Colony keeps evidence-verification and integration authority. See [`docs/build-colony-first-client.md`](docs/build-colony-first-client.md).
 
 ## Development
 
@@ -81,20 +114,18 @@ python -m pip install -e . --no-build-isolation --no-deps
 
 The core has no non-stdlib runtime dependencies; SQLite comes from Python's standard library.
 
-## Current v0.0.10 conformance bank
+## Current v0.0.11 conformance bank
 
-Tests cover timeout reconciliation, completed physical outcome without automatic logical submission, provider terminal persistence, deterministic fresh-store replay, capacity-head reuse rejection, distinct-store enforcement, invalid-mode rejection before mutation, report/component binding, and explicit caller-retained context semantics.
-
-An isolated two-store SQLite harness also confirmed reopen persistence, `keep_running` occupancy, terminal persistence, reconciliation-style CAS, and deterministic report identity. This is targeted evidence, not the full historical repository regression.
+The repository includes context round-trip and exact reconstruction, unrelated-head advancement, lease-removal rejection, schema/binding checks, context persistence and idempotency, re-anchor conflict, cold bootstrap from stores only, corruption rejection, orphan/historical context handling, stores-only cold resume, completed cold recovery without automatic logical submission, provider identity reconstruction, deterministic replay across fresh files, invalid-mode preservation, distinct-store enforcement, and final report binding.
 
 ## Admission state
 
-v0.0.10 is intentionally stacked on the v0.0.5-v0.0.9 candidate line. The canonical `main` remains at v0.0.4 until the full historical repository regression for the stacked line can be executed in a complete runner environment.
+v0.0.11 remains stacked above the v0.0.5-v0.0.10 candidate line. Canonical `main` remains at v0.0.4 until the full historical repository regression for the stacked line can be executed in a complete runner environment.
 
 ## Next ceiling
 
-The next highest-value milestone is **v0.0.11 — Durable Recovery Context**: canonically serialize and reconstruct the `ExecutionSpec`, registry, dispatch plan, logical Session, and physical authorization so a rehearsal can discard all volatile protocol objects and perform a true cold coordinator restart.
+The next highest-value milestone is a **cross-store cut-point failure matrix** around recovery-context persistence, capacity-head commit, provider registration, terminal-state persistence, and reconciliation CAS. Each cut point must prove the exact safe recovery state without timing assumptions.
 
 ## Status
 
-**v0.0.10 durable store reopen rehearsal: stacked implementation candidate under validation.**
+**v0.0.11 Durable Recovery Context + true cold coordinator rehearsal: stacked implementation candidate under validation.**
