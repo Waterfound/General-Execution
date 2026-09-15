@@ -124,12 +124,22 @@ class ProviderContractAttestation:
             raise ValueError("provider conformance attestation cannot create project authority")
         if self.suite_version != SUITE_VERSION:
             raise ValueError("unsupported attestation suite version")
-        if set(self.passed_cases) & set(self.failed_cases):
+        passed = set(self.passed_cases)
+        failed = set(self.failed_cases)
+        if passed & failed:
             raise ValueError("conformance case cannot be both passed and failed")
+        if not (passed | failed).issubset(ALLOWED_CASES):
+            raise ValueError("attestation contains unknown conformance case")
+        if len(self.passed_cases) != len(passed) or len(self.failed_cases) != len(failed):
+            raise ValueError("attestation conformance cases must be unique")
+        if self.contract_conformant and self.failed_cases:
+            raise ValueError("conformant attestation cannot contain failed required cases")
         if self.safe_resubmission_certified and (
             not self.contract_conformant or self.environment_scope != "production_equivalent"
         ):
             raise ValueError("safe resubmission certification requires production-equivalent conformance")
+        if self.terminal_evidence_certified and self.environment_scope != "production_equivalent":
+            raise ValueError("terminal evidence certification requires production-equivalent conformance")
 
     @property
     def attestation_id(self) -> str:
@@ -143,6 +153,7 @@ class ProviderContractAttestation:
 @dataclass(frozen=True, slots=True)
 class AttestedResubmissionPermit:
     decision_digest: str
+    reconciliation_evidence_digest: str
     contract_digest: str
     attestation_digest: str
     conformance_evidence_digest: str
@@ -157,6 +168,7 @@ class AttestedResubmissionPermit:
     def __post_init__(self) -> None:
         for name in (
             "decision_digest",
+            "reconciliation_evidence_digest",
             "contract_digest",
             "attestation_digest",
             "conformance_evidence_digest",
@@ -268,8 +280,6 @@ def authorize_attested_resubmission(
         raise ConformanceError("reconciliation decision does not authorize same-invocation resubmission")
     if decision.contract_digest != contract.digest:
         raise ConformanceError("reconciliation decision contract binding mismatch")
-    if decision.evidence_digest != evidence.digest:
-        raise ConformanceError("reconciliation decision evidence binding mismatch")
     if decision.live_permit_digest != live_permit.digest:
         raise ConformanceError("reconciliation decision live permit binding mismatch")
     if (
@@ -296,6 +306,7 @@ def authorize_attested_resubmission(
 
     return AttestedResubmissionPermit(
         decision_digest=decision.digest,
+        reconciliation_evidence_digest=decision.evidence_digest,
         contract_digest=contract.digest,
         attestation_digest=attestation.digest,
         conformance_evidence_digest=evidence.digest,
