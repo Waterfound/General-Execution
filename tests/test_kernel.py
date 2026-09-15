@@ -190,3 +190,28 @@ def test_ledger_reordering_is_detected():
 def test_artifact_digest_format_is_fail_closed():
     with pytest.raises(ValueError):
         ArtifactRef("bad", "artifact://bad", "not-a-digest")
+
+
+def test_invalid_runner_mode_is_rejected_at_runtime():
+    with pytest.raises(ValueError):
+        runner(modes=("verified",))
+
+
+def test_result_cannot_claim_verification_authority():
+    s = spec()
+    registry = RunnerRegistry((runner(),))
+    session = start_session(bind_session(s, registry, plan_execution(s, registry)))
+    with pytest.raises(ValueError):
+        ResultEnvelope(
+            session_id=session.session_id,
+            spec_id=s.spec_id,
+            spec_digest=s.digest,
+            runner_id=session.runner_id,
+            attempt=session.attempt,
+            status="verified",
+        )
+
+
+def test_artifact_digest_rejects_non_hex_payload():
+    with pytest.raises(ValueError):
+        ArtifactRef("bad", "artifact://bad", "sha256:" + "z" * 64)

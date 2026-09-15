@@ -8,6 +8,9 @@ from .canonical import sha256_digest, stable_id
 ExecutionMode = Literal["read_only", "bounded_write"]
 ResultStatus = Literal["completed", "failed"]
 
+VALID_EXECUTION_MODES = frozenset({"read_only", "bounded_write"})
+VALID_RESULT_STATUSES = frozenset({"completed", "failed"})
+
 
 def _nonempty(name: str, value: str) -> None:
     if not value or not value.strip():
@@ -30,6 +33,10 @@ class ArtifactRef:
         _nonempty("artifact.uri", self.uri)
         if not self.digest.startswith("sha256:") or len(self.digest) != 71:
             raise ValueError("artifact.digest must be a sha256:<64-hex> digest")
+        try:
+            int(self.digest[7:], 16)
+        except ValueError as exc:
+            raise ValueError("artifact.digest must contain 64 hexadecimal characters") from exc
 
 
 @dataclass(frozen=True, slots=True)
@@ -81,6 +88,8 @@ class RunnerCapabilities:
             _nonempty(name, getattr(self, name))
         _unique("capabilities", self.capabilities)
         _unique("modes", self.modes)
+        if not self.modes or any(mode not in VALID_EXECUTION_MODES for mode in self.modes):
+            raise ValueError("modes must contain only read_only or bounded_write")
         if self.max_parallelism < 1:
             raise ValueError("max_parallelism must be >= 1")
 
@@ -117,6 +126,8 @@ class DispatchPlan:
     schema_version: str = "ge.dispatch-plan.v1"
 
     def __post_init__(self) -> None:
+        if self.mode not in VALID_EXECUTION_MODES:
+            raise ValueError("mode must be read_only or bounded_write")
         if (self.runner_id is None) != (self.runner_capability_digest is None):
             raise ValueError("runner_id and runner_capability_digest must be both present or both absent")
         if self.runner_id is None and self.deferral_reason is None:
@@ -150,6 +161,8 @@ class ExecutionSession:
     def __post_init__(self) -> None:
         if self.attempt < 1:
             raise ValueError("attempt must be >= 1")
+        if self.mode not in VALID_EXECUTION_MODES:
+            raise ValueError("mode must be read_only or bounded_write")
         if self.state == "result_submitted" and self.result_digest is None:
             raise ValueError("result_submitted state requires result_digest")
         if self.state != "result_submitted" and self.result_digest is not None:
@@ -186,6 +199,8 @@ class ResultEnvelope:
             _nonempty(name, getattr(self, name))
         if self.attempt < 1:
             raise ValueError("attempt must be >= 1")
+        if self.status not in VALID_RESULT_STATUSES:
+            raise ValueError("status must be completed or failed")
 
     @property
     def digest(self) -> str:
