@@ -43,6 +43,15 @@ from .capacity import (
     verify_capacity_transition_record,
 )
 from .cold_bootstrap import ColdRecoveryBinding, bootstrap_active_recovery_contexts
+from .cold_rehearsal import (
+    COLD_CONTEXT_MODE,
+    ColdRehearsalError,
+    ColdRestartPreparationReceipt,
+    ColdRestartRehearsalReport,
+    ReferenceColdRestartRehearsal,
+    prepare_reference_cold_restart,
+    resume_reference_cold_restart,
+)
 from .durable import (
     DurableCapacityHead,
     DurableCapacitySnapshot,
@@ -171,6 +180,7 @@ __all__ = [
     "AdapterError",
     "AdapterReceipt",
     "ArtifactRef",
+    "COLD_CONTEXT_MODE",
     "CapacityError",
     "CapacityLease",
     "CapacityLeaseGrant",
@@ -179,6 +189,9 @@ __all__ = [
     "CapacityTransition",
     "CapacityTransitionRecord",
     "ColdRecoveryBinding",
+    "ColdRehearsalError",
+    "ColdRestartPreparationReceipt",
+    "ColdRestartRehearsalReport",
     "DispatchPlan",
     "DuplicatePhysicalAttempt",
     "DurableCapacityHead",
@@ -225,6 +238,7 @@ __all__ = [
     "ReconciliationConflict",
     "ReconciliationError",
     "ReferenceBridgeError",
+    "ReferenceColdRestartRehearsal",
     "ReferenceJobRecord",
     "ReferenceRegistrationReceipt",
     "ReferenceRegistryConflict",
@@ -274,6 +288,7 @@ __all__ = [
     "plan_execution",
     "plan_provider_outcome_reconciliation",
     "plan_revocation_reconciliation",
+    "prepare_reference_cold_restart",
     "propose_capacity_reservation",
     "propose_outcome_release",
     "propose_revocation_release",
@@ -292,6 +307,7 @@ __all__ = [
     "release_capacity_for_outcome",
     "release_capacity_for_revocation",
     "reserve_capacity",
+    "resume_reference_cold_restart",
     "revoke_session",
     "run_reference_store_reopen_rehearsal",
     "serialize_durable_snapshot",
@@ -323,4 +339,4 @@ __all__ = [
     "verify_status_probe",
 ]
 
-__version__ = "0.0.11"
+__version__ = "0.0.12"
