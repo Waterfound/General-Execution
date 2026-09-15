@@ -4,13 +4,13 @@ from dataclasses import dataclass
 from typing import Literal
 
 from .canonical import sha256_digest, stable_id
-from .dispatch import DispatchIntentError, DispatchIntentState, DispatchPermit, verify_dispatch_permit
+from .dispatch import DispatchIntentState, DispatchPermit, verify_dispatch_permit
 from .dispatch_guard import LiveDispatchPermit, verify_live_dispatch_permit
 from .durable import SqliteCapacityHeadStore
 from .models import RunnerCapabilities
 from .physical import PhysicalAttemptAuthorization
 
-SameRequestSemantics = Literal["same_operation", "duplicate_rejected"]
+SameRequestSemantics = Literal["same_operation", "duplicate_rejected", "may_duplicate"]
 ReconciliationStatus = Literal["absent", "accepted", "terminal", "unknown"]
 ReconciliationAction = Literal[
     "resubmit_same_invocation",
@@ -62,7 +62,7 @@ class ProviderReconciliationContract:
             _nonempty(name, getattr(self, name))
         if self.idempotency_key != "invocation_id":
             raise ValueError("v0.0.7 reconciliation requires invocation_id as idempotency key")
-        if self.same_key_same_request not in {"same_operation", "duplicate_rejected"}:
+        if self.same_key_same_request not in {"same_operation", "duplicate_rejected", "may_duplicate"}:
             raise ValueError("unsupported same-key/same-request semantics")
         if self.same_key_different_request != "reject":
             raise ValueError("same idempotency key with a different request must be rejected")
@@ -169,8 +169,8 @@ class ProviderReconciliationObservation:
             if not self.provider_invocation_id or self.terminal_evidence_digest is not None:
                 raise ValueError("accepted observation requires provider invocation and no terminal evidence")
         elif self.status == "terminal":
-            if not self.provider_invocation_id or self.terminal_evidence_digest is None:
-                raise ValueError("terminal observation requires provider invocation and terminal evidence digest")
+            if not self.provider_invocation_id:
+                raise ValueError("terminal observation requires provider invocation identity")
         elif self.status == "unknown":
             if self.terminal_evidence_digest is not None:
                 raise ValueError("unknown observation cannot claim terminal evidence")
@@ -198,6 +198,8 @@ class ProviderReconciliationEvidence:
 class ReconciliationDecision:
     intent_id: str
     dispatch_state_digest: str
+    invocation_id: str
+    request_digest: str
     evidence_digest: str
     contract_digest: str
     status: ReconciliationStatus
@@ -209,6 +211,15 @@ class ReconciliationDecision:
     schema_version: str = DECISION_SCHEMA
 
     def __post_init__(self) -> None:
+        for name in (
+            "intent_id",
+            "dispatch_state_digest",
+            "invocation_id",
+            "request_digest",
+            "evidence_digest",
+            "contract_digest",
+        ):
+            _nonempty(name, getattr(self, name))
         if self.action == "resubmit_same_invocation":
             if not self.resubmit_authorized or not self.requires_fresh_live_permit or not self.live_permit_digest:
                 raise ValueError("resubmit decision requires explicit authorization and fresh live permit")
@@ -301,7 +312,40 @@ def admit_reconciliation_observation(
         or observation.adapter_version != query.adapter_version
     ):
         raise ReconciliationError("provider reconciliation observation identity mismatch")
+    if observation.status == "terminal":
+        if contract.terminal_evidence_lookup and observation.terminal_evidence_digest is None:
+            raise ReconciliationError("provider contract requires retrievable terminal evidence")
+        if not contract.terminal_evidence_lookup and observation.terminal_evidence_digest is not None:
+            raise ReconciliationError("provider contract does not support terminal evidence lookup")
     return ProviderReconciliationEvidence(query, observation, contract.digest)
+
+
+def _decision(
+    *,
+    state: DispatchIntentState,
+    evidence: ProviderReconciliationEvidence,
+    contract: ProviderReconciliationContract,
+    status: ReconciliationStatus,
+    action: ReconciliationAction,
+    resubmit_authorized: bool,
+    requires_fresh_live_permit: bool,
+    live_permit_digest: str | None,
+    reason: str,
+) -> ReconciliationDecision:
+    return ReconciliationDecision(
+        intent_id=state.intent.intent_id,
+        dispatch_state_digest=state.digest,
+        invocation_id=state.intent.invocation_id,
+        request_digest=state.intent.request_digest,
+        evidence_digest=evidence.digest,
+        contract_digest=contract.digest,
+        status=status,
+        action=action,
+        resubmit_authorized=resubmit_authorized,
+        requires_fresh_live_permit=requires_fresh_live_permit,
+        live_permit_digest=live_permit_digest,
+        reason=reason,
+    )
 
 
 def decide_reconciliation(
@@ -316,19 +360,17 @@ def decide_reconciliation(
     runner: RunnerCapabilities | None = None,
 ) -> ReconciliationDecision:
     query = create_reconciliation_query(state, permit, authorization, contract)
-    if evidence.query != query or evidence.contract_digest != contract.digest:
-        raise ReconciliationError("reconciliation evidence does not belong to current query")
+    expected_evidence = admit_reconciliation_observation(query, contract, evidence.observation)
+    if evidence != expected_evidence:
+        raise ReconciliationError("reconciliation evidence does not belong to current query and contract")
     observation = evidence.observation
-    if observation.query_digest != query.digest:
-        raise ReconciliationError("reconciliation evidence observation is not bound to current query")
 
     if observation.status == "absent":
         if not contract.safe_idempotent_resubmission:
-            return ReconciliationDecision(
-                intent_id=state.intent.intent_id,
-                dispatch_state_digest=state.digest,
-                evidence_digest=evidence.digest,
-                contract_digest=contract.digest,
+            return _decision(
+                state=state,
+                evidence=evidence,
+                contract=contract,
                 status="absent",
                 action="hold",
                 resubmit_authorized=False,
@@ -340,11 +382,10 @@ def decide_reconciliation(
             raise ReconciliationError("safe resubmission requires a fresh live dispatch permit")
         if not verify_live_dispatch_permit(state, permit, live_permit, capacity_store, runner):
             raise ReconciliationError("live dispatch permit is stale or invalid")
-        return ReconciliationDecision(
-            intent_id=state.intent.intent_id,
-            dispatch_state_digest=state.digest,
-            evidence_digest=evidence.digest,
-            contract_digest=contract.digest,
+        return _decision(
+            state=state,
+            evidence=evidence,
+            contract=contract,
             status="absent",
             action="resubmit_same_invocation",
             resubmit_authorized=True,
@@ -354,11 +395,10 @@ def decide_reconciliation(
         )
 
     if observation.status == "accepted":
-        return ReconciliationDecision(
-            intent_id=state.intent.intent_id,
-            dispatch_state_digest=state.digest,
-            evidence_digest=evidence.digest,
-            contract_digest=contract.digest,
+        return _decision(
+            state=state,
+            evidence=evidence,
+            contract=contract,
             status="accepted",
             action="poll_existing",
             resubmit_authorized=False,
@@ -368,30 +408,34 @@ def decide_reconciliation(
         )
 
     if observation.status == "terminal":
-        action: ReconciliationAction = "admit_terminal_evidence" if contract.terminal_evidence_lookup else "hold"
-        reason = (
-            "provider returned terminal evidence for admission"
-            if contract.terminal_evidence_lookup
-            else "provider reports terminal state but contract cannot retrieve admissible terminal evidence"
-        )
-        return ReconciliationDecision(
-            intent_id=state.intent.intent_id,
-            dispatch_state_digest=state.digest,
-            evidence_digest=evidence.digest,
-            contract_digest=contract.digest,
+        if contract.terminal_evidence_lookup:
+            return _decision(
+                state=state,
+                evidence=evidence,
+                contract=contract,
+                status="terminal",
+                action="admit_terminal_evidence",
+                resubmit_authorized=False,
+                requires_fresh_live_permit=False,
+                live_permit_digest=None,
+                reason="provider returned terminal evidence for admission",
+            )
+        return _decision(
+            state=state,
+            evidence=evidence,
+            contract=contract,
             status="terminal",
-            action=action,
+            action="hold",
             resubmit_authorized=False,
             requires_fresh_live_permit=False,
             live_permit_digest=None,
-            reason=reason,
+            reason="provider reports terminal state but contract cannot retrieve admissible terminal evidence",
         )
 
-    return ReconciliationDecision(
-        intent_id=state.intent.intent_id,
-        dispatch_state_digest=state.digest,
-        evidence_digest=evidence.digest,
-        contract_digest=contract.digest,
+    return _decision(
+        state=state,
+        evidence=evidence,
+        contract=contract,
         status="unknown",
         action="hold",
         resubmit_authorized=False,
