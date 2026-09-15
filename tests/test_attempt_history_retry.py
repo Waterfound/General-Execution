@@ -125,6 +125,37 @@ def test_retry_logical_settlement_replay_is_idempotent(tmp_path):
     assert first.result_digest == second.result_digest
 
 
+def test_two_failures_produce_attempt_three_with_attempt_two_receipt_predecessor(tmp_path):
+    store_paths = paths(tmp_path)
+    preparation = prepare_reference_cold_lifecycle(*store_paths, suffix="attempt-three")
+    failure_one = settle_active_reference_failure(*store_paths)
+    retry_two = prepare_retry_from_durable_failure(*store_paths)
+    failure_two = settle_active_reference_failure(*store_paths)
+    assert failure_two.physical_attempt == 2
+    assert failure_two.authorization_id == retry_two.retry_authorization_id
+
+    retry_three = prepare_retry_from_durable_failure(*store_paths)
+    assert retry_three.prior_physical_attempt == 2
+    assert retry_three.retry_physical_attempt == 3
+    assert retry_three.prior_outcome_digest == failure_two.outcome_digest
+    assert retry_three.prior_receipt_digest == failure_two.physical_receipt_digest
+
+    contexts = {
+        context.authorization.authorization_id: context
+        for context, _ in SQLiteRecoveryContextStore(store_paths[1]).bootstrap_candidates()
+    }
+    third = contexts[retry_three.retry_authorization_id]
+    assert third.authorization.physical_attempt == 3
+    assert third.authorization.previous_receipt_digest == failure_two.physical_receipt_digest
+
+    history = assess_attempt_history(*physical_paths(store_paths)).for_session(preparation.session_id)
+    assert [(entry.physical_attempt, entry.state) for entry in history] == [
+        (1, "settled_failure"),
+        (2, "settled_failure"),
+        (3, "active_provider_running"),
+    ]
+
+
 def test_retry_is_rejected_if_logical_session_is_revoked(tmp_path):
     store_paths = paths(tmp_path)
     preparation = prepare_reference_cold_lifecycle(*store_paths, suffix="revoked-retry")
