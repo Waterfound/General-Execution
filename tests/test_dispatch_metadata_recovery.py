@@ -10,6 +10,7 @@ from general_execution import (
     REFERENCE_EVIDENCE,
     REFERENCE_TASK_KIND,
     RunnerRegistry,
+    SqliteCapacityHeadStore,
     authorize_physical_attempt,
     bind_session,
     initialize_capacity_state,
@@ -61,10 +62,14 @@ def prepared_store(tmp_path, suffix):
         runner,
         authorization,
     )
+    capacity_store = SqliteCapacityHeadStore(tmp_path / "capacity.db")
+    capacity_store.initialize(runner, genesis)
+    capacity_store.commit(runner, genesis.digest, capacity_state)
+
     intent = prepare_dispatch_intent(capacity_state, runner, grant.lease, authorization)
-    store = SqliteDispatchIntentStore(tmp_path / "dispatch.db")
-    prepared = store.initialize(intent)
-    return runner, capacity_state, intent, store, prepared
+    dispatch_store = SqliteDispatchIntentStore(tmp_path / "dispatch.db")
+    prepared = dispatch_store.initialize(intent)
+    return runner, capacity_store, intent, dispatch_store, prepared
 
 
 def test_runner_metadata_tampering_cannot_hide_ambiguous_intent(tmp_path):
@@ -101,11 +106,11 @@ def test_intent_id_metadata_tampering_is_found_by_recovery_scan(tmp_path):
 
 
 def test_durable_dispatch_permit_explicitly_has_no_transport_authority(tmp_path):
-    runner, capacity_state, intent, store, prepared = prepared_store(tmp_path, "authority")
+    runner, capacity_store, intent, store, prepared = prepared_store(tmp_path, "authority")
     unknown, permit = store.begin_submission(
         intent.intent_id,
         prepared.digest,
-        capacity_state,
+        capacity_store,
         runner,
     )
     assert unknown.status == "submission_unknown"
