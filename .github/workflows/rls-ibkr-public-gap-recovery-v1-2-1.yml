@@ -1,0 +1,66 @@
+name: RLS IBKR Public Gap Recovery V1.2.1
+
+on:
+  push:
+    branches:
+      - build-colony/rls-ibkr-archive-recovery-v1
+    paths:
+      - workloads/rls_ibkr_public_gap_recovery_v1_2.py
+      - workloads/rls_ibkr_public_gap_recovery_v1_2_1.py
+      - .github/workflows/rls-ibkr-public-gap-recovery-v1-2-1.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  recover-public-gap-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact branch revision
+        uses: actions/checkout@v4
+
+      - name: Record exact revision
+        run: |
+          git rev-parse HEAD
+          python3 --version
+
+      - name: Execute CRLF-safe credential-free gap recovery V1.2.1
+        working-directory: workloads
+        run: python3 rls_ibkr_public_gap_recovery_v1_2_1.py
+
+      - name: Verify bounded manifest and print summary
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('workloads/artifacts/rls_ibkr_public_gap_recovery_manifest_v1_2.json')
+          d = json.loads(p.read_text())
+          assert d['authority'] == 'OBSERVATION_ONLY_NO_RLS_ADMISSION_AUTHORITY'
+          assert d['credential_policy']['user_specific_credentials_used'] is False
+          assert d['frozen_target']['required_full_calendar_months'] == 120
+          assert len(d['frozen_target']['missing_months_before_run']) == 39
+          assert d['worker_version'] == 'RLS-IBKR-PUBLIC-GAP-RECOVERY-WORKER-v1.2.1'
+          c = d['coverage_result']
+          print('worker_version=', d['worker_version'])
+          print('evidence_digest_sha256=', d['evidence_digest_sha256'])
+          print('live_ibkr_statuses=', [(x.get('host'), x.get('status'), x.get('capture_date'), x.get('schema'), x.get('valid_full_ibkr_snapshot')) for x in d['live_ibkr_publisher']])
+          print('common_crawl_collections=', d['common_crawl'].get('collection_count'))
+          print('common_crawl_recovered_records=', len(d['common_crawl'].get('recovered', [])))
+          print('arquivo_variants=', [(x.get('original'), x.get('status'), x.get('row_count'), len(x.get('gap_rows', []))) for x in d['arquivo_pt']['variants']])
+          print('public_collector_bucket=', d['public_collector_bucket'])
+          print('new_full_snapshot_gap_months_recovered=', c['new_full_snapshot_gap_months_recovered'])
+          print('residual_missing_month_count=', c['residual_missing_month_count'])
+          print('residual_missing_months=', c['residual_missing_months'])
+          print('combined_month_count=', c['combined_month_count_if_all_new_recoveries_authenticate'])
+          print('threshold_120_met=', c['threshold_120_met_by_this_public_recovery'])
+          PY
+
+      - name: Upload public evidence manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: rls-ibkr-public-gap-recovery-v1-2-1
+          path: workloads/artifacts/rls_ibkr_public_gap_recovery_manifest_v1_2.json
+          if-no-files-found: error
+          retention-days: 30
