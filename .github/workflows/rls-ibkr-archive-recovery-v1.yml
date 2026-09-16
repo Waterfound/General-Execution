@@ -1,4 +1,4 @@
-name: RLS IBKR Archive Recovery V1
+name: RLS IBKR Archive Recovery V1.1
 
 on:
   push:
@@ -6,6 +6,7 @@ on:
       - build-colony/rls-ibkr-archive-recovery-v1
     paths:
       - workloads/rls_ibkr_archive_recovery_v1.py
+      - workloads/rls_ibkr_archive_recovery_v1_1.py
       - .github/workflows/rls-ibkr-archive-recovery-v1.yml
   workflow_dispatch:
 
@@ -25,15 +26,16 @@ jobs:
           git rev-parse HEAD
           python3 --version
 
-      - name: Execute bounded public archive recovery
-        run: python3 workloads/rls_ibkr_archive_recovery_v1.py > /tmp/rls-worker-output.txt
+      - name: Execute bounded public archive recovery V1.1
+        working-directory: workloads
+        run: python3 rls_ibkr_archive_recovery_v1_1.py > /tmp/rls-worker-output.txt
 
       - name: Print bounded recovery summary
         run: |
           python3 - <<'PY'
           import json
           from pathlib import Path
-          p = Path('artifacts/rls_ibkr_archive_recovery_manifest_v1.json')
+          p = Path('workloads/artifacts/rls_ibkr_archive_recovery_manifest_v1.json')
           d = json.loads(p.read_text())
           c = d['community_archive']
           print('worker_version=', d['worker_version'])
@@ -41,10 +43,12 @@ jobs:
           print('community_status=', c.get('status'))
           print('archive_sha256=', c.get('sha256'))
           print('archive_size=', c.get('size'))
+          print('member_count=', c.get('member_count'))
           print('earliest_capture_date=', c.get('earliest_capture_date'))
           print('latest_capture_date=', c.get('latest_capture_date'))
           print('target_month_count_present=', c.get('target_month_count_present'))
           print('target_month_count_missing=', c.get('target_month_count_missing'))
+          print('longest_consecutive_target_month_run=', c.get('longest_consecutive_target_month_run'))
           print('target_months_missing=', c.get('target_months_missing'))
           for v in d['internet_archive']['variants']:
               print('wayback_variant=', v['original'])
@@ -57,7 +61,7 @@ jobs:
       - name: Upload evidence manifest
         uses: actions/upload-artifact@v4
         with:
-          name: rls-ibkr-archive-recovery-v1
-          path: artifacts/rls_ibkr_archive_recovery_manifest_v1.json
+          name: rls-ibkr-archive-recovery-v1-1
+          path: workloads/artifacts/rls_ibkr_archive_recovery_manifest_v1.json
           if-no-files-found: error
           retention-days: 30
