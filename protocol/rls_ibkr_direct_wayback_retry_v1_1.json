@@ -1,0 +1,20 @@
+{
+  "protocol":"RLS-IBKR-DIRECT-WAYBACK-RETRY-v1.1",
+  "status":"FROZEN_TRANSPORT_ONLY_SUCCESSOR",
+  "frozen_at":"2026-09-16",
+  "authority":"OBSERVATION_ONLY_NO_RLS_ADMISSION_AUTHORITY",
+  "parent_protocol":"RLS-IBKR-DIRECT-WAYBACK-AVAILABILITY-SWEEP-v1",
+  "parent_evidence_digest_sha256":"84d59443bca56926f9d666a389f3e085d6d770a3e81df87dc113485ae9759bb1",
+  "unresolved_rule": {
+    "http_ftp3": "all 78 parent anchors across the 39 missing months",
+    "https_ftp3": "all 78 parent anchors across the 39 missing months",
+    "https_ftp2": "56 parent anchors: 2017-08, 2017-09 and every month 2024-07 through 2026-08, days 01 and 15",
+    "expected_query_count":212,
+    "no_new_anchors":true
+  },
+  "transport":{"endpoint":"https://archive.org/wayback/available","max_concurrency":2,"timeout_seconds":20,"max_attempts":4,"retry_backoff_seconds":[0.75,2.0,4.0]},
+  "allowed":["retry exactly parent-unresolved target+anchor pairs","availability metadata only","deduplicate target+snapshot timestamp+URL","identify missing-month snapshot candidates","deterministic evidence digest"],
+  "forbidden":["new target/anchor","follow snapshot","open archived bytes/economic values/strategy outcomes","grant admission authority","change 120-month target","credentials/API keys/account login"],
+  "credential_policy":{"user_specific_credentials_allowed":false,"api_keys_allowed":false,"account_login_allowed":false},
+  "confirmation":"SEALED","capital_authorization":"0.00%"
+}
