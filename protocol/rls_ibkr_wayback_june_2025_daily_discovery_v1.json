@@ -1,0 +1,17 @@
+{
+  "protocol":"RLS-IBKR-WAYBACK-JUNE-2025-DAILY-DISCOVERY-v1",
+  "status":"FROZEN_AFTER_MONTH_CANDIDATE_BEFORE_DAILY_DISCOVERY",
+  "frozen_at":"2026-09-16",
+  "authority":"OBSERVATION_ONLY_NO_RLS_ADMISSION_AUTHORITY",
+  "parent_protocol":"RLS-IBKR-DIRECT-WAYBACK-AVAILABILITY-SWEEP-v1",
+  "parent_evidence_digest_sha256":"84d59443bca56926f9d666a389f3e085d6d770a3e81df87dc113485ae9759bb1",
+  "target":"http://ftp2.interactivebrokers.com/usa.txt",
+  "candidate_month":"2025-06",
+  "anchor_rule":{"all_calendar_days":true,"first":"20250601","last":"20250630","expected_anchor_count":30,"no_early_stop":true},
+  "transport":{"endpoint":"https://archive.org/wayback/available","max_concurrency":2,"timeout_seconds":20,"max_attempts":4,"retry_backoff_seconds":[0.75,2.0,4.0]},
+  "allowed":["availability metadata only","enumerate distinct snapshot timestamps/URLs","map discovered snapshots to calendar dates","count distinct snapshot dates within June 2025","deterministic evidence digest"],
+  "forbidden":["follow snapshot URLs","open archived raw bytes in this stage","open economic values","infer full-month coverage merely from one or several snapshots","grant admission authority","change 120-month requirement","use credentials/API keys/account login"],
+  "successor_rule":"Every newly discovered distinct June-2025 snapshot must pass the exact raw-snapshot structural preflight. Month admission, if any, requires a separate frozen completeness rule and may not be inferred from availability discovery alone.",
+  "credential_policy":{"user_specific_credentials_allowed":false,"api_keys_allowed":false,"account_login_allowed":false},
+  "confirmation":"SEALED","capital_authorization":"0.00%"
+}
