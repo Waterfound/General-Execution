@@ -1,0 +1,59 @@
+{
+  "protocol": "RLS-IBKR-WAYBACK-ZIP-STRUCTURE-v1",
+  "status": "FROZEN_BEFORE_SNAPSHOT_STRUCTURE_OPEN",
+  "frozen_at": "2026-09-16",
+  "authority": "OBSERVATION_ONLY_NO_RLS_ADMISSION_AUTHORITY",
+  "parent_evidence": {
+    "protocol": "RLS-IBKR-WAYBACK-AVAILABILITY-v1",
+    "evidence_digest_sha256": "4a895e5fd8e2887c58ffe1a24af19362d27773559d1bca64a80aa1fa30a6d70f",
+    "capture_timestamp": "20260221140226",
+    "capture_status": "200",
+    "original_url": "http://potential-investments.com/ib_shorting.zip"
+  },
+  "exact_replay_target": "https://web.archive.org/web/20260221140226id_/http://potential-investments.com/ib_shorting.zip",
+  "purpose": "Determine the archived ZIP container structure and filename date coverage before opening any member payload or economic field.",
+  "allowed": [
+    "HEAD or zero-byte-equivalent metadata request to the exact replay target",
+    "bounded HTTP byte-range reads required to locate ZIP EOCD and central directory",
+    "parse ZIP EOCD and central-directory metadata only",
+    "record container content length, ETag/Last-Modified if exposed, range support, member names, CRC32, compressed size, uncompressed size, compression method and ZIP metadata timestamps",
+    "derive filename dates from the already-observed YYMMDD_shorting.tsv naming rule",
+    "compute first/last filename date, month set, consecutive month coverage and missing months",
+    "compare central-directory metadata for overlapping member names against the current community ZIP metadata in a later separately-frozen authentication stage"
+  ],
+  "forbidden": [
+    "read or decompress any ZIP member payload",
+    "open FEERATE, AVAILABLE or any economic field",
+    "open strategy returns or outcomes",
+    "select members or dates based on economic values",
+    "grant RLS admission authority",
+    "alter the frozen 120 full-calendar-month requirement",
+    "treat filename coverage as economic-data admission",
+    "use credentials, API keys, AWS login, Gmail login or account-specific authentication"
+  ],
+  "transport_fail_closed": [
+    "if the replay does not honor byte ranges, do not silently download the full archive in this stage",
+    "if EOCD or central-directory bounds are inconsistent, stop",
+    "if ZIP64 is required, parse ZIP64 metadata only if it can be obtained by bounded ranges; otherwise stop",
+    "if any requested range returns a full-body 200 response, close without reading the body and mark RANGE_UNSUPPORTED"
+  ],
+  "target_window": {
+    "first_month": "2016-09",
+    "last_month": "2026-08",
+    "required_full_calendar_months": 120
+  },
+  "credential_policy": {
+    "user_specific_credentials_allowed": false,
+    "api_keys_allowed": false,
+    "account_login_allowed": false
+  },
+  "success_does_not_prove": [
+    "member payload integrity",
+    "IBKR semantic authenticity",
+    "FEERATE correctness",
+    "AVAILABLE correctness",
+    "point-in-time admission",
+    "confirmation authorization",
+    "capital authorization"
+  ]
+}
