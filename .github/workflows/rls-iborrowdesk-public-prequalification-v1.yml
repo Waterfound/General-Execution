@@ -1,0 +1,57 @@
+name: RLS IBorrowDesk Public Prequalification V1
+
+on:
+  push:
+    branches:
+      - build-colony/rls-ibkr-archive-recovery-v1
+    paths:
+      - workloads/rls_iborrowdesk_public_prequalification_v1.py
+      - .github/workflows/rls-iborrowdesk-public-prequalification-v1.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prequalify-keyless-public-mirror:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout exact branch revision
+        uses: actions/checkout@v4
+      - name: Record exact revision
+        run: |
+          git rev-parse HEAD
+          python3 --version
+      - name: Execute keyless structural coverage prequalification
+        working-directory: workloads
+        run: python3 rls_iborrowdesk_public_prequalification_v1.py
+      - name: Verify observation-only invariants
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('workloads/artifacts/rls_iborrowdesk_public_prequalification_v1.json')
+          d = json.loads(p.read_text())
+          assert d['authority'] == 'OBSERVATION_ONLY_NO_RLS_ADMISSION_AUTHORITY'
+          assert d['credential_policy']['user_specific_credentials_used'] is False
+          assert d['credential_policy']['api_key_used'] is False
+          assert d['target_window']['required_months'] == 120
+          r = d['prequalification_result']
+          assert r['admission_authority_granted'] is False
+          assert r['economic_values_emitted'] is False
+          print('worker_version=', d['worker_version'])
+          print('evidence_digest_sha256=', d['evidence_digest_sha256'])
+          print('probe_statuses=', [(p['label'], p['status'], p.get('http_status'), p.get('json_valid')) for p in d['probes']])
+          print('reaches_start=', r['long_lived_probes_reaching_2016_09_or_earlier'])
+          print('coexisting_fields=', r['probes_with_fee_and_availability_coexisting'])
+          print('inactive_queryability=', r['inactive_or_acquired_probe_queryability'])
+          print('prequalification_pass=', r['prequalification_pass'])
+          PY
+      - name: Upload prequalification manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: rls-iborrowdesk-public-prequalification-v1
+          path: workloads/artifacts/rls_iborrowdesk_public_prequalification_v1.json
+          if-no-files-found: error
+          retention-days: 30
