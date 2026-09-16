@@ -1,0 +1,70 @@
+name: RLS IBKR Community ZIP Common Crawl V1.2.2a
+
+on:
+  push:
+    branches:
+      - build-colony/rls-ibkr-archive-recovery-v1
+    paths:
+      - workloads/rls_ibkr_community_zip_commoncrawl_v1_2_2.py
+      - workloads/rls_ibkr_community_zip_commoncrawl_v1_2_2a.py
+      - .github/workflows/rls-ibkr-community-zip-commoncrawl-v1-2-2a.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  discover-commoncrawl-zip-metadata:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout exact branch revision
+        uses: actions/checkout@v4
+
+      - name: Record exact revision
+        run: |
+          git rev-parse HEAD
+          python3 --version
+
+      - name: Execute transport-only metadata successor V1.2.2a
+        working-directory: workloads
+        run: python3 rls_ibkr_community_zip_commoncrawl_v1_2_2a.py
+
+      - name: Verify frozen semantics and metadata-only invariants
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('workloads/artifacts/rls_ibkr_community_zip_commoncrawl_v1_2_2a.json')
+          d = json.loads(p.read_text())
+          assert d['authority'] == 'OBSERVATION_ONLY_NO_RLS_ADMISSION_AUTHORITY'
+          assert d['parent_protocol'] == 'RLS-IBKR-COMMUNITY-ARCHIVE-COMMONCRAWL-CANDIDATE-v1.2.2'
+          assert d['transport_addendum'] == 'RLS-IBKR-COMMUNITY-ARCHIVE-COMMONCRAWL-TRANSPORT-v1.2.2a'
+          assert d['frozen_query']['target'] == 'potential-investments.com/ib_shorting.zip'
+          assert d['frozen_query']['years'] == ['2017','2018','2019','2020','2021','2022','2023','2024']
+          assert d['frozen_query']['http_status_required'] == '200'
+          assert d['frozen_query']['selection_stage'] == 'METADATA_ONLY'
+          assert d['frozen_query']['collapse_key'] == 'digest'
+          assert d['transport']['no_early_stop_on_match'] is True
+          assert d['credential_policy']['user_specific_credentials_used'] is False
+          assert d['credential_policy']['api_key_used'] is False
+          assert d['credential_policy']['aws_login_used'] is False
+          assert d['archived_warc_or_zip_bytes_opened'] is False
+          assert d['economic_values_opened'] is False
+          assert d['admission_authority_granted'] is False
+          print('worker_version=', d['worker_version'])
+          print('evidence_digest_sha256=', d['evidence_digest_sha256'])
+          print('collection_count=', d['collection_count'])
+          print('query_status_counts=', {s: sum(1 for q in d['queries'] if q['status'] == s) for s in sorted({q['status'] for q in d['queries']})})
+          print('raw_match_count=', d['raw_match_count'])
+          print('distinct_digest_count=', d['distinct_digest_count'])
+          print('distinct_digests_in_selection_order=', d['distinct_digests_in_selection_order'])
+          PY
+
+      - name: Upload metadata manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: rls-ibkr-community-zip-commoncrawl-v1-2-2a
+          path: workloads/artifacts/rls_ibkr_community_zip_commoncrawl_v1_2_2a.json
+          if-no-files-found: error
+          retention-days: 30
