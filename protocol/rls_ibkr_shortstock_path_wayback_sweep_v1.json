@@ -1,0 +1,23 @@
+{
+  "protocol": "RLS-IBKR-SHORTSTOCK-PATH-WAYBACK-SWEEP-v1",
+  "status": "FROZEN_BEFORE_PATH_VARIANT_SWEEP",
+  "frozen_at": "2026-09-16",
+  "authority": "OBSERVATION_ONLY_NO_RLS_ADMISSION_AUTHORITY",
+  "purpose": "Test documented/keyless HTTP mirror path variants /shortstock/usa.txt that are not covered by the root /usa.txt direct-publisher sweep.",
+  "targets": [
+    "http://ftp2.interactivebrokers.com/shortstock/usa.txt",
+    "https://ftp2.interactivebrokers.com/shortstock/usa.txt",
+    "http://ftp3.interactivebrokers.com/shortstock/usa.txt",
+    "https://ftp3.interactivebrokers.com/shortstock/usa.txt",
+    "http://www.interactivebrokers.com/shortstock/usa.txt",
+    "https://www.interactivebrokers.com/shortstock/usa.txt"
+  ],
+  "target_basis": "Public source code independently records ftp2/ftp3/www /shortstock/usa.txt as IBKR key-free borrow-source URL variants; this carrier-path discovery occurred before archive queries.",
+  "missing_month_rule": {"early_first":"2016-09","early_last":"2017-09","recent_first":"2024-07","recent_last":"2026-08","month_count":39,"anchor_days":[1,15],"anchors_per_target":78,"total_query_count":468,"no_early_stop":true},
+  "transport": {"endpoint":"https://archive.org/wayback/available","max_concurrency":4,"timeout_seconds":15,"max_attempts_per_query":3,"retry_backoff_seconds":[0.75,2.0]},
+  "allowed": ["availability metadata only", "deduplicate snapshot target+timestamp+URL", "identify snapshots whose timestamps fall in a currently missing month", "deterministic evidence digest"],
+  "forbidden": ["follow snapshot URL", "open archived usa.txt bytes", "open FEERATE/AVAILABLE/economic values", "open strategy outcomes", "grant admission authority", "alter 120-month target", "use credentials/API keys/account login"],
+  "credential_policy": {"user_specific_credentials_allowed":false,"api_keys_allowed":false,"account_login_allowed":false},
+  "confirmation":"SEALED",
+  "capital_authorization":"0.00%"
+}
