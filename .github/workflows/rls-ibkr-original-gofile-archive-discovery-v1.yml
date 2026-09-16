@@ -1,0 +1,53 @@
+name: RLS IBKR Original Gofile Archive Discovery V1
+
+on:
+  push:
+    branches:
+      - build-colony/rls-ibkr-archive-recovery-v1
+    paths:
+      - workloads/rls_ibkr_original_gofile_archive_discovery_v1.py
+      - .github/workflows/rls-ibkr-original-gofile-archive-discovery-v1.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  discover-original-share-metadata:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Record exact revision
+        run: |
+          git rev-parse HEAD
+          python3 --version
+      - name: Execute metadata-only original-share archive discovery
+        working-directory: workloads
+        run: python3 rls_ibkr_original_gofile_archive_discovery_v1.py
+      - name: Verify frozen boundaries
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('workloads/artifacts/rls_ibkr_original_gofile_archive_discovery_v1.json').read_text())
+          assert d['authority']=='OBSERVATION_ONLY_NO_RLS_ADMISSION_AUTHORITY'
+          assert d['credential_policy']['user_specific_credentials_used'] is False
+          assert d['archive_body_bytes_opened'] is False
+          assert d['securities_rows_opened'] is False
+          assert d['economic_values_opened'] is False
+          assert d['summary']['payload_selection_performed'] is False
+          assert d['summary']['payload_bytes_opened'] is False
+          assert d['summary']['admission_authority_granted'] is False
+          print('unique_metadata_capture_count=',d['summary']['unique_metadata_capture_count'])
+          print('success_condition_met=',d['summary']['success_condition_met'])
+          print('captures=',d['summary']['captures'])
+          print('evidence_digest_sha256=',d['evidence_digest_sha256'])
+          PY
+      - name: Upload discovery manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: rls-ibkr-original-gofile-archive-discovery-v1
+          path: workloads/artifacts/rls_ibkr_original_gofile_archive_discovery_v1.json
+          if-no-files-found: error
+          retention-days: 30
