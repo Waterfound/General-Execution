@@ -1,0 +1,53 @@
+{
+  "protocol": "RLS-IBKR-DIRECT-WAYBACK-AVAILABILITY-SWEEP-v1",
+  "status": "FROZEN_BEFORE_DIRECT_PUBLISHER_SWEEP",
+  "frozen_at": "2026-09-16",
+  "authority": "OBSERVATION_ONLY_NO_RLS_ADMISSION_AUTHORITY",
+  "purpose": "Discover public Wayback captures of the IBKR usa.txt publisher feed specifically in the 39 currently missing calendar months, before opening any archived raw snapshot bytes.",
+  "targets": [
+    "http://ftp2.interactivebrokers.com/usa.txt",
+    "https://ftp2.interactivebrokers.com/usa.txt",
+    "http://ftp3.interactivebrokers.com/usa.txt",
+    "https://ftp3.interactivebrokers.com/usa.txt"
+  ],
+  "missing_month_rule": {
+    "early_first": "2016-09",
+    "early_last": "2017-09",
+    "recent_first": "2024-07",
+    "recent_last": "2026-08",
+    "expected_month_count": 39,
+    "anchor_days": [1, 15],
+    "anchors_per_target": 78,
+    "total_query_count": 312,
+    "no_early_stop": true
+  },
+  "transport": {
+    "endpoint": "https://archive.org/wayback/available",
+    "max_concurrency": 4,
+    "timeout_seconds": 15,
+    "max_attempts_per_query": 3,
+    "retry_backoff_seconds": [0.75, 2.0]
+  },
+  "allowed_outputs": [
+    "target URL and anchor",
+    "transport status",
+    "closest snapshot available/status/timestamp/url",
+    "distinct snapshot metadata deduplicated by target+snapshot timestamp+URL",
+    "snapshot-month membership relative to the 39 missing months",
+    "deterministic evidence digest"
+  ],
+  "forbidden": [
+    "follow returned Wayback snapshot URLs",
+    "download or open any archived usa.txt byte",
+    "open FEERATE, AVAILABLE or any economic value",
+    "open strategy returns/outcomes",
+    "select additional dates based on discovered contents",
+    "grant RLS admission authority",
+    "alter the 120 full-calendar-month target",
+    "use credentials, API keys or account login"
+  ],
+  "successor_rule": "For each distinct archived raw snapshot whose timestamp or original URL plausibly maps to a missing month, freeze exact-snapshot raw preflight before opening bytes. No snapshot is admitted from availability metadata alone.",
+  "credential_policy": {"user_specific_credentials_allowed": false, "api_keys_allowed": false, "account_login_allowed": false},
+  "confirmation": "SEALED",
+  "capital_authorization": "0.00%"
+}
