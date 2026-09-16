@@ -1,0 +1,53 @@
+name: RLS IBKR GoFile Common Crawl V1
+
+on:
+  push:
+    branches:
+      - build-colony/rls-ibkr-archive-recovery-v1
+    paths:
+      - rls_ibkr_gofile_commoncrawl_v1.py
+      - .github/workflows/rls-ibkr-gofile-commoncrawl-v1.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  discover-gofile-captures:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout exact branch revision
+        uses: actions/checkout@v4
+      - name: Record exact revision
+        run: |
+          git rev-parse HEAD
+          python3 --version
+      - name: Execute metadata-only GoFile recovery V1
+        run: python3 rls_ibkr_gofile_commoncrawl_v1.py
+      - name: Verify frozen invariants
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('workloads/artifacts/rls_ibkr_gofile_commoncrawl_v1.json')
+          d=json.loads(p.read_text())
+          assert d['authority']=='OBSERVATION_ONLY_NO_RLS_ADMISSION_AUTHORITY'
+          assert d['parent_protocol']=='RLS-IBKR-GOFILE-2019-RECOVERY-CANDIDATE-v1'
+          assert d['target']=='https://gofile.io/?c=gRd3kH'
+          assert d['crawl_count']==30
+          assert d['credential_policy']['user_specific_credentials_used'] is False
+          assert d['credential_policy']['api_key_used'] is False
+          assert d['credential_policy']['account_login_used'] is False
+          assert d['archived_landing_or_file_bytes_opened'] is False
+          assert d['economic_values_opened'] is False
+          assert d['admission_authority_granted'] is False
+          print('capture_row_count=',d['capture_row_count'])
+          print('evidence_digest_sha256=',d['evidence_digest_sha256'])
+          PY
+      - name: Upload metadata manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: rls-ibkr-gofile-commoncrawl-v1
+          path: workloads/artifacts/rls_ibkr_gofile_commoncrawl_v1.json
+          retention-days: 30
