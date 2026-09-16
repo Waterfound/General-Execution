@@ -1,0 +1,49 @@
+name: RLS IBKR Wayback Availability Retry V2.1
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - build-colony/rls-ibkr-archive-recovery-v1
+    paths:
+      - 'protocol/rls_ibkr_wayback_availability_retry_v2_1.json'
+      - 'rls_ibkr_wayback_availability_retry_v2_1.py'
+      - '.github/workflows/rls-ibkr-wayback-availability-retry-v2-1.yml'
+permissions:
+  contents: read
+jobs:
+  retry-unresolved:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Execute frozen retry
+        run: python3 rls_ibkr_wayback_availability_retry_v2_1.py
+      - name: Verify invariants
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('workloads/artifacts/rls_ibkr_wayback_availability_retry_v2_1.json').read_text())
+          assert d['protocol']=='RLS-IBKR-WAYBACK-AVAILABILITY-RETRY-v2.1'
+          assert d['authority']=='OBSERVATION_ONLY_NO_RLS_ADMISSION_AUTHORITY'
+          assert d['input_anchor_count']==70
+          assert d['snapshot_bytes_opened'] is False
+          assert d['economic_values_opened'] is False
+          assert d['admission_authority_granted'] is False
+          assert not d['credential_policy']['user_specific_credentials_used']
+          assert not d['credential_policy']['api_key_used']
+          assert not d['credential_policy']['account_login_used']
+          print('status=',d['status'])
+          print('observed_anchor_count=',d['observed_anchor_count'])
+          print('unresolved_anchor_count=',d['unresolved_anchor_count'])
+          print('distinct_snapshots=',d['distinct_snapshots'])
+          print('new_distinct_snapshots=',d['new_distinct_snapshots'])
+          print('evidence_digest_sha256=',d['evidence_digest_sha256'])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rls-ibkr-wayback-availability-retry-v2-1
+          path: workloads/artifacts/rls_ibkr_wayback_availability_retry_v2_1.json
+          retention-days: 30
+          if-no-files-found: error
