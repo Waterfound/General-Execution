@@ -1,0 +1,68 @@
+{
+  "worker_version": "RLS-IBKR-CREDENTIAL-FREE-ARCHIVE-ROUTE-CLOSURE-run-014",
+  "frozen_at_utc": "2026-09-16",
+  "authority": "OBSERVATION_ONLY_NO_RLS_ADMISSION_AUTHORITY",
+  "credential_policy": {
+    "user_specific_credentials_used": false,
+    "api_key_used": false,
+    "aws_login_used": false,
+    "gmail_login_used": false
+  },
+  "frozen_target": {
+    "first_month": "2016-09",
+    "last_month": "2026-08",
+    "required_full_calendar_months": 120
+  },
+  "baseline": {
+    "authenticated_month_count": 81,
+    "authenticated_first_month": "2017-10",
+    "authenticated_last_month": "2024-06",
+    "residual_missing_month_count": 39
+  },
+  "common_crawl": {
+    "target": "potential-investments.com/ib_shorting.zip",
+    "years": ["2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024"],
+    "collection_count": 75,
+    "all_collection_ids_scope_sha256": "8fd8c10d1d56080857bf066c68e1f5aaa653c5052dac21a3f551d1246f677a81",
+    "first_transport_parent_evidence_sha256": "cfcebf96d84846c9fb194cb7ef1ac45ca6c9d1365abd6a41450530b20e824b99",
+    "first_transport_conclusive_no_match_count": 14,
+    "first_transport_unresolved_count": 61,
+    "secondary_transport_scope_sha256": "14b08b8a7e790d287c5ce473b8d9da24d60d45e9686cc36ee1fa3d9650fc0b2e",
+    "secondary_transport_retried_count": 61,
+    "secondary_transport_final_no_match_count": 61,
+    "secondary_transport_final_capture_count": 0,
+    "final_observed_no_match_count": 75,
+    "final_capture_count": 0,
+    "archived_warc_or_zip_bytes_opened": false,
+    "route_disposition": "CLOSED_EXACT_TARGET_NO_MATCH"
+  },
+  "arquivo_pt": {
+    "target_http": "http://potential-investments.com/ib_shorting.zip",
+    "target_https": "https://potential-investments.com/ib_shorting.zip",
+    "http_version_history_result_count": 0,
+    "https_version_history_result_count": 0,
+    "archived_zip_bytes_opened": false,
+    "route_disposition": "CLOSED_ZERO_CAPTURES"
+  },
+  "internet_archive": {
+    "target": "potential-investments.com/ib_shorting.zip",
+    "latest_transport_status": 503,
+    "route_disposition": "OPEN_TRANSPORT_UNAVAILABLE_NOT_EVIDENCE_OF_ABSENCE"
+  },
+  "public_mirror_constraints": {
+    "same_publisher_authentication_required": true,
+    "transformed_datasets_do_not_fill_months": true,
+    "proxy_metrics_prohibited": true,
+    "threshold_may_not_be_reduced": true,
+    "economic_values_opened_in_this_closure": false
+  },
+  "next_frozen_priorities": [
+    "resolve original forum ib_shorting.zip href and alternate raw archive links without downloading",
+    "search authenticated raw IBKR full-snapshot mirrors for 2024-07 through 2026-08",
+    "search authenticated raw IBKR full-snapshot mirrors for 2016-09 through 2017-09",
+    "retry Internet Archive metadata only when service is available"
+  ],
+  "confirmation": "SEALED",
+  "authorized_gross_nav_percent": 0.0,
+  "evidence_manifest_sha256": "4818cac3fd0be4014a82ab69c2a3fac1ab03e391ebcd26a62cfc01a2adbb75c2"
+}
