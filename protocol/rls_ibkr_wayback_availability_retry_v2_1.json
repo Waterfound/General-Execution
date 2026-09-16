@@ -1,0 +1,24 @@
+{
+  "protocol": "RLS-IBKR-WAYBACK-AVAILABILITY-RETRY-v2.1",
+  "status": "FROZEN_TRANSPORT_ONLY_SUCCESSOR",
+  "frozen_at": "2026-09-16",
+  "authority": "OBSERVATION_ONLY_NO_RLS_ADMISSION_AUTHORITY",
+  "parent_protocol": "RLS-IBKR-WAYBACK-AVAILABILITY-SWEEP-v2",
+  "parent_evidence_digest_sha256": "542d8dc9d25deddcc34bab0b15ee4627b1c4427bd941f773a7b6bb9105d07600",
+  "target": "http://potential-investments.com/ib_shorting.zip",
+  "unresolved_anchors": ["20231001","20231015","20231101","20231115","20231201","20231215","20240101","20240115","20240201","20240215","20240301","20240315","20240401","20240415","20240501","20240515","20240601","20240615","20240701","20240715","20240801","20240815","20240901","20240915","20241001","20241015","20241101","20241115","20241201","20241215","20250101","20250115","20250201","20250215","20250301","20250315","20250401","20250415","20250501","20250515","20250601","20250615","20250701","20250715","20250801","20250815","20250901","20250915","20251001","20251015","20251101","20251115","20251201","20251215","20260101","20260115","20260201","20260215","20260301","20260315","20260401","20260415","20260501","20260515","20260601","20260615","20260701","20260715","20260801","20260815"],
+  "transport": {
+    "endpoint": "https://archive.org/wayback/available",
+    "max_concurrency": 2,
+    "timeout_seconds": 20,
+    "max_attempts_per_anchor": 4,
+    "retry_backoff_seconds": [0.75, 2.0, 4.0],
+    "no_early_stop": true
+  },
+  "allowed": ["retry exactly the 70 parent-unresolved anchors", "record closest-snapshot metadata", "deduplicate snapshot timestamp+URL", "emit deterministic evidence digest"],
+  "forbidden": ["query any new anchor", "follow returned snapshots", "open archived ZIP bytes", "open economic values or strategy returns", "grant admission authority", "use credentials/API keys/account login", "alter 120-month requirement"],
+  "known_snapshot": "20260221140226",
+  "credential_policy": {"user_specific_credentials_allowed": false, "api_keys_allowed": false, "account_login_allowed": false},
+  "confirmation": "SEALED",
+  "capital_authorization": "0.00%"
+}
