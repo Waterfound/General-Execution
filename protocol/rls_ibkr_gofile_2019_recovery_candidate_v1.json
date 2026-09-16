@@ -1,0 +1,40 @@
+{
+  "protocol": "RLS-IBKR-GOFILE-2019-RECOVERY-CANDIDATE-v1",
+  "frozen_at_utc": "2026-09-16",
+  "authority": "OBSERVATION_ONLY_NO_RLS_ADMISSION_AUTHORITY",
+  "origin_evidence": {
+    "forum": "Portfolio123 Community",
+    "post_date": "2019-08-28",
+    "publisher_claim": "daily IBKR data going back to 2017-04-18, downloaded between 04:00 and 07:00",
+    "observed_url": "https://gofile.io/?c=gRd3kH"
+  },
+  "frozen_targets": [
+    "https://gofile.io/?c=gRd3kH"
+  ],
+  "archive_search_window": {
+    "first_year": 2019,
+    "last_year": 2021
+  },
+  "stage_1": {
+    "allowed": [
+      "query public web-archive metadata for the exact observed URL",
+      "open archived landing-page HTML only if a capture exists",
+      "record timestamps, digests, status, content length and direct-file hrefs"
+    ],
+    "forbidden": [
+      "download the historical data file before a direct-file candidate is frozen",
+      "open strategy returns or outcomes",
+      "change the 120-month threshold",
+      "use proxy metrics",
+      "treat a transformed dataset as an IBKR raw snapshot"
+    ]
+  },
+  "candidate_success_condition": "An archived landing page or metadata record reveals an immutable direct-file candidate traceable to the 2019 upload; file bytes remain unopened until a successor protocol freezes selection/authentication.",
+  "credential_policy": {
+    "user_specific_credentials": false,
+    "api_keys": false,
+    "account_login": false
+  },
+  "confirmation": "SEALED",
+  "authorized_gross_nav_percent": 0.0
+}
