@@ -1,0 +1,41 @@
+name: RLS IBKR Wayback June 2025 Daily Discovery V1
+on:
+  workflow_dispatch:
+  push:
+    branches: [build-colony/rls-ibkr-archive-recovery-v1]
+    paths:
+      - 'protocol/rls_ibkr_wayback_june_2025_daily_discovery_v1.json'
+      - 'rls_ibkr_wayback_june_2025_daily_discovery_v1.py'
+      - '.github/workflows/rls-ibkr-wayback-june-2025-daily-discovery-v1.yml'
+permissions:
+  contents: read
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 rls_ibkr_wayback_june_2025_daily_discovery_v1.py
+      - name: Verify invariants
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('workloads/artifacts/rls_ibkr_wayback_june_2025_daily_discovery_v1.json').read_text())
+          assert d['protocol']=='RLS-IBKR-WAYBACK-JUNE-2025-DAILY-DISCOVERY-v1'
+          assert d['authority']=='OBSERVATION_ONLY_NO_RLS_ADMISSION_AUTHORITY'
+          assert d['anchor_count']==30
+          assert d['archived_snapshot_bytes_opened'] is False
+          assert d['economic_values_opened'] is False
+          assert d['admission_authority_granted'] is False
+          assert not d['credential_policy']['user_specific_credentials_used']
+          assert not d['credential_policy']['api_key_used']
+          assert not d['credential_policy']['account_login_used']
+          print('status=',d['status']); print('june_2025_distinct_snapshot_date_count=',d['june_2025_distinct_snapshot_date_count']); print('june_2025_distinct_snapshot_dates=',d['june_2025_distinct_snapshot_dates']); print('evidence_digest_sha256=',d['evidence_digest_sha256'])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rls-ibkr-wayback-june-2025-daily-discovery-v1
+          path: workloads/artifacts/rls_ibkr_wayback_june_2025_daily_discovery_v1.json
+          retention-days: 30
+          if-no-files-found: error
