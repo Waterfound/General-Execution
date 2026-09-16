@@ -1,0 +1,71 @@
+name: RLS IBKR Public Namespace Discovery V1
+
+on:
+  push:
+    branches:
+      - build-colony/rls-ibkr-archive-recovery-v1
+    paths:
+      - workloads/rls_ibkr_public_namespace_discovery_v1.py
+      - .github/workflows/rls-ibkr-public-namespace-discovery-v1.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  discover-publisher-namespace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout exact branch revision
+        uses: actions/checkout@v4
+
+      - name: Record exact revision
+        run: |
+          git rev-parse HEAD
+          python3 --version
+
+      - name: Static guard against historical body retrieval
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('workloads/rls_ibkr_public_namespace_discovery_v1.py')
+          s = p.read_text(encoding='utf-8').lower()
+          forbidden = ['retrbinary(', 'retrlines(', 'transfercmd(', 'ntransfercmd(']
+          hits = [x for x in forbidden if x in s]
+          assert not hits, hits
+          print('body_retrieval_static_guard=PASS')
+          PY
+
+      - name: Execute bounded namespace discovery
+        working-directory: workloads
+        run: python3 rls_ibkr_public_namespace_discovery_v1.py
+
+      - name: Verify observation-only manifest
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('workloads/artifacts/rls_ibkr_public_namespace_discovery_v1.json')
+          d = json.loads(p.read_text())
+          assert d['authority'] == 'OBSERVATION_ONLY_NO_RLS_ADMISSION_AUTHORITY'
+          assert d['credential_policy']['user_specific_credentials_used'] is False
+          assert d['body_retrieval_performed'] is False
+          assert d['summary']['historical_candidate_bodies_opened'] is False
+          assert d['summary']['admission_authority_granted'] is False
+          print('connection_status=', d['connection'].get('status'))
+          print('total_entries_observed=', d['summary']['total_entries_observed'])
+          print('child_directories_enumerated=', d['summary']['child_directories_enumerated'])
+          print('candidate_count=', d['summary']['candidate_count'])
+          print('candidate_paths=', [x['path'] for x in d['summary']['candidates']])
+          print('success_condition_met=', d['summary']['success_condition_met'])
+          print('evidence_digest_sha256=', d['evidence_digest_sha256'])
+          PY
+
+      - name: Upload namespace evidence manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: rls-ibkr-public-namespace-discovery-v1
+          path: workloads/artifacts/rls_ibkr_public_namespace_discovery_v1.json
+          if-no-files-found: error
+          retention-days: 30
