@@ -1,0 +1,68 @@
+name: RLS IBKR Community ZIP Columnar Transport V1.2.2b
+
+on:
+  push:
+    branches:
+      - build-colony/rls-ibkr-archive-recovery-v1
+    paths:
+      - workloads/rls_ibkr_community_zip_columnar_transport_v1_2_2b.py
+      - .github/workflows/rls-ibkr-community-zip-columnar-v1-2-2b.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe-columnar-transport:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Record exact revision
+        run: |
+          git rev-parse HEAD
+          python3 --version
+
+      - name: Install pinned DuckDB transport engine
+        run: python3 -m pip install --disable-pip-version-check 'duckdb==1.4.0'
+
+      - name: Execute frozen HTTPS Parquet transport feasibility probe
+        working-directory: workloads
+        run: python3 rls_ibkr_community_zip_columnar_transport_v1_2_2b.py
+
+      - name: Verify observation-only boundaries
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('workloads/artifacts/rls_ibkr_community_zip_columnar_transport_v1_2_2b.json').read_text())
+          assert d['authority']=='OBSERVATION_ONLY_NO_RLS_ADMISSION_AUTHORITY'
+          assert d['phase']=='A_TRANSPORT_FEASIBILITY_ONLY'
+          assert d['frozen_crawl_id']=='CC-MAIN-2021-17'
+          assert d['frozen_target']['url_host_registered_domain']=='potential-investments.com'
+          assert d['frozen_target']['url_path']=='/ib_shorting.zip'
+          assert d['frozen_target']['fetch_status']==200
+          assert d['transport']['aws_account_required'] is False
+          assert d['transport']['aws_credentials_used'] is False
+          assert d['transport']['api_key_used'] is False
+          assert d['transport']['user_specific_credentials_used'] is False
+          assert all(v is False for v in d['boundaries'].values())
+          assert d['result']['zero_rows_if_any_do_not_prove_absence'] is True
+          assert d['result']['admission_authority_granted'] is False
+          print('transport_success=',d['result']['transport_success'])
+          print('query_status=',d['query']['status'])
+          print('row_count=',d['query']['row_count'])
+          print('rows_sha256=',d['query']['rows_sha256'])
+          print('query_error=',d['query']['error'])
+          print('phase_b_authorized_by_transport_gate=',d['result']['phase_b_authorized_by_transport_gate'])
+          print('evidence_digest_sha256=',d['evidence_digest_sha256'])
+          PY
+
+      - name: Upload transport evidence manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: rls-ibkr-community-zip-columnar-v1-2-2b
+          path: workloads/artifacts/rls_ibkr_community_zip_columnar_transport_v1_2_2b.json
+          if-no-files-found: error
+          retention-days: 30
