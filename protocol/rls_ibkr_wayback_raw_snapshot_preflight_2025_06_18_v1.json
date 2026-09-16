@@ -1,0 +1,48 @@
+{
+  "protocol": "RLS-IBKR-WAYBACK-RAW-SNAPSHOT-PREFLIGHT-2025-06-18-v1",
+  "status": "FROZEN_BEFORE_RAW_SNAPSHOT_OPEN",
+  "frozen_at": "2026-09-16",
+  "authority": "OBSERVATION_ONLY_NO_RLS_ADMISSION_AUTHORITY",
+  "parent_protocol": "RLS-IBKR-DIRECT-WAYBACK-AVAILABILITY-SWEEP-v1",
+  "parent_evidence_digest_sha256": "84d59443bca56926f9d666a389f3e085d6d770a3e81df87dc113485ae9759bb1",
+  "discovered_snapshot": {
+    "timestamp": "20250618090506",
+    "availability_status": "226",
+    "availability_url": "http://web.archive.org/web/20250618090506/ftp://shortstock@ftp2.interactivebrokers.com/usa.txt",
+    "original_publisher_resource": "ftp://shortstock@ftp2.interactivebrokers.com/usa.txt"
+  },
+  "exact_replay_target": "https://web.archive.org/web/20250618090506id_/ftp://shortstock@ftp2.interactivebrokers.com/usa.txt",
+  "purpose": "Establish byte identity and raw IBKR structural validity of the exact archived snapshot before parsing or emitting any economic row value.",
+  "allowed": [
+    "download exactly the frozen archived snapshot without following to any different capture timestamp",
+    "compute byte length and SHA-256 over exact response body",
+    "record replay HTTP status/content-type/content-length/content-location/last-modified/etag if exposed",
+    "strictly decode only structural marker lines beginning with #BOF, #SYM and #EOF",
+    "record BOF date/time, exact header names/order, EOF declared row count",
+    "count physical data rows without decoding their fields",
+    "validate expected canonical fields SYM, CON, ISIN, REBATERATE, FEERATE and AVAILABLE are present",
+    "validate BOF calendar month equals 2025-06",
+    "emit deterministic structural evidence digest"
+  ],
+  "forbidden": [
+    "emit, parse, summarize, rank or inspect any economic row values",
+    "open FEERATE, REBATERATE or AVAILABLE cell values",
+    "open strategy returns/outcomes",
+    "infer full-month coverage from one snapshot",
+    "grant RLS admission authority",
+    "alter the 120 full-calendar-month requirement",
+    "use credentials, API keys or account login"
+  ],
+  "pass_requires": [
+    "replay response body nonempty",
+    "exactly one BOF marker and one SYM header and one EOF marker",
+    "BOF date parses to 2025-06-18",
+    "header contains SYM, CON, ISIN, REBATERATE, FEERATE, AVAILABLE",
+    "physical data row count equals EOF declared row count if EOF count is numeric",
+    "no HTML/Wayback error document masquerading as data"
+  ],
+  "successor_rule": "Passing this preflight authenticates one point-in-time raw IBKR snapshot only. Full-month recovery still requires a separately frozen month-coverage discovery/admission gate.",
+  "credential_policy": {"user_specific_credentials_allowed": false, "api_keys_allowed": false, "account_login_allowed": false},
+  "confirmation": "SEALED",
+  "capital_authorization": "0.00%"
+}
