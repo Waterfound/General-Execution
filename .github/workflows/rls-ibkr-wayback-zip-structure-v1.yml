@@ -1,0 +1,56 @@
+name: RLS IBKR Wayback ZIP Structure V1
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - build-colony/rls-ibkr-archive-recovery-v1
+    paths:
+      - 'protocol/rls_ibkr_wayback_zip_structure_v1.json'
+      - 'rls_ibkr_wayback_zip_structure_v1.py'
+      - '.github/workflows/rls-ibkr-wayback-zip-structure-v1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  inspect-wayback-zip-structure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Checkout exact branch revision
+        uses: actions/checkout@v4
+      - name: Record exact revision
+        run: |
+          git rev-parse HEAD
+          python3 --version
+      - name: Execute bounded metadata-only ZIP structure inspection
+        run: python3 rls_ibkr_wayback_zip_structure_v1.py
+      - name: Verify frozen invariants
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('workloads/artifacts/rls_ibkr_wayback_zip_structure_v1.json').read_text())
+          assert d['protocol']=='RLS-IBKR-WAYBACK-ZIP-STRUCTURE-v1'
+          assert d['authority']=='OBSERVATION_ONLY_NO_RLS_ADMISSION_AUTHORITY'
+          assert d['target']=='https://web.archive.org/web/20260221140226id_/http://potential-investments.com/ib_shorting.zip'
+          assert d['credential_policy']['user_specific_credentials_used'] is False
+          assert d['credential_policy']['api_key_used'] is False
+          assert d['credential_policy']['account_login_used'] is False
+          assert d['member_payload_bytes_opened'] is False
+          assert d['economic_values_opened'] is False
+          assert d['admission_authority_granted'] is False
+          print('status=', d.get('status'))
+          print('range_probe_status=', d.get('range_probe_status'))
+          print('member_count=', d.get('member_count'))
+          print('filename_date_summary=', d.get('filename_date_summary'))
+          print('evidence_digest_sha256=', d['evidence_digest_sha256'])
+          PY
+      - name: Upload structure manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: rls-ibkr-wayback-zip-structure-v1
+          path: workloads/artifacts/rls_ibkr_wayback_zip_structure_v1.json
+          retention-days: 30
+          if-no-files-found: error
