@@ -1,0 +1,33 @@
+{
+  "protocol": "RLS-IBKR-GOFILE-COMMONCRAWL-TRANSPORT-ADDENDUM-v1.1",
+  "frozen_at_utc": "2026-09-16",
+  "parent_protocol": "RLS-IBKR-GOFILE-2019-RECOVERY-CANDIDATE-v1",
+  "authority": "OBSERVATION_ONLY_NO_RLS_ADMISSION_AUTHORITY",
+  "reason": "The exact-scheme query produced 24 transport timeouts, 5 HTTP 503 results, and 1 conclusive 404 across the frozen 30 Common Crawl indexes. Common Crawl index lookup commonly canonicalizes URL keys without the scheme. This addendum changes only query serialization, not the underlying resource identity, archive window, selection rule, or admission semantics.",
+  "resource_identity": {
+    "observed_forum_url": "https://gofile.io/?c=gRd3kH",
+    "canonical_index_query": "gofile.io/?c=gRd3kH",
+    "equivalence_rule": "A returned capture counts only if its metadata url/original field resolves to gofile.io with the exact query parameter c=gRd3kH. Different GoFile codes, paths, or query values are rejected."
+  },
+  "frozen_crawl_scope": {
+    "years": [2019, 2020, 2021],
+    "same_30_index_ids_as_parent_worker": true,
+    "match_type": "exact",
+    "no_early_stop_on_match": true
+  },
+  "stage": "METADATA_ONLY",
+  "forbidden": [
+    "opening archived landing-page bytes before capture metadata is fixed",
+    "downloading historical dataset bytes",
+    "broad wildcard search across other GoFile codes",
+    "changing the 120-month requirement",
+    "opening strategy returns or economic outcomes"
+  ],
+  "credential_policy": {
+    "user_specific_credentials": false,
+    "api_keys": false,
+    "account_login": false
+  },
+  "confirmation": "SEALED",
+  "authorized_gross_nav_percent": 0.0
+}
