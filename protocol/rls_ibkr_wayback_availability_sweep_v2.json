@@ -1,0 +1,61 @@
+{
+  "protocol": "RLS-IBKR-WAYBACK-AVAILABILITY-SWEEP-v2",
+  "status": "FROZEN_BEFORE_SWEEP",
+  "frozen_at": "2026-09-16",
+  "authority": "OBSERVATION_ONLY_NO_RLS_ADMISSION_AUTHORITY",
+  "exact_target": "http://potential-investments.com/ib_shorting.zip",
+  "purpose": "Discover distinct Wayback captures of the exact community ZIP URL without CDX and without opening any archived ZIP bytes.",
+  "frozen_anchor_rule": {
+    "first_month": "2019-08",
+    "last_month": "2026-08",
+    "days_per_month": [1, 15],
+    "anchor_format": "YYYYMMDD",
+    "expected_anchor_count": 170,
+    "include_additional_known_event_dates": false,
+    "no_early_stop": true
+  },
+  "transport": {
+    "endpoint": "https://archive.org/wayback/available",
+    "max_concurrency": 8,
+    "timeout_seconds": 12,
+    "max_attempts_per_anchor": 2,
+    "retry_only_transport_failures": true
+  },
+  "allowed_outputs": [
+    "anchor timestamp",
+    "request transport status",
+    "closest snapshot available boolean",
+    "closest snapshot status",
+    "closest snapshot timestamp",
+    "closest snapshot URL",
+    "distinct snapshot timestamps and URLs in timestamp order",
+    "counts of observed anchors, no-snapshot anchors and unresolved transport failures",
+    "deterministic evidence digest"
+  ],
+  "forbidden": [
+    "follow any returned snapshot URL",
+    "download any archived ZIP byte",
+    "open member names or member payloads in this stage",
+    "open economic values or strategy returns",
+    "select/refine anchors based on archive contents",
+    "grant RLS admission authority",
+    "alter the frozen 120-month requirement",
+    "use credentials, API keys or account login"
+  ],
+  "successor_rule": "If and only if the sweep reveals a distinct snapshot timestamp not already structure-inspected, freeze a bounded ZIP-central-directory inspection for every newly discovered distinct timestamp before opening any member payload.",
+  "known_already_inspected_snapshot": {
+    "timestamp": "20260221140226",
+    "container_length": 962467364,
+    "member_count": 2362,
+    "first_filename_date": "2017-10-09",
+    "last_filename_date": "2024-06-24",
+    "new_missing_months_recovered": 0
+  },
+  "credential_policy": {
+    "user_specific_credentials_allowed": false,
+    "api_keys_allowed": false,
+    "account_login_allowed": false
+  },
+  "confirmation": "SEALED",
+  "capital_authorization": "0.00%"
+}
