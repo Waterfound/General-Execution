@@ -1,0 +1,63 @@
+name: RLS IBKR Archive Recovery V1
+
+on:
+  push:
+    branches:
+      - build-colony/rls-ibkr-archive-recovery-v1
+    paths:
+      - workloads/rls_ibkr_archive_recovery_v1.py
+      - .github/workflows/rls-ibkr-archive-recovery-v1.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  recover-public-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact branch revision
+        uses: actions/checkout@v4
+
+      - name: Record exact revision
+        run: |
+          git rev-parse HEAD
+          python3 --version
+
+      - name: Execute bounded public archive recovery
+        run: python3 workloads/rls_ibkr_archive_recovery_v1.py > /tmp/rls-worker-output.txt
+
+      - name: Print bounded recovery summary
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('artifacts/rls_ibkr_archive_recovery_manifest_v1.json')
+          d = json.loads(p.read_text())
+          c = d['community_archive']
+          print('worker_version=', d['worker_version'])
+          print('manifest_sha256=', d['manifest_sha256'])
+          print('community_status=', c.get('status'))
+          print('archive_sha256=', c.get('sha256'))
+          print('archive_size=', c.get('size'))
+          print('earliest_capture_date=', c.get('earliest_capture_date'))
+          print('latest_capture_date=', c.get('latest_capture_date'))
+          print('target_month_count_present=', c.get('target_month_count_present'))
+          print('target_month_count_missing=', c.get('target_month_count_missing'))
+          print('target_months_missing=', c.get('target_months_missing'))
+          for v in d['internet_archive']['variants']:
+              print('wayback_variant=', v['original'])
+              print('  cdx_ok=', v['cdx']['ok'], 'rows=', len(v['cdx']['rows']), 'error=', v['cdx']['error'])
+              hits = [(x.get('timestamp'), x.get('snapshot_url')) for x in v['availability_by_anchor'] if x.get('available')]
+              print('  availability_hits=', hits)
+              print('  recovered_snapshots=', len(v['recovered_snapshots']))
+          PY
+
+      - name: Upload evidence manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: rls-ibkr-archive-recovery-v1
+          path: artifacts/rls_ibkr_archive_recovery_manifest_v1.json
+          if-no-files-found: error
+          retention-days: 30
