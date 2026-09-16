@@ -1,0 +1,56 @@
+name: RLS IBKR Wayback Availability Sweep V2
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - build-colony/rls-ibkr-archive-recovery-v1
+    paths:
+      - 'protocol/rls_ibkr_wayback_availability_sweep_v2.json'
+      - 'rls_ibkr_wayback_availability_sweep_v2.py'
+      - '.github/workflows/rls-ibkr-wayback-availability-sweep-v2.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  sweep-wayback-availability:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v4
+      - name: Execute frozen availability sweep
+        run: python3 rls_ibkr_wayback_availability_sweep_v2.py
+      - name: Verify invariants
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('workloads/artifacts/rls_ibkr_wayback_availability_sweep_v2.json').read_text())
+          assert d['protocol']=='RLS-IBKR-WAYBACK-AVAILABILITY-SWEEP-v2'
+          assert d['authority']=='OBSERVATION_ONLY_NO_RLS_ADMISSION_AUTHORITY'
+          assert d['target']=='http://potential-investments.com/ib_shorting.zip'
+          assert d['anchor_rule']['anchor_count']==170
+          assert d['anchor_rule']['days_per_month']==[1,15]
+          assert d['archived_snapshot_bytes_opened'] is False
+          assert d['economic_values_opened'] is False
+          assert d['admission_authority_granted'] is False
+          assert d['credential_policy']['user_specific_credentials_used'] is False
+          assert d['credential_policy']['api_key_used'] is False
+          assert d['credential_policy']['account_login_used'] is False
+          print('status=',d['status'])
+          print('observed_anchor_count=',d['observed_anchor_count'])
+          print('unresolved_anchor_count=',d['unresolved_anchor_count'])
+          print('distinct_snapshot_count=',d['distinct_snapshot_count'])
+          print('distinct_snapshots=',d['distinct_snapshots'])
+          print('new_distinct_snapshot_count=',d['new_distinct_snapshot_count'])
+          print('evidence_digest_sha256=',d['evidence_digest_sha256'])
+          PY
+      - name: Upload sweep manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: rls-ibkr-wayback-availability-sweep-v2
+          path: workloads/artifacts/rls_ibkr_wayback_availability_sweep_v2.json
+          retention-days: 30
+          if-no-files-found: error
