@@ -1,0 +1,40 @@
+name: RLS IBKR Wayback Raw Snapshot Preflight 2025-06-18 V1
+on:
+  workflow_dispatch:
+  push:
+    branches: [build-colony/rls-ibkr-archive-recovery-v1]
+    paths:
+      - 'protocol/rls_ibkr_wayback_raw_snapshot_preflight_2025_06_18_v1.json'
+      - 'rls_ibkr_wayback_raw_snapshot_preflight_2025_06_18_v1.py'
+      - '.github/workflows/rls-ibkr-wayback-raw-snapshot-preflight-2025-06-18-v1.yml'
+permissions:
+  contents: read
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 rls_ibkr_wayback_raw_snapshot_preflight_2025_06_18_v1.py
+      - name: Verify invariants
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('workloads/artifacts/rls_ibkr_wayback_raw_snapshot_preflight_2025_06_18_v1.json').read_text())
+          assert d['protocol']=='RLS-IBKR-WAYBACK-RAW-SNAPSHOT-PREFLIGHT-2025-06-18-v1'
+          assert d['authority']=='OBSERVATION_ONLY_NO_RLS_ADMISSION_AUTHORITY'
+          assert d['economic_row_values_parsed'] is False
+          assert d['economic_values_emitted'] is False
+          assert d['admission_authority_granted'] is False
+          assert not d['credential_policy']['user_specific_credentials_used']
+          assert not d['credential_policy']['api_key_used']
+          assert not d['credential_policy']['account_login_used']
+          print('status=',d['status']); print('sha256=',d.get('sha256')); print('bof_date=',d.get('bof_date')); print('header_columns=',d.get('header_columns')); print('row_count_match=',d.get('row_count_match')); print('evidence_digest_sha256=',d['evidence_digest_sha256'])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rls-ibkr-wayback-raw-snapshot-preflight-2025-06-18-v1
+          path: workloads/artifacts/rls_ibkr_wayback_raw_snapshot_preflight_2025_06_18_v1.json
+          retention-days: 30
+          if-no-files-found: error
