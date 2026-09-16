@@ -1,0 +1,74 @@
+{
+  "protocol": "RLS-IBKR-GITHUB-STOCKLOAN-CARRIER-PREQUALIFICATION-v1",
+  "status": "FROZEN_BEFORE_CARRIER_CONTENT_OPEN",
+  "frozen_at": "2026-09-16",
+  "authority": "OBSERVATION_ONLY_NO_RLS_ADMISSION_AUTHORITY",
+  "candidate": {
+    "repository": "lbelt567/TradingData",
+    "repository_commit": "869ea1cee4e09a0ffaddbb77b56609a0e1c5bd8f",
+    "path": "data_upload/stock_loan_data.csv",
+    "git_blob_sha": "92822a1a2e3d2ec4023db95a47bede98c55df225",
+    "git_tree_observed_size_bytes": 1356565,
+    "commit_date_utc": "2025-06-26T15:25:35Z",
+    "provenance_code_repository_commit": "afa17f177eb35de245e189a88e70466e34bf157e",
+    "provenance_code_path": "scrape_logic/scrape_ibkr_short_borrow.py",
+    "declared_upstream_host": "ftp2.interactivebrokers.com",
+    "declared_upstream_user": "shortstock",
+    "declared_upstream_password": "",
+    "declared_change_fields": ["AVAILABLE", "FEERATE", "REBATERATE"]
+  },
+  "selection_basis": [
+    "candidate was discovered by repository/code metadata search before its CSV content was opened",
+    "repository code explicitly declares direct anonymous collection from the IBKR shortstock FTP",
+    "the exact CSV path has one observed Git commit and an exact Git blob SHA",
+    "file size is large enough to warrant structural prequalification but size is not an admission criterion"
+  ],
+  "stage_1_allowed": [
+    "fetch the exact public Git blob at the frozen commit",
+    "compute SHA-256 and byte length over the exact file bytes",
+    "decode CSV strictly enough to identify header and row count",
+    "record exact header names and order",
+    "identify temporal columns only by predeclared case-insensitive names: TIMESTAMP, DATETIME, DATE, FETCHED_AT, OBSERVED_AT, BOF_TIMESTAMP, TIME",
+    "parse values only from identified temporal columns to derive earliest/latest timestamp, distinct dates and observed calendar months",
+    "record whether predeclared canonical economic field names SYM, CON, ISIN, FEERATE, REBATERATE and AVAILABLE are present, without emitting their row values",
+    "record duplicate-row count only if computable without selecting on economic magnitude",
+    "record whether every parsed row has a temporal value",
+    "emit deterministic structural evidence digest"
+  ],
+  "stage_1_forbidden": [
+    "emit or summarize any FEERATE, REBATERATE or AVAILABLE values",
+    "rank/select rows, symbols, dates or months by economic values",
+    "open strategy returns or outcomes",
+    "infer missing availability or fee values",
+    "grant RLS admission authority",
+    "alter the 120 full-calendar-month target",
+    "treat a transformed CSV as raw IBKR bytes",
+    "treat repository provenance declarations as sufficient authenticity without later overlap authentication",
+    "use credentials, API keys or account login"
+  ],
+  "prequalification_pass_requires": [
+    "exact frozen Git blob retrieved",
+    "CSV structurally valid",
+    "at least one parseable temporal column exists",
+    "SYM present",
+    "FEERATE present",
+    "AVAILABLE present",
+    "at least one observation month falls within the frozen missing-month window 2024-07 through 2026-08"
+  ],
+  "if_pass_next_gate": "Freeze a transformed-carrier authentication protocol before comparing selected overlapping observations to direct IBKR/public community snapshots or using any economic field.",
+  "target_window": {
+    "first_month": "2016-09",
+    "last_month": "2026-08",
+    "required_full_calendar_months": 120,
+    "currently_verified_months": 81,
+    "currently_missing_early": ["2016-09", "2017-09"],
+    "currently_missing_recent": ["2024-07", "2026-08"]
+  },
+  "credential_policy": {
+    "user_specific_credentials_allowed": false,
+    "api_keys_allowed": false,
+    "account_login_allowed": false
+  },
+  "capital_authorization": "0.00%",
+  "confirmation": "SEALED"
+}
