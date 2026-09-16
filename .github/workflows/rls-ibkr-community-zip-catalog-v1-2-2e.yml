@@ -1,0 +1,65 @@
+name: RLS IBKR Community ZIP Catalog Transport V1.2.2e
+
+on:
+  push:
+    branches:
+      - build-colony/rls-ibkr-archive-recovery-v1
+    paths:
+      - workloads/rls_ibkr_community_zip_catalog_transport_v1_2_2e.py
+      - .github/workflows/rls-ibkr-community-zip-catalog-v1-2-2e.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe-deterministic-catalog-transport:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Record exact revision
+        run: |
+          git rev-parse HEAD
+          python3 --version
+      - name: Install pinned DuckDB transport engine
+        run: python3 -m pip install --disable-pip-version-check 'duckdb==1.4.0'
+      - name: Execute deterministic 300-shard HTTPS metadata query
+        working-directory: workloads
+        run: python3 rls_ibkr_community_zip_catalog_transport_v1_2_2e.py
+      - name: Verify frozen catalog and zero-credential boundaries
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('workloads/artifacts/rls_ibkr_community_zip_catalog_transport_v1_2_2e.json').read_text())
+          assert d['authority']=='OBSERVATION_ONLY_NO_RLS_ADMISSION_AUTHORITY'
+          assert d['phase']=='A_TRANSPORT_FEASIBILITY_ONLY'
+          assert d['frozen_crawl_id']=='CC-MAIN-2021-17'
+          assert d['catalog']['partition_count']==300
+          assert d['catalog']['first_partition_index']==0
+          assert d['catalog']['last_partition_index']==299
+          assert d['catalog']['shard_uuid']=='74237c22-0523-49c6-9e5a-6b4aa471a042'
+          assert d['catalog']['object_listing_used'] is False
+          assert all(v is False for v in d['credential_policy'].values())
+          assert all(v is False for v in d['boundaries'].values())
+          assert d['result']['zero_rows_if_any_do_not_prove_absence'] is True
+          assert d['result']['admission_authority_granted'] is False
+          print('partition_count=',d['catalog']['partition_count'])
+          print('keys_sha256=',d['catalog']['keys_sha256'])
+          print('catalog_endpoint_probes=',d['catalog_endpoint_probes'])
+          print('query_status=',d['query'].get('status'))
+          print('row_count=',d['query'].get('row_count'))
+          print('rows_sha256=',d['query'].get('rows_sha256'))
+          print('query_error=',d['query'].get('error'))
+          print('transport_success=',d['result']['transport_success'])
+          print('phase_b_authorized_by_transport_gate=',d['result']['phase_b_authorized_by_transport_gate'])
+          print('evidence_digest_sha256=',d['evidence_digest_sha256'])
+          PY
+      - name: Upload transport evidence manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: rls-ibkr-community-zip-catalog-v1-2-2e
+          path: workloads/artifacts/rls_ibkr_community_zip_catalog_transport_v1_2_2e.json
+          if-no-files-found: error
+          retention-days: 30
