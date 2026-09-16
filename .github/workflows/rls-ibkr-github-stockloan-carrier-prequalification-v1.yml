@@ -1,0 +1,51 @@
+name: RLS IBKR GitHub Stockloan Carrier Prequalification V1
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - build-colony/rls-ibkr-archive-recovery-v1
+    paths:
+      - 'protocol/rls_ibkr_github_stockloan_carrier_prequalification_v1.json'
+      - 'rls_ibkr_github_stockloan_carrier_prequalification_v1.py'
+      - '.github/workflows/rls-ibkr-github-stockloan-carrier-prequalification-v1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  prequalify-public-stockloan-carrier:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout exact branch revision
+        uses: actions/checkout@v4
+      - name: Execute frozen structural prequalification
+        run: python3 rls_ibkr_github_stockloan_carrier_prequalification_v1.py
+      - name: Verify authority and redaction invariants
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('workloads/artifacts/rls_ibkr_github_stockloan_carrier_prequalification_v1.json').read_text())
+          assert d['protocol']=='RLS-IBKR-GITHUB-STOCKLOAN-CARRIER-PREQUALIFICATION-v1'
+          assert d['authority']=='OBSERVATION_ONLY_NO_RLS_ADMISSION_AUTHORITY'
+          assert d['candidate']['commit']=='869ea1cee4e09a0ffaddbb77b56609a0e1c5bd8f'
+          assert d['candidate']['path']=='data_upload/stock_loan_data.csv'
+          assert d['economic_values_emitted'] is False
+          assert d['admission_authority_granted'] is False
+          assert d['strategy_outcomes_opened'] is False
+          assert d['credential_policy']['user_specific_credentials_used'] is False
+          assert d['credential_policy']['api_key_used'] is False
+          assert d['credential_policy']['account_login_used'] is False
+          print('status=',d.get('status'))
+          print('temporal_summary=',d.get('temporal_summary'))
+          print('evidence_digest_sha256=',d['evidence_digest_sha256'])
+          PY
+      - name: Upload structural manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: rls-ibkr-github-stockloan-carrier-prequalification-v1
+          path: workloads/artifacts/rls_ibkr_github_stockloan_carrier_prequalification_v1.json
+          retention-days: 30
+          if-no-files-found: error
