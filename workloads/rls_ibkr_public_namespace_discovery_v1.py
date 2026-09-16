@@ -16,7 +16,7 @@ import re
 from datetime import datetime, timezone
 from pathlib import PurePosixPath, Path
 
-WORKER_VERSION = "RLS-IBKR-PUBLIC-NAMESPACE-DISCOVERY-v1"
+WORKER_VERSION = "RLS-IBKR-PUBLIC-NAMESPACE-DISCOVERY-v1.0.1"
 AUTHORITY = "OBSERVATION_ONLY_NO_RLS_ADMISSION_AUTHORITY"
 HOST = "ftp2.interactivebrokers.com"
 USER = "shortstock"
@@ -29,6 +29,11 @@ TERMS = (
     "archive", "backup", "history", "historical", "hist", "old",
     "short", "usa", ".zip", ".gz", ".bz2", ".csv", ".tsv",
 )
+HISTORICAL_TERMS = (
+    "archive", "backup", "history", "historical", "hist", "old",
+    ".zip", ".gz", ".bz2", ".csv", ".tsv",
+)
+CURRENT_ONLY_PATHS = {"/usa.txt", "/usa.txt.md5"}
 DATEISH = re.compile(r"(?:^|[^0-9])(?:20\d{2}(?:[-_.]?\d{2}){0,2}|\d{6,8})(?:[^0-9]|$)")
 
 
@@ -50,6 +55,18 @@ def candidate_reason(path: str) -> list[str]:
     if DATEISH.search(path):
         reasons.append("dateish_name")
     return reasons
+
+
+def historical_candidate(entry: dict[str, object]) -> bool:
+    path = str(entry.get("path", "")).lower()
+    if path in CURRENT_ONLY_PATHS:
+        return False
+    if entry.get("type") == "dir":
+        return True
+    reasons = [str(x) for x in entry.get("candidate_reasons", [])]
+    if "dateish_name" in reasons:
+        return True
+    return any(f"term:{term}" in reasons for term in HISTORICAL_TERMS)
 
 
 def normalize_entry(parent: str, name: str, facts: dict[str, str] | None, source: str) -> dict[str, object]:
@@ -196,15 +213,15 @@ def main() -> int:
             all_entries.extend(child.get("entries", []))
 
     candidates = [e for e in all_entries if e.get("candidate_reasons")]
+    historical_candidates = [e for e in candidates if historical_candidate(e)]
     manifest["summary"] = {
         "total_entries_observed": len(all_entries),
         "child_directories_enumerated": len(manifest.get("children", [])),
         "candidate_count": len(candidates),
         "candidates": candidates,
-        "success_condition_met": any(
-            e.get("type") == "dir" or str(e.get("name", "")).lower() != "usa.txt"
-            for e in candidates
-        ),
+        "historical_candidate_count": len(historical_candidates),
+        "historical_candidates": historical_candidates,
+        "success_condition_met": bool(historical_candidates),
         "historical_candidate_bodies_opened": False,
         "admission_authority_granted": False,
     }
@@ -219,6 +236,8 @@ def main() -> int:
     print("child_directories_enumerated=", s["child_directories_enumerated"])
     print("candidate_count=", s["candidate_count"])
     print("candidate_paths=", [e["path"] for e in s["candidates"]])
+    print("historical_candidate_count=", s["historical_candidate_count"])
+    print("historical_candidate_paths=", [e["path"] for e in s["historical_candidates"]])
     print("success_condition_met=", s["success_condition_met"])
     print("evidence_digest_sha256=", manifest["evidence_digest_sha256"])
     return 0
