@@ -15,10 +15,11 @@ import rls_ibkr_archive_recovery_v1 as v1
 
 WORKER_VERSION = "RLS-IBKR-USA-ARCHIVE-RECOVERY-WORKER-v1.1"
 YYMMDD_SHORTING = re.compile(r"^(\d{2})(\d{2})(\d{2})_shorting\.tsv$", re.I)
+_LEGACY_FILENAME_DATE = v1.filename_date
 
 
 def filename_date_v1_1(name: str) -> str | None:
-    legacy = v1.filename_date(name)
+    legacy = _LEGACY_FILENAME_DATE(name)
     if legacy is not None:
         return legacy
     base = name.rsplit("/", 1)[-1]
