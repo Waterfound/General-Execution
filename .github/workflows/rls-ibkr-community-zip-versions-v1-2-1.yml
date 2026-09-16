@@ -1,0 +1,52 @@
+name: RLS IBKR Community ZIP Versions V1.2.1
+
+on:
+  push:
+    branches:
+      - build-colony/rls-ibkr-archive-recovery-v1
+    paths:
+      - workloads/rls_ibkr_community_zip_versions_v1_2_1.py
+      - .github/workflows/rls-ibkr-community-zip-versions-v1-2-1.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  discover-historical-zip-versions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout exact branch revision
+        uses: actions/checkout@v4
+      - name: Record exact revision
+        run: |
+          git rev-parse HEAD
+          python3 --version
+      - name: Execute public archive metadata discovery
+        working-directory: workloads
+        run: python3 rls_ibkr_community_zip_versions_v1_2_1.py
+      - name: Verify manifest invariants
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('workloads/artifacts/rls_ibkr_community_zip_versions_v1_2_1.json')
+          d = json.loads(p.read_text())
+          assert d['authority'] == 'OBSERVATION_ONLY_NO_RLS_ADMISSION_AUTHORITY'
+          assert d['raw_archived_zip_bytes_opened'] is False
+          assert d['user_specific_credentials_used'] is False
+          print('worker_version=', d['worker_version'])
+          print('evidence_digest_sha256=', d['evidence_digest_sha256'])
+          print('variant_statuses=', [(v['original'], v['status'], len(v['rows']), v['error']) for v in d['variants']])
+          print('unique_capture_count=', d['unique_capture_count'])
+          print('distinct_digest_count=', d['distinct_digest_count'])
+          print('selection_order=', d['distinct_digests_in_selection_order'])
+          PY
+      - name: Upload metadata manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: rls-ibkr-community-zip-versions-v1-2-1
+          path: workloads/artifacts/rls_ibkr_community_zip_versions_v1_2_1.json
+          if-no-files-found: error
+          retention-days: 30
