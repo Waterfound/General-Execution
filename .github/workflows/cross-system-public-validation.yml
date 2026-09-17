@@ -25,6 +25,7 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git hash-object capsules/build-colony-agdws-v1/work_selection.py)" = "89e9eb62dace5de94be5a7c626b6677cd78a7a8b"
+          test "$(git hash-object capsules/build-colony-agdws-v1/bridge/build_colony/gate_directed_issue.py)" = "333d0d5b5e46d4b4b5edba1dfc3b2416d9783cdb"
           test "$(git hash-object capsules/cii-execution-binding-v1/execution-binding.mjs)" = "a1d8d26204656eacb5c0c145ddf8f7b5189fd84e"
           test -f capsules/cross-system-validation-001.json
           echo "Public capsule source blobs match the frozen private candidate blobs."
@@ -49,6 +50,29 @@ jobs:
       - name: Execute AGDWS frozen replay bank
         working-directory: capsules/build-colony-agdws-v1
         run: python -m unittest -v test_work_selection.py
+
+  agdws-pre-issue-bridge:
+    name: AGDWS pre-ISSUE bridge / Python ${{ matrix.python-version }}
+    needs: provenance
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    steps:
+      - name: Checkout public execution repo only
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Execute exact bridge against bounded public stubs
+        working-directory: capsules/build-colony-agdws-v1/bridge
+        env:
+          PYTHONPATH: ..
+        run: python -m unittest -v test_gate_directed_issue.py
 
   cii-execution-binding:
     name: CII execution binding / Node ${{ matrix.node-version }}
