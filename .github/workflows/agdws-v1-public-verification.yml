@@ -1,0 +1,27 @@
+name: AGDWS v1 public verification
+
+on:
+  push:
+    branches:
+      - pilot/agdws-v1-public-verification
+    paths:
+      - 'pilots/agdws-v1/**'
+      - '.github/workflows/agdws-v1-public-verification.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-sanitized-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout exact public verification revision
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Run independent AGDWS behavior oracle
+        run: python pilots/agdws-v1/verify.py
