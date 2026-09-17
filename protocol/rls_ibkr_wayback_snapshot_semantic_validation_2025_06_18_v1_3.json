@@ -1,0 +1,32 @@
+{
+  "protocol": "RLS-IBKR-WAYBACK-SNAPSHOT-SEMANTIC-VALIDATION-2025-06-18-v1.3",
+  "status": "FROZEN_PRE_EXECUTION",
+  "authority": "OBSERVATION_ONLY_RECOVERY_PRECHECK_NO_ADMISSION_AUTHORITY",
+  "source_sha256": "74d6bd14aeadcddc74fa5a00c597a6b36ad50bdaa953fec90525c1a351b9c553",
+  "parent_lexical_evidence_digest_sha256": "aa4398374aaacd84c6c3cea1eecb4040ff33c0a4800a35be088b1be3ff92fa7b",
+  "schema": {
+    "exact_header": "#SYM|CUR|NAME|CON|ISIN|REBATERATE|FEERATE|AVAILABLE|FIGI|",
+    "row_field_count": 9,
+    "figi_is_supporting_identity_only": true
+  },
+  "rate_semantics": {
+    "numeric": "OBSERVED_NUMERIC",
+    "blank": "MISSING",
+    "NA": "MISSING",
+    "NA_must_not_be_zero_imputed": true
+  },
+  "availability_semantics": {
+    "blank": "MISSING",
+    "zero": "OBSERVED_UNAVAILABLE",
+    "positive_integer": "OBSERVED_AVAILABLE",
+    "greater_than_positive_integer": "OBSERVED_AVAILABLE_LOWER_BOUND"
+  },
+  "field_independence": {
+    "availability_may_be_observed_when_fee_is_missing": true,
+    "missing_fee_must_remain_missing": true,
+    "no_cross_field_imputation": true
+  },
+  "forbidden": ["strategy outcomes", "admission authority", "120-month threshold change", "zero-impute missing fee", "infer fee from availability"],
+  "confirmation": "SEALED",
+  "capital_authorization": "0.00%"
+}
