@@ -7,12 +7,17 @@
     {
       "system": "build_colony",
       "candidate": "active-gate-directed-work-selection-v1",
-      "private_source_commit": "f319a96309933af8639fc4e717cfb3ece6a1535d",
+      "private_source_commit": "8d5d06e088d241d0cb2ffa0ac0d8d0dd5df53f9d",
       "frozen_baseline_commit": "057d91b1f85ca861ccd5f190e25a05b1b1e174cf",
-      "source_blob_sha": "89e9eb62dace5de94be5a7c626b6677cd78a7a8b",
-      "public_capsule_blob_sha": "89e9eb62dace5de94be5a7c626b6677cd78a7a8b",
+      "core_source_blob_sha": "89e9eb62dace5de94be5a7c626b6677cd78a7a8b",
+      "core_public_capsule_blob_sha": "89e9eb62dace5de94be5a7c626b6677cd78a7a8b",
+      "bridge_source_blob_sha": "333d0d5b5e46d4b4b5edba1dfc3b2416d9783cdb",
+      "bridge_public_capsule_blob_sha": "333d0d5b5e46d4b4b5edba1dfc3b2416d9783cdb",
       "byte_identity": true,
-      "test_command": "python -m unittest -v test_work_selection.py"
+      "test_commands": [
+        "python -m unittest -v test_work_selection.py",
+        "PYTHONPATH=.. python -m unittest -v test_gate_directed_issue.py"
+      ]
     },
     {
       "system": "continuous_improvement_intelligence",
