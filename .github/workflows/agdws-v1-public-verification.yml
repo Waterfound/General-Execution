@@ -25,3 +25,5 @@ jobs:
           python-version: '3.13'
       - name: Run independent AGDWS behavior oracle
         run: python pilots/agdws-v1/verify.py
+      - name: Run independent AGDWS pre-ISSUE binding oracle
+        run: python pilots/agdws-v1/verify_binding.py
