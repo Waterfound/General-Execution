@@ -1,0 +1,39 @@
+{
+  "protocol":"RLS-IBKR-WAYBACK-SNAPSHOT-SEMANTIC-VALIDATION-2025-06-18-v1.1",
+  "status":"FROZEN_BEFORE_ECONOMIC_ROW_PARSE",
+  "frozen_at":"2026-09-16",
+  "authority":"OBSERVATION_ONLY_RECOVERY_PRECHECK_NO_ADMISSION_AUTHORITY",
+  "rls_protocol":"RLS-IBKR-USA-SNAPSHOT-CANDIDATE-v1.1",
+  "rls_protocol_commit":"ba83402f36b58c10e4f521b1577e97d98f274f61",
+  "snapshot":{
+    "wayback_timestamp":"20250618090506",
+    "provider_bof_date":"2025-06-18",
+    "url":"https://web.archive.org/web/20250618090506id_/ftp://shortstock@ftp2.interactivebrokers.com/usa.txt",
+    "expected_sha256":"74d6bd14aeadcddc74fa5a00c597a6b36ad50bdaa953fec90525c1a351b9c553",
+    "expected_row_count":17613,
+    "expected_header":"#SYM|CUR|NAME|CON|ISIN|REBATERATE|FEERATE|AVAILABLE|FIGI|"
+  },
+  "validation":{
+    "con_positive_integer":true,
+    "duplicate_con_fails_closed":true,
+    "fee_blank_or_finite_signed_numeric_only":true,
+    "availability_allowed":["blank","zero","positive_integer",">positive_integer"],
+    "positive_availability_requires_fee":true,
+    "paired_observation":"observed FEERATE plus nonmissing valid AVAILABLE",
+    "recovery_precheck_pass":"paired_observation_count >= 1 AND all rows pass frozen validation"
+  },
+  "public_output_policy":{
+    "raw_rows":false,
+    "symbols":false,
+    "contract_ids":false,
+    "isins":false,
+    "figis":false,
+    "fee_values":false,
+    "availability_values":false,
+    "aggregate_counts":true,
+    "hashes":true
+  },
+  "forbidden":["strategy outcomes","returns","threshold changes","row selection after economic inspection","canonical admission","confirmation opening","capital authorization"],
+  "confirmation":"SEALED",
+  "capital_authorization":"0.00%"
+}
