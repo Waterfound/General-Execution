@@ -1,0 +1,27 @@
+name: CII Execution Binding v1 public verification
+
+on:
+  push:
+    branches:
+      - pilot/cii-execution-binding-v1
+    paths:
+      - 'pilots/cii-execution-binding-v1/**'
+      - '.github/workflows/cii-execution-binding-v1-public-verification.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-sanitized-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout exact public verification revision
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Verify CII Execution Binding Contract v1 evidence
+        run: python pilots/cii-execution-binding-v1/verify.py
