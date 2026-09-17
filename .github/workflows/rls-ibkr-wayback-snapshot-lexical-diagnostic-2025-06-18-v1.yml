@@ -1,0 +1,45 @@
+name: RLS IBKR Wayback Snapshot Lexical Diagnostic 2025-06-18 V1
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - build-colony/rls-ibkr-archive-recovery-v1
+    paths:
+      - 'protocol/rls_ibkr_wayback_snapshot_lexical_diagnostic_2025_06_18_v1.json'
+      - 'rls_ibkr_wayback_snapshot_lexical_diagnostic_2025_06_18_v1.py'
+      - '.github/workflows/rls-ibkr-wayback-snapshot-lexical-diagnostic-2025-06-18-v1.yml'
+permissions:
+  contents: read
+jobs:
+  diagnose-lexical-surface:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Execute frozen lexical diagnostic
+        run: python3 rls_ibkr_wayback_snapshot_lexical_diagnostic_2025_06_18_v1.py
+      - name: Verify invariants
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('workloads/artifacts/rls_ibkr_wayback_snapshot_lexical_diagnostic_2025_06_18_v1.json').read_text())
+          assert d['protocol']=='RLS-IBKR-WAYBACK-SNAPSHOT-LEXICAL-DIAGNOSTIC-2025-06-18-v1'
+          assert d['authority']=='OBSERVATION_ONLY_FORMAT_DIAGNOSTIC_NO_ADMISSION_AUTHORITY'
+          assert d['source_sha256']=='74d6bd14aeadcddc74fa5a00c597a6b36ad50bdaa953fec90525c1a351b9c553'
+          assert d['raw_rows_emitted'] is False
+          assert d['identifiers_emitted'] is False
+          assert d['ordinary_numeric_values_emitted'] is False
+          assert d['strategy_outcomes_opened'] is False
+          assert d['admission_authority_granted'] is False
+          print('status=',d['status'])
+          print('unsupported_token_kind_count=',d['unsupported_token_kind_count'])
+          print('evidence_digest_sha256=',d['evidence_digest_sha256'])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rls-ibkr-wayback-snapshot-lexical-diagnostic-2025-06-18-v1
+          path: workloads/artifacts/rls_ibkr_wayback_snapshot_lexical_diagnostic_2025_06_18_v1.json
+          retention-days: 30
+          if-no-files-found: error
