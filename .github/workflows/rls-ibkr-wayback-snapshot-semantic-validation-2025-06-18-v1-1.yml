@@ -1,0 +1,46 @@
+name: RLS IBKR Wayback Snapshot Semantic Validation 2025-06-18 V1.1
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - build-colony/rls-ibkr-archive-recovery-v1
+    paths:
+      - 'protocol/rls_ibkr_wayback_snapshot_semantic_validation_2025_06_18_v1_1.json'
+      - 'rls_ibkr_wayback_snapshot_semantic_validation_2025_06_18_v1_1.py'
+      - '.github/workflows/rls-ibkr-wayback-snapshot-semantic-validation-2025-06-18-v1-1.yml'
+permissions:
+  contents: read
+jobs:
+  validate-june-2025-snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Execute frozen semantic validation
+        run: python3 rls_ibkr_wayback_snapshot_semantic_validation_2025_06_18_v1_1.py
+      - name: Verify invariants
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('workloads/artifacts/rls_ibkr_wayback_snapshot_semantic_validation_2025_06_18_v1_1.json').read_text())
+          assert d['protocol']=='RLS-IBKR-WAYBACK-SNAPSHOT-SEMANTIC-VALIDATION-2025-06-18-v1.1'
+          assert d['authority']=='OBSERVATION_ONLY_RECOVERY_PRECHECK_NO_ADMISSION_AUTHORITY'
+          assert d['source_sha256']=='74d6bd14aeadcddc74fa5a00c597a6b36ad50bdaa953fec90525c1a351b9c553'
+          assert d['snapshot_date']=='2025-06-18' and d['monthly_anchor_day']==18
+          assert d['row_count']==17613 and d['distinct_contract_count']==17613
+          assert d['raw_rows_emitted'] is False and d['identifiers_emitted'] is False and d['economic_values_emitted'] is False
+          assert d['strategy_outcomes_opened'] is False and d['admission_authority_granted'] is False
+          assert d['confirmation']=='SEALED' and d['capital_authorization']=='0.00%'
+          print('status=',d['status'])
+          print('paired_fee_availability_row_count=',d['paired_fee_availability_row_count'])
+          print('recovery_precheck_pass=',d['recovery_precheck_pass'])
+          print('evidence_digest_sha256=',d['evidence_digest_sha256'])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rls-ibkr-wayback-snapshot-semantic-validation-2025-06-18-v1-1
+          path: workloads/artifacts/rls_ibkr_wayback_snapshot_semantic_validation_2025_06_18_v1_1.json
+          retention-days: 30
+          if-no-files-found: error
