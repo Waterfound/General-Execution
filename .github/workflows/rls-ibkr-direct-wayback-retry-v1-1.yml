@@ -1,0 +1,49 @@
+name: RLS IBKR Direct Wayback Retry V1.1
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - build-colony/rls-ibkr-archive-recovery-v1
+    paths:
+      - 'protocol/rls_ibkr_direct_wayback_retry_v1_1.json'
+      - 'rls_ibkr_direct_wayback_retry_v1_1.py'
+      - '.github/workflows/rls-ibkr-direct-wayback-retry-v1-1.yml'
+permissions:
+  contents: read
+jobs:
+  retry-direct-unresolved:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Execute frozen direct-publisher retry
+        run: python3 rls_ibkr_direct_wayback_retry_v1_1.py
+      - name: Verify invariants
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('workloads/artifacts/rls_ibkr_direct_wayback_retry_v1_1.json').read_text())
+          assert d['protocol']=='RLS-IBKR-DIRECT-WAYBACK-RETRY-v1.1'
+          assert d['authority']=='OBSERVATION_ONLY_NO_RLS_ADMISSION_AUTHORITY'
+          assert d['query_count']==212
+          assert d['snapshot_bytes_opened'] is False
+          assert d['economic_values_opened'] is False
+          assert d['admission_authority_granted'] is False
+          assert not d['credential_policy']['user_specific_credentials_used']
+          assert not d['credential_policy']['api_key_used']
+          assert not d['credential_policy']['account_login_used']
+          print('status=',d['status'])
+          print('observed_query_count=',d['observed_query_count'])
+          print('unresolved_query_count=',d['unresolved_query_count'])
+          print('distinct_snapshots=',d['distinct_snapshots'])
+          print('missing_month_snapshot_candidates=',d['missing_month_snapshot_candidates'])
+          print('evidence_digest_sha256=',d['evidence_digest_sha256'])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rls-ibkr-direct-wayback-retry-v1-1
+          path: workloads/artifacts/rls_ibkr_direct_wayback_retry_v1_1.json
+          retention-days: 30
+          if-no-files-found: error
