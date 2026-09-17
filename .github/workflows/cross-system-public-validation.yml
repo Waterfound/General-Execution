@@ -1,0 +1,72 @@
+name: Cross-system public capsule validation
+
+on:
+  push:
+    branches:
+      - execution/cross-system-validation-001
+    paths:
+      - 'capsules/**'
+      - '.github/workflows/cross-system-public-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  provenance:
+    name: Byte identity / privacy boundary
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout public execution repo only
+        uses: actions/checkout@v4
+
+      - name: Verify candidate source byte identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object capsules/build-colony-agdws-v1/work_selection.py)" = "89e9eb62dace5de94be5a7c626b6677cd78a7a8b"
+          test "$(git hash-object capsules/cii-execution-binding-v1/execution-binding.mjs)" = "a1d8d26204656eacb5c0c145ddf8f7b5189fd84e"
+          test -f capsules/cross-system-validation-001.json
+          echo "Public capsule source blobs match the frozen private candidate blobs."
+
+  agdws:
+    name: AGDWS / Python ${{ matrix.python-version }}
+    needs: provenance
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    steps:
+      - name: Checkout public execution repo only
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Execute AGDWS frozen replay bank
+        working-directory: capsules/build-colony-agdws-v1
+        run: python -m unittest -v test_work_selection.py
+
+  cii-execution-binding:
+    name: CII execution binding / Node ${{ matrix.node-version }}
+    needs: provenance
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: ['22.x', '24.x']
+    steps:
+      - name: Checkout public execution repo only
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Execute CII execution-binding bank
+        working-directory: capsules/cii-execution-binding-v1
+        run: node --test execution-binding.test.mjs
