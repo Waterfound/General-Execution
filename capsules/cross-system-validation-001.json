@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "purpose": "public-safe independent validation without exposing private system repositories",
+  "authority": "EXECUTION_ONLY",
+  "promotion_authority": false,
+  "capsules": [
+    {
+      "system": "build_colony",
+      "candidate": "active-gate-directed-work-selection-v1",
+      "private_source_commit": "f319a96309933af8639fc4e717cfb3ece6a1535d",
+      "frozen_baseline_commit": "057d91b1f85ca861ccd5f190e25a05b1b1e174cf",
+      "source_blob_sha": "89e9eb62dace5de94be5a7c626b6677cd78a7a8b",
+      "public_capsule_blob_sha": "89e9eb62dace5de94be5a7c626b6677cd78a7a8b",
+      "byte_identity": true,
+      "test_command": "python -m unittest -v test_work_selection.py"
+    },
+    {
+      "system": "continuous_improvement_intelligence",
+      "candidate": "execution-binding-contract-v1",
+      "private_source_commit": "504b681f5a09983cfb6a726607e337c03fd9f873",
+      "source_blob_sha": "a1d8d26204656eacb5c0c145ddf8f7b5189fd84e",
+      "public_capsule_blob_sha": "a1d8d26204656eacb5c0c145ddf8f7b5189fd84e",
+      "byte_identity": true,
+      "dependency_surface": "minimal public-safe contract primitives only",
+      "test_command": "node --test execution-binding.test.mjs"
+    }
+  ],
+  "privacy_invariants": [
+    "no private repository checkout",
+    "no secrets",
+    "no credentials",
+    "no private source tree export",
+    "no integration or promotion authority",
+    "only bounded public-safe capsule code and tests"
+  ]
+}
