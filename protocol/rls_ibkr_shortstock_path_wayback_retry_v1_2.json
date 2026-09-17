@@ -1,0 +1,30 @@
+{
+  "protocol": "RLS-IBKR-SHORTSTOCK-PATH-WAYBACK-RETRY-v1.2",
+  "status": "FROZEN_PRE_EXECUTION",
+  "authority": "OBSERVATION_ONLY_NO_RLS_ADMISSION_AUTHORITY",
+  "purpose": "Retry exactly the 11 transport-unresolved queries from V1.1 on a fresh public runner. No new dates, targets, economic fields, or admission rules may be introduced.",
+  "parent_evidence_digest_sha256": "95126c3cddcdee55311df0b83f001f3d93a27b83ed4f7493691a8ce7b2f4c6a3",
+  "query_count": 11,
+  "queries": [
+    ["http://www.interactivebrokers.com/shortstock/usa.txt", "20170801"],
+    ["http://www.interactivebrokers.com/shortstock/usa.txt", "20170815"],
+    ["http://www.interactivebrokers.com/shortstock/usa.txt", "20170901"],
+    ["http://www.interactivebrokers.com/shortstock/usa.txt", "20170915"],
+    ["http://www.interactivebrokers.com/shortstock/usa.txt", "20240701"],
+    ["http://www.interactivebrokers.com/shortstock/usa.txt", "20240715"],
+    ["http://www.interactivebrokers.com/shortstock/usa.txt", "20240801"],
+    ["http://www.interactivebrokers.com/shortstock/usa.txt", "20240815"],
+    ["http://www.interactivebrokers.com/shortstock/usa.txt", "20240901"],
+    ["http://www.interactivebrokers.com/shortstock/usa.txt", "20240915"],
+    ["https://www.interactivebrokers.com/shortstock/usa.txt", "20170115"]
+  ],
+  "retry_policy": {"max_attempts": 5, "max_workers": 1, "backoff_seconds": [1, 3, 7, 12]},
+  "forbidden": [
+    "open archived snapshot bytes",
+    "open economic values",
+    "infer absence from transport failure",
+    "change 120-month threshold",
+    "grant RLS admission authority"
+  ],
+  "credential_policy": {"user_specific_credentials_used": false, "api_key_used": false, "account_login_used": false}
+}
