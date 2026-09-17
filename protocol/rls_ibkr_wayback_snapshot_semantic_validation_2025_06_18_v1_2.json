@@ -1,0 +1,15 @@
+{
+  "protocol": "RLS-IBKR-WAYBACK-SNAPSHOT-SEMANTIC-VALIDATION-2025-06-18-v1.2",
+  "status": "FROZEN_PRE_EXECUTION",
+  "authority": "OBSERVATION_ONLY_RECOVERY_PRECHECK_NO_ADMISSION_AUTHORITY",
+  "source_sha256": "74d6bd14aeadcddc74fa5a00c597a6b36ad50bdaa953fec90525c1a351b9c553",
+  "parent_lexical_evidence_digest_sha256": "aa4398374aaacd84c6c3cea1eecb4040ff33c0a4800a35be088b1be3ff92fa7b",
+  "lexical_binding": {
+    "REBATERATE": {"NA": "MISSING", "blank": "MISSING", "numeric": "OBSERVED_NUMERIC"},
+    "FEERATE": {"NA": "MISSING", "blank": "MISSING", "numeric": "OBSERVED_NUMERIC"},
+    "AVAILABLE": {"blank": "MISSING", "0": "OBSERVED_UNAVAILABLE", "positive_integer": "OBSERVED_AVAILABLE", ">positive_integer": "OBSERVED_AVAILABLE_LOWER_BOUND"}
+  },
+  "critical_rule": "NA is missing/null and MUST NOT be coerced to zero.",
+  "unchanged": ["source bytes", "availability semantics", "120 full-calendar-month threshold", "confirmation SEALED", "capital authorization 0.00%", "no strategy outcomes"],
+  "admission_authority_granted": false
+}
