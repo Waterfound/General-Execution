@@ -1,0 +1,31 @@
+name: RLS IBKR Snapshot V1.2 Bound Conformance
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - build-colony/rls-ibkr-archive-recovery-v1
+    paths:
+      - 'workloads/rls_v12_conformance/**'
+      - '.github/workflows/rls-ibkr-snapshot-v1-2-bound-conformance.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  conformance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bind mirror to private RLS parser blob
+        run: |
+          actual=$(git hash-object workloads/rls_v12_conformance/ibkr_usa_snapshot_candidate_v1_2.py)
+          expected=aaa28fabcc553f3004007dd58404dc9135f7127c
+          echo "actual_blob_sha=$actual"
+          echo "expected_blob_sha=$expected"
+          test "$actual" = "$expected"
+      - name: Compile exact parser mirror
+        run: python3 -m py_compile workloads/rls_v12_conformance/engine.py workloads/rls_v12_conformance/ibkr_usa_snapshot_candidate_v1_2.py workloads/rls_v12_conformance/test_ibkr_v12_conformance.py
+      - name: Run synthetic fail-closed conformance suite
+        run: python3 -m unittest -v workloads.rls_v12_conformance.test_ibkr_v12_conformance
