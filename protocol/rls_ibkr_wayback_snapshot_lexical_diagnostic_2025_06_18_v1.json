@@ -1,0 +1,12 @@
+{
+  "protocol": "RLS-IBKR-WAYBACK-SNAPSHOT-LEXICAL-DIAGNOSTIC-2025-06-18-v1",
+  "status": "FROZEN_PRE_EXECUTION",
+  "authority": "OBSERVATION_ONLY_FORMAT_DIAGNOSTIC_NO_ADMISSION_AUTHORITY",
+  "source_sha256": "74d6bd14aeadcddc74fa5a00c597a6b36ad50bdaa953fec90525c1a351b9c553",
+  "purpose": "Diagnose only unsupported lexical tokens that caused semantic-validation V1.1 to stop. No rows, identifiers, ordinary numeric values, distributions, strategy outcomes, or admission decisions may be emitted.",
+  "fields": ["REBATERATE", "FEERATE", "AVAILABLE"],
+  "allowed_output": ["field", "unsupported literal", "count", "literal sha256"],
+  "forbidden": ["raw rows", "symbols", "CON", "ISIN", "FIGI", "ordinary numeric values", "strategy outcomes", "admission authority", "change 120-month threshold"],
+  "confirmation": "SEALED",
+  "capital_authorization": "0.00%"
+}
