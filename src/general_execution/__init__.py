@@ -121,10 +121,13 @@ from .models import (
 from .portfolio_persistence import (
     DurablePortfolioHead,
     PortfolioPersistenceError,
+    PortfolioRecoveryReport,
     SqlitePortfolioHeadStore,
     deserialize_portfolio_snapshot,
     portfolio_snapshot,
+    recover_portfolio_after_restart,
     serialize_portfolio_snapshot,
+    verify_portfolio_recovery,
 )
 from .portfolio_state import (
     PortfolioBlocker,
@@ -281,6 +284,7 @@ __all__ = [
     "PortfolioBlocker",
     "PortfolioEntry",
     "PortfolioPersistenceError",
+    "PortfolioRecoveryReport",
     "PortfolioState",
     "PortfolioStateError",
     "ProviderObservation",
@@ -379,6 +383,7 @@ __all__ = [
     "record_invocation",
     "record_physical_attempt",
     "recover_capacity_after_restart",
+    "recover_portfolio_after_restart",
     "recover_dispatch_after_restart",
     "reference_runner",
     "release_capacity_for_outcome",
@@ -416,6 +421,7 @@ __all__ = [
     "verify_physical_attempt_record",
     "verify_physical_outcome",
     "verify_plan",
+    "verify_portfolio_recovery",
     "verify_provider_attestation",
     "verify_restart_recovery",
     "verify_retry_chain",
