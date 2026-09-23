@@ -223,7 +223,7 @@ def test_park_active_is_constrained_to_external_blocker():
 
 
 def test_wake_passive_is_constrained_to_passive_wake():
-    with pytest.raises(TransitionPolicyError, match="passive + wake_satisfied"):
+    with pytest.raises(TransitionPolicyError, match=r"passive \\+ wake_satisfied"):
         rule(effect="wake_passive")
 
 
