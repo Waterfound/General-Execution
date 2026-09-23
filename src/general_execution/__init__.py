@@ -118,6 +118,14 @@ from .models import (
     RunnerCapabilities,
     RunnerRegistry,
 )
+from .portfolio_persistence import (
+    DurablePortfolioHead,
+    PortfolioPersistenceError,
+    SqlitePortfolioHeadStore,
+    deserialize_portfolio_snapshot,
+    portfolio_snapshot,
+    serialize_portfolio_snapshot,
+)
 from .portfolio_state import (
     PortfolioBlocker,
     PortfolioEntry,
@@ -179,6 +187,13 @@ from .reconciliation import (
     decide_reconciliation,
 )
 from .recovery_driver import RecoveryDriverError, RecoveryDriverResult, apply_recovery_step
+from .retry_authority import (
+    FailureObservation,
+    RetryAuthorityError,
+    RetryDecision,
+    RetryPolicy,
+    decide_retry,
+)
 from .session import SessionError, bind_session, revoke_session, start_session, submit_result
 from .session_recovery import (
     SessionRecoveryError,
@@ -236,12 +251,14 @@ __all__ = [
     "DurableCapacityError",
     "DurableCapacityHead",
     "DurableObservedOutcome",
+    "DurablePortfolioHead",
     "ExecutionCheckpoint",
     "ExecutionCheckpointError",
     "ExecutionLedger",
     "ExecutionSession",
     "ExecutionSpec",
     "FAILURE_TRANSPORT_STATUSES",
+    "FailureObservation",
     "GENERAL_EXECUTION_REPOSITORY_URL",
     "InvocationBundle",
     "InvocationRecord",
@@ -263,6 +280,7 @@ __all__ = [
     "ProviderContractAttestation",
     "PortfolioBlocker",
     "PortfolioEntry",
+    "PortfolioPersistenceError",
     "PortfolioState",
     "PortfolioStateError",
     "ProviderObservation",
@@ -281,6 +299,7 @@ __all__ = [
     "ReferenceConformanceTarget",
     "RestartRecoveryReport",
     "ResultEnvelope",
+    "RetryPolicy",
     "RunnerCapabilities",
     "RunnerCapacityState",
     "RunnerRegistry",
@@ -291,6 +310,7 @@ __all__ = [
     "SqliteCapacityHeadStore",
     "SqliteDispatchIntentStore",
     "SqliteDurableObservedOutcomeStore",
+    "SqlitePortfolioHeadStore",
     "TransitionPolicy",
     "TransitionPolicyError",
     "TransitionRule",
@@ -329,6 +349,7 @@ __all__ = [
     "deserialize_portfolio_state",
     "deserialize_dispatch_state",
     "deserialize_physical_outcome",
+    "deserialize_portfolio_snapshot",
     "deserialize_transition_policy",
     "dispatch_state_from_dict",
     "dispatch_state_to_dict",
