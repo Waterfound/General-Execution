@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from typing import Any, Literal
 
 from .canonical import canonical_json, sha256_digest
@@ -284,7 +284,7 @@ class PortfolioState:
 
 
 def portfolio_state_to_dict(state: PortfolioState) -> dict[str, Any]:
-    return asdict(state)
+    return json.loads(canonical_json(state))
 
 
 def serialize_portfolio_state(state: PortfolioState) -> str:
