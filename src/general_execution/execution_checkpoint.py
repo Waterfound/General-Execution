@@ -142,6 +142,16 @@ class ExecutionCheckpoint:
             raise ExecutionCheckpointError(
                 "checkpoint canonical reference names must be unique"
             )
+        canonical_by_name = {item.name: item for item in self.canonical_refs}
+        portfolio_ref = canonical_by_name.get("portfolio_state")
+        if portfolio_ref is None:
+            raise ExecutionCheckpointError(
+                "checkpoint requires canonical portfolio_state reference"
+            )
+        if portfolio_ref.content_digest != self.portfolio_state_digest:
+            raise ExecutionCheckpointError(
+                "checkpoint portfolio_state canonical digest mismatch"
+            )
 
         _unique_nonempty("uncertainties", self.uncertainties)
         _optional_nonempty("stop_reason", self.stop_reason)
@@ -172,6 +182,17 @@ class ExecutionCheckpoint:
             if decision.signal != self.observed_signal:
                 raise ExecutionCheckpointError(
                     "checkpoint transition signal mismatch"
+                )
+
+            canonical_by_name = {item.name: item for item in self.canonical_refs}
+            policy_ref = canonical_by_name.get("transition_policy")
+            if policy_ref is None:
+                raise ExecutionCheckpointError(
+                    "checkpoint transition requires canonical transition_policy reference"
+                )
+            if policy_ref.content_digest != decision.policy_digest:
+                raise ExecutionCheckpointError(
+                    "checkpoint transition policy canonical digest mismatch"
                 )
 
             available_evidence = {item.digest for item in self.evidence}
