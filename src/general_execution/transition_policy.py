@@ -542,3 +542,14 @@ def deserialize_transition_decision(payload: str) -> TransitionDecision:
     except (TypeError, json.JSONDecodeError) as exc:
         raise TransitionPolicyError("transition decision is not valid JSON") from exc
     return transition_decision_from_dict(data)
+
+
+def verify_transition_decision(
+    policy: TransitionPolicy,
+    request: TransitionRequest,
+    decision: TransitionDecision,
+) -> bool:
+    try:
+        return evaluate_transition(policy, request) == decision
+    except TransitionPolicyError:
+        return False
