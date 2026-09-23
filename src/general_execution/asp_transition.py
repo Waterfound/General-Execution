@@ -337,42 +337,22 @@ def _secondary_from_wake(
     return replacement, remaining
 
 
-def _external_secondary(
-    state: PortfolioState,
-    replacement: PortfolioEntry,
-) -> tuple[PortfolioEntry, tuple[PortfolioEntry, ...]]:
-    if replacement.role != "secondary" or replacement.state != "ready":
-        raise AspTransitionError(
-            "replacement secondary must be role=secondary and state=ready"
-        )
-    current_ids = {
-        state.active.work_id,
-        state.secondary.work_id,
-        *(entry.work_id for entry in state.passive),
-    }
-    if replacement.work_id in current_ids:
-        raise AspTransitionError(
-            "external replacement secondary must have a new work_id"
-        )
-    return replacement, state.passive
-
-
 def _replacement_secondary(
     state: PortfolioState,
     policy: TransitionPolicy,
     replacement: PortfolioEntry | None,
     wake_admission: PassiveWakeAdmission | None,
-) -> tuple[PortfolioEntry, tuple[PortfolioEntry, ...], str | None]:
-    if (replacement is None) == (wake_admission is None):
+) -> tuple[PortfolioEntry, tuple[PortfolioEntry, ...], str]:
+    if replacement is not None:
         raise AspTransitionError(
-            "rotating transition requires exactly one replacement-secondary source"
+            "external replacement selection is not authorized by core ASP engine"
         )
-    if wake_admission is not None:
-        item, remaining = _secondary_from_wake(state, policy, wake_admission)
-        return item, remaining, wake_admission.digest
-    assert replacement is not None
-    item, remaining = _external_secondary(state, replacement)
-    return item, remaining, None
+    if wake_admission is None:
+        raise AspTransitionError(
+            "rotating transition requires a valid passive wake admission"
+        )
+    item, remaining = _secondary_from_wake(state, policy, wake_admission)
+    return item, remaining, wake_admission.digest
 
 
 def _promoted_active(entry: PortfolioEntry) -> PortfolioEntry:
