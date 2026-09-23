@@ -23,6 +23,7 @@ RetryDisposition = Literal[
     "independent_reproduction",
     "diagnose",
     "human_gate",
+    "stop",
 ]
 
 VALID_FAILURE_CLASSES = {
@@ -34,8 +35,14 @@ VALID_FAILURE_CLASSES = {
     "security_boundary",
     "authority_boundary",
 }
-BOUNDARY_FAILURE_CLASSES = {"cost_boundary", "security_boundary", "authority_boundary"}
-VALID_DISPOSITIONS = {"retry", "independent_reproduction", "diagnose", "human_gate"}
+HUMAN_BOUNDARY_FAILURE_CLASSES = {"security_boundary", "authority_boundary"}
+VALID_DISPOSITIONS = {
+    "retry",
+    "independent_reproduction",
+    "diagnose",
+    "human_gate",
+    "stop",
+}
 
 
 class RetryAuthorityError(ValueError):
@@ -104,6 +111,10 @@ class RetryPolicy:
             raise RetryAuthorityError(
                 "throttle_max_backoff_seconds must be >= initial backoff"
             )
+        if self.unknown_reproduction_limit != 1:
+            raise RetryAuthorityError(
+                "unknown_reproduction_limit is frozen to exactly 1"
+            )
 
     @property
     def digest(self) -> str:
@@ -114,6 +125,7 @@ class RetryPolicy:
 class FailureObservation:
     failure_class: FailureClass
     failure_code: str
+    evidence_digest: str
     automatic_retry_count: int = 0
     independent_reproduction_count: int = 0
     boundary_detail: str | None = None
@@ -125,16 +137,23 @@ class FailureObservation:
         if self.failure_class not in VALID_FAILURE_CLASSES:
             raise RetryAuthorityError("unsupported failure class")
         _nonempty("failure_code", self.failure_code)
+        _digest("evidence_digest", self.evidence_digest)
         _nonnegative_int("automatic_retry_count", self.automatic_retry_count)
         _nonnegative_int(
             "independent_reproduction_count",
             self.independent_reproduction_count,
         )
         _optional_nonempty("boundary_detail", self.boundary_detail)
-        if self.failure_class in BOUNDARY_FAILURE_CLASSES:
+
+        if self.failure_class in HUMAN_BOUNDARY_FAILURE_CLASSES:
             if self.boundary_detail is None:
                 raise RetryAuthorityError(
-                    "boundary failure requires boundary_detail"
+                    "human boundary failure requires boundary_detail"
+                )
+        elif self.failure_class == "cost_boundary":
+            if self.boundary_detail is None:
+                raise RetryAuthorityError(
+                    "cost boundary requires boundary_detail"
                 )
         elif self.boundary_detail is not None:
             raise RetryAuthorityError(
@@ -156,6 +175,8 @@ class RetryDecision:
     automatic_retry_authorized: bool = False
     independent_reproduction_authorized: bool = False
     human_required: bool = False
+    authority_ref: str | None = None
+    authority_digest: str | None = None
     authority_boundary: str | None = None
     transport_authority: bool = False
     schema_version: str = RETRY_DECISION_SCHEMA
@@ -169,7 +190,11 @@ class RetryDecision:
             raise RetryAuthorityError("unsupported retry disposition")
         _nonempty("next_action_ref", self.next_action_ref)
         _nonnegative_int("delay_seconds", self.delay_seconds)
+        _optional_nonempty("authority_ref", self.authority_ref)
+        if self.authority_digest is not None:
+            _digest("authority_digest", self.authority_digest)
         _optional_nonempty("authority_boundary", self.authority_boundary)
+
         if self.transport_authority:
             raise RetryAuthorityError(
                 "retry decision cannot grant transport authority"
@@ -182,9 +207,13 @@ class RetryDecision:
                 )
             if self.independent_reproduction_authorized or self.human_required:
                 raise RetryAuthorityError("retry disposition flags are inconsistent")
-            if self.authority_boundary is not None:
+            if (
+                self.authority_ref is None
+                or self.authority_digest is None
+                or self.authority_boundary is not None
+            ):
                 raise RetryAuthorityError(
-                    "retry disposition cannot carry authority_boundary"
+                    "retry disposition requires bounded authority artifact only"
                 )
 
         elif self.disposition == "independent_reproduction":
@@ -196,21 +225,33 @@ class RetryDecision:
                 raise RetryAuthorityError(
                     "independent reproduction flags are inconsistent"
                 )
-            if self.delay_seconds != 0 or self.authority_boundary is not None:
+            if (
+                self.delay_seconds != 0
+                or self.authority_ref is None
+                or self.authority_digest is None
+                or self.authority_boundary is not None
+            ):
                 raise RetryAuthorityError(
-                    "independent reproduction cannot carry delay or authority boundary"
+                    "independent reproduction requires bounded authority artifact"
                 )
 
-        elif self.disposition == "diagnose":
+        elif self.disposition in {"diagnose", "stop"}:
             if (
                 self.automatic_retry_authorized
                 or self.independent_reproduction_authorized
                 or self.human_required
             ):
-                raise RetryAuthorityError("diagnose disposition cannot grant authority")
-            if self.delay_seconds != 0 or self.authority_boundary is not None:
                 raise RetryAuthorityError(
-                    "diagnose disposition cannot carry delay or authority boundary"
+                    f"{self.disposition} disposition cannot grant authority"
+                )
+            if (
+                self.delay_seconds != 0
+                or self.authority_ref is not None
+                or self.authority_digest is not None
+                or self.authority_boundary is not None
+            ):
+                raise RetryAuthorityError(
+                    f"{self.disposition} disposition cannot carry authority or delay"
                 )
 
         elif self.disposition == "human_gate":
@@ -222,8 +263,12 @@ class RetryDecision:
                 self.automatic_retry_authorized
                 or self.independent_reproduction_authorized
                 or self.delay_seconds != 0
+                or self.authority_ref is not None
+                or self.authority_digest is not None
             ):
-                raise RetryAuthorityError("human_gate disposition flags are inconsistent")
+                raise RetryAuthorityError(
+                    "human_gate disposition flags are inconsistent"
+                )
 
     @property
     def digest(self) -> str:
@@ -246,6 +291,7 @@ def _decision(
     human_required: bool = False,
     authority_boundary: str | None = None,
 ) -> RetryDecision:
+    mechanical = automatic_retry_authorized or independent_reproduction_authorized
     return RetryDecision(
         policy_digest=policy.digest,
         observation_digest=observation.digest,
@@ -255,6 +301,8 @@ def _decision(
         automatic_retry_authorized=automatic_retry_authorized,
         independent_reproduction_authorized=independent_reproduction_authorized,
         human_required=human_required,
+        authority_ref=policy.authority_ref if mechanical else None,
+        authority_digest=policy.authority_digest if mechanical else None,
         authority_boundary=authority_boundary,
     )
 
@@ -330,7 +378,15 @@ def decide_retry(
             next_action_ref="diagnose://unknown-failure",
         )
 
-    if failure_class in BOUNDARY_FAILURE_CLASSES:
+    if failure_class == "cost_boundary":
+        return _decision(
+            policy,
+            observation,
+            disposition="stop",
+            next_action_ref="stop://cost-boundary",
+        )
+
+    if failure_class in HUMAN_BOUNDARY_FAILURE_CLASSES:
         return _decision(
             policy,
             observation,
