@@ -16,6 +16,14 @@ from .adapter import (
     verify_dispatch_request,
     verify_invocation_bundle,
 )
+from .asp_transition import (
+    AspTransitionError,
+    PassiveWakeAdmission,
+    PortfolioTransitionResult,
+    TransitionAuthorityGrant,
+    admit_passive_wake,
+    apply_active_transition,
+)
 from .canonical import canonical_json, sha256_digest, stable_id
 from .capacity import (
     CapacityError,
@@ -227,6 +235,7 @@ from .vercel_sandbox import (
 
 __all__ = [
     "AdapterDispatchRequest",
+    "AspTransitionError",
     "AdapterError",
     "AdapterReceipt",
     "ArtifactRef",
@@ -276,6 +285,8 @@ __all__ = [
     "PhysicalOutcomeBundle",
     "PhysicalOutcomeCodecError",
     "PhysicalReceipt",
+    "PortfolioTransitionResult",
+    "PassiveWakeAdmission",
     "ProviderConformanceCaseResult",
     "ProviderConformanceEvidence",
     "ProviderConformanceRun",
@@ -318,6 +329,7 @@ __all__ = [
     "SqliteDurableObservedOutcomeStore",
     "SqlitePortfolioHeadStore",
     "TransitionPolicy",
+    "TransitionAuthorityGrant",
     "TransitionPolicyError",
     "TransitionRule",
     "VALID_TRANSPORT_STATUSES",
@@ -328,10 +340,12 @@ __all__ = [
     "VercelSandboxConformanceSpec",
     "WakeCondition",
     "admit_observation",
+    "admit_passive_wake",
     "admit_physical_observation",
     "admit_reconciliation_observation",
     "append_event",
     "apply_recovery_step",
+    "apply_active_transition",
     "attest_provider_contract",
     "authorize_attested_resubmission",
     "authorize_live_dispatch",
