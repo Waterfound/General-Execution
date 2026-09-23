@@ -5,11 +5,12 @@ from dataclasses import dataclass
 from typing import Any
 
 from .canonical import canonical_json, sha256_digest
-from .portfolio_state import VALID_ROLES, VALID_STATES
+from .portfolio_state import PortfolioState, VALID_ROLES, VALID_STATES
 from .transition_policy import (
     AdmittedEvidence,
     TransitionDecision,
     TransitionPolicyError,
+    VALID_SIGNALS,
     transition_decision_from_dict,
 )
 
@@ -115,6 +116,14 @@ class ExecutionCheckpoint:
             raise ExecutionCheckpointError("unsupported checkpoint entry role")
         if self.entry_state not in VALID_STATES:
             raise ExecutionCheckpointError("unsupported checkpoint entry state")
+        if self.entry_role == "active" and self.entry_state == "passive":
+            raise ExecutionCheckpointError("invalid checkpoint active role/state")
+        if self.entry_role == "secondary" and self.entry_state != "ready":
+            raise ExecutionCheckpointError("invalid checkpoint secondary role/state")
+        if self.entry_role == "passive" and self.entry_state != "passive":
+            raise ExecutionCheckpointError("invalid checkpoint passive role/state")
+        if self.observed_signal not in VALID_SIGNALS:
+            raise ExecutionCheckpointError("unsupported checkpoint observed_signal")
 
         if not self.evidence:
             raise ExecutionCheckpointError("checkpoint requires admitted evidence")
@@ -297,3 +306,27 @@ def deserialize_execution_checkpoint(payload: str) -> ExecutionCheckpoint:
             "execution checkpoint is not valid JSON"
         ) from exc
     return execution_checkpoint_from_dict(data)
+
+
+def verify_execution_checkpoint(
+    checkpoint: ExecutionCheckpoint,
+    portfolio: PortfolioState,
+) -> bool:
+    if checkpoint.portfolio_id != portfolio.portfolio_id:
+        return False
+    if checkpoint.portfolio_generation != portfolio.generation:
+        return False
+    if checkpoint.portfolio_state_digest != portfolio.digest:
+        return False
+
+    entries = (portfolio.active, portfolio.secondary, *portfolio.passive)
+    matches = [entry for entry in entries if entry.work_id == checkpoint.work_id]
+    if len(matches) != 1:
+        return False
+    entry = matches[0]
+    return (
+        entry.digest == checkpoint.entry_digest
+        and entry.role == checkpoint.entry_role
+        and entry.state == checkpoint.entry_state
+        and entry.source_revision == checkpoint.source_revision
+    )
