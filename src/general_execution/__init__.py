@@ -208,6 +208,7 @@ from .reconciliation import (
 from .recovery_driver import RecoveryDriverError, RecoveryDriverResult, apply_recovery_step
 from .resume_tick import (
     CoreVerificationReceipt,
+    CoreVerificationRequirement,
     ResumeTickError,
     ResumeTickObservation,
     ResumeTickResult,
@@ -265,6 +266,7 @@ __all__ = [
     "CapacityTransition",
     "CapacityTransitionRecord",
     "CoreVerificationReceipt",
+    "CoreVerificationRequirement",
     "ConformanceError",
     "ConformanceHarnessError",
     "ConformanceLookupResult",
