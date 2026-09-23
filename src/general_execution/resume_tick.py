@@ -199,7 +199,7 @@ class ResumeTickResult:
                 raise ResumeTickError(
                     "external_input_required cannot carry observation digest"
                 )
-        elif self.observation_digest is None:
+        elif self.disposition != "verification_gate_closed" and self.observation_digest is None:
             raise ResumeTickError(
                 "tick disposition requires observation digest"
             )
