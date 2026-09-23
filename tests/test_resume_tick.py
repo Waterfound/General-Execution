@@ -7,6 +7,7 @@ from general_execution import (
     CoreVerificationReceipt,
     CoreVerificationRequirement,
     PortfolioEntry,
+    PortfolioPersistenceError,
     PortfolioState,
     ResumeTickError,
     ResumeTickObservation,
@@ -320,6 +321,56 @@ def test_immediate_replay_is_idempotent_and_does_not_advance_generation(tmp_path
     assert replay.pre_generation == replay.post_generation == 1
     assert reloaded.generation == 1
     assert replay.checkpoint_digest == first.checkpoint_digest
+
+
+
+
+def test_concurrent_duplicate_commit_resolves_as_already_applied(tmp_path):
+    class DuplicateRaceStore(SqlitePortfolioHeadStore):
+        def __init__(self, path):
+            super().__init__(path)
+            self.inject_duplicate_race = True
+
+        def commit(self, portfolio_id, expected_state_digest, new_state, checkpoint):
+            if self.inject_duplicate_race:
+                self.inject_duplicate_race = False
+                super().commit(
+                    portfolio_id,
+                    expected_state_digest,
+                    new_state,
+                    checkpoint,
+                )
+                raise PortfolioPersistenceError("simulated duplicate writer")
+            return super().commit(
+                portfolio_id,
+                expected_state_digest,
+                new_state,
+                checkpoint,
+            )
+
+    state = portfolio()
+    store = DuplicateRaceStore(tmp_path / "portfolio.db")
+    store.initialize(state)
+    p = policy()
+    obs = observation(state, p)
+
+    result = resume_tick(
+        store,
+        state.portfolio_id,
+        p,
+        obs,
+        core_requirement=requirement(),
+        core_verification=receipt(),
+    )
+
+    reloaded, _ = store.load(state.portfolio_id)
+    checkpoint = store.latest_checkpoint(state.portfolio_id)
+    assert result.disposition == "already_applied"
+    assert result.pre_generation == result.post_generation == 1
+    assert reloaded.generation == 1
+    assert checkpoint is not None
+    assert obs.checkpoint_ref in checkpoint.canonical_refs
+    assert result.checkpoint_digest == checkpoint.digest
 
 
 def test_stale_observation_never_mutates_current_head(tmp_path):
