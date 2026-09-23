@@ -1,0 +1,130 @@
+{
+  "schema_version": "ge.core1-rehearsal-fixture.v1",
+  "fixture_id": "durable-execution-core1-v1",
+  "purpose": "Prove the minimum Durable Execution core without chat-dependent state before any trigger/system integration.",
+  "verification_gate": {
+    "target_revision": "8f6494eca2c730de49b2e6ebfeb085cad1f33744",
+    "suite_ref": "tests://durable-execution/wave5-asp/full-repository",
+    "focused_test_path": "tests/test_asp_transition.py",
+    "focused_test_count": 18,
+    "verifier_ref": "verifier://vercel-sandbox-conformance/v1",
+    "full_repository_pytest_required": true
+  },
+  "candidate_runtime": {
+    "branch": "feature/durable-asp-portfolio-state",
+    "unattended_runtime_enabled": false,
+    "provider_trigger_enabled": false
+  },
+  "scenarios": [
+    {
+      "id": "cold-resume-checkpoint",
+      "assertions": [
+        "cold_resume",
+        "checkpoint_reconstruction",
+        "no_chat_dependency"
+      ],
+      "protocol": [
+        "initialize durable portfolio generation 0",
+        "admit one exact ResumeTickObservation",
+        "commit exactly one generation",
+        "destroy the initiating store/session object",
+        "construct a fresh SqlitePortfolioHeadStore from the same database path",
+        "recover portfolio + checkpoint using recover_portfolio_after_restart",
+        "prove exact state/checkpoint digests without chat context"
+      ]
+    },
+    {
+      "id": "verified-secondary-promotion",
+      "assertions": [
+        "verified_secondary_promotion",
+        "passive_wake_admission",
+        "no_hidden_authority"
+      ],
+      "protocol": [
+        "start with Active VERIFYING, Secondary READY, at least two Passive entries",
+        "admit explicit wake evidence for one Passive",
+        "apply verification_passed with verifier_pass evidence",
+        "prove old Secondary becomes Active READY",
+        "prove only the admitted Passive becomes Secondary READY",
+        "prove completed Active is not silently re-enqueued",
+        "prove no external Secondary selection was accepted"
+      ]
+    },
+    {
+      "id": "external-blocker-parking",
+      "assertions": [
+        "external_blocker_parking",
+        "passive_wake_admission"
+      ],
+      "protocol": [
+        "start with Active WAITING_EXTERNAL carrying blocker + wake condition",
+        "admit a current Passive wake",
+        "supply external_blocker + no_internal_work evidence",
+        "prove blocked Active becomes Passive with wake condition preserved",
+        "prove old Secondary becomes Active",
+        "prove admitted Passive becomes Secondary"
+      ]
+    },
+    {
+      "id": "retry-boundaries",
+      "assertions": [
+        "bounded_retry",
+        "unknown_failure_single_reproduction",
+        "cost_security_authority_stop"
+      ],
+      "protocol": [
+        "prove network timeout retries stop at configured ceiling",
+        "prove provider throttling backoff is bounded",
+        "prove deterministic assertion never retries",
+        "prove unknown failure permits exactly one independent reproduction",
+        "prove cost boundary stops without hidden spend authority",
+        "prove security/authority boundary reaches human gate"
+      ]
+    },
+    {
+      "id": "stale-and-duplicate-protection",
+      "assertions": [
+        "stale_write_rejected",
+        "duplicate_tick_idempotent"
+      ],
+      "protocol": [
+        "race two identical observations against the same durable head",
+        "prove only one generation is committed",
+        "prove the loser returns already_applied when the same observation is recovered",
+        "submit a different stale observation",
+        "prove it returns stale_observation and does not mutate the head"
+      ]
+    },
+    {
+      "id": "human-authority-stop",
+      "assertions": [
+        "human_gate_stop",
+        "no_hidden_authority"
+      ],
+      "protocol": [
+        "drive Active to human_gate using authority_required evidence",
+        "prove checkpoint authority_stop=true and next_transition_refs empty",
+        "invoke a new tick with no observation",
+        "prove requested_action_ref is the human authority action",
+        "prove human_required=true",
+        "prove no authority_ref is fabricated"
+      ]
+    }
+  ],
+  "required_assertions": [
+    "bounded_retry",
+    "checkpoint_reconstruction",
+    "cold_resume",
+    "cost_security_authority_stop",
+    "duplicate_tick_idempotent",
+    "external_blocker_parking",
+    "human_gate_stop",
+    "no_chat_dependency",
+    "no_hidden_authority",
+    "passive_wake_admission",
+    "stale_write_rejected",
+    "unknown_failure_single_reproduction",
+    "verified_secondary_promotion"
+  ],
+  "promotion_rule": "CORE-1 may be PASS only when a valid CoreVerificationReceipt opens the gate and all required assertions carry durable evidence. The rehearsal itself does not enable unattended runtime."
+}
