@@ -25,6 +25,14 @@ from .asp_transition import (
     apply_active_transition,
 )
 from .canonical import canonical_json, sha256_digest, stable_id
+from .asp_transition_engine import (
+    AspTransitionApplication,
+    AspTransitionError,
+    PassiveWakeAdmission,
+    PassiveWakeSignal,
+    admit_passive_wake,
+    apply_asp_transition,
+)
 from .capacity import (
     CapacityError,
     CapacityLease,
@@ -239,6 +247,8 @@ __all__ = [
     "AdapterError",
     "AdapterReceipt",
     "ArtifactRef",
+    "AspTransitionApplication",
+    "AspTransitionError",
     "AttestedResubmissionPermit",
     "CapacityError",
     "CapacityLease",
@@ -285,6 +295,8 @@ __all__ = [
     "PhysicalOutcomeBundle",
     "PhysicalOutcomeCodecError",
     "PhysicalReceipt",
+    "PassiveWakeAdmission",
+    "PassiveWakeSignal",
     "PortfolioTransitionResult",
     "PassiveWakeAdmission",
     "ProviderConformanceCaseResult",
@@ -341,10 +353,12 @@ __all__ = [
     "WakeCondition",
     "admit_observation",
     "admit_passive_wake",
+    "admit_passive_wake",
     "admit_physical_observation",
     "admit_reconciliation_observation",
     "append_event",
     "apply_recovery_step",
+    "apply_asp_transition",
     "apply_active_transition",
     "attest_provider_contract",
     "authorize_attested_resubmission",
