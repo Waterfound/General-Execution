@@ -17,6 +17,7 @@ from .portfolio_persistence import (
 )
 from .transition_policy import TransitionPolicy
 
+CORE_VERIFICATION_REQUIREMENT_SCHEMA = "ge.core-verification-requirement.v1"
 CORE_VERIFICATION_SCHEMA = "ge.core-verification-receipt.v1"
 TICK_OBSERVATION_SCHEMA = "ge.resume-tick-observation.v1"
 TICK_RESULT_SCHEMA = "ge.resume-tick-result.v1"
@@ -51,6 +52,32 @@ def _commit_sha(name: str, value: str) -> None:
         int(value, 16)
     except ValueError as exc:
         raise ResumeTickError(f"{name} must be hexadecimal") from exc
+
+
+@dataclass(frozen=True, slots=True)
+class CoreVerificationRequirement:
+    required_revision: str
+    required_suite_ref: str
+    required_verifier_ref: str
+    minimum_test_count: int
+    schema_version: str = CORE_VERIFICATION_REQUIREMENT_SCHEMA
+
+    def __post_init__(self) -> None:
+        if self.schema_version != CORE_VERIFICATION_REQUIREMENT_SCHEMA:
+            raise ResumeTickError("unsupported core verification requirement schema")
+        _commit_sha("required_revision", self.required_revision)
+        _nonempty("required_suite_ref", self.required_suite_ref)
+        _nonempty("required_verifier_ref", self.required_verifier_ref)
+        if not isinstance(self.minimum_test_count, int) or isinstance(
+            self.minimum_test_count, bool
+        ):
+            raise ResumeTickError("minimum_test_count must be an integer")
+        if self.minimum_test_count < 1:
+            raise ResumeTickError("minimum_test_count must be >= 1")
+
+    @property
+    def digest(self) -> str:
+        return sha256_digest(self)
 
 
 @dataclass(frozen=True, slots=True)
@@ -228,13 +255,15 @@ class ResumeTickResult:
 
 def _gate_open(
     receipt: CoreVerificationReceipt | None,
-    required_revision: str,
+    requirement: CoreVerificationRequirement,
 ) -> bool:
-    _commit_sha("required_revision", required_revision)
     return (
         receipt is not None
         and receipt.passed
-        and receipt.target_revision == required_revision
+        and receipt.target_revision == requirement.required_revision
+        and receipt.suite_ref == requirement.required_suite_ref
+        and receipt.verifier_ref == requirement.required_verifier_ref
+        and receipt.test_count >= requirement.minimum_test_count
     )
 
 
@@ -257,7 +286,7 @@ def resume_tick(
     policy: TransitionPolicy,
     observation: ResumeTickObservation | None,
     *,
-    required_core_revision: str,
+    core_requirement: CoreVerificationRequirement,
     core_verification: CoreVerificationReceipt | None,
 ) -> ResumeTickResult:
     _nonempty("portfolio_id", portfolio_id)
@@ -268,7 +297,7 @@ def resume_tick(
     pre_generation = state.generation
     pre_digest = state.digest
 
-    if not _gate_open(core_verification, required_core_revision):
+    if not _gate_open(core_verification, core_requirement):
         return ResumeTickResult(
             portfolio_id=portfolio_id,
             disposition="verification_gate_closed",
@@ -339,6 +368,7 @@ def resume_tick(
         canonical_refs=(
             *observation.canonical_refs,
             observation.checkpoint_ref,
+            f"core-requirement:{core_requirement.digest}",
             f"core-verification:{core_verification.digest}",
         ),
         uncertainties=observation.uncertainties,
