@@ -2,41 +2,20 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
-from typing import Any, Literal
+from typing import Any
 
-from .canonical import canonical_json, sha256_digest, stable_id
+from .canonical import canonical_json, sha256_digest
+from .portfolio_state import PortfolioState, VALID_ROLES, VALID_STATES
+from .transition_policy import (
+    AdmittedEvidence,
+    TransitionDecision,
+    TransitionPolicyError,
+    VALID_SIGNALS,
+    transition_decision_from_dict,
+)
 
+CANONICAL_REF_SCHEMA = "ge.checkpoint-canonical-ref.v1"
 CHECKPOINT_SCHEMA = "ge.execution-checkpoint.v1"
-CHECKPOINT_EVIDENCE_SCHEMA = "ge.checkpoint-evidence.v1"
-
-CheckpointRole = Literal["active", "secondary", "passive"]
-CheckpointState = Literal[
-    "ready",
-    "running",
-    "verifying",
-    "complete",
-    "waiting_external",
-    "rework",
-    "di_required",
-    "human_gate",
-    "failed",
-    "passive",
-]
-
-VALID_ROLES = {"active", "secondary", "passive"}
-VALID_STATES = {
-    "ready",
-    "running",
-    "verifying",
-    "complete",
-    "waiting_external",
-    "rework",
-    "di_required",
-    "human_gate",
-    "failed",
-    "passive",
-}
-TERMINAL_WITHOUT_NEXT = {"complete", "failed"}
 
 
 class ExecutionCheckpointError(ValueError):
@@ -59,9 +38,7 @@ def _digest(name: str, value: str) -> None:
     try:
         int(value[7:], 16)
     except ValueError as exc:
-        raise ExecutionCheckpointError(
-            f"{name} must contain 64 hexadecimal characters"
-        ) from exc
+        raise ExecutionCheckpointError(f"{name} must contain 64 hexadecimal characters") from exc
 
 
 def _unique_nonempty(name: str, values: tuple[str, ...]) -> None:
@@ -77,32 +54,28 @@ def _require_exact_fields(data: Any, expected: set[str], label: str) -> dict[str
     actual = set(data)
     if actual != expected:
         raise ExecutionCheckpointError(
-            f"{label} fields mismatch: missing={sorted(expected - actual)} "
-            f"unknown={sorted(actual - expected)}"
+            f"{label} fields mismatch: "
+            f"missing={sorted(expected - actual)} unknown={sorted(actual - expected)}"
         )
     return data
 
 
 @dataclass(frozen=True, slots=True)
-class CheckpointEvidence:
-    kind: str
+class CheckpointCanonicalRef:
+    name: str
     locator: str
-    digest: str
-    schema_version: str = CHECKPOINT_EVIDENCE_SCHEMA
+    content_digest: str
+    schema_version: str = CANONICAL_REF_SCHEMA
 
     def __post_init__(self) -> None:
-        if self.schema_version != CHECKPOINT_EVIDENCE_SCHEMA:
-            raise ExecutionCheckpointError("unsupported checkpoint evidence schema")
-        _nonempty("evidence.kind", self.kind)
-        _nonempty("evidence.locator", self.locator)
-        _digest("evidence.digest", self.digest)
+        if self.schema_version != CANONICAL_REF_SCHEMA:
+            raise ExecutionCheckpointError("unsupported checkpoint canonical ref schema")
+        _nonempty("canonical_ref.name", self.name)
+        _nonempty("canonical_ref.locator", self.locator)
+        _digest("canonical_ref.content_digest", self.content_digest)
 
     @property
-    def identity(self) -> tuple[str, str, str]:
-        return (self.kind, self.locator, self.digest)
-
-    @property
-    def evidence_digest(self) -> str:
+    def digest(self) -> str:
         return sha256_digest(self)
 
 
@@ -112,121 +85,172 @@ class ExecutionCheckpoint:
     portfolio_generation: int
     portfolio_state_digest: str
     work_id: str
-    role: CheckpointRole
-    state_before: CheckpointState
-    state_after: CheckpointState
-    action_ref: str
+    entry_digest: str
+    entry_role: str
+    entry_state: str
     source_revision: str
-    observed_at: str
+    observed_signal: str
     summary: str
-    evidence: tuple[CheckpointEvidence, ...]
-    canonical_refs: tuple[str, ...]
+    evidence: tuple[AdmittedEvidence, ...]
+    canonical_refs: tuple[CheckpointCanonicalRef, ...]
     uncertainties: tuple[str, ...] = ()
-    next_transition_refs: tuple[str, ...] = ()
-    authority_stop: bool = False
-    authority_boundary: str | None = None
+    next_transition: TransitionDecision | None = None
+    stop_reason: str | None = None
     schema_version: str = CHECKPOINT_SCHEMA
 
     def __post_init__(self) -> None:
         if self.schema_version != CHECKPOINT_SCHEMA:
             raise ExecutionCheckpointError("unsupported execution checkpoint schema")
-        for name in (
-            "portfolio_id",
-            "work_id",
-            "action_ref",
-            "source_revision",
-            "observed_at",
-            "summary",
-        ):
+        for name in ("portfolio_id", "work_id", "source_revision", "observed_signal", "summary"):
             _nonempty(name, getattr(self, name))
-
         if not isinstance(self.portfolio_generation, int) or isinstance(
             self.portfolio_generation, bool
         ):
             raise ExecutionCheckpointError("portfolio_generation must be an integer")
         if self.portfolio_generation < 0:
             raise ExecutionCheckpointError("portfolio_generation cannot be negative")
-
         _digest("portfolio_state_digest", self.portfolio_state_digest)
+        _digest("entry_digest", self.entry_digest)
 
-        if self.role not in VALID_ROLES:
-            raise ExecutionCheckpointError("unsupported checkpoint role")
-        if self.state_before not in VALID_STATES or self.state_after not in VALID_STATES:
-            raise ExecutionCheckpointError("unsupported checkpoint state")
+        if self.entry_role not in VALID_ROLES:
+            raise ExecutionCheckpointError("unsupported checkpoint entry role")
+        if self.entry_state not in VALID_STATES:
+            raise ExecutionCheckpointError("unsupported checkpoint entry state")
+        if self.entry_role == "active" and self.entry_state == "passive":
+            raise ExecutionCheckpointError("invalid checkpoint active role/state")
+        if self.entry_role == "secondary" and self.entry_state != "ready":
+            raise ExecutionCheckpointError("invalid checkpoint secondary role/state")
+        if self.entry_role == "passive" and self.entry_state != "passive":
+            raise ExecutionCheckpointError("invalid checkpoint passive role/state")
+        if self.observed_signal not in VALID_SIGNALS:
+            raise ExecutionCheckpointError("unsupported checkpoint observed_signal")
 
         if not self.evidence:
             raise ExecutionCheckpointError("checkpoint requires admitted evidence")
-        evidence_ids = tuple(item.identity for item in self.evidence)
-        if len(evidence_ids) != len(set(evidence_ids)):
-            raise ExecutionCheckpointError("checkpoint evidence must not contain duplicates")
-
-        _unique_nonempty("canonical_refs", self.canonical_refs)
-        if not self.canonical_refs:
-            raise ExecutionCheckpointError("checkpoint requires at least one canonical_ref")
-        _unique_nonempty("uncertainties", self.uncertainties)
-        _unique_nonempty("next_transition_refs", self.next_transition_refs)
-
-        if self.authority_stop:
-            if not self.authority_boundary:
-                raise ExecutionCheckpointError(
-                    "authority_stop requires authority_boundary"
-                )
-            if self.state_after != "human_gate":
-                raise ExecutionCheckpointError(
-                    "authority_stop requires state_after=human_gate"
-                )
-            if self.next_transition_refs:
-                raise ExecutionCheckpointError(
-                    "authority_stop cannot declare automatic next transitions"
-                )
-        else:
-            if self.authority_boundary is not None:
-                raise ExecutionCheckpointError(
-                    "authority_boundary is valid only for authority_stop"
-                )
-            if (
-                not self.next_transition_refs
-                and self.state_after not in TERMINAL_WITHOUT_NEXT
-            ):
-                raise ExecutionCheckpointError(
-                    "nonterminal checkpoint requires next_transition_refs"
-                )
-
-        if self.role == "passive" and self.state_after != "passive":
+        evidence_kinds = tuple(item.kind for item in self.evidence)
+        if len(evidence_kinds) != len(set(evidence_kinds)):
             raise ExecutionCheckpointError(
-                "passive checkpoint cannot claim non-passive state"
+                "checkpoint evidence kinds must be unique"
             )
+
+        if not self.canonical_refs:
+            raise ExecutionCheckpointError(
+                "checkpoint requires at least one canonical reference"
+            )
+        canonical_names = tuple(item.name for item in self.canonical_refs)
+        if len(canonical_names) != len(set(canonical_names)):
+            raise ExecutionCheckpointError(
+                "checkpoint canonical reference names must be unique"
+            )
+        canonical_by_name = {item.name: item for item in self.canonical_refs}
+        portfolio_ref = canonical_by_name.get("portfolio_state")
+        if portfolio_ref is None:
+            raise ExecutionCheckpointError(
+                "checkpoint requires canonical portfolio_state reference"
+            )
+        if portfolio_ref.content_digest != self.portfolio_state_digest:
+            raise ExecutionCheckpointError(
+                "checkpoint portfolio_state canonical digest mismatch"
+            )
+
+        _unique_nonempty("uncertainties", self.uncertainties)
+        _optional_nonempty("stop_reason", self.stop_reason)
+
+        if (self.next_transition is None) == (self.stop_reason is None):
+            raise ExecutionCheckpointError(
+                "checkpoint requires exactly one of next_transition or stop_reason"
+            )
+
+        if self.next_transition is not None:
+            decision = self.next_transition
+            if decision.work_id != self.work_id:
+                raise ExecutionCheckpointError(
+                    "checkpoint transition work_id mismatch"
+                )
+            if decision.entry_digest != self.entry_digest:
+                raise ExecutionCheckpointError(
+                    "checkpoint transition entry_digest mismatch"
+                )
+            if decision.from_role != self.entry_role:
+                raise ExecutionCheckpointError(
+                    "checkpoint transition role mismatch"
+                )
+            if decision.from_state != self.entry_state:
+                raise ExecutionCheckpointError(
+                    "checkpoint transition state mismatch"
+                )
+            if decision.signal != self.observed_signal:
+                raise ExecutionCheckpointError(
+                    "checkpoint transition signal mismatch"
+                )
+
+            canonical_by_name = {item.name: item for item in self.canonical_refs}
+            policy_ref = canonical_by_name.get("transition_policy")
+            if policy_ref is None:
+                raise ExecutionCheckpointError(
+                    "checkpoint transition requires canonical transition_policy reference"
+                )
+            if policy_ref.content_digest != decision.policy_digest:
+                raise ExecutionCheckpointError(
+                    "checkpoint transition policy canonical digest mismatch"
+                )
+
+            available_evidence = {item.digest for item in self.evidence}
+            missing = tuple(
+                digest
+                for digest in decision.evidence_digests
+                if digest not in available_evidence
+            )
+            if missing:
+                raise ExecutionCheckpointError(
+                    "checkpoint transition references evidence not preserved in checkpoint"
+                )
 
     @property
     def digest(self) -> str:
         return sha256_digest(self)
 
-    @property
-    def checkpoint_id(self) -> str:
-        return stable_id("gec", self)
 
-
-def checkpoint_to_dict(checkpoint: ExecutionCheckpoint) -> dict[str, Any]:
+def execution_checkpoint_to_dict(checkpoint: ExecutionCheckpoint) -> dict[str, Any]:
     return json.loads(canonical_json(checkpoint))
 
 
-def serialize_checkpoint(checkpoint: ExecutionCheckpoint) -> str:
+def serialize_execution_checkpoint(checkpoint: ExecutionCheckpoint) -> str:
     return canonical_json(checkpoint)
 
 
-def _evidence_from_dict(data: Any) -> CheckpointEvidence:
+def _evidence_from_dict(data: Any) -> AdmittedEvidence:
     obj = _require_exact_fields(
         data,
-        {"kind", "locator", "digest", "schema_version"},
-        "checkpoint evidence",
+        {"kind", "locator", "content_digest", "schema_version"},
+        "checkpoint admitted evidence",
     )
     try:
-        return CheckpointEvidence(**obj)
-    except (TypeError, KeyError) as exc:
-        raise ExecutionCheckpointError("invalid checkpoint evidence") from exc
+        return AdmittedEvidence(
+            kind=obj["kind"],
+            locator=obj["locator"],
+            content_digest=obj["content_digest"],
+            schema_version=obj["schema_version"],
+        )
+    except TransitionPolicyError as exc:
+        raise ExecutionCheckpointError("invalid checkpoint admitted evidence") from exc
 
 
-def checkpoint_from_dict(data: Any) -> ExecutionCheckpoint:
+def _canonical_ref_from_dict(data: Any) -> CheckpointCanonicalRef:
+    obj = _require_exact_fields(
+        data,
+        {"name", "locator", "content_digest", "schema_version"},
+        "checkpoint canonical ref",
+    )
+    return CheckpointCanonicalRef(
+        name=obj["name"],
+        locator=obj["locator"],
+        content_digest=obj["content_digest"],
+        schema_version=obj["schema_version"],
+    )
+
+
+def execution_checkpoint_from_dict(data: Any) -> ExecutionCheckpoint:
     obj = _require_exact_fields(
         data,
         {
@@ -234,54 +258,96 @@ def checkpoint_from_dict(data: Any) -> ExecutionCheckpoint:
             "portfolio_generation",
             "portfolio_state_digest",
             "work_id",
-            "role",
-            "state_before",
-            "state_after",
-            "action_ref",
+            "entry_digest",
+            "entry_role",
+            "entry_state",
             "source_revision",
-            "observed_at",
+            "observed_signal",
             "summary",
             "evidence",
             "canonical_refs",
             "uncertainties",
-            "next_transition_refs",
-            "authority_stop",
-            "authority_boundary",
+            "next_transition",
+            "stop_reason",
             "schema_version",
         },
         "execution checkpoint",
     )
-    for field in ("evidence", "canonical_refs", "uncertainties", "next_transition_refs"):
-        if not isinstance(obj[field], list):
-            raise ExecutionCheckpointError(f"{field} must be a list")
-    try:
-        return ExecutionCheckpoint(
-            portfolio_id=obj["portfolio_id"],
-            portfolio_generation=obj["portfolio_generation"],
-            portfolio_state_digest=obj["portfolio_state_digest"],
-            work_id=obj["work_id"],
-            role=obj["role"],
-            state_before=obj["state_before"],
-            state_after=obj["state_after"],
-            action_ref=obj["action_ref"],
-            source_revision=obj["source_revision"],
-            observed_at=obj["observed_at"],
-            summary=obj["summary"],
-            evidence=tuple(_evidence_from_dict(item) for item in obj["evidence"]),
-            canonical_refs=tuple(obj["canonical_refs"]),
-            uncertainties=tuple(obj["uncertainties"]),
-            next_transition_refs=tuple(obj["next_transition_refs"]),
-            authority_stop=obj["authority_stop"],
-            authority_boundary=obj["authority_boundary"],
-            schema_version=obj["schema_version"],
+
+    evidence = obj["evidence"]
+    canonical_refs = obj["canonical_refs"]
+    uncertainties = obj["uncertainties"]
+    if not isinstance(evidence, list):
+        raise ExecutionCheckpointError("checkpoint evidence must be a list")
+    if not isinstance(canonical_refs, list):
+        raise ExecutionCheckpointError("checkpoint canonical_refs must be a list")
+    if not isinstance(uncertainties, list):
+        raise ExecutionCheckpointError("checkpoint uncertainties must be a list")
+
+    transition = obj["next_transition"]
+    if transition is not None and not isinstance(transition, dict):
+        raise ExecutionCheckpointError(
+            "checkpoint next_transition must be an object or null"
         )
-    except (TypeError, KeyError) as exc:
-        raise ExecutionCheckpointError("invalid execution checkpoint") from exc
+
+    try:
+        parsed_transition = (
+            transition_decision_from_dict(transition)
+            if transition is not None
+            else None
+        )
+    except TransitionPolicyError as exc:
+        raise ExecutionCheckpointError("invalid checkpoint transition decision") from exc
+
+    return ExecutionCheckpoint(
+        portfolio_id=obj["portfolio_id"],
+        portfolio_generation=obj["portfolio_generation"],
+        portfolio_state_digest=obj["portfolio_state_digest"],
+        work_id=obj["work_id"],
+        entry_digest=obj["entry_digest"],
+        entry_role=obj["entry_role"],
+        entry_state=obj["entry_state"],
+        source_revision=obj["source_revision"],
+        observed_signal=obj["observed_signal"],
+        summary=obj["summary"],
+        evidence=tuple(_evidence_from_dict(item) for item in evidence),
+        canonical_refs=tuple(_canonical_ref_from_dict(item) for item in canonical_refs),
+        uncertainties=tuple(uncertainties),
+        next_transition=parsed_transition,
+        stop_reason=obj["stop_reason"],
+        schema_version=obj["schema_version"],
+    )
 
 
-def deserialize_checkpoint(payload: str) -> ExecutionCheckpoint:
+def deserialize_execution_checkpoint(payload: str) -> ExecutionCheckpoint:
     try:
         data = json.loads(payload)
     except (TypeError, json.JSONDecodeError) as exc:
-        raise ExecutionCheckpointError("execution checkpoint is not valid JSON") from exc
-    return checkpoint_from_dict(data)
+        raise ExecutionCheckpointError(
+            "execution checkpoint is not valid JSON"
+        ) from exc
+    return execution_checkpoint_from_dict(data)
+
+
+def verify_execution_checkpoint(
+    checkpoint: ExecutionCheckpoint,
+    portfolio: PortfolioState,
+) -> bool:
+    if checkpoint.portfolio_id != portfolio.portfolio_id:
+        return False
+    if checkpoint.portfolio_generation != portfolio.generation:
+        return False
+    if checkpoint.portfolio_state_digest != portfolio.digest:
+        return False
+
+    entries = (portfolio.active, portfolio.secondary, *portfolio.passive)
+    matches = [entry for entry in entries if entry.work_id == checkpoint.work_id]
+    if len(matches) != 1:
+        return False
+    entry = matches[0]
+    return (
+        entry.digest == checkpoint.entry_digest
+        and entry.role == checkpoint.entry_role
+        and entry.state == checkpoint.entry_state
+        and entry.source_revision == checkpoint.source_revision
+    )
