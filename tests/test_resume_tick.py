@@ -232,6 +232,9 @@ def test_open_gate_without_observation_requests_external_input(tmp_path):
 
     assert result.disposition == "external_input_required"
     assert result.observation_digest is None
+    assert result.requested_work_id == "ACTIVE"
+    assert result.requested_action_ref == "action://active"
+    assert not result.human_required
     reloaded, _ = store.load(state.portfolio_id)
     assert reloaded == state
 
@@ -466,6 +469,62 @@ def test_human_gate_tick_commits_stop_and_never_auto_continues(tmp_path):
     assert checkpoint is not None
     assert checkpoint.authority_stop
     assert checkpoint.next_transition_refs == ()
+
+
+
+
+def test_human_gate_requests_human_input_instead_of_auto_continue(tmp_path):
+    base = portfolio()
+    store = initialized_store(tmp_path, base)
+    p = policy()
+    verification = receipt()
+
+    start = resume_tick(
+        store,
+        base.portfolio_id,
+        p,
+        observation(base, p),
+        core_requirement=requirement(),
+        core_verification=verification,
+    )
+    assert start.disposition == "committed"
+
+    running, _ = store.load(base.portfolio_id)
+    boundary = ResumeTickObservation(
+        portfolio_id=running.portfolio_id,
+        expected_generation=running.generation,
+        expected_state_digest=running.digest,
+        policy_digest=p.digest,
+        event="authority_required",
+        evidence=(evidence("authority_boundary_reached"),),
+        action_ref="authority://boundary-observed",
+        observed_at="2026-09-23T16:34:00Z",
+        summary="Release approval boundary reached",
+        canonical_refs=("artifact://authority-boundary",),
+    )
+    stopped = resume_tick(
+        store,
+        base.portfolio_id,
+        p,
+        boundary,
+        core_requirement=requirement(),
+        core_verification=verification,
+    )
+    assert stopped.disposition == "committed"
+
+    request = resume_tick(
+        store,
+        base.portfolio_id,
+        p,
+        None,
+        core_requirement=requirement(),
+        core_verification=verification,
+    )
+
+    assert request.disposition == "external_input_required"
+    assert request.requested_work_id == "ACTIVE"
+    assert request.requested_action_ref == "authority://human-decision"
+    assert request.human_required
 
 
 def test_observation_identity_is_deterministic_and_state_bound():
