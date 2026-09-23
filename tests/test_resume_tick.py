@@ -5,6 +5,7 @@ import pytest
 from general_execution import (
     CheckpointEvidence,
     CoreVerificationReceipt,
+    CoreVerificationRequirement,
     PortfolioEntry,
     PortfolioState,
     ResumeTickError,
@@ -90,6 +91,17 @@ def policy():
     )
 
 
+def requirement(**changes):
+    values = dict(
+        required_revision=WAVE5_REVISION,
+        required_suite_ref="tests://wave5-executable-regression",
+        required_verifier_ref="verifier://independent-python-runtime",
+        minimum_test_count=18,
+    )
+    values.update(changes)
+    return CoreVerificationRequirement(**values)
+
+
 def receipt(**changes):
     values = dict(
         target_revision=WAVE5_REVISION,
@@ -147,7 +159,7 @@ def test_closed_core_gate_cannot_mutate_even_without_observation(tmp_path):
         state.portfolio_id,
         policy(),
         None,
-        required_core_revision=WAVE5_REVISION,
+        core_requirement=requirement(),
         core_verification=None,
     )
 
@@ -168,13 +180,40 @@ def test_wrong_core_revision_keeps_gate_closed(tmp_path):
         state.portfolio_id,
         policy(),
         obs,
-        required_core_revision="1" * 40,
+        core_requirement=requirement(required_revision="1" * 40),
         core_verification=receipt(),
     )
 
     assert result.disposition == "verification_gate_closed"
     reloaded, _ = store.load(state.portfolio_id)
     assert reloaded == state
+
+
+
+
+def test_core_requirement_binds_suite_verifier_and_minimum_count(tmp_path):
+    state = portfolio()
+    obs = observation(state)
+    variants = (
+        requirement(required_suite_ref="tests://other-suite"),
+        requirement(required_verifier_ref="verifier://other"),
+        requirement(minimum_test_count=19),
+    )
+
+    for index, gate in enumerate(variants):
+        store = SqlitePortfolioHeadStore(tmp_path / f"portfolio-{index}.db")
+        store.initialize(state)
+        result = resume_tick(
+            store,
+            state.portfolio_id,
+            policy(),
+            obs,
+            core_requirement=gate,
+            core_verification=receipt(),
+        )
+        assert result.disposition == "verification_gate_closed"
+        reloaded, _ = store.load(state.portfolio_id)
+        assert reloaded == state
 
 
 def test_open_gate_without_observation_requests_external_input(tmp_path):
@@ -186,7 +225,7 @@ def test_open_gate_without_observation_requests_external_input(tmp_path):
         state.portfolio_id,
         policy(),
         None,
-        required_core_revision=WAVE5_REVISION,
+        core_requirement=requirement(),
         core_verification=receipt(),
     )
 
@@ -227,7 +266,7 @@ def test_one_tick_commits_exactly_one_generation_and_cold_recovers(tmp_path):
         state.portfolio_id,
         p,
         obs,
-        required_core_revision=WAVE5_REVISION,
+        core_requirement=requirement(),
         core_verification=receipt(),
     )
 
@@ -247,6 +286,7 @@ def test_one_tick_commits_exactly_one_generation_and_cold_recovers(tmp_path):
     assert reloaded.active.state == "running"
     assert checkpoint is not None
     assert obs.checkpoint_ref in checkpoint.canonical_refs
+    assert f"core-requirement:{requirement().digest}" in checkpoint.canonical_refs
     assert f"core-verification:{receipt().digest}" in checkpoint.canonical_refs
 
 
@@ -262,7 +302,7 @@ def test_immediate_replay_is_idempotent_and_does_not_advance_generation(tmp_path
         state.portfolio_id,
         p,
         obs,
-        required_core_revision=WAVE5_REVISION,
+        core_requirement=requirement(),
         core_verification=verification,
     )
     replay = resume_tick(
@@ -270,7 +310,7 @@ def test_immediate_replay_is_idempotent_and_does_not_advance_generation(tmp_path
         state.portfolio_id,
         p,
         obs,
-        required_core_revision=WAVE5_REVISION,
+        core_requirement=requirement(),
         core_verification=verification,
     )
 
@@ -293,7 +333,7 @@ def test_stale_observation_never_mutates_current_head(tmp_path):
         state.portfolio_id,
         p,
         stale,
-        required_core_revision=WAVE5_REVISION,
+        core_requirement=requirement(),
         core_verification=receipt(),
     )
     current, _ = store.load(state.portfolio_id)
@@ -316,7 +356,7 @@ def test_stale_observation_never_mutates_current_head(tmp_path):
         state.portfolio_id,
         p,
         another,
-        required_core_revision=WAVE5_REVISION,
+        core_requirement=requirement(),
         core_verification=receipt(),
     )
 
@@ -339,7 +379,7 @@ def test_human_gate_tick_commits_stop_and_never_auto_continues(tmp_path):
         base.portfolio_id,
         p,
         start,
-        required_core_revision=WAVE5_REVISION,
+        core_requirement=requirement(),
         core_verification=verification,
     )
     assert first.disposition == "committed"
@@ -363,7 +403,7 @@ def test_human_gate_tick_commits_stop_and_never_auto_continues(tmp_path):
         base.portfolio_id,
         p,
         human,
-        required_core_revision=WAVE5_REVISION,
+        core_requirement=requirement(),
         core_verification=verification,
     )
 
