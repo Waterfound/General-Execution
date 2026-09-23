@@ -33,6 +33,12 @@ from .asp_transition_engine import (
     admit_passive_wake,
     apply_asp_transition,
 )
+from .core_verification import (
+    CoreVerificationAdmissionError,
+    CoreVerificationManifest,
+    VERCEL_CORE_VERIFIER_REF,
+    admit_vercel_core_verification,
+)
 from .capacity import (
     CapacityError,
     CapacityLease,
@@ -266,7 +272,9 @@ __all__ = [
     "CapacityTransition",
     "CapacityTransitionRecord",
     "CoreVerificationReceipt",
+    "CoreVerificationAdmissionError",
     "CoreVerificationRequirement",
+    "CoreVerificationManifest",
     "ConformanceError",
     "ConformanceHarnessError",
     "ConformanceLookupResult",
@@ -360,11 +368,13 @@ __all__ = [
     "VALID_TRANSPORT_STATUSES",
     "VERCEL_SANDBOX_PROVIDER",
     "VERCEL_SANDBOX_RUNTIME",
+    "VERCEL_CORE_VERIFIER_REF",
     "VercelSandboxConformanceError",
     "VercelSandboxConformanceRun",
     "VercelSandboxConformanceSpec",
     "WakeCondition",
     "admit_observation",
+    "admit_vercel_core_verification",
     "admit_passive_wake",
     "admit_passive_wake",
     "admit_physical_observation",
