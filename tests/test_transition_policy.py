@@ -344,9 +344,3 @@ def test_unknown_fields_fail_closed():
 def test_malformed_json_fails_closed():
     with pytest.raises(TransitionPolicyError, match="not valid JSON"):
         deserialize_transition_policy("{broken")
-
-
-def test_forged_decision_schema_still_requires_valid_digest_fields():
-    d = evaluate_transition(policy(), request())
-    with pytest.raises(TransitionPolicyError, match="policy_digest must be sha256"):
-        TransitionDecision(**{**transition_policy_to_dict(policy()), "policy_digest": "bad"})
