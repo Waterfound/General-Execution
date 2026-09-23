@@ -190,6 +190,9 @@ class ResumeTickResult:
     checkpoint_digest: str | None = None
     transition_result_digest: str | None = None
     recovery_report_digest: str | None = None
+    requested_work_id: str | None = None
+    requested_action_ref: str | None = None
+    human_required: bool = False
     schema_version: str = TICK_RESULT_SCHEMA
 
     def __post_init__(self) -> None:
@@ -221,12 +224,25 @@ class ResumeTickResult:
             if not isinstance(value, int) or isinstance(value, bool) or value < 0:
                 raise ResumeTickError(f"{name} must be a non-negative integer")
 
+        if not isinstance(self.human_required, bool):
+            raise ResumeTickError("human_required must be boolean")
         if self.disposition == "external_input_required":
             if self.observation_digest is not None:
                 raise ResumeTickError(
                     "external_input_required cannot carry observation digest"
                 )
-        elif self.disposition != "verification_gate_closed" and self.observation_digest is None:
+            _nonempty("requested_work_id", self.requested_work_id)
+            _nonempty("requested_action_ref", self.requested_action_ref)
+        else:
+            if self.requested_work_id is not None or self.requested_action_ref is not None:
+                raise ResumeTickError(
+                    "only external_input_required can request work"
+                )
+            if self.human_required:
+                raise ResumeTickError(
+                    "human_required is valid only for external_input_required"
+                )
+        if self.disposition != "external_input_required" and self.disposition != "verification_gate_closed" and self.observation_digest is None:
             raise ResumeTickError(
                 "tick disposition requires observation digest"
             )
@@ -319,6 +335,9 @@ def resume_tick(
             pre_state_digest=pre_digest,
             post_state_digest=pre_digest,
             recovery_report_digest=recovery.digest,
+            requested_work_id=state.active.work_id,
+            requested_action_ref=state.active.next_action_ref,
+            human_required=state.active.state == "human_gate",
         )
 
     if observation.policy_digest != policy.digest:
