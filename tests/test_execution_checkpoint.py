@@ -4,201 +4,317 @@ from dataclasses import replace
 import pytest
 
 from general_execution import (
-    CheckpointEvidence,
+    AdmittedEvidence,
+    CheckpointCanonicalRef,
     ExecutionCheckpoint,
     ExecutionCheckpointError,
-    checkpoint_from_dict,
-    checkpoint_to_dict,
-    deserialize_checkpoint,
-    serialize_checkpoint,
+    PortfolioEntry,
+    PortfolioState,
+    TransitionPolicy,
+    TransitionRequest,
+    TransitionRule,
+    deserialize_execution_checkpoint,
+    evaluate_transition,
+    execution_checkpoint_from_dict,
+    execution_checkpoint_to_dict,
+    serialize_execution_checkpoint,
+    verify_execution_checkpoint,
 )
 
-D = "sha256:" + "b" * 64
+D1 = "sha256:" + "1" * 64
+D2 = "sha256:" + "2" * 64
+D3 = "sha256:" + "3" * 64
 
 
-def evidence(kind="test", locator="artifact://tests"):
-    return CheckpointEvidence(kind=kind, locator=locator, digest=D)
+def active(**changes):
+    values = dict(
+        work_id="FAE-BE-04",
+        role="active",
+        state="running",
+        objective="Bind explorer",
+        active_gate="PUBLIC_NODE_BINDING",
+        next_action_ref="action://deploy",
+        source_revision="abc123",
+        evidence_required=("execution_report",),
+    )
+    values.update(changes)
+    return PortfolioEntry(**values)
+
+
+def secondary():
+    return PortfolioEntry(
+        work_id="FAE-WALLET-UX",
+        role="secondary",
+        state="ready",
+        objective="Wallet UX",
+        active_gate="WALLET_TX_DISCOVERABILITY",
+        next_action_ref="action://inspect",
+        source_revision="def456",
+    )
+
+
+def portfolio(**changes):
+    values = dict(
+        portfolio_id="fae-mainnet-critical",
+        generation=0,
+        active=active(),
+        secondary=secondary(),
+    )
+    values.update(changes)
+    return PortfolioState(**values)
+
+
+def evidence(kind="execution_report", digest=D1):
+    return AdmittedEvidence(
+        kind=kind,
+        locator=f"artifact://{kind}",
+        content_digest=digest,
+    )
+
+
+def canonical_ref(name, digest):
+    return CheckpointCanonicalRef(
+        name=name,
+        locator=f"artifact://canonical/{name}",
+        content_digest=digest,
+    )
+
+
+def policy():
+    return TransitionPolicy(
+        policy_id="durable-asp-v1",
+        policy_revision="rev-001",
+        rules=(
+            TransitionRule(
+                rule_id="010-running-completed",
+                from_role="active",
+                from_state="running",
+                signal="execution_completed",
+                target_role="active",
+                target_state="verifying",
+                action_ref="action://verify",
+                required_evidence=("execution_report",),
+            ),
+        ),
+    )
+
+
+def decision(state=None):
+    state = state or portfolio()
+    req = TransitionRequest(
+        work_id=state.active.work_id,
+        entry_digest=state.active.digest,
+        from_role=state.active.role,
+        from_state=state.active.state,
+        signal="execution_completed",
+        admitted_evidence=(evidence(),),
+    )
+    return evaluate_transition(policy(), req)
 
 
 def checkpoint(**changes):
+    state = portfolio()
     values = dict(
-        portfolio_id="fae-mainnet-critical",
-        portfolio_generation=3,
-        portfolio_state_digest=D,
-        work_id="FAE-BE-04",
-        role="active",
-        state_before="running",
-        state_after="verifying",
-        action_ref="action://deploy-prebind",
-        source_revision="abc123",
-        observed_at="2026-09-23T12:30:00-03:00",
-        summary="Deployment fragment completed and is ready for independent verification.",
+        portfolio_id=state.portfolio_id,
+        portfolio_generation=state.generation,
+        portfolio_state_digest=state.digest,
+        work_id=state.active.work_id,
+        entry_digest=state.active.digest,
+        entry_role=state.active.role,
+        entry_state=state.active.state,
+        source_revision=state.active.source_revision,
+        observed_signal="execution_completed",
+        summary="Deployment fragment completed and is ready for verification.",
         evidence=(evidence(),),
-        canonical_refs=("commit:abc123",),
+        canonical_refs=(
+            canonical_ref("portfolio_state", state.digest),
+            canonical_ref("transition_policy", policy().digest),
+        ),
         uncertainties=("public reachability not yet independently verified",),
-        next_transition_refs=("transition://verify-deployment",),
+        next_transition=decision(state),
     )
     values.update(changes)
     return ExecutionCheckpoint(**values)
 
 
-def test_checkpoint_identity_is_deterministic():
-    a = checkpoint()
-    b = checkpoint()
-    assert a.digest == b.digest
-    assert a.checkpoint_id == b.checkpoint_id
-
-
 def test_checkpoint_round_trip_is_canonical():
-    original = checkpoint()
-    encoded = serialize_checkpoint(original)
-    decoded = deserialize_checkpoint(encoded)
-    assert decoded == original
-    assert decoded.digest == original.digest
-    assert serialize_checkpoint(decoded) == encoded
+    cp = checkpoint()
+    encoded = serialize_execution_checkpoint(cp)
+    decoded = deserialize_execution_checkpoint(encoded)
+    assert decoded == cp
+    assert decoded.digest == cp.digest
+    assert encoded == serialize_execution_checkpoint(decoded)
 
 
-def test_checkpoint_dict_round_trip():
-    original = checkpoint()
-    decoded = checkpoint_from_dict(json.loads(json.dumps(checkpoint_to_dict(original))))
-    assert decoded == original
+def test_checkpoint_binds_exact_portfolio_and_entry():
+    state = portfolio()
+    cp = checkpoint()
+    assert verify_execution_checkpoint(cp, state)
 
 
-def test_checkpoint_requires_evidence():
+def test_checkpoint_rejects_different_portfolio_generation():
+    state = portfolio()
+    cp = checkpoint()
+    later = replace(
+        state,
+        generation=1,
+        previous_state_digest=state.digest,
+    )
+    assert not verify_execution_checkpoint(cp, later)
+
+
+def test_checkpoint_rejects_different_portfolio_digest():
+    state = portfolio()
+    changed = replace(
+        state,
+        active=replace(state.active, objective="Changed objective"),
+    )
+    assert not verify_execution_checkpoint(checkpoint(), changed)
+
+
+def test_checkpoint_requires_exactly_one_next_transition_or_stop_reason():
+    with pytest.raises(ExecutionCheckpointError, match="exactly one"):
+        checkpoint(next_transition=None, stop_reason=None)
+    with pytest.raises(ExecutionCheckpointError, match="exactly one"):
+        checkpoint(stop_reason="stop", next_transition=decision())
+
+
+def test_checkpoint_can_record_fail_closed_stop_without_transition():
+    cp = checkpoint(
+        next_transition=None,
+        stop_reason="authority_required_before_next_transition",
+    )
+    assert cp.next_transition is None
+    assert cp.stop_reason == "authority_required_before_next_transition"
+
+
+def test_checkpoint_transition_must_match_work_identity():
+    d = replace(decision(), work_id="OTHER")
+    with pytest.raises(ExecutionCheckpointError, match="work_id mismatch"):
+        checkpoint(next_transition=d)
+
+
+def test_checkpoint_transition_must_match_entry_digest():
+    d = replace(decision(), entry_digest=D3)
+    with pytest.raises(ExecutionCheckpointError, match="entry_digest mismatch"):
+        checkpoint(next_transition=d)
+
+
+def test_checkpoint_transition_must_match_role_state_and_signal():
+    d = replace(decision(), from_role="secondary")
+    with pytest.raises(ExecutionCheckpointError, match="role mismatch"):
+        checkpoint(next_transition=d)
+
+    d = replace(decision(), from_state="ready")
+    with pytest.raises(ExecutionCheckpointError, match="state mismatch"):
+        checkpoint(next_transition=d)
+
+    d = replace(decision(), signal="failure_confirmed")
+    with pytest.raises(ExecutionCheckpointError, match="signal mismatch"):
+        checkpoint(next_transition=d)
+
+
+def test_checkpoint_preserves_evidence_used_by_transition():
+    d = decision()
+    with pytest.raises(ExecutionCheckpointError, match="evidence not preserved"):
+        checkpoint(
+            evidence=(evidence("other", D3),),
+            next_transition=d,
+        )
+
+
+def test_checkpoint_requires_admitted_evidence():
     with pytest.raises(ExecutionCheckpointError, match="requires admitted evidence"):
         checkpoint(evidence=())
 
 
-def test_checkpoint_requires_canonical_ref():
-    with pytest.raises(ExecutionCheckpointError, match="at least one canonical_ref"):
+def test_checkpoint_requires_canonical_reference():
+    with pytest.raises(ExecutionCheckpointError, match="canonical reference"):
         checkpoint(canonical_refs=())
 
 
-def test_duplicate_evidence_is_rejected():
-    item = evidence()
+def test_checkpoint_requires_exact_portfolio_canonical_reference():
+    with pytest.raises(ExecutionCheckpointError, match="canonical portfolio_state"):
+        checkpoint(
+            canonical_refs=(canonical_ref("transition_policy", policy().digest),)
+        )
+
+    with pytest.raises(ExecutionCheckpointError, match="portfolio_state canonical digest mismatch"):
+        checkpoint(
+            canonical_refs=(
+                canonical_ref("portfolio_state", D3),
+                canonical_ref("transition_policy", policy().digest),
+            )
+        )
+
+
+def test_checkpoint_transition_requires_exact_policy_canonical_reference():
+    state = portfolio()
+    with pytest.raises(ExecutionCheckpointError, match="canonical transition_policy"):
+        checkpoint(
+            canonical_refs=(canonical_ref("portfolio_state", state.digest),)
+        )
+
+    with pytest.raises(ExecutionCheckpointError, match="policy canonical digest mismatch"):
+        checkpoint(
+            canonical_refs=(
+                canonical_ref("portfolio_state", state.digest),
+                canonical_ref("transition_policy", D3),
+            )
+        )
+
+
+def test_checkpoint_rejects_duplicate_evidence_kinds():
+    with pytest.raises(ExecutionCheckpointError, match="evidence kinds must be unique"):
+        checkpoint(evidence=(evidence("execution_report", D1), evidence("execution_report", D2)))
+
+
+def test_checkpoint_rejects_duplicate_canonical_names():
+    with pytest.raises(ExecutionCheckpointError, match="reference names must be unique"):
+        checkpoint(canonical_refs=(canonical_ref("source", D1), canonical_ref("source", D2)))
+
+
+def test_checkpoint_rejects_duplicate_uncertainties():
     with pytest.raises(ExecutionCheckpointError, match="must not contain duplicates"):
-        checkpoint(evidence=(item, item))
+        checkpoint(uncertainties=("unknown", "unknown"))
 
 
-def test_duplicate_uncertainty_is_rejected():
-    with pytest.raises(ExecutionCheckpointError, match="must not contain duplicates"):
-        checkpoint(uncertainties=("same", "same"))
+def test_checkpoint_rejects_unknown_observed_signal():
+    with pytest.raises(ExecutionCheckpointError, match="unsupported checkpoint observed_signal"):
+        checkpoint(observed_signal="magic")
 
 
-def test_nonterminal_checkpoint_requires_next_transition():
-    with pytest.raises(ExecutionCheckpointError, match="nonterminal checkpoint requires"):
-        checkpoint(next_transition_refs=())
+def test_checkpoint_rejects_invalid_role_state_combination():
+    with pytest.raises(ExecutionCheckpointError, match="secondary role/state"):
+        checkpoint(entry_role="secondary", entry_state="running")
 
 
-def test_complete_checkpoint_may_have_no_next_transition():
-    item = checkpoint(state_before="verifying", state_after="complete", next_transition_refs=())
-    assert item.state_after == "complete"
-
-
-def test_failed_checkpoint_may_have_no_next_transition():
-    item = checkpoint(state_after="failed", next_transition_refs=())
-    assert item.state_after == "failed"
-
-
-def test_authority_stop_requires_boundary():
-    with pytest.raises(ExecutionCheckpointError, match="requires authority_boundary"):
-        checkpoint(
-            state_after="human_gate",
-            authority_stop=True,
-            authority_boundary=None,
-            next_transition_refs=(),
-        )
-
-
-def test_authority_stop_requires_human_gate():
-    with pytest.raises(ExecutionCheckpointError, match="state_after=human_gate"):
-        checkpoint(
-            authority_stop=True,
-            authority_boundary="spend ceiling exceeded",
-            next_transition_refs=(),
-        )
-
-
-def test_authority_stop_cannot_claim_automatic_next_transition():
-    with pytest.raises(ExecutionCheckpointError, match="cannot declare automatic"):
-        checkpoint(
-            state_after="human_gate",
-            authority_stop=True,
-            authority_boundary="release approval",
-        )
-
-
-def test_authority_boundary_invalid_without_stop():
-    with pytest.raises(ExecutionCheckpointError, match="valid only for authority_stop"):
-        checkpoint(authority_boundary="release approval")
-
-
-def test_valid_authority_stop_records_no_automatic_transition():
-    item = checkpoint(
-        state_after="human_gate",
-        authority_stop=True,
-        authority_boundary="spend above authorized ceiling",
-        next_transition_refs=(),
-    )
-    assert item.authority_stop
-    assert item.next_transition_refs == ()
-
-
-def test_passive_checkpoint_cannot_claim_non_passive_state():
-    with pytest.raises(ExecutionCheckpointError, match="passive checkpoint"):
-        checkpoint(role="passive", state_before="passive", state_after="ready")
-
-
-def test_passive_checkpoint_can_remain_passive():
-    item = checkpoint(
-        role="passive",
-        state_before="passive",
-        state_after="passive",
-        next_transition_refs=("transition://await-wake",),
-    )
-    assert item.role == "passive"
-
-
-def test_unknown_checkpoint_field_fails_closed():
-    data = checkpoint_to_dict(checkpoint())
+def test_checkpoint_unknown_fields_fail_closed():
+    data = execution_checkpoint_to_dict(checkpoint())
     data["unexpected"] = True
     with pytest.raises(ExecutionCheckpointError, match="fields mismatch"):
-        checkpoint_from_dict(data)
+        execution_checkpoint_from_dict(data)
 
 
-def test_nested_evidence_unknown_field_fails_closed():
-    data = checkpoint_to_dict(checkpoint())
-    data["evidence"][0]["unexpected"] = True
-    with pytest.raises(ExecutionCheckpointError, match="checkpoint evidence fields mismatch"):
-        checkpoint_from_dict(data)
+def test_checkpoint_nested_unknown_fields_fail_closed():
+    data = execution_checkpoint_to_dict(checkpoint())
+    data["canonical_refs"][0]["unexpected"] = True
+    with pytest.raises(ExecutionCheckpointError, match="canonical ref fields mismatch"):
+        execution_checkpoint_from_dict(data)
 
 
-def test_schema_tamper_fails_closed():
-    data = checkpoint_to_dict(checkpoint())
-    data["schema_version"] = "ge.execution-checkpoint.v999"
-    with pytest.raises(ExecutionCheckpointError, match="unsupported execution checkpoint schema"):
-        checkpoint_from_dict(data)
-
-
-def test_bad_portfolio_digest_fails_closed():
-    with pytest.raises(ExecutionCheckpointError, match="portfolio_state_digest"):
-        checkpoint(portfolio_state_digest="bad")
-
-
-def test_bad_evidence_digest_fails_closed():
-    with pytest.raises(ExecutionCheckpointError, match="evidence.digest"):
-        evidence(locator="artifact://bad").__class__(
-            kind="test",
-            locator="artifact://bad",
-            digest="not-a-digest",
-        )
-
-
-def test_malformed_json_fails_closed():
+def test_checkpoint_malformed_json_fails_closed():
     with pytest.raises(ExecutionCheckpointError, match="not valid JSON"):
-        deserialize_checkpoint("{broken")
+        deserialize_execution_checkpoint("{broken")
 
 
-def test_boolean_generation_is_rejected():
-    with pytest.raises(ExecutionCheckpointError, match="must be an integer"):
-        checkpoint(portfolio_generation=True)
+def test_checkpoint_can_be_reconstructed_without_chat_context():
+    original = checkpoint()
+    artifact = json.loads(serialize_execution_checkpoint(original))
+    restored = execution_checkpoint_from_dict(artifact)
+    assert restored.portfolio_id == "fae-mainnet-critical"
+    assert restored.work_id == "FAE-BE-04"
+    assert restored.next_transition.action_ref == "action://verify"
+    assert restored.uncertainties == (
+        "public reachability not yet independently verified",
+    )
