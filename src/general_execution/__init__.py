@@ -33,6 +33,13 @@ from .asp_transition_engine import (
     admit_passive_wake,
     apply_asp_transition,
 )
+from .core_rehearsal import (
+    CoreRehearsalAssertion,
+    CoreRehearsalError,
+    CoreRehearsalReport,
+    REQUIRED_CORE1_ASSERTIONS,
+    build_core_rehearsal_report,
+)
 from .core_verification import (
     CoreVerificationAdmissionError,
     CoreVerificationManifest,
@@ -273,6 +280,9 @@ __all__ = [
     "CapacityTransitionRecord",
     "CoreVerificationReceipt",
     "CoreVerificationAdmissionError",
+    "CoreRehearsalAssertion",
+    "CoreRehearsalError",
+    "CoreRehearsalReport",
     "CoreVerificationRequirement",
     "CoreVerificationManifest",
     "ConformanceError",
@@ -336,6 +346,7 @@ __all__ = [
     "REFERENCE_CAPABILITY",
     "REFERENCE_EVIDENCE",
     "REFERENCE_TASK_KIND",
+    "REQUIRED_CORE1_ASSERTIONS",
     "RecoveredLease",
     "ReconciliationDecision",
     "ReconciliationError",
@@ -390,6 +401,7 @@ __all__ = [
     "authorize_retry",
     "bind_session",
     "build_dispatch_request",
+    "build_core_rehearsal_report",
     "canonical_json",
     "capacity_snapshot",
     "capacity_state_from_dict",
