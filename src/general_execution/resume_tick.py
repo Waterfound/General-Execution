@@ -384,11 +384,29 @@ def resume_tick(
             transition.checkpoint,
         )
     except PortfolioPersistenceError as exc:
-        recovered_state, _, recovered_report = recover_portfolio_after_restart(
-            store,
-            portfolio_id,
+        recovered_state, recovered_checkpoint, recovered_report = (
+            recover_portfolio_after_restart(
+                store,
+                portfolio_id,
+            )
         )
         if recovered_state.digest != state.digest:
+            if (
+                recovered_checkpoint is not None
+                and observation.checkpoint_ref
+                in recovered_checkpoint.canonical_refs
+            ):
+                return ResumeTickResult(
+                    portfolio_id=portfolio_id,
+                    disposition="already_applied",
+                    observation_digest=observation.digest,
+                    pre_generation=recovered_state.generation,
+                    post_generation=recovered_state.generation,
+                    pre_state_digest=recovered_state.digest,
+                    post_state_digest=recovered_state.digest,
+                    checkpoint_digest=recovered_checkpoint.digest,
+                    recovery_report_digest=recovered_report.digest,
+                )
             return ResumeTickResult(
                 portfolio_id=portfolio_id,
                 disposition="stale_observation",
