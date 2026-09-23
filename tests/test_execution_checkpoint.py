@@ -72,10 +72,10 @@ def evidence(kind="execution_report", digest=D1):
     )
 
 
-def canonical_ref(name="source_revision", digest=D2):
+def canonical_ref(name, digest):
     return CheckpointCanonicalRef(
         name=name,
-        locator=f"git://general-execution/{name}",
+        locator=f"artifact://canonical/{name}",
         content_digest=digest,
     )
 
@@ -126,7 +126,10 @@ def checkpoint(**changes):
         observed_signal="execution_completed",
         summary="Deployment fragment completed and is ready for verification.",
         evidence=(evidence(),),
-        canonical_refs=(canonical_ref(),),
+        canonical_refs=(
+            canonical_ref("portfolio_state", state.digest),
+            canonical_ref("transition_policy", policy().digest),
+        ),
         uncertainties=("public reachability not yet independently verified",),
         next_transition=decision(state),
     )
@@ -228,6 +231,37 @@ def test_checkpoint_requires_admitted_evidence():
 def test_checkpoint_requires_canonical_reference():
     with pytest.raises(ExecutionCheckpointError, match="canonical reference"):
         checkpoint(canonical_refs=())
+
+
+def test_checkpoint_requires_exact_portfolio_canonical_reference():
+    with pytest.raises(ExecutionCheckpointError, match="canonical portfolio_state"):
+        checkpoint(
+            canonical_refs=(canonical_ref("transition_policy", policy().digest),)
+        )
+
+    with pytest.raises(ExecutionCheckpointError, match="portfolio_state canonical digest mismatch"):
+        checkpoint(
+            canonical_refs=(
+                canonical_ref("portfolio_state", D3),
+                canonical_ref("transition_policy", policy().digest),
+            )
+        )
+
+
+def test_checkpoint_transition_requires_exact_policy_canonical_reference():
+    state = portfolio()
+    with pytest.raises(ExecutionCheckpointError, match="canonical transition_policy"):
+        checkpoint(
+            canonical_refs=(canonical_ref("portfolio_state", state.digest),)
+        )
+
+    with pytest.raises(ExecutionCheckpointError, match="policy canonical digest mismatch"):
+        checkpoint(
+            canonical_refs=(
+                canonical_ref("portfolio_state", state.digest),
+                canonical_ref("transition_policy", D3),
+            )
+        )
 
 
 def test_checkpoint_rejects_duplicate_evidence_kinds():
