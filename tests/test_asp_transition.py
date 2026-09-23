@@ -228,24 +228,38 @@ def test_unmatched_transition_fails_closed():
         apply(state, "fatal_failure", (ev("failure"),))
 
 
-def test_verified_completion_promotes_secondary_with_explicit_replacement():
-    state = portfolio("verifying")
-    replacement = secondary("NEXT")
-
-    result = apply(
+def test_verified_completion_promotes_secondary_from_woken_passive():
+    state = portfolio(
+        "verifying",
+        passive=(passive("PASSIVE-A"), passive("PASSIVE-B")),
+    )
+    p = policy()
+    admission = admit_passive_wake(
         state,
+        p,
+        "PASSIVE-A",
+        (ev("wake_condition_satisfied"),),
+    )
+
+    result = apply_active_transition(
+        state,
+        p,
         "verification_passed",
         (ev("verifier_pass"),),
-        replacement_secondary=replacement,
+        action_ref="verify://active",
+        observed_at="2026-09-23T16:00:00Z",
+        summary="Verifier passed",
+        canonical_refs=("artifact://canonical",),
+        wake_admission=admission,
     )
 
     assert result.effect == "promote_secondary"
     assert result.new_state.active.work_id == "SECONDARY"
     assert result.new_state.active.role == "active"
     assert result.new_state.active.state == "ready"
-    assert result.new_state.secondary == replacement
-    assert result.new_state.passive == state.passive
-    assert result.replacement_secondary_work_id == "NEXT"
+    assert result.new_state.secondary.work_id == "PASSIVE-A"
+    assert tuple(item.work_id for item in result.new_state.passive) == ("PASSIVE-B",)
+    assert result.replacement_secondary_work_id == "PASSIVE-A"
     assert result.checkpoint.work_id == "ACTIVE"
     assert result.checkpoint.state_after == "complete"
     assert result.checkpoint.next_transition_refs == ()
@@ -261,40 +275,54 @@ def test_rotating_transition_never_invents_replacement_secondary():
     state = portfolio("verifying")
     with pytest.raises(
         AspTransitionError,
-        match="exactly one replacement-secondary source",
+        match="requires a valid passive wake admission",
     ):
         apply(state, "verification_passed", (ev("verifier_pass"),))
 
 
-def test_external_replacement_cannot_alias_existing_work():
+def test_external_replacement_selection_is_not_authorized_in_core():
     state = portfolio("verifying")
-    with pytest.raises(AspTransitionError, match="must have a new work_id"):
+    with pytest.raises(
+        AspTransitionError,
+        match="external replacement selection is not authorized",
+    ):
         apply(
             state,
             "verification_passed",
             (ev("verifier_pass"),),
-            replacement_secondary=secondary("PASSIVE"),
+            replacement_secondary=secondary("NEXT"),
         )
 
 
 def test_external_blocker_parks_active_only_with_no_internal_work_evidence():
     state = portfolio("waiting_external")
-    replacement = secondary("NEXT")
-
-    result = apply(
+    p = policy()
+    admission = admit_passive_wake(
         state,
+        p,
+        "PASSIVE",
+        (ev("wake_condition_satisfied"),),
+    )
+
+    result = apply_active_transition(
+        state,
+        p,
         "external_blocker",
         (
             ev("external_blocker"),
             ev("no_internal_work"),
         ),
-        replacement_secondary=replacement,
+        action_ref="action://observed",
+        observed_at="2026-09-23T16:00:00Z",
+        summary="Active externally blocked",
+        canonical_refs=("artifact://canonical",),
+        wake_admission=admission,
     )
 
     assert result.effect == "park_active"
     assert result.new_state.active.work_id == "SECONDARY"
     assert result.new_state.active.state == "ready"
-    assert result.new_state.secondary.work_id == "NEXT"
+    assert result.new_state.secondary.work_id == "PASSIVE"
     parked = {item.work_id: item for item in result.new_state.passive}["ACTIVE"]
     assert parked.role == "passive"
     assert parked.state == "passive"
@@ -305,12 +333,24 @@ def test_external_blocker_parks_active_only_with_no_internal_work_evidence():
 
 def test_park_active_rejects_missing_no_internal_work_proof():
     state = portfolio("waiting_external")
+    p = policy()
+    admission = admit_passive_wake(
+        state,
+        p,
+        "PASSIVE",
+        (ev("wake_condition_satisfied"),),
+    )
     with pytest.raises(AspTransitionError, match="policy-required evidence"):
-        apply(
+        apply_active_transition(
             state,
+            p,
             "external_blocker",
             (ev("external_blocker"),),
-            replacement_secondary=secondary("NEXT"),
+            action_ref="action://observed",
+            observed_at="2026-09-23T16:00:00Z",
+            summary="Active externally blocked",
+            canonical_refs=("artifact://canonical",),
+            wake_admission=admission,
         )
 
 
@@ -513,12 +553,24 @@ def test_transition_result_commits_atomically_with_checkpoint_and_recovers(tmp_p
 
 def test_input_state_is_immutable_after_rotation():
     state = portfolio("verifying")
-    before = state
-    _ = apply(
+    p = policy()
+    admission = admit_passive_wake(
         state,
+        p,
+        "PASSIVE",
+        (ev("wake_condition_satisfied"),),
+    )
+    before = state
+    _ = apply_active_transition(
+        state,
+        p,
         "verification_passed",
         (ev("verifier_pass"),),
-        replacement_secondary=secondary("NEXT"),
+        action_ref="verify://active",
+        observed_at="2026-09-23T16:00:00Z",
+        summary="Verifier passed",
+        canonical_refs=("artifact://canonical",),
+        wake_admission=admission,
     )
     assert state == before
     assert state.active.work_id == "ACTIVE"
