@@ -206,6 +206,13 @@ from .reconciliation import (
     decide_reconciliation,
 )
 from .recovery_driver import RecoveryDriverError, RecoveryDriverResult, apply_recovery_step
+from .resume_tick import (
+    CoreVerificationReceipt,
+    ResumeTickError,
+    ResumeTickObservation,
+    ResumeTickResult,
+    resume_tick,
+)
 from .retry_authority import (
     FailureObservation,
     RetryAuthorityError,
@@ -257,6 +264,7 @@ __all__ = [
     "CapacityReleaseGrant",
     "CapacityTransition",
     "CapacityTransitionRecord",
+    "CoreVerificationReceipt",
     "ConformanceError",
     "ConformanceHarnessError",
     "ConformanceLookupResult",
@@ -323,6 +331,9 @@ __all__ = [
     "ReconciliationError",
     "RecoveryDriverError",
     "RecoveryDriverResult",
+    "ResumeTickError",
+    "ResumeTickObservation",
+    "ResumeTickResult",
     "ReferenceConformanceTarget",
     "RestartRecoveryReport",
     "ResultEnvelope",
@@ -412,6 +423,7 @@ __all__ = [
     "record_physical_attempt",
     "recover_capacity_after_restart",
     "recover_portfolio_after_restart",
+    "resume_tick",
     "recover_dispatch_after_restart",
     "reference_runner",
     "release_capacity_for_outcome",
