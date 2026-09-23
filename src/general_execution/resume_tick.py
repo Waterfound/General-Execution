@@ -91,6 +91,7 @@ class ResumeTickObservation:
     portfolio_id: str
     expected_generation: int
     expected_state_digest: str
+    policy_digest: str
     event: str
     evidence: tuple[CheckpointEvidence, ...]
     action_ref: str
@@ -120,6 +121,7 @@ class ResumeTickObservation:
         if self.expected_generation < 0:
             raise ResumeTickError("expected_generation cannot be negative")
         _digest("expected_state_digest", self.expected_state_digest)
+        _digest("policy_digest", self.policy_digest)
         if not self.evidence:
             raise ResumeTickError("tick observation requires admitted evidence")
         identities = tuple(item.identity for item in self.evidence)
@@ -153,7 +155,7 @@ class ResumeTickObservation:
 class ResumeTickResult:
     portfolio_id: str
     disposition: TickDisposition
-    observation_digest: str
+    observation_digest: str | None
     pre_generation: int
     post_generation: int
     pre_state_digest: str
@@ -175,7 +177,8 @@ class ResumeTickResult:
             "stale_observation",
         }:
             raise ResumeTickError("unsupported tick disposition")
-        _digest("observation_digest", self.observation_digest)
+        if self.observation_digest is not None:
+            _digest("observation_digest", self.observation_digest)
         _digest("pre_state_digest", self.pre_state_digest)
         _digest("post_state_digest", self.post_state_digest)
         for name in (
@@ -190,6 +193,16 @@ class ResumeTickResult:
             value = getattr(self, name)
             if not isinstance(value, int) or isinstance(value, bool) or value < 0:
                 raise ResumeTickError(f"{name} must be a non-negative integer")
+
+        if self.disposition == "external_input_required":
+            if self.observation_digest is not None:
+                raise ResumeTickError(
+                    "external_input_required cannot carry observation digest"
+                )
+        elif self.observation_digest is None:
+            raise ResumeTickError(
+                "tick disposition requires observation digest"
+            )
 
         if self.disposition == "committed":
             if self.post_generation != self.pre_generation + 1:
@@ -242,13 +255,13 @@ def resume_tick(
     store: SqlitePortfolioHeadStore,
     portfolio_id: str,
     policy: TransitionPolicy,
-    observation: ResumeTickObservation,
+    observation: ResumeTickObservation | None,
     *,
     required_core_revision: str,
     core_verification: CoreVerificationReceipt | None,
 ) -> ResumeTickResult:
     _nonempty("portfolio_id", portfolio_id)
-    if observation.portfolio_id != portfolio_id:
+    if observation is not None and observation.portfolio_id != portfolio_id:
         raise ResumeTickError("tick observation portfolio identity mismatch")
 
     state, _, recovery = recover_portfolio_after_restart(store, portfolio_id)
@@ -259,13 +272,28 @@ def resume_tick(
         return ResumeTickResult(
             portfolio_id=portfolio_id,
             disposition="verification_gate_closed",
-            observation_digest=observation.digest,
+            observation_digest=observation.digest if observation is not None else None,
             pre_generation=pre_generation,
             post_generation=pre_generation,
             pre_state_digest=pre_digest,
             post_state_digest=pre_digest,
             recovery_report_digest=recovery.digest,
         )
+
+    if observation is None:
+        return ResumeTickResult(
+            portfolio_id=portfolio_id,
+            disposition="external_input_required",
+            observation_digest=None,
+            pre_generation=pre_generation,
+            post_generation=pre_generation,
+            pre_state_digest=pre_digest,
+            post_state_digest=pre_digest,
+            recovery_report_digest=recovery.digest,
+        )
+
+    if observation.policy_digest != policy.digest:
+        raise ResumeTickError("tick observation transition policy mismatch")
 
     applied, checkpoint_digest, _ = _already_applied(
         store,
