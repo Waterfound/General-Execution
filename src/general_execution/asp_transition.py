@@ -113,9 +113,9 @@ class PassiveWakeAdmission:
     wake_condition_digest: str
     policy_digest: str
     rule_digest: str
-    evidence_digests: tuple[str, ...]
+    evidence: tuple[CheckpointEvidence, ...]
     next_action_ref: str
-    authority_grant_digest: str | None = None
+    authority_grant: TransitionAuthorityGrant | None = None
     schema_version: str = WAKE_ADMISSION_SCHEMA
 
     def __post_init__(self) -> None:
@@ -137,20 +137,25 @@ class PassiveWakeAdmission:
             "rule_digest",
         ):
             _digest(name, getattr(self, name))
-        if not self.evidence_digests:
-            raise AspTransitionError("wake admission requires evidence digests")
-        if tuple(sorted(self.evidence_digests)) != self.evidence_digests:
+        if not self.evidence:
+            raise AspTransitionError("wake admission requires admitted evidence")
+        identities = tuple(item.identity for item in self.evidence)
+        if identities != tuple(sorted(identities)):
             raise AspTransitionError(
-                "wake admission evidence digests must be canonical-sorted"
+                "wake admission evidence must be canonical-sorted"
             )
-        if len(self.evidence_digests) != len(set(self.evidence_digests)):
+        if len(identities) != len(set(identities)):
             raise AspTransitionError(
-                "wake admission evidence digests must be unique"
+                "wake admission evidence must be unique"
             )
-        for value in self.evidence_digests:
-            _digest("evidence_digest", value)
-        if self.authority_grant_digest is not None:
-            _digest("authority_grant_digest", self.authority_grant_digest)
+
+    @property
+    def evidence_digests(self) -> tuple[str, ...]:
+        return tuple(sorted(item.evidence_digest for item in self.evidence))
+
+    @property
+    def authority_grant_digest(self) -> str | None:
+        return self.authority_grant.digest if self.authority_grant is not None else None
 
     @property
     def digest(self) -> str:
@@ -187,6 +192,17 @@ class PortfolioTransitionResult:
             _digest("authority_grant_digest", self.authority_grant_digest)
         if self.wake_admission_digest is not None:
             _digest("wake_admission_digest", self.wake_admission_digest)
+        if self.effect not in {"none", "promote_secondary", "park_active", "request_di", "stop_human_gate"}:
+            raise AspTransitionError("unsupported transition result effect")
+        if self.effect in ROTATING_EFFECTS:
+            if self.replacement_secondary_work_id is None or self.wake_admission_digest is None:
+                raise AspTransitionError(
+                    "rotating result requires replacement Secondary and wake admission"
+                )
+        elif self.replacement_secondary_work_id is not None or self.wake_admission_digest is not None:
+            raise AspTransitionError(
+                "non-rotating result cannot carry replacement Secondary or wake admission"
+            )
 
         if self.new_state.previous_state_digest != self.previous_state_digest:
             raise AspTransitionError(
@@ -271,8 +287,8 @@ def admit_passive_wake(
         )
 
     _verify_evidence(rule, evidence)
-    grant_digest = _verify_authority(policy, rule, authority_grant)
-    evidence_digests = tuple(sorted(item.digest for item in evidence))
+    _verify_authority(policy, rule, authority_grant)
+    canonical_evidence = tuple(sorted(evidence, key=lambda item: item.identity))
 
     return PassiveWakeAdmission(
         portfolio_id=state.portfolio_id,
@@ -282,9 +298,9 @@ def admit_passive_wake(
         wake_condition_digest=item.wake_condition.digest,
         policy_digest=policy.digest,
         rule_digest=rule.digest,
-        evidence_digests=evidence_digests,
+        evidence=canonical_evidence,
         next_action_ref=rule.next_action_ref,
-        authority_grant_digest=grant_digest,
+        authority_grant=authority_grant,
     )
 
 
@@ -317,6 +333,12 @@ def _secondary_from_wake(
         or wake_rule.next_action_ref != admission.next_action_ref
     ):
         raise AspTransitionError("wake admission does not bind current wake rule")
+    _verify_evidence(wake_rule, admission.evidence)
+    _verify_authority(
+        policy,
+        wake_rule,
+        admission.authority_grant,
+    )
 
     replacement = replace(
         item,
