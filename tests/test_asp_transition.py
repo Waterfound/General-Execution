@@ -494,6 +494,73 @@ def test_woken_passive_can_fill_secondary_slot_during_verified_rotation():
     assert result.wake_admission_digest == admission.digest
 
 
+
+
+def test_wake_admission_evidence_is_revalidated_when_consumed():
+    state = portfolio("verifying")
+    p = policy()
+    admission = admit_passive_wake(
+        state,
+        p,
+        "PASSIVE",
+        (ev("wake_condition_satisfied"),),
+    )
+    forged = replace(
+        admission,
+        evidence=(ev("wrong"),),
+    )
+    with pytest.raises(
+        AspTransitionError,
+        match="policy-required evidence",
+    ):
+        apply_active_transition(
+            state,
+            p,
+            "verification_passed",
+            (ev("verifier_pass"),),
+            action_ref="verify://active",
+            observed_at="2026-09-23T16:00:00Z",
+            summary="Verifier passed",
+            canonical_refs=("artifact://canonical",),
+            wake_admission=forged,
+        )
+
+
+def test_wake_admission_authority_is_revalidated_when_consumed():
+    state = portfolio("verifying")
+    p = policy()
+    admission = admit_passive_wake(
+        state,
+        p,
+        "PASSIVE",
+        (ev("wake_condition_satisfied"),),
+    )
+    wake_rule = match_transition_rule(p, "passive", "wake_satisfied")
+    forged_grant = TransitionAuthorityGrant(
+        policy_digest=p.digest,
+        rule_digest=wake_rule.digest,
+        authority_boundary="not-authorized",
+        authority_ref="artifact://forged-authority",
+        authority_digest=A,
+    )
+    forged = replace(admission, authority_grant=forged_grant)
+    with pytest.raises(
+        AspTransitionError,
+        match="ordinary transition cannot consume an authority grant",
+    ):
+        apply_active_transition(
+            state,
+            p,
+            "verification_passed",
+            (ev("verifier_pass"),),
+            action_ref="verify://active",
+            observed_at="2026-09-23T16:00:00Z",
+            summary="Verifier passed",
+            canonical_refs=("artifact://canonical",),
+            wake_admission=forged,
+        )
+
+
 def test_stale_wake_admission_is_rejected():
     state = portfolio("verifying")
     p = policy()
