@@ -3,7 +3,7 @@
   "fixture_id": "durable-execution-core1-v1",
   "purpose": "Prove the minimum Durable Execution core without chat-dependent state before any trigger/system integration.",
   "verification_gate": {
-    "target_revision": "8f6494eca2c730de49b2e6ebfeb085cad1f33744",
+    "target_revision": "04a47cd7031b608368de15ec2c99ccc715eb6cbf",
     "suite_ref": "tests://durable-execution/wave5-asp/full-repository",
     "focused_test_path": "tests/test_asp_transition.py",
     "focused_test_count": 18,
@@ -12,6 +12,7 @@
   },
   "candidate_runtime": {
     "branch": "feature/durable-asp-portfolio-state",
+    "candidate_revision": "04a47cd7031b608368de15ec2c99ccc715eb6cbf",
     "unattended_runtime_enabled": false,
     "provider_trigger_enabled": false
   },

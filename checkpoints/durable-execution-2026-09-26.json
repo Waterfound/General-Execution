@@ -1,0 +1,78 @@
+{
+  "authority": {
+    "main_modified": false,
+    "merge_authorized": false,
+    "new_spending_authorized": false,
+    "provider_trigger_enabled": false,
+    "release_authorized": false,
+    "unattended_runtime_enabled": false
+  },
+  "branch": "feature/durable-asp-portfolio-state",
+  "core1": {
+    "fixture": "rehearsals/core1-v1.json",
+    "required_assertions": [
+      "bounded_retry",
+      "checkpoint_reconstruction",
+      "cold_resume",
+      "cost_security_authority_stop",
+      "duplicate_tick_idempotent",
+      "external_blocker_parking",
+      "human_gate_stop",
+      "no_chat_dependency",
+      "no_hidden_authority",
+      "passive_wake_admission",
+      "stale_write_rejected",
+      "unknown_failure_single_reproduction",
+      "verified_secondary_promotion"
+    ],
+    "status": "PREPARED_NOT_EXECUTED"
+  },
+  "local_regression": {
+    "compileall": "PASS",
+    "errors": 0,
+    "evidence_path": "evidence/durable-execution/2026-09-26/local-regression.json",
+    "failures": 0,
+    "file_hashes_match_frozen_git_commit": true,
+    "python": "3.13.15",
+    "skipped": 0,
+    "sqlite": "3.53.1",
+    "status": "PASS",
+    "tests": 345
+  },
+  "next_action": {
+    "entrypoint": "python scripts/verify_wave5_core.py --output evidence/wave5-vercel-run.json",
+    "executor": "authenticated Vercel Sandbox",
+    "on_error": "Reconcile provider state before another attempt",
+    "on_fail": "Retain failure artifact, do not retry automatically, diagnose the failed stage",
+    "on_pass": "Admit exact receipt, then execute CORE-1 and collect all 13 assertion proofs"
+  },
+  "previous_candidate": "6cad261424c9f28e3b6651e656c6adafdb6954ee",
+  "recorded_at": "2026-09-26T04:00:57.829172+00:00",
+  "schema_version": "ge.durable-development-checkpoint.v1",
+  "source_publication": {
+    "identical_git_tree": "823c81c75aac5f343980b98e52bd8dc493779b96",
+    "local_tested_commit": "525fb5bebd8f7dfc07faf1ef2e5e5d6a88dd4aae",
+    "published_candidate_commit": "04a47cd7031b608368de15ec2c99ccc715eb6cbf",
+    "transport": "GitHub connector Git Data API; terminal push unavailable"
+  },
+  "superseded_failed_target": "8f6494eca2c730de49b2e6ebfeb085cad1f33744",
+  "tested_source_revision": "04a47cd7031b608368de15ec2c99ccc715eb6cbf",
+  "vercel_gate": {
+    "blockers": [
+      "No terminal Vercel token/OIDC configuration",
+      "Browser is not authenticated; user attempted login unsuccessfully",
+      "Connector deploy tool returned Tool deploy_to_vercel not found"
+    ],
+    "confirmed_shutdown_required": true,
+    "full_repository_pytest_required": true,
+    "minimum_focused_tests": 18,
+    "project_id": "prj_0eyS5MBoYLjAMpWmHMJGBv5cjdIK",
+    "provider_invoked_this_session": false,
+    "receipt": null,
+    "required_revision": "04a47cd7031b608368de15ec2c99ccc715eb6cbf",
+    "required_verifier": "verifier://vercel-sandbox-conformance/v1",
+    "status": "BLOCKED_EXTERNAL_EXECUTION",
+    "suite_ref": "tests://durable-execution/wave5-asp/full-repository",
+    "team_id": "team_MHwznJgPOms2fJdgTInc1WZG"
+  }
+}

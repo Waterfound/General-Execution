@@ -17,7 +17,8 @@ from general_execution import (
     run_vercel_sandbox_conformance,
 )
 
-WAVE5_REVISION = "8f6494eca2c730de49b2e6ebfeb085cad1f33744"
+# The original 8f6494e target failed full regression; see the repair evidence.
+WAVE5_REVISION = "04a47cd7031b608368de15ec2c99ccc715eb6cbf"
 WAVE5_SUITE_REF = "tests://durable-execution/wave5-asp/full-repository"
 WAVE5_FOCUSED_TEST_PATH = "tests/test_asp_transition.py"
 WAVE5_FOCUSED_TEST_COUNT = 18

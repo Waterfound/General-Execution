@@ -12,7 +12,7 @@ Those values are frozen in source.
 
 ```text
 revision:
-8f6494eca2c730de49b2e6ebfeb085cad1f33744
+04a47cd7031b608368de15ec2c99ccc715eb6cbf
 
 repository:
 https://github.com/Waterfound/General-Execution.git
@@ -29,6 +29,10 @@ focused cases:
 verifier:
 verifier://vercel-sandbox-conformance/v1
 ```
+
+This target supersedes `8f6494eca2c730de49b2e6ebfeb085cad1f33744` after
+16 failures were reproduced in the old full regression bank. The corrected
+source passed 345 local tests. That local result is not a Vercel receipt.
 
 The Vercel runner itself remains protocol-fixed to:
 
@@ -54,16 +58,42 @@ These values are passed only to Sandbox creation. They are not persisted into th
 
 They do not alter the Git source, revision, runtime, command sequence, suite, or verifier contract.
 
-## Output
+## Invocation and output
 
-On complete GREEN, stdout contains one canonical JSON object binding:
+Install the exact optional SDK boundary with `python -m pip install -e '.[dev,vercel-sandbox]'`.
+It pins `vercel==0.5.9` to preserve the synchronous v1 runner protocol.
+
+First run the offline preflight:
+
+```bash
+python scripts/verify_wave5_core.py --preflight
+```
+
+It invokes no provider and emits no verification receipt. Exit 2 means SDK or
+authentication configuration is missing. Once authenticated execution is
+available, the fixed invocation is:
+
+```bash
+python scripts/verify_wave5_core.py --output evidence/wave5-vercel-run.json
+```
+
+The output path must not already exist. No revision override is accepted.
+
+On complete GREEN, stdout and the optional file contain a v2 JSON object binding:
 
 - verification manifest + digest;
 - Vercel Sandbox spec + digest;
 - conformance run + digest;
 - admitted CoreVerificationReceipt + digest.
 
-Any source-revision mismatch, failed command, failed pytest, failed shutdown, or inconsistent evidence raises/fails instead of fabricating a receipt.
+Exit 0 / `PASS` includes an admitted receipt. Exit 1 / `FAIL` retains the
+conformance run without a receipt. Exit 2 / `ERROR` preserves only safe error
+classification when no complete conformance run could be returned; the provider
+state must be reconciled before another attempt. Exception messages and credentials
+are never serialized. Shutdown is awaited with the SDK's blocking stop.
+
+Any source-revision mismatch, failed command, failed pytest, failed shutdown, or
+inconsistent evidence prevents a receipt. No automatic retry is performed.
 
 ## Authority boundary
 

@@ -8,12 +8,20 @@ would not close the gate.
 | --- | --- | --- |
 | `8f6494eca2c730de49b2e6ebfeb085cad1f33744` | 289 passed, 16 failed | local Python 3.13.15 |
 | `6cad261424c9f28e3b6651e656c6adafdb6954ee` | 318 passed, 17 failed | local Python 3.13.15 |
-| Corrected source, bound by file hashes in evidence | 345 passed, 0 failed | local Python 3.13.15 |
+| `04a47cd7031b608368de15ec2c99ccc715eb6cbf` | 345 passed, 0 failed | local Python 3.13.15 |
 
 These are full-repository executions with actual package imports. No shim,
 test exclusion, skipped failing test, synthetic provider run, or Vercel receipt
 is represented as external evidence. Logs and JUnit results are retained in
 `evidence/durable-execution/2026-09-26/`.
+
+The complete JUnit files are authoritative for case counts and individual
+failures. The `candidate-before.log` stdout capture is partial; the corresponding
+JUnit file retains all 335 cases and all 17 failures.
+
+The [development checkpoint](../checkpoints/durable-execution-2026-09-26.json)
+binds every tested Python/configuration file to the frozen Git commit and
+records the provider blocker plus the exact next invocation.
 
 ## Corrections
 
@@ -57,7 +65,7 @@ The Work terminal has no Vercel token/OIDC configuration. The user attempted
 sign-in unsuccessfully and authorized continued work without it.
 
 The old Wave 5 SHA must remain recorded as a rejected local regression target.
-A subsequent checkpoint freezes the corrected Git SHA and explicitly rebinds
+The subsequent checkpoint freezes the corrected Git SHA and explicitly rebinds
 the harness and CORE-1 fixture to that source. This is candidate repair,
 not admission of the failed source or relaxation of the verifier.
 

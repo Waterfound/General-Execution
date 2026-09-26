@@ -15,10 +15,14 @@ Its job is to answer one question:
 CORE-1 must remain closed until an exact-source Vercel Sandbox conformance run for:
 
 ```text
-8f6494eca2c730de49b2e6ebfeb085cad1f33744
+04a47cd7031b608368de15ec2c99ccc715eb6cbf
 ```
 
 is admitted through `CoreVerificationManifest -> CoreVerificationReceipt`.
+
+This repaired target supersedes `8f6494eca2c730de49b2e6ebfeb085cad1f33744`,
+which failed local full regression. The Vercel requirement is unchanged; see
+`durable-execution-work-resumption-2026-09-26.md` for the failure and repair evidence.
 
 Required verifier contract:
 
