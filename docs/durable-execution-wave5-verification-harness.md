@@ -2,7 +2,7 @@
 
 ## Purpose
 
-`scripts/verify_wave5_core.py` is the single fixed entry point for closing the Durable Execution Wave 5 executable gate.
+`scripts/verify_wave5_core.py` on the development checkpoint is the fixed controller for the Durable Execution Wave 5 executable gate. The isolated operational branch uses `ops/verify_wave5_candidate.py`, a byte-identical copy of that controller frozen at `53bd734ef3faeccc2618058c742bc3c92572bcdc`.
 
 It does not accept a revision, repository, command list, suite, test path, verifier, or minimum test count from the caller.
 
@@ -111,3 +111,22 @@ It does not authorize:
 - provider trigger activation.
 
 CORE-1 must still pass separately.
+
+## Operational deployment checkpoint — 2026-09-26
+
+Deploy `ops/wave5-vercel-verification` at `0949c447d988caaf7f083cb6d2798cfd2301c018`.
+The original operational commit `aa1fd573...` must not be deployed: because it was
+based on the immutable candidate, its candidate-internal historical script still
+targets the rejected `8f6494...` source. This discrepancy was proved before any
+Sandbox invocation.
+
+The corrected ops branch adds a separate entrypoint with the fixed `04a47cd...`
+target; all 100 candidate files remain byte-identical. Its only delta from the
+candidate is `ops/verify_wave5_candidate.py` and `vercel.json`. Preflight JSON is
+retained in both stdout and an exclusive file, so a failing build retains the
+non-secret preflight evidence. No endpoint, cron, or runtime trigger is added.
+
+The local preflight confirmed SDK compatibility and returned exit 2 because no
+Vercel authentication was configured. The browser also redirected to login.
+No external run or CoreVerificationReceipt exists. See
+`../evidence/durable-execution/2026-09-26/ops-binding-repair.json`.

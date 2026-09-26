@@ -1,0 +1,63 @@
+{
+  "build_preflight_output_retained_in_file_and_stdout": true,
+  "candidate_files_unchanged": 100,
+  "candidate_revision": "04a47cd7031b608368de15ec2c99ccc715eb6cbf",
+  "candidate_source_mutated": false,
+  "candidate_tree": "823c81c75aac5f343980b98e52bd8dc493779b96",
+  "deployment_created": false,
+  "entrypoint_ast_identical_to_candidate_except_revision": true,
+  "entrypoint_byte_identical_to_canonical_controller": true,
+  "failure_stage": "static_predeployment_target_binding",
+  "first_divergence": "Operational build invoked the candidate-internal historical harness, whose frozen target is superseded.",
+  "local_auth_presence": {
+    "VERCEL_OIDC_TOKEN": false,
+    "VERCEL_PROJECT_ID": false,
+    "VERCEL_TEAM_ID": false,
+    "VERCEL_TOKEN": false
+  },
+  "operational_contract_tests": {
+    "environment": "local Python 3.12.14",
+    "errors": 0,
+    "evidence": "evidence/durable-execution/2026-09-26/ops-harness-contract.xml",
+    "evidence_sha256": "556ede510310c9884e621cdecbf29bda14e08b2213e1047305624507878f3ee0",
+    "failures": 0,
+    "scope": [
+      "tests/test_wave5_harness.py",
+      "tests/test_vercel_sandbox_conformance.py"
+    ],
+    "skipped": 0,
+    "status": "PASS",
+    "tests": 19
+  },
+  "operational_delta": [
+    "ops/verify_wave5_candidate.py",
+    "vercel.json"
+  ],
+  "original_observed_target": "8f6494eca2c730de49b2e6ebfeb085cad1f33744",
+  "original_ops_revision": "aa1fd573bd66952ab56e3f007dd360520daa29aa",
+  "preflight": {
+    "exit_code": 2,
+    "payload": {
+      "authentication_configured": false,
+      "provider_invoked": false,
+      "receipt": null,
+      "schema_version": "ge.wave5-preflight.v1",
+      "sdk_compatible": true,
+      "sdk_version": "0.5.9",
+      "target_revision": "04a47cd7031b608368de15ec2c99ccc715eb6cbf"
+    }
+  },
+  "provider_invoked": false,
+  "receipt_digest": null,
+  "recorded_at": "2026-09-26T13:11:52.399275+00:00",
+  "repair_entrypoint": "ops/verify_wave5_candidate.py",
+  "repair_entrypoint_sha256": "a280d571f381579396040a222db384ffcb9b0733b6524fb621b1be0c640569d1",
+  "repair_source_path": "scripts/verify_wave5_core.py",
+  "repair_source_revision": "53bd734ef3faeccc2618058c742bc3c92572bcdc",
+  "repaired_ops_revision": "0949c447d988caaf7f083cb6d2798cfd2301c018",
+  "revision_verified": null,
+  "sandbox_id": null,
+  "schema_version": "ge.wave5-ops-binding-repair.v1",
+  "shutdown_status": "not_applicable_no_sandbox_created",
+  "verification_boundary": "Operational validation only. Does not constitute external Wave5 PASS or a CoreVerificationReceipt."
+}

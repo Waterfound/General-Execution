@@ -1,8 +1,8 @@
 # Durable Execution — Work resumption, 2026-09-26
 
-The exact Wave 5 source was retrieved and executed locally in Python 3.13.
-It is **not a green candidate**. Updating the remote runner's binding alone
-would not close the gate.
+The original Wave 5 source was retrieved and failed full local regression in
+Python 3.13. The repaired immutable candidate `04a47cd...` subsequently passed
+345 local tests. Its external Vercel gate remains pending.
 
 | Source | Result | Environment |
 | --- | --- | --- |
@@ -76,3 +76,30 @@ confirmed shutdown. Local results do not open the Vercel receipt interlock.
 CORE-1 remains unexecuted. Provider triggers and unattended runtime remain
 disabled. No merge, release, broader systems integration, spending, or
 production authority was inferred from the local PASS.
+
+## Operational continuation at 13:00 UTC — 2026-09-26
+
+Remote GitHub state confirmed main `ccc616ea...`, development `53bd734...`, and
+ops `aa1fd573...` before work. Inspection found the ops build invoked the
+candidate-internal harness frozen to superseded `8f6494...`, despite the ops
+branch being based on candidate `04a47cd...`. The branch base alone does not
+prove the revision executed inside Sandbox.
+
+Ops repair `0949c447d988caaf7f083cb6d2798cfd2301c018` adds a separate copy of the
+correct controller harness and binds the build to it. The candidate remains
+immutable; byte comparison verified all 100 files and the original candidate
+tree `823c81c75aac5f343980b98e52bd8dc493779b96`. The copied controller is byte
+identical to development checkpoint `53bd734...`; its executable AST differs
+from the candidate-internal harness only in the frozen target constant.
+
+Nineteen local harness/conformance contract tests passed on Python 3.12.14.
+These use unit provider doubles and are not external receipts. The historical
+345/345 Python 3.13 candidate regression is unchanged. Live SDK preflight
+confirmed `vercel==0.5.9` compatibility but stopped before provider invocation
+with exit 2 because authentication was absent.
+
+The Vercel browser redirected to login. The connector still reads the legacy
+project, whose deployment is unchanged. No deployment or Sandbox was created,
+no shutdown was required, no receipt was admitted, and CORE-1 remains 0/13
+executed. The active frontier is still `wave5-external-verification-gate`;
+this bounded operational repair does not require a planning rerun.
