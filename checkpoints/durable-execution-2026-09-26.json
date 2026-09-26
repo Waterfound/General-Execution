@@ -40,14 +40,14 @@
     "tests": 345
   },
   "next_action": {
-    "entrypoint": "python scripts/verify_wave5_core.py --output evidence/wave5-vercel-run.json",
-    "executor": "authenticated Vercel Sandbox",
-    "on_error": "Reconcile provider state before another attempt",
-    "on_fail": "Retain failure artifact, do not retry automatically, diagnose the failed stage",
-    "on_pass": "Admit exact receipt, then execute CORE-1 and collect all 13 assertion proofs"
+    "entrypoint": "deploy ops/wave5-vercel-verification @ aa1fd573bd66952ab56e3f007dd360520daa29aa to authenticated Vercel project",
+    "executor": "Vercel build -> one-shot authenticated Vercel Sandbox",
+    "on_error": "Retain deployment/build evidence; reconcile provider state before another attempt",
+    "on_fail": "Retain wave5-verification artifact, do not retry automatically, diagnose the failed stage",
+    "on_pass": "Admit exact CoreVerificationReceipt for 04a47cd7031b608368de15ec2c99ccc715eb6cbf, then execute CORE-1 and collect all 13 assertion proofs"
   },
   "previous_candidate": "6cad261424c9f28e3b6651e656c6adafdb6954ee",
-  "recorded_at": "2026-09-26T04:00:57.829172+00:00",
+  "recorded_at": "2026-09-26T04:25:18Z",
   "schema_version": "ge.durable-development-checkpoint.v1",
   "source_publication": {
     "identical_git_tree": "823c81c75aac5f343980b98e52bd8dc493779b96",
@@ -59,9 +59,10 @@
   "tested_source_revision": "04a47cd7031b608368de15ec2c99ccc715eb6cbf",
   "vercel_gate": {
     "blockers": [
-      "No terminal Vercel token/OIDC configuration",
-      "Browser is not authenticated; user attempted login unsuccessfully",
-      "Connector deploy tool returned Tool deploy_to_vercel not found"
+      "Connected Vercel app can read/call deployments but its advertised deploy_to_vercel write action is unavailable server-side",
+      "Legacy general-execution-colony-runner source is not Git-backed/indexed and its /api/run is hardcoded to ccc616ea77e6345b6fa3c61448cf17958fefba3d",
+      "Deployment source-files REST endpoint is not authorized through the connected Vercel app",
+      "No General-Execution Git-linked Vercel project auto-deployed ops/wave5-vercel-verification"
     ],
     "confirmed_shutdown_required": true,
     "full_repository_pytest_required": true,
@@ -71,8 +72,22 @@
     "receipt": null,
     "required_revision": "04a47cd7031b608368de15ec2c99ccc715eb6cbf",
     "required_verifier": "verifier://vercel-sandbox-conformance/v1",
-    "status": "BLOCKED_EXTERNAL_EXECUTION",
+    "status": "BLOCKED_DEPLOYMENT_AUTH_SURFACE",
     "suite_ref": "tests://durable-execution/wave5-asp/full-repository",
     "team_id": "team_MHwznJgPOms2fJdgTInc1WZG"
+  },
+  "operational_runner": {
+    "branch": "ops/wave5-vercel-verification",
+    "commit": "aa1fd573bd66952ab56e3f007dd360520daa29aa",
+    "base_candidate": "04a47cd7031b608368de15ec2c99ccc715eb6cbf",
+    "delta": [
+      "vercel.json"
+    ],
+    "mode": "one-shot-build-time-verifier",
+    "public_repeatable_endpoint": false,
+    "preflight_before_provider_invocation": true,
+    "candidate_source_mutated": false,
+    "auto_deployment_detected": false,
+    "status": "READY_FOR_DEPLOYMENT"
   }
 }
