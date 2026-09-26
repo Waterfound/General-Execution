@@ -1,0 +1,5 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "mkdir -p public && python3 -m pip install -e '.[vercel-sandbox]' --disable-pip-version-check && python3 scripts/verify_wave5_core.py --preflight > public/preflight.json && python3 scripts/verify_wave5_core.py --output public/wave5-verification.json",
+  "outputDirectory": "public"
+}
