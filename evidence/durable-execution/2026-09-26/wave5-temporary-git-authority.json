@@ -1,0 +1,24 @@
+{
+  "schema_version": "ge.wave5-temporary-git-authority.v1",
+  "recorded_at": "2026-09-26T21:05:00Z",
+  "user_authority": "Explicitly authorized temporary Git connection for Wave5 verification.",
+  "repository": "Waterfound/General-Execution",
+  "vercel_project": "general-execution-colony-runner",
+  "candidate": "04a47cd7031b608368de15ec2c99ccc715eb6cbf",
+  "ops_revision": "03f3d455be7910fc3d02ce7085b2934122a9616a",
+  "ops_parent": "0949c447d988caaf7f083cb6d2798cfd2301c018",
+  "ops_change_only": "vercel.json git.deploymentEnabled scope hardening",
+  "deployment_scope": {
+    "*": false,
+    "ops/wave5-vercel-verification*": true
+  },
+  "main_production_authorized": false,
+  "merge_authorized": false,
+  "release_authorized": false,
+  "new_spending_authorized": false,
+  "disconnect_after_verification": true,
+  "connection_created": false,
+  "deployment_created": false,
+  "receipt": null,
+  "core1_executed": false
+}

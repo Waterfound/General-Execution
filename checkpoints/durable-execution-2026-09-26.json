@@ -1,0 +1,143 @@
+{
+  "authority": {
+    "main_modified": false,
+    "merge_authorized": false,
+    "new_spending_authorized": false,
+    "provider_trigger_enabled": false,
+    "release_authorized": false,
+    "unattended_runtime_enabled": false,
+    "temporary_verification_git_connection_authorized": true,
+    "temporary_verification_git_trigger_scope": "ops/wave5-vercel-verification* only"
+  },
+  "branch": "feature/durable-asp-portfolio-state",
+  "core1": {
+    "assertions_proven": 0,
+    "blocked_by": "CoreVerificationReceipt for exact candidate is absent",
+    "fixture": "rehearsals/core1-v1.json",
+    "required_assertions": [
+      "bounded_retry",
+      "checkpoint_reconstruction",
+      "cold_resume",
+      "cost_security_authority_stop",
+      "duplicate_tick_idempotent",
+      "external_blocker_parking",
+      "human_gate_stop",
+      "no_chat_dependency",
+      "no_hidden_authority",
+      "passive_wake_admission",
+      "stale_write_rejected",
+      "unknown_failure_single_reproduction",
+      "verified_secondary_promotion"
+    ],
+    "status": "PREPARED_NOT_EXECUTED"
+  },
+  "local_regression": {
+    "compileall": "PASS",
+    "errors": 0,
+    "evidence_path": "evidence/durable-execution/2026-09-26/local-regression.json",
+    "failures": 0,
+    "file_hashes_match_frozen_git_commit": true,
+    "python": "3.13.15",
+    "skipped": 0,
+    "sqlite": "3.53.1",
+    "status": "PASS",
+    "tests": 345
+  },
+  "next_action": {
+    "entrypoint": "In authenticated Work browser, connect Waterfound/General-Execution temporarily to Vercel project general-execution-colony-runner; do not deploy/promote main. Return once Connected Git Repository is confirmed.",
+    "executor": "After connection, normal chat will create a one-shot trigger branch at ops SHA 03f3d455be7910fc3d02ce7085b2934122a9616a, observe preview deployment, fetch verification artifacts, then continue receipt -> CORE-1.",
+    "on_error": "If connection unexpectedly creates or promotes a production deployment, stop and preserve evidence; do not continue.",
+    "on_fail": "Retain verification artifact; do not admit receipt; diagnose first failed stage.",
+    "on_pass": "Admit exact CoreVerificationReceipt for 04a47cd7031b608368de15ec2c99ccc715eb6cbf, execute CORE-1, require 13/13, externalize evidence, disconnect Git integration."
+  },
+  "operational_runner": {
+    "auto_deployment_detected": false,
+    "base_candidate": "04a47cd7031b608368de15ec2c99ccc715eb6cbf",
+    "branch": "ops/wave5-vercel-verification",
+    "candidate_source_mutated": false,
+    "commit": "03f3d455be7910fc3d02ce7085b2934122a9616a",
+    "delta": [
+      "ops/verify_wave5_candidate.py",
+      "vercel.json"
+    ],
+    "entrypoint": "ops/verify_wave5_candidate.py",
+    "entrypoint_provenance": "byte-identical copy of scripts/verify_wave5_core.py at 53bd734ef3faeccc2618058c742bc3c92572bcdc",
+    "entrypoint_target_revision": "04a47cd7031b608368de15ec2c99ccc715eb6cbf",
+    "mode": "one-shot-build-time-verifier",
+    "preflight_before_provider_invocation": true,
+    "public_repeatable_endpoint": false,
+    "repair_evidence": "evidence/durable-execution/2026-09-26/ops-binding-repair.json",
+    "status": "GIT_SCOPE_HARDENED_AWAITING_TEMPORARY_CONNECTION",
+    "superseded_ops_commit": "aa1fd573bd66952ab56e3f007dd360520daa29aa",
+    "git_deployment_scope": {
+      "default": false,
+      "allowed_pattern": "ops/wave5-vercel-verification*",
+      "production_main_allowed": false
+    }
+  },
+  "previous_candidate": "6cad261424c9f28e3b6651e656c6adafdb6954ee",
+  "previous_checkpoint": "2b59084409bce966ede6e2767bac406233185f30",
+  "recorded_at": "2026-09-26T21:05:00Z",
+  "schema_version": "ge.durable-development-checkpoint.v1",
+  "source_publication": {
+    "identical_git_tree": "823c81c75aac5f343980b98e52bd8dc493779b96",
+    "local_tested_commit": "525fb5bebd8f7dfc07faf1ef2e5e5d6a88dd4aae",
+    "published_candidate_commit": "04a47cd7031b608368de15ec2c99ccc715eb6cbf",
+    "transport": "GitHub connector Git Data API; terminal push unavailable"
+  },
+  "superseded_failed_target": "8f6494eca2c730de49b2e6ebfeb085cad1f33744",
+  "tested_source_revision": "04a47cd7031b608368de15ec2c99ccc715eb6cbf",
+  "vercel_gate": {
+    "auth_observation": "evidence/durable-execution/2026-09-26/vercel-auth-surface.json",
+    "blockers": [
+      "Normal-chat Vercel connector exposes no functional Git-connect/project-write action; the remaining connection click must occur in the authenticated Work browser.",
+      "No Git connection is yet evidenced on the Vercel project."
+    ],
+    "confirmed_shutdown_required": true,
+    "deployment_id": null,
+    "full_repository_pytest_required": true,
+    "last_preflight_exit_code": 2,
+    "minimum_focused_tests": 18,
+    "observed_revision": null,
+    "project_id": "prj_0eyS5MBoYLjAMpWmHMJGBv5cjdIK",
+    "provider_invoked_this_session": false,
+    "receipt": null,
+    "receipt_digest": null,
+    "required_revision": "04a47cd7031b608368de15ec2c99ccc715eb6cbf",
+    "required_verifier": "verifier://vercel-sandbox-conformance/v1",
+    "revision_verified": null,
+    "shutdown_status": "not_applicable_no_sandbox_created",
+    "status": "AUTHORIZED_AWAITING_TEMPORARY_GIT_CONNECTION",
+    "suite_ref": "tests://durable-execution/wave5-asp/full-repository",
+    "team_id": "team_MHwznJgPOms2fJdgTInc1WZG",
+    "browser_auth_context_observation": "evidence/durable-execution/2026-09-26/work-browser-cli-deploy-boundary.json",
+    "temporary_git_connection_authorized": true,
+    "authorized_project": "general-execution-colony-runner",
+    "authorized_repository": "Waterfound/General-Execution",
+    "authorized_branch_pattern": "ops/wave5-vercel-verification*",
+    "disconnect_after_verification": true
+  },
+  "execution_surface_exhaustion": {
+    "status": "NORMAL_CHAT_SURFACES_EXHAUSTED",
+    "observations": [
+      "Vercel MCP deploy_to_vercel remains advertised but server returns Tool not found.",
+      "Vercel MCP get_deployment_build_logs remains advertised but server returns Tool not found.",
+      "Vercel MCP get_project has a server-side schema mismatch and is unusable for deeper project inspection.",
+      "Normal-chat browser automation does not inherit the authenticated Work browser session and redirects to Vercel login.",
+      "GitHub Actions runs on Build-Colony fail before any step starts; jobs expose steps=null/logs_url=null, so a one-shot Vercel OAuth workflow cannot execute there.",
+      "Local container/runtime cannot resolve api.vercel.com/vercel.com/npm registry, so Vercel CLI or direct REST OAuth cannot be executed from this runtime."
+    ],
+    "candidate_software_change_required": false,
+    "replan_required": false,
+    "only_remaining_execution_surface": "authenticated Work browser/session",
+    "exact_next_action": "In Work, deploy ops/wave5-vercel-verification @ 0949c447d988caaf7f083cb6d2798cfd2301c018 as isolated preview, then continue through exact-candidate Sandbox verification, clean shutdown, CoreVerificationReceipt, and CORE-1 13/13.",
+    "work_followup": {
+      "evidence_path": "evidence/durable-execution/2026-09-26/work-browser-cli-deploy-boundary.json",
+      "browser_auth_confirmed": true,
+      "cli_network_available": true,
+      "cli_authenticated": false,
+      "git_connection_approval_denied": true,
+      "deployment_created": false
+    }
+  }
+}
