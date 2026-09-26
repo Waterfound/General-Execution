@@ -42,11 +42,11 @@
     "tests": 345
   },
   "next_action": {
-    "entrypoint": "authenticate a persistent normal-chat browser profile to Waterfound Vercel, then deploy ops/wave5-vercel-verification @ 0949c447d988caaf7f083cb6d2798cfd2301c018",
-    "executor": "authenticated persistent browser profile -> isolated Vercel preview -> one-shot authenticated Vercel Sandbox",
-    "on_error": "Retain browser/deployment evidence; do not retry blindly",
-    "on_fail": "Retain verification artifact, diagnose first failed stage, no automatic retry",
-    "on_pass": "Admit exact CoreVerificationReceipt for 04a47cd7031b608368de15ec2c99ccc715eb6cbf, then execute CORE-1 and collect all 13 assertion proofs"
+    "entrypoint": "resume authenticated Work browser session",
+    "executor": "Work browser -> isolated Vercel preview for ops/wave5-vercel-verification @ 0949c447d988caaf7f083cb6d2798cfd2301c018 -> one-shot Vercel Sandbox",
+    "on_error": "Retain deployment/build evidence; diagnose first divergence only; no blind retry",
+    "on_fail": "Retain wave5 verification artifact; do not admit receipt; do not run CORE-1",
+    "on_pass": "Admit exact CoreVerificationReceipt for 04a47cd7031b608368de15ec2c99ccc715eb6cbf, execute CORE-1, require 13/13, externalize evidence, reconcile Build Colony"
   },
   "operational_runner": {
     "auto_deployment_detected": false,
@@ -70,7 +70,7 @@
   },
   "previous_candidate": "6cad261424c9f28e3b6651e656c6adafdb6954ee",
   "previous_checkpoint": "53bd734ef3faeccc2618058c742bc3c92572bcdc",
-  "recorded_at": "2026-09-26T14:50:00Z",
+  "recorded_at": "2026-09-26T15:20:00Z",
   "schema_version": "ge.durable-development-checkpoint.v1",
   "source_publication": {
     "identical_git_tree": "823c81c75aac5f343980b98e52bd8dc493779b96",
@@ -83,12 +83,10 @@
   "vercel_gate": {
     "auth_observation": "evidence/durable-execution/2026-09-26/vercel-auth-surface.json",
     "blockers": [
-      "Connected Vercel app can read/call deployments but its advertised deploy_to_vercel write action is unavailable server-side",
-      "Legacy general-execution-colony-runner source is not Git-backed/indexed and its /api/run is hardcoded to ccc616ea77e6345b6fa3c61448cf17958fefba3d",
-      "Deployment source-files REST endpoint is not authorized through the connected Vercel app",
-      "No General-Execution Git-linked Vercel project auto-deployed ops/wave5-vercel-verification",
-      "Work browser redirects to login; Work terminal has no Vercel token/OIDC authentication.",
-      "Work browser Vercel authentication is not shared with the normal-chat browser automation context; normal-chat browser redirected to Vercel login."
+      "Normal-chat Vercel write tools are unavailable server-side despite being advertised.",
+      "Normal-chat browser session is not authenticated and does not inherit Work browser authentication.",
+      "GitHub Actions runner path is structurally unavailable before job steps begin.",
+      "Local runtime has no external DNS/network path for Vercel CLI/API."
     ],
     "confirmed_shutdown_required": true,
     "deployment_id": null,
@@ -104,9 +102,24 @@
     "required_verifier": "verifier://vercel-sandbox-conformance/v1",
     "revision_verified": null,
     "shutdown_status": "not_applicable_no_sandbox_created",
-    "status": "BLOCKED_DEPLOYMENT_AUTH_SURFACE",
+    "status": "BLOCKED_WORK_BROWSER_EXECUTION_SURFACE",
     "suite_ref": "tests://durable-execution/wave5-asp/full-repository",
     "team_id": "team_MHwznJgPOms2fJdgTInc1WZG",
     "browser_auth_context_observation": "evidence/durable-execution/2026-09-26/browser-auth-context-separation.json"
+  },
+  "execution_surface_exhaustion": {
+    "status": "NORMAL_CHAT_SURFACES_EXHAUSTED",
+    "observations": [
+      "Vercel MCP deploy_to_vercel remains advertised but server returns Tool not found.",
+      "Vercel MCP get_deployment_build_logs remains advertised but server returns Tool not found.",
+      "Vercel MCP get_project has a server-side schema mismatch and is unusable for deeper project inspection.",
+      "Normal-chat browser automation does not inherit the authenticated Work browser session and redirects to Vercel login.",
+      "GitHub Actions runs on Build-Colony fail before any step starts; jobs expose steps=null/logs_url=null, so a one-shot Vercel OAuth workflow cannot execute there.",
+      "Local container/runtime cannot resolve api.vercel.com/vercel.com/npm registry, so Vercel CLI or direct REST OAuth cannot be executed from this runtime."
+    ],
+    "candidate_software_change_required": false,
+    "replan_required": false,
+    "only_remaining_execution_surface": "authenticated Work browser/session",
+    "exact_next_action": "In Work, deploy ops/wave5-vercel-verification @ 0949c447d988caaf7f083cb6d2798cfd2301c018 as isolated preview, then continue through exact-candidate Sandbox verification, clean shutdown, CoreVerificationReceipt, and CORE-1 13/13."
   }
 }
