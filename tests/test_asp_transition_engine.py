@@ -3,7 +3,7 @@ from dataclasses import replace
 import pytest
 
 from general_execution import (
-    AspTransitionError,
+    SignalAspTransitionError as AspTransitionError,
     CheckpointEvidence,
     PassiveWakeSignal,
     PortfolioBlocker,
@@ -12,7 +12,7 @@ from general_execution import (
     TransitionPolicy,
     TransitionRule,
     WakeCondition,
-    admit_passive_wake,
+    admit_passive_wake_signal as admit_passive_wake,
     apply_asp_transition,
 )
 

@@ -251,7 +251,7 @@ def test_tick_observation_is_bound_to_transition_policy(tmp_path):
             state.portfolio_id,
             p,
             wrong,
-            required_core_revision=WAVE5_REVISION,
+            core_requirement=requirement(),
             core_verification=receipt(),
         )
 

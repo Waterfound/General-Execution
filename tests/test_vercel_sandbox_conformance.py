@@ -187,6 +187,19 @@ def test_stop_failure_is_evidence_and_prevents_all_passed():
     assert verify_vercel_sandbox_conformance_run(spec, run)
 
 
+def test_sdk_stop_waits_for_confirmed_termination():
+    class BlockingSandbox(FakeSandbox):
+        def stop(self, *, blocking=False):
+            assert blocking is True
+            self.stop_called = True
+
+    sandbox = BlockingSandbox(successful_results())
+    run = run_vercel_sandbox_conformance(
+        VercelSandboxConformanceSpec(REVISION), sandbox_factory=factory_for(sandbox),
+    )
+    assert sandbox.stop_called and run.stopped and run.all_passed
+
+
 def test_credentials_are_used_for_factory_but_never_enter_run_evidence():
     spec = VercelSandboxConformanceSpec(REVISION)
     captured = []

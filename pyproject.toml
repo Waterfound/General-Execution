@@ -14,7 +14,9 @@ dependencies = []
 
 [project.optional-dependencies]
 dev = ["pytest>=8"]
-vercel-sandbox = ["vercel"]
+# The v1 conformance protocol uses the synchronous Sandbox.create API.
+# New SDK generations change both this API and the default VM image.
+vercel-sandbox = ["vercel==0.5.9"]
 
 [tool.setuptools]
 package-dir = {"" = "src"}

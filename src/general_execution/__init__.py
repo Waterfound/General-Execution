@@ -27,10 +27,10 @@ from .asp_transition import (
 from .canonical import canonical_json, sha256_digest, stable_id
 from .asp_transition_engine import (
     AspTransitionApplication,
-    AspTransitionError,
-    PassiveWakeAdmission,
+    AspTransitionError as SignalAspTransitionError,
+    PassiveWakeAdmission as SignalPassiveWakeAdmission,
     PassiveWakeSignal,
-    admit_passive_wake,
+    admit_passive_wake as admit_passive_wake_signal,
     apply_asp_transition,
 )
 from .core_rehearsal import (
@@ -264,7 +264,6 @@ from .vercel_sandbox import (
 
 __all__ = [
     "AdapterDispatchRequest",
-    "AspTransitionError",
     "AdapterError",
     "AdapterReceipt",
     "ArtifactRef",
@@ -326,7 +325,8 @@ __all__ = [
     "PassiveWakeAdmission",
     "PassiveWakeSignal",
     "PortfolioTransitionResult",
-    "PassiveWakeAdmission",
+    "SignalAspTransitionError",
+    "SignalPassiveWakeAdmission",
     "ProviderConformanceCaseResult",
     "ProviderConformanceEvidence",
     "ProviderConformanceRun",
@@ -387,7 +387,7 @@ __all__ = [
     "admit_observation",
     "admit_vercel_core_verification",
     "admit_passive_wake",
-    "admit_passive_wake",
+    "admit_passive_wake_signal",
     "admit_physical_observation",
     "admit_reconciliation_observation",
     "append_event",

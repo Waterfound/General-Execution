@@ -360,7 +360,12 @@ def run_vercel_sandbox_conformance(
                 break
     finally:
         try:
-            stop_result = sandbox.stop()
+            # The pinned SDK defaults to a non-blocking stop request. Wait for
+            # provider-confirmed termination before admitting clean shutdown.
+            if "blocking" in inspect.signature(sandbox.stop).parameters:
+                stop_result = sandbox.stop(blocking=True)
+            else:
+                stop_result = sandbox.stop()
             if inspect.isawaitable(stop_result):
                 raise VercelSandboxConformanceError("sync conformance runner received asynchronous stop result")
             stopped = True
