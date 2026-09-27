@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:273c3048a7574839b047a27e42b8dfd85f12cce73b1352ff7e7c82663db2da06",
+  "event_id": "runtime-final-source-pin-bootstrap-001",
+  "event_report_digest": "sha256:78579d44efa9e192e3a4af59a18c1ffd56dac064055a0993fea09e0cc64d53b2",
+  "operation": "bootstrap",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "d58b07fedf76c67c0a4cede9d4665c8d1b9444a6"
+}
