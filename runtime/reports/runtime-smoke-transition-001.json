@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:b83d0ce9dd1280173e5e68501a921f90387ff3bdd003a5d62e08c1470de64293",
+  "event_report": {
+    "checkpoint_digest": "sha256:ccc0a4dd2556c1591392ea9c257c3e5878f00af0378280dc294b7c39525bb559",
+    "event_id": "runtime-smoke-transition-001",
+    "human_required": true,
+    "operation": "transition",
+    "portfolio_id": "durable-runtime-smoke",
+    "post_generation": 1,
+    "post_state_digest": "sha256:703b6cbc7cec457190364af0d1c2e465c652d544397e1cb05ae6636bc4d65545",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:9f18fa5a57cb5294ca3472a1c2a701fdcae7554f03f43ba0844fab9be4f98af9",
+    "requested_action_ref": "authority://persistent-runtime-smoke",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "committed"
+  },
+  "event_report_digest": "sha256:8fd9d076a97496a6b19e044ad5001943d722d9c1dec2ec5068eb00bcfa971eba",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
