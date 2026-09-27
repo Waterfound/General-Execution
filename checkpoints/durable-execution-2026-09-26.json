@@ -47,12 +47,10 @@
     "tests": 345
   },
   "next_action": {
-    "frontier": "unattended-pilot",
-    "mode": "real bounded provider-triggered pilot",
-    "provider_activation_authorized": false,
-    "unattended_pilot_authorized": false,
-    "authority_gate": "Await explicit user authorization to activate one bounded real pilot. No release/main/production/spend authority is implied.",
-    "on_authorize": "Activate only the minimum trigger surface needed for a one-shot bounded pilot; preserve 1 Active + 1 Secondary + N Passive policy, independent verification, durable checkpointing, and stop at the predeclared human authority gate."
+    "frontier": null,
+    "mode": "frozen Durable ASP plan reached verified ceiling",
+    "authority_gate": "Any move toward persistent unattended activation, merge to main, release, production deployment, broader provider triggers, or new spending requires a separate explicit authority decision.",
+    "automatic_continuation": false
   },
   "operational_runner": {
     "auto_deployment_detected": false,
@@ -80,8 +78,8 @@
     }
   },
   "previous_candidate": "6cad261424c9f28e3b6651e656c6adafdb6954ee",
-  "previous_checkpoint": "8bd50c4cc1444e2a0c8e182055803be9b2cd3fc2",
-  "recorded_at": "2026-09-27T15:14:00Z",
+  "previous_checkpoint": "f717d64448561ff6dcd28400a0fbf69732685b9c",
+  "recorded_at": "2026-09-27T15:31:00Z",
   "schema_version": "ge.durable-development-checkpoint.v1",
   "source_publication": {
     "identical_git_tree": "823c81c75aac5f343980b98e52bd8dc493779b96",
@@ -197,13 +195,17 @@
     "activation_authorized": false
   },
   "unattended_pilot": {
-    "schema_version": "ge.unattended-pilot-preflight-validation.v1",
-    "status": "PREFLIGHT_PASS_NOT_ACTIVATED",
-    "evidence_path": "evidence/durable-execution/2026-09-27/unattended-pilot-preflight-validation.json",
+    "schema_version": "ge.unattended-pilot-live-validation.v1",
+    "status": "PASS_VERIFIED",
+    "evidence_path": "evidence/durable-execution/2026-09-27/unattended-pilot-live-validation.json",
+    "canonical_report_path": "evidence/durable-execution/2026-09-27/unattended-pilot-live-report.json",
+    "provider": "github_actions",
+    "provider_run_id": 36329375324,
+    "provider_job_id": 108648260843,
+    "trigger_commit": "e14e52cc7882e01a18c4cad5849ce76f01207e18",
     "tested_revision": "1827175ba7b926dfabaeca57791f83595ece11e0",
-    "github_actions_run_id": 36328650357,
-    "github_actions_job_id": 108646205967,
-    "focused_tests": 2,
+    "report_digest": "sha256:af7fa8aeef5b9703b140d5d77e387cedbcd8d9b2afe736ee5e745e839546129d",
+    "artifact_digest": "sha256:13cd0d5d7dd37ec337095d96a4ae4c61eb9933f154aa798135919817467a78f7",
     "full_repository_tests": 378,
     "process_invocations": 8,
     "state_transitions": 5,
@@ -212,8 +214,30 @@
     "authority_stop": true,
     "human_required": true,
     "chat_context_required": false,
-    "provider_trigger_enabled": false,
-    "unattended_runtime_enabled": false,
-    "real_activation_authorized": false
+    "bounded_unattended_execution_observed": true,
+    "provider_trigger_cleaned_up": true,
+    "persistent_provider_trigger_enabled": false,
+    "persistent_unattended_runtime_enabled": false
+  },
+  "portfolio_status": {
+    "frozen_plan_domains_verified": [
+      "baseline-audit",
+      "portfolio-state-contract",
+      "checkpoint-contract",
+      "transition-policy-contract",
+      "bounded-retry-authority",
+      "portfolio-persistence",
+      "asp-transition-engine",
+      "resume-tick-runtime",
+      "core-rehearsal",
+      "external-trigger-adapter",
+      "thin-envelope-escalation",
+      "verification-escalation",
+      "unattended-pilot"
+    ],
+    "pending_domains": [],
+    "failed_domains": [],
+    "project_goal_evidence_complete": true,
+    "main_modified": false
   }
 }
