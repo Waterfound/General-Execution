@@ -1,0 +1,46 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "runtime-protection-smoke-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "durable-runtime-protection-smoke",
+      "generation": 0,
+      "active": {
+        "work_id": "RUNTIME-PROTECTION-ACTIVE",
+        "role": "active",
+        "state": "ready",
+        "objective": "Prove branch ruleset preserves normal durable runtime persistence",
+        "active_gate": "RUNTIME-PROTECTION",
+        "next_action_ref": "action://runtime-protection-verified",
+        "source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+        "evidence_required": [],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": null,
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "RUNTIME-PROTECTION-SECONDARY",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Remain inert during runtime protection smoke",
+        "active_gate": "SECONDARY",
+        "next_action_ref": "action://secondary",
+        "source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+        "evidence_required": [],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": null,
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
