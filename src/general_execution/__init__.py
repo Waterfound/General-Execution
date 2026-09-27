@@ -250,6 +250,21 @@ from .transition_policy import (
     transition_policy_from_dict,
     transition_policy_to_dict,
 )
+from .verification_escalation import (
+    PROJECT_ASSURANCE_SYSTEM,
+    RED_TEAM_SYSTEM,
+    IndependentVerificationRequest,
+    IndependentVerificationResponse,
+    RedTeamEscalationRequest,
+    RedTeamResponse,
+    VerificationAdmission,
+    VerificationEscalationError,
+    admit_independent_verification,
+    admit_red_team_response,
+    build_verification_observation,
+    prepare_independent_verification,
+    prepare_red_team_escalation,
+)
 from .vercel_sandbox import (
     GENERAL_EXECUTION_REPOSITORY_URL,
     VERCEL_SANDBOX_PROVIDER,
@@ -490,6 +505,19 @@ __all__ = [
     "verify_restart_recovery",
     "verify_retry_chain",
     "verify_vercel_sandbox_conformance_run",
+    "PROJECT_ASSURANCE_SYSTEM",
+    "RED_TEAM_SYSTEM",
+    "IndependentVerificationRequest",
+    "IndependentVerificationResponse",
+    "RedTeamEscalationRequest",
+    "RedTeamResponse",
+    "VerificationAdmission",
+    "VerificationEscalationError",
+    "admit_independent_verification",
+    "admit_red_team_response",
+    "build_verification_observation",
+    "prepare_independent_verification",
+    "prepare_red_team_escalation",
 ]
 
 __version__ = "0.0.13"
