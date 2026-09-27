@@ -1,0 +1,46 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "runtime-smoke-bootstrap-002",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "durable-runtime-smoke",
+      "generation": 0,
+      "active": {
+        "work_id": "SMOKE-ACTIVE",
+        "role": "active",
+        "state": "ready",
+        "objective": "Prove persistent runtime state survives ephemeral runners",
+        "active_gate": "SMOKE",
+        "next_action_ref": "action://await-smoke-transition",
+        "source_revision": "0ee552364eae07cd23b94da4cb4fa9c4cac23763",
+        "evidence_required": [],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": null,
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "SMOKE-SECONDARY",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Remain ready during persistent runtime smoke",
+        "active_gate": "SECONDARY",
+        "next_action_ref": "action://secondary",
+        "source_revision": "0ee552364eae07cd23b94da4cb4fa9c4cac23763",
+        "evidence_required": [],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": null,
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
