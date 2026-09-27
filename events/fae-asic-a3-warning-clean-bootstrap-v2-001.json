@@ -1,0 +1,50 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-asic-a3-warning-clean-bootstrap-v2-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "fae-asic-a3-warning-clean-revalidation-v2",
+      "generation": 0,
+      "active": {
+        "work_id": "FAE-ASIC-A3-WARNING-CLEAN-REVALIDATION-V2",
+        "role": "active",
+        "state": "ready",
+        "objective": "Revalidate the AXI4-Lite warning-clean A3 direct-split candidate in AWS/Vivado without physical implementation or AFI creation.",
+        "active_gate": "A3-WARNING-CLEAN-STATIC-REVALIDATION",
+        "next_action_ref": "action://fae-asic/a3/request-warning-clean-static-revalidation-authority",
+        "source_revision": "4246c098468f59bca2c41d8db1e8651912ac9167",
+        "evidence_required": [
+          "a3_warning_clean_ready"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "fae://asic/f2/a3-warning-clean-static-revalidation-v2",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "FAE-ASIC-A3-PHYSICAL-DECISION-V2",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Evaluate a later physical implementation only after provider revalidation; no physical build without separate authority.",
+        "active_gate": "A3-PHYSICAL-DECISION",
+        "next_action_ref": "authority://fae-asic/a3/physical-build",
+        "source_revision": "4246c098468f59bca2c41d8db1e8651912ac9167",
+        "evidence_required": [
+          "a3_warning_clean_static_revalidation"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "fae://asic/f2/a3-physical-decision-v2",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
