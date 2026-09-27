@@ -1,0 +1,46 @@
+{
+  "schema_version": "ge.main-canonicalization.v1",
+  "recorded_at": "2026-09-27T19:52:00Z",
+  "repository": "Waterfound/General-Execution",
+  "canonical_main_before": "fcec2964b2100709a5ecbde38b0bfe0abb8eb2d1",
+  "branch": "feature/durable-main-canonicalization-20260927",
+  "functional_head": "50242943924923cb96296416b6a81f810dfabe7d",
+  "changes": {
+    "persistent_runtime_source_pin": {
+      "from": "0ee552364eae07cd23b94da4cb4fa9c4cac23763",
+      "to": "fcec2964b2100709a5ecbde38b0bfe0abb8eb2d1"
+    },
+    "verification_branch_policy": "Persistent runtime, unattended preflight, and Wave9 verification run on canonical main and this bounded pre-merge validation branch.",
+    "runtime_event_trigger_unchanged": "runtime/durable-asp-control + create-only events/*.json",
+    "authority_model_unchanged": true
+  },
+  "verification": [
+    {
+      "name": "Persistent runtime verification",
+      "run_id": 36345866992,
+      "head_sha": "a60bfd5f16da405d61726599027e0c5a75b1b48f",
+      "conclusion": "success"
+    },
+    {
+      "name": "Unattended pilot preflight",
+      "run_id": 36345868985,
+      "head_sha": "856f1525259ce3fd0286fc3447e9d6b6b884b551",
+      "conclusion": "success"
+    },
+    {
+      "name": "Wave9 verification",
+      "run_id": 36345871030,
+      "head_sha": "50242943924923cb96296416b6a81f810dfabe7d",
+      "conclusion": "success"
+    }
+  ],
+  "runtime_activation": {
+    "runtime_branch_modified": false,
+    "event_added": false,
+    "persistent_transition_triggered": false,
+    "production_deployment_triggered": false,
+    "new_spend_authorized": false,
+    "authority_created": false
+  },
+  "next_gate": "Human authorization required to merge canonicalization into main. Runtime branch activation/re-pin remains a separate post-merge verification step."
+}
