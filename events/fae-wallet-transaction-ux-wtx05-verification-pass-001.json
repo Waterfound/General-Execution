@@ -1,0 +1,76 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-wallet-transaction-ux-wtx05-verification-pass-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-wallet-transaction-ux-wtx05-v1",
+      "revision": "3",
+      "rules": [
+        {
+          "rule_id": "01-verification-pass",
+          "from_state": "verifying",
+          "event": "verification_passed",
+          "to_state": "complete",
+          "next_action_ref": "terminal://fae-wallet-transaction-ux/wtx05-complete",
+          "effect": "none",
+          "required_evidence": [
+            "verifier_pass"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-push",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-wallet-transaction-ux-wtx05",
+      "policy_digest": "sha256:8d763b42eaf73404b45c6375e683e902b51fff8b78ee51e4fe0fa06b1c4b7e1b",
+      "transition_event": "verification_passed"
+    },
+    "trigger": {
+      "source": "github-push",
+      "event_id": "fae-wallet-transaction-ux-wtx05-verification-pass-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:5901155226d190babff0baf01bc25d837c92398be82472ce36f76b11d941bffb",
+      "observation_digest": "sha256:660ac95d9804a0ebd144c4c0c7d1b1935e861923c48872ccfa0c336fc7b8cc70",
+      "admission_ref": "github://runtime/durable-asp-control/fae-wallet-transaction-ux-wtx05-verification-pass-001"
+    },
+    "observation": {
+      "portfolio_id": "fae-wallet-transaction-ux-wtx05",
+      "expected_generation": 2,
+      "expected_state_digest": "sha256:eb8236db0616ef0f961cebcb6e7bebdc59ee41523086c37844d94d487dca8eb0",
+      "policy_digest": "sha256:8d763b42eaf73404b45c6375e683e902b51fff8b78ee51e4fe0fa06b1c4b7e1b",
+      "event": "verification_passed",
+      "evidence": [
+        {
+          "kind": "verifier_pass",
+          "locator": "github://Waterfound/General-Execution/actions/runs/36336972956",
+          "digest": "sha256:5acc2e08bede4c6cb711d254e8259facc2e96acce082ab6aac5ae0bd7e9132c6",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "github://Waterfound/FAE-testnet/commit/d36c2302cbdcce1fa7b38896362bd58b0a24dd00",
+      "observed_at": "2026-09-27T17:28:00Z",
+      "summary": "Independent Project Assurance passed for the immutable WTX-05 candidate, including deterministic gates and real Chromium journeys across desktop, tablet-touch, and mobile-touch profiles.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/d36c2302cbdcce1fa7b38896362bd58b0a24dd00",
+        "github://Waterfound/FAE-testnet/actions/runs/36336818778",
+        "github://Waterfound/FAE-testnet/actions/runs/36336818799",
+        "github://Waterfound/General-Execution/actions/runs/36336972956",
+        "github://Waterfound/General-Execution/commit/07f1ab977d6b7c303aecd36da3673263ed7870c9",
+        "github://Waterfound/General-Execution/evidence/durable-execution/2026-09-27/fae-wallet-tx-ux-wtx05-independent-verification.json"
+      ],
+      "uncertainties": [
+        "Browser-CI touch emulation is not physical iPad/iPhone evidence."
+      ],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
