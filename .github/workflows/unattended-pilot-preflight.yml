@@ -3,7 +3,8 @@ name: Unattended pilot preflight
 on:
   push:
     branches:
-      - feature/durable-asp-portfolio-state
+      - main
+      - feature/durable-main-canonicalization-20260927
     paths:
       - scripts/run_unattended_pilot.py
       - src/general_execution/portfolio_persistence.py

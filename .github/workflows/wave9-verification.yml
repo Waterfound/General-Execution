@@ -3,7 +3,8 @@ name: Wave9 verification
 on:
   push:
     branches:
-      - feature/durable-asp-portfolio-state
+      - main
+      - feature/durable-main-canonicalization-20260927
     paths:
       - src/general_execution/verification_escalation.py
       - src/general_execution/__init__.py
