@@ -344,6 +344,16 @@ def process_persistent_runtime_event(
     )
     after, checkpoint, _ = recover_portfolio_after_restart(store, contract.portfolio_id)
 
+    authority_stop = checkpoint is not None and checkpoint.authority_stop
+    human_required = (
+        result.human_required
+        or authority_stop
+        or after.active.state == "human_gate"
+    )
+    requested_action_ref = (
+        result.requested_action_ref
+        or (after.active.next_action_ref if human_required else None)
+    )
     return PersistentRuntimeEventReport(
         event_id=obj["event_id"],
         operation="transition",
@@ -354,6 +364,6 @@ def process_persistent_runtime_event(
         pre_state_digest=before.digest,
         post_state_digest=after.digest,
         checkpoint_digest=checkpoint.digest if checkpoint is not None else None,
-        human_required=result.human_required,
-        requested_action_ref=result.requested_action_ref,
+        human_required=human_required,
+        requested_action_ref=requested_action_ref,
     )
