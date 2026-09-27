@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - feature/durable-main-canonicalization-20260927
+      - feature/durable-authority-canonicalization-20260927
     paths:
       - src/general_execution/persistent_runtime.py
       - scripts/run_persistent_runtime_event.py
@@ -57,7 +57,7 @@ jobs:
           assert "production" not in text.lower()
           assert "release" not in text.lower()
           assert "__PINNED_RUNTIME_REVISION__" not in text
-          assert "fcec2964b2100709a5ecbde38b0bfe0abb8eb2d1" in text
+          assert "a27a558d4ed0e28d96c3fec408212353d0077060" in text
           PY
       - name: Full regression
         run: python -m pytest -q
