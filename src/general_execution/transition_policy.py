@@ -158,6 +158,11 @@ class TransitionRule:
                     "human_required rule must use stop_human_gate effect"
                 )
 
+        if self.from_state == "human_gate" and self.authority_mode != "preauthorized_required":
+            raise TransitionPolicyError(
+                "transitions from human_gate require preauthorized authority"
+            )
+
         if self.effect == "promote_secondary":
             if self.event != "verification_passed" or self.to_state != "complete":
                 raise TransitionPolicyError(
