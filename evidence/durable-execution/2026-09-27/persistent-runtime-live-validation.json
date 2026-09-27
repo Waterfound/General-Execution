@@ -1,0 +1,96 @@
+{
+  "schema_version": "ge.persistent-runtime-live-validation.v1",
+  "recorded_at": "2026-09-27T15:58:00Z",
+  "status": "ACTIVE_VERIFIED",
+  "runtime_branch": "runtime/durable-asp-control",
+  "runtime_branch_head": "1d406099ee58656e2c4a5e6e021300c77ca7a20c",
+  "pinned_runtime_source_revision": "0ee552364eae07cd23b94da4cb4fa9c4cac23763",
+  "development_head_before_evidence": "4cc67914c34b1cf358bb055b7b3f4e3e7725ad57",
+  "verification": {
+    "successful_run_id": 36330937794,
+    "prior_successful_pin_run_id": 36330811465,
+    "python": "3.13.15",
+    "focused_tests": {
+      "passed": 6,
+      "failed": 0
+    },
+    "full_regression": {
+      "passed": 384,
+      "failed": 0
+    },
+    "workflow_envelope_audit": "PASS"
+  },
+  "fail_closed_probe": {
+    "event_id": "runtime-smoke-bootstrap-001",
+    "trigger_commit": "de287c5757f63246ce0194377bfc5b1b78e4e8be",
+    "run_id": 36330896045,
+    "conclusion": "failure",
+    "failed_stage": "Prepare pinned verified runtime source",
+    "cause": "invalid exact-pin shell guard",
+    "state_files_created": 0,
+    "state_mutated": false,
+    "repaired_development_commit": "4cc67914c34b1cf358bb055b7b3f4e3e7725ad57",
+    "repaired_runtime_commit": "e5c90f6b9e507ec82689def2abe88355fa85aebf"
+  },
+  "bootstrap": {
+    "event_id": "runtime-smoke-bootstrap-002",
+    "trigger_commit": "306165387d92838555ec532a080e575866584169",
+    "state_commit": "7c0dcf387d5642f3e523b93a19a3fce167e4ecb1",
+    "run_id": 36331002152,
+    "job_id": 108652772954,
+    "conclusion": "success",
+    "portfolio_id": "durable-runtime-smoke",
+    "generation": 0,
+    "state_digest": "sha256:9f18fa5a57cb5294ca3472a1c2a701fdcae7554f03f43ba0844fab9be4f98af9",
+    "database_sha256": "sha256:f569e7cb03a75c86650d94446a20f382ce5151b63cb2151c0299d96b89b3f3bf",
+    "event_report_digest": "sha256:bea94505209bec3130716bd21d08bbf02fc557ea3e595047e852733f0fb24a62",
+    "artifact_id": 10935528395,
+    "artifact_digest": "sha256:773903f3fee5a5e0f09c56dbbb8d6aa1db7c0d97591563141c52d1d07e9bb86d"
+  },
+  "cross_runner_transition": {
+    "event_id": "runtime-smoke-transition-001",
+    "trigger_commit": "4bcb1a36b5f03d527569ed1e077f6c063291e05f",
+    "state_commit": "1d406099ee58656e2c4a5e6e021300c77ca7a20c",
+    "run_id": 36331174028,
+    "job_id": 108653257691,
+    "conclusion": "success",
+    "pre_generation": 0,
+    "post_generation": 1,
+    "pre_state_digest": "sha256:9f18fa5a57cb5294ca3472a1c2a701fdcae7554f03f43ba0844fab9be4f98af9",
+    "post_state_digest": "sha256:703b6cbc7cec457190364af0d1c2e465c652d544397e1cb05ae6636bc4d65545",
+    "checkpoint_digest": "sha256:ccc0a4dd2556c1591392ea9c257c3e5878f00af0378280dc294b7c39525bb559",
+    "database_sha256": "sha256:b83d0ce9dd1280173e5e68501a921f90387ff3bdd003a5d62e08c1470de64293",
+    "event_report_digest": "sha256:8fd9d076a97496a6b19e044ad5001943d722d9c1dec2ec5068eb00bcfa971eba",
+    "human_required": true,
+    "requested_action_ref": "authority://persistent-runtime-smoke",
+    "final_state": "human_gate",
+    "artifact_id": 10934904408,
+    "artifact_digest": "sha256:00dba7515a46c56483f3b9ae579a8528d0eb7cfc2aba03f9e624998f236c031b",
+    "cross_runner_state_recovery_proven": true
+  },
+  "runtime_manifest": {
+    "authority_created": false,
+    "persistent_provider_trigger_enabled": true,
+    "runtime_source_revision": "0ee552364eae07cd23b94da4cb4fa9c4cac23763",
+    "last_event_id": "runtime-smoke-transition-001",
+    "last_operation": "transition",
+    "last_trigger_commit": "4bcb1a36b5f03d527569ed1e077f6c063291e05f",
+    "database_sha256": "sha256:b83d0ce9dd1280173e5e68501a921f90387ff3bdd003a5d62e08c1470de64293"
+  },
+  "envelope": {
+    "trigger": "push to runtime/durable-asp-control adding exactly one events/*.json file",
+    "persistent_schedule_enabled": false,
+    "arbitrary_commands_in_events": false,
+    "credential_shaped_event_keys_rejected": true,
+    "at_most_one_transition_per_event": true,
+    "runtime_state_paths": "runtime/**",
+    "runtime_state_commits_retrigger": false,
+    "source_revision_pinned": true,
+    "main_modified": false,
+    "merge_performed": false,
+    "release_performed": false,
+    "production_modified": false,
+    "new_spend_authorized": false
+  },
+  "conclusion": "Persistent trigger and durable cross-run state recovery are installed and verified. No real project portfolio has been onboarded yet."
+}

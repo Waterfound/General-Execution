@@ -1,0 +1,82 @@
+{
+  "schema_version": "ge.fae-wallet-tx-ux-wtx03-independent-verification.v1",
+  "recorded_at": "2026-09-27T17:02:00Z",
+  "portfolio_id": "fae-wallet-transaction-ux-wtx03",
+  "package": "WTX-03-txid-details",
+  "outcome": "PASS",
+  "base_revision": "2b19764abdfc400276f22c235cfa0ae2a6963209",
+  "candidate_revision": "2c4e3cf0ed958d1ab28d7bbcaaf01c9424fc1e1d",
+  "product_delta": [
+    "core.js",
+    "index.html",
+    "tests/client-smoke.mjs",
+    "wallet.js"
+  ],
+  "execution": {
+    "run_id": 36335267836,
+    "job_id": 108664816104,
+    "conclusion": "success",
+    "checks": {
+      "source_manifests": "PASS",
+      "syntax": "PASS",
+      "wtx01_contract": "PASS",
+      "wtx02_acceptance_fixtures": "11/11 PASS",
+      "crypto_compatibility": "PASS",
+      "client_smoke": "PASS",
+      "independent_node": "PASS"
+    }
+  },
+  "independent_verification": {
+    "workflow": "FAE Wallet UX WTX03 independent verifier",
+    "workflow_revision": "4b64313c2c3561ff719545a0c8227eee281900df",
+    "run_id": 36335379727,
+    "job_id": 108665115055,
+    "conclusion": "success",
+    "exact_candidate_checkout": true,
+    "exact_delta_allowlist": true
+  },
+  "behavior_proven": {
+    "accepted_receipt_survives_refresh_failure": true,
+    "accepted_receipt_remains_unconfirmed": true,
+    "full_txid_selectable": true,
+    "full_txid_exact_copy": true,
+    "accessible_copy_feedback": true,
+    "transaction_direction_detail": true,
+    "transaction_origin_detail": true,
+    "transaction_outputs_detail": true,
+    "transaction_status_detail": true,
+    "confirmation_height_only_when_confirmed": true,
+    "iso_timestamp_rendering": true
+  },
+  "non_selective_failure_ledger": [
+    {
+      "run_id": 36335220379,
+      "head_sha": "d22daafec5482f7dc9621e4594fec8e7a799bdb9",
+      "conclusion": "failure",
+      "classification": "PARTIAL_PRODUCT_COMMIT_BEFORE_DEPENDENT_FILES"
+    },
+    {
+      "run_id": 36335225038,
+      "head_sha": "ec7befe6c277f023517f451001271e21664b3122",
+      "conclusion": "failure",
+      "classification": "PARTIAL_PRODUCT_COMMIT_BEFORE_DEPENDENT_FILES"
+    },
+    {
+      "run_id": 36335229024,
+      "head_sha": "1907dbb97b62c8c2ece045a0fd2ad07898eac55d",
+      "conclusion": "failure",
+      "classification": "PARTIAL_PRODUCT_COMMIT_BEFORE_UPDATED_SMOKE"
+    }
+  ],
+  "authority": {
+    "main_modified": false,
+    "merge_performed": false,
+    "release_performed": false,
+    "production_modified": false,
+    "backend_changed": false,
+    "consensus_changed": false,
+    "wallet_key_material_changed": false,
+    "new_spend_authorized": false
+  },
+  "next_package": "WTX-04-history-lifecycle"
+}

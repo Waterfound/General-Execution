@@ -1,0 +1,77 @@
+{
+  "schema_version": "ge.fae-wallet-tx-ux-wtx06-integrated-combined-main.v1",
+  "recorded_at": "2026-09-27T18:07:10Z",
+  "package": "WTX-06-integration",
+  "authority": {
+    "source": "explicit_current_conversation_instruction",
+    "scope": "Merge PR #259 into canonical main only.",
+    "pr_number": 259,
+    "merge_authorized": true,
+    "deployment_authorized": false,
+    "release_authorized": false,
+    "live_claim_authorized": false
+  },
+  "merge": {
+    "pr_number": 259,
+    "pr_url": "https://github.com/Waterfound/FAE-testnet/pull/259",
+    "head_revision": "a18484c7fc56d914a42105a0be80f9b974ee202f",
+    "base_revision": "c34f8287fb7e09d05e762b3061060a9c03c692d9",
+    "merge_method": "merge",
+    "merged": true,
+    "merge_commit": "4238e4b6de6a2863d0531ee5d78b526ba4efad92",
+    "merged_at": "2026-09-27T18:04:11Z"
+  },
+  "canonical_main": {
+    "revision": "4238e4b6de6a2863d0531ee5d78b526ba4efad92",
+    "parents": [
+      "c34f8287fb7e09d05e762b3061060a9c03c692d9",
+      "a18484c7fc56d914a42105a0be80f9b974ee202f"
+    ]
+  },
+  "canonical_main_gates": {
+    "cross_lab_integration": {
+      "run_id": 36339270441,
+      "conclusion": "success",
+      "head_sha": "4238e4b6de6a2863d0531ee5d78b526ba4efad92"
+    },
+    "canonical_source": {
+      "run_id": 36339270407,
+      "conclusion": "success",
+      "head_sha": "4238e4b6de6a2863d0531ee5d78b526ba4efad92"
+    },
+    "public_code_security_recurring_assurance": {
+      "run_id": 36339270417,
+      "conclusion": "success",
+      "head_sha": "4238e4b6de6a2863d0531ee5d78b526ba4efad92"
+    },
+    "codeql_security": {
+      "run_id": 36339270406,
+      "conclusion": "success",
+      "head_sha": "4238e4b6de6a2863d0531ee5d78b526ba4efad92"
+    }
+  },
+  "independent_combined_main_verification": {
+    "workflow": "FAE Wallet UX combined-main verifier",
+    "workflow_revision": "37bcf9450ac8d3c1545cd6354150aae524fde8e2",
+    "run_id": 36339338787,
+    "job_id": 108676214467,
+    "conclusion": "success",
+    "exact_integrated_main_binding": true,
+    "cross_lab_combined_main_gate": "PASS",
+    "wallet_transaction_contract": "PASS",
+    "wallet_acceptance_fixtures": "11/11 PASS",
+    "wallet_history_lifecycle": "PASS",
+    "wallet_crypto_compatibility": "PASS",
+    "wallet_client_smoke": "PASS",
+    "independent_node": "PASS",
+    "chromium_journeys": "4/4 PASS"
+  },
+  "status": {
+    "lab_verified": true,
+    "integrated_main": true,
+    "combined_main_verified": true,
+    "live": false
+  },
+  "next_package": "WTX-07-publication-and-closure",
+  "next_authority_boundary": "No deployment or LIVE claim without separate authority/evidence. First inspect whether configured infrastructure automatically deployed the merge commit; do not trigger a deployment implicitly."
+}

@@ -1,0 +1,45 @@
+{
+  "schema_version": "ge.fae-wallet-tx-ux-wtx02-independent-verification.v1",
+  "recorded_at": "2026-09-27T16:24:15Z",
+  "portfolio_id": "fae-wallet-transaction-ux-wtx02",
+  "package": "WTX-02-acceptance-fixtures",
+  "outcome": "PASS",
+  "base_revision": "189ddbd381c953ad6effeb0548b98d4daa74a844",
+  "candidate_revision": "2b19764abdfc400276f22c235cfa0ae2a6963209",
+  "execution": {
+    "run_id": 36332990354,
+    "job_id": 108658386707,
+    "conclusion": "success",
+    "fixture_matrix": "11/11"
+  },
+  "independent_verification": {
+    "run_id": 36333095505,
+    "job_id": 108658679245,
+    "conclusion": "success",
+    "workflow_revision": "2606318bdb22f67ecf657cc665124f1fa71deea9"
+  },
+  "exact_delta": [
+    ".github/workflows/wallet-tx-ux-current-main.yml",
+    "tests/fixtures/wallet-transactions-acceptance.json",
+    "tests/wallet-transactions-acceptance.mjs"
+  ],
+  "product_files_changed": false,
+  "backend_changed": false,
+  "consensus_changed": false,
+  "key_material_changed": false,
+  "checks": {
+    "fixture_matrix": "11/11 PASS",
+    "wtx01_contract": "PASS",
+    "crypto_compatibility": "PASS",
+    "client_smoke": "PASS",
+    "independent_node": "PASS"
+  },
+  "authority": {
+    "main_modified": false,
+    "merge_performed": false,
+    "release_performed": false,
+    "production_modified": false,
+    "new_spend_authorized": false
+  },
+  "next_package": "WTX-03-txid-details"
+}

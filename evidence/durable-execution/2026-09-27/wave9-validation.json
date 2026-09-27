@@ -1,0 +1,56 @@
+{
+  "schema_version": "ge.wave9-verification-escalation-validation.v1",
+  "recorded_at": "2026-09-27T15:00:00Z",
+  "status": "PASS",
+  "tested_revision": "6095e3024c373dbf96ea2be91989c35ebf44f238",
+  "implementation_commits": {
+    "contract": "564a784bbf909a62adfe68426396840742b225e4",
+    "tests": "57de10e7e73d89d4749038fc5aa1de52397e7d86",
+    "public_api": "d873c3567489770027cdc65c34095324ae5f3207",
+    "ci": "6095e3024c373dbf96ea2be91989c35ebf44f238"
+  },
+  "github_actions": {
+    "run_id": 36327835171,
+    "job_id": 108643917513,
+    "conclusion": "success",
+    "runner": "ubuntu-24.04",
+    "python": "3.13.15",
+    "sqlite": "3.45.1",
+    "compileall": "PASS",
+    "focused_tests": {
+      "path": "tests/test_wave9_verification_escalation.py",
+      "passed": 15,
+      "failed": 0
+    },
+    "full_regression": {
+      "passed": 375,
+      "failed": 0
+    },
+    "permissions": {
+      "contents": "read",
+      "metadata": "read"
+    }
+  },
+  "verified_contracts": [
+    "exact durable checkpoint/tick/policy provenance binding",
+    "executor and worker cannot self-verify",
+    "Project Assurance response requires independent authenticated admission",
+    "PASS creates verifier_pass evidence but cannot self-integrate",
+    "REJECT creates verifier_reject evidence and reaches rework only through explicit transition policy",
+    "verifier cannot grant repair or integration authority",
+    "Red Team escalation requires explicit rejected verification plus recommendation",
+    "Red Team responder must be independent of executor, worker, and Project Assurance verifier",
+    "Red Team response is advisory-only or waiting_external",
+    "no provider transport or unattended runtime activation"
+  ],
+  "authority": {
+    "main_modified": false,
+    "provider_trigger_enabled": false,
+    "unattended_runtime_enabled": false,
+    "release_authorized": false,
+    "merge_authorized": false,
+    "authority_created": false
+  },
+  "next_frontier": "unattended-pilot",
+  "unattended_pilot_authorized": false
+}

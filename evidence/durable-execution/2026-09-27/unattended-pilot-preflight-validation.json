@@ -1,0 +1,83 @@
+{
+  "schema_version": "ge.unattended-pilot-preflight-validation.v1",
+  "recorded_at": "2026-09-27T15:13:00Z",
+  "status": "PASS_NOT_ACTIVATED",
+  "tested_revision": "1827175ba7b926dfabaeca57791f83595ece11e0",
+  "github_actions": {
+    "run_id": 36328650357,
+    "job_id": 108646205967,
+    "conclusion": "success",
+    "runner": "ubuntu-24.04",
+    "python": "3.13.15",
+    "sqlite": "3.45.1",
+    "compileall": "PASS",
+    "focused_tests": {
+      "path": "tests/test_unattended_pilot_preflight.py",
+      "passed": 2,
+      "failed": 0
+    },
+    "direct_process_separated_preflight": "PASS",
+    "full_regression": {
+      "passed": 378,
+      "failed": 0
+    }
+  },
+  "pilot_report": {
+    "schema_version": "ge.unattended-pilot-preflight.v1",
+    "status": "PASS_NOT_ACTIVATED",
+    "process_invocations": 8,
+    "state_transitions": 5,
+    "final_generation": 5,
+    "final_state": "human_gate",
+    "authority_stop": true,
+    "human_required": true,
+    "chat_context_required": false,
+    "provider_trigger_enabled": false,
+    "unattended_runtime_enabled": false,
+    "real_activation_authorized": false,
+    "worker_pids": [
+      2262,
+      2263,
+      2264,
+      2265,
+      2266,
+      2267,
+      2268,
+      2269
+    ]
+  },
+  "sequence": [
+    "init",
+    "execution-start",
+    "execution-complete",
+    "project-assurance-reject",
+    "verification-reject -> rework",
+    "rework-start",
+    "authority-stop",
+    "fresh-process recover -> human input required"
+  ],
+  "hardening": [
+    {
+      "failed_run_id": 36328387208,
+      "finding": "JSON round-trip decoded ResumeTickObservation.canonical_refs as list instead of tuple",
+      "repair_commit": "84bc82d3e6e6c00f64ce9b75cfe80de5d6c0b07a"
+    },
+    {
+      "failed_run_id": 36328513102,
+      "finding": "Concurrent recovery could combine an old head generation with a newer checkpoint because head and checkpoint were read in separate SQLite snapshots",
+      "repair_commit": "7f207de0cd14b0efd653396b2d3dcbba40faa18f",
+      "regression_commit": "5f525bd7dbe1928dae93194a130955b9e152d355",
+      "ci_scope_commit": "1827175ba7b926dfabaeca57791f83595ece11e0"
+    }
+  ],
+  "authority": {
+    "main_modified": false,
+    "provider_trigger_enabled": false,
+    "unattended_runtime_enabled": false,
+    "real_pilot_authorized": false,
+    "merge_authorized": false,
+    "release_authorized": false,
+    "new_spending_authorized": false
+  },
+  "authority_gate": "Explicit authorization is required before a real provider trigger/unattended pilot may be activated."
+}

@@ -1,0 +1,138 @@
+{
+  "schema_version": "ge.fae-wallet-tx-ux-wtx07-live-observed.v1",
+  "recorded_at": "2026-09-27T18:10:00Z",
+  "package": "WTX-07-publication-and-closure",
+  "integrated_main_revision": "4238e4b6de6a2863d0531ee5d78b526ba4efad92",
+  "deployment": {
+    "provider": "Vercel",
+    "project_id": "prj_Cjbutbz2klX3u0Ojjp0HSuewEXro",
+    "project_name": "fairyelf-fae-testnet",
+    "deployment_id": "dpl_8B4eqYfngFRANcFjiFyX2Q7bgrFM",
+    "deployment_url": "fairyelf-fae-testnet-res0ue42a-waterfound.vercel.app",
+    "production_alias": "fairyelf-fae-testnet.vercel.app",
+    "state": "READY",
+    "target": "production",
+    "source": "git",
+    "github_commit_ref": "main",
+    "github_commit_sha": "4238e4b6de6a2863d0531ee5d78b526ba4efad92",
+    "created_at_ms": 1790532253996,
+    "ready_at_ms": 1790532266395,
+    "manual_deploy_performed_by_assistant": false,
+    "observed_trigger": "preconfigured Git integration after authorized main merge"
+  },
+  "public_read_smoke": {
+    "production_alias_root_status": 200,
+    "production_alias_root_success": true,
+    "immutable_deployment_root_status": 302,
+    "immutable_deployment_root_note": "Deployment URL redirects while canonical production alias serves the public page.",
+    "required_wallet_script_present": true,
+    "bounded_history_copy_present": true
+  },
+  "exact_public_byte_binding": {
+    "index.html": {
+      "github_blob_sha": "23148e9fbbcf5a4eea82f7277a267ab5e40f1838",
+      "live_status": 200,
+      "exact_text_match": true,
+      "length": 18905
+    },
+    "core.js": {
+      "github_blob_sha": "4689358f75caf9b5349a600cd42d484deec9e9d4",
+      "live_status": 200,
+      "exact_text_match": true,
+      "length": 22583
+    },
+    "wallet.js": {
+      "github_blob_sha": "7ab3ac9a24a7a42228ee11cfbefa15ddcd52b7e5",
+      "live_status": 200,
+      "exact_text_match": true,
+      "length": 22857
+    },
+    "wallet-transactions.js": {
+      "github_blob_sha": "1e9c9f72f6d8e9c8e338d3acbf418f832cd826d2",
+      "live_status": 200,
+      "exact_text_match": true,
+      "length": 7884
+    }
+  },
+  "status": {
+    "lab_verified": true,
+    "integrated_main": true,
+    "combined_main_verified": true,
+    "live": true,
+    "closure_evidence_merged": true,
+    "final_post_merge_verified": true
+  },
+  "limitations": [
+    "WTX-05 touch evidence uses real Chromium browser touch emulation, not a physical iPad/iPhone.",
+    "This closeout did not submit a new live testnet transaction during production verification; publication proof is exact commit/deployment/public-byte binding plus prior deterministic and browser journey evidence."
+  ],
+  "authority": {
+    "merge_authorized_by_user": true,
+    "manual_deployment_authorized_in_current_turn": false,
+    "new_manual_deployment_triggered": false,
+    "release_action_triggered_by_assistant": false
+  },
+  "final_closeout": {
+    "recorded_at": "2026-09-27T18:51:47Z",
+    "fae_pull_request": 260,
+    "evidence_branch_head": "2449f83ea8a05c5eec3a98a400471deef7fa4bb2",
+    "evidence_merge_revision": "48ba1df01075f7e6714d2e98d5ce8df827d1e5f2",
+    "evidence_merged_to_main": true,
+    "merge_commit_verified_signature": true,
+    "post_merge_workflows": [
+      {
+        "name": "cross-lab-integration-gate",
+        "run_id": 36342090977,
+        "conclusion": "success"
+      },
+      {
+        "name": "verify-canonical-source",
+        "run_id": 36342090992,
+        "conclusion": "success"
+      },
+      {
+        "name": "public-code-security-recurring-assurance",
+        "run_id": 36342090959,
+        "conclusion": "success"
+      },
+      {
+        "name": "codeql-security",
+        "run_id": 36342090955,
+        "conclusion": "success"
+      }
+    ],
+    "vercel": {
+      "project_name": "fairyelf-fae-testnet",
+      "production_deployment_id": "dpl_5rpSVGkrvuoLaXD5uWLzf8iDZ66q",
+      "state": "READY",
+      "target": "production",
+      "github_commit_ref": "main",
+      "github_commit_sha": "48ba1df01075f7e6714d2e98d5ce8df827d1e5f2",
+      "production_alias": "fairyelf-fae-testnet.vercel.app"
+    },
+    "exact_public_byte_binding_after_evidence_merge": {
+      "index.html": {
+        "http_status": 200,
+        "exact_text_match": true,
+        "length": 18905
+      },
+      "wallet.js": {
+        "http_status": 200,
+        "exact_text_match": true,
+        "length": 22857
+      },
+      "wallet-transactions.js": {
+        "http_status": 200,
+        "exact_text_match": true,
+        "length": 7884
+      },
+      "core.js": {
+        "http_status": 200,
+        "exact_text_match": true,
+        "length": 22583
+      },
+      "all_exact": true
+    },
+    "conclusion": "WTX-01R through WTX-07 are closed for the Wallet Transaction UX workstream; final evidence is merged in FAE main and the production alias serves the exact integrated Wallet UX bytes."
+  }
+}

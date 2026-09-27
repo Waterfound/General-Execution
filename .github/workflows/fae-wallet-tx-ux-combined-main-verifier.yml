@@ -1,0 +1,81 @@
+name: FAE Wallet UX combined-main verifier
+
+on:
+  push:
+    branches:
+      - feature/durable-asp-portfolio-state
+    paths:
+      - .github/workflows/fae-wallet-tx-ux-combined-main-verifier.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  FAE_INTEGRATED_MAIN: 4238e4b6de6a2863d0531ee5d78b526ba4efad92
+
+jobs:
+  combined-main:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: Waterfound/FAE-testnet
+          ref: 4238e4b6de6a2863d0531ee5d78b526ba4efad92
+          fetch-depth: 0
+          path: fae
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Bind exact integrated main
+        working-directory: fae
+        run: |
+          test "$(git rev-parse HEAD)" = "$FAE_INTEGRATED_MAIN"
+          git fetch --no-tags origin main
+          test "$(git rev-parse FETCH_HEAD)" = "$FAE_INTEGRATED_MAIN"
+
+      - name: Cross-lab combined-main gate
+        working-directory: fae
+        run: node tools/verify-lab-integration.mjs --require-latest-main --run
+
+      - name: Wallet UX deterministic regression
+        working-directory: fae
+        run: |
+          node --check core.js
+          node --check wallet.js
+          node --check wallet-transactions.js
+          node tests/wallet-transactions-contract.mjs
+          node tests/wallet-transactions-acceptance.mjs
+          node tests/wallet-history-lifecycle.mjs
+          node tests/crypto-compat.mjs
+          node tests/client-smoke.mjs
+          npm ci --prefix sovereign-forge/node
+          npm run --prefix sovereign-forge/node check
+          node sovereign-forge/tests/smoke-independent-node.mjs
+
+      - name: Install pinned Chromium verifier
+        working-directory: fae
+        run: |
+          printf '{"private":true}\n' > package.json
+          npm install --no-save --package-lock=false @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Start isolated local client
+        working-directory: fae
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/combined-main-http.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/combined-main-http.log
+          exit 1
+
+      - name: Wallet UX real-browser regression
+        working-directory: fae
+        run: npx playwright test tests/wallet-browser-validation.spec.mjs --reporter=line --workers=1

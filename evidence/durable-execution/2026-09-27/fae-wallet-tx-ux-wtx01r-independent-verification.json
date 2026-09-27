@@ -1,0 +1,71 @@
+{
+  "schema_version": "ge.fae-wallet-tx-ux-independent-verification.v1",
+  "recorded_at": "2026-09-27T16:16:00Z",
+  "portfolio_id": "fae-wallet-transaction-ux",
+  "package": "WTX-01R-current-main-reconciliation",
+  "outcome": "PASS",
+  "base_revision": "c34f8287fb7e09d05e762b3061060a9c03c692d9",
+  "candidate_revision": "189ddbd381c953ad6effeb0548b98d4daa74a844",
+  "original_contract_revision": "afb0a989c051dfd10d3c6a16571ecacff54e16ca",
+  "original_ui_revision": "e18cb6001c416fd6f78680f3340c37cfd8b15b29",
+  "execution": {
+    "workflow": "Wallet Transaction UX current-main",
+    "run_id": 36332358174,
+    "job_id": 108656610704,
+    "conclusion": "success"
+  },
+  "independent_verification": {
+    "workflow": "FAE Wallet UX independent verifier",
+    "workflow_repository": "Waterfound/General-Execution",
+    "workflow_revision": "ff61f8464befc14fa0f12645fa13c67ee17c7d50",
+    "run_id": 36332559508,
+    "job_id": 108657171828,
+    "conclusion": "success",
+    "exact_candidate_checkout": true,
+    "verifier_separate_from_builder_workflow": true
+  },
+  "change_boundary": {
+    "ahead_by": 8,
+    "behind_by": 0,
+    "changed_files": [
+      ".github/workflows/wallet-tx-ux-current-main.yml",
+      "core.js",
+      "docs/wallet-transaction-ux/contract.json",
+      "index.html",
+      "tests/client-smoke.mjs",
+      "tests/wallet-transactions-contract.mjs",
+      "wallet-transactions.js",
+      "wallet.js"
+    ],
+    "supabase_changed": false,
+    "sovereign_forge_changed": false,
+    "wallet_crypto_changed": false,
+    "consensus_changed": false,
+    "backend_changed": false,
+    "key_material_changed": false
+  },
+  "replayed_product_blobs": {
+    "core.js": "5a973fa05727754fd45252d6390a375709f0fd9e",
+    "index.html": "ab08d5a17150167844d297152b7eaecdbb0a4a22",
+    "tests/client-smoke.mjs": "466c16d19e1f220b4d884d995922a3b5c1ba9f75",
+    "wallet.js": "c1d1d1c0497ffe3b7a0c800df23e185009aebca2"
+  },
+  "checks": {
+    "pinned_source_manifests": "PASS",
+    "browser_source_syntax": "PASS",
+    "wallet_transaction_contract": "PASS",
+    "wallet_crypto_compatibility": "PASS",
+    "client_smoke_txid_history": "PASS",
+    "independent_node_compatibility": "PASS"
+  },
+  "authority": {
+    "main_modified": false,
+    "merge_performed": false,
+    "release_performed": false,
+    "production_modified": false,
+    "new_spend_authorized": false,
+    "credentials_used_by_work_item": false,
+    "integration_authority_granted": false
+  },
+  "next_package": "WTX-02-acceptance-fixtures"
+}

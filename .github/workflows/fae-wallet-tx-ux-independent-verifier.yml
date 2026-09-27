@@ -1,0 +1,103 @@
+name: FAE Wallet UX independent verifier
+
+on:
+  push:
+    branches:
+      - feature/durable-asp-portfolio-state
+    paths:
+      - .github/workflows/fae-wallet-tx-ux-independent-verifier.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  FAE_REPO: Waterfound/FAE-testnet
+  FAE_BASE: c34f8287fb7e09d05e762b3061060a9c03c692d9
+  FAE_CANDIDATE: 189ddbd381c953ad6effeb0548b98d4daa74a844
+
+jobs:
+  project-assurance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: Waterfound/FAE-testnet
+          ref: 189ddbd381c953ad6effeb0548b98d4daa74a844
+          fetch-depth: 1
+          path: fae
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify exact immutable candidate
+        working-directory: fae
+        run: |
+          test "$(git rev-parse HEAD)" = "$FAE_CANDIDATE"
+          git fetch --depth=1 origin "$FAE_BASE"
+          python - <<'PY'
+          import os, subprocess
+          expected={
+            ".github/workflows/wallet-tx-ux-current-main.yml",
+            "core.js",
+            "docs/wallet-transaction-ux/contract.json",
+            "index.html",
+            "tests/client-smoke.mjs",
+            "tests/wallet-transactions-contract.mjs",
+            "wallet-transactions.js",
+            "wallet.js",
+          }
+          base=os.environ["FAE_BASE"]
+          candidate=os.environ["FAE_CANDIDATE"]
+          changed=set(subprocess.check_output(
+              ["git","diff","--name-only",base,candidate],
+              text=True,
+          ).splitlines())
+          assert changed==expected,(sorted(changed),sorted(expected))
+          forbidden_prefixes=("supabase/","sovereign-forge/")
+          assert not any(path.startswith(forbidden_prefixes) for path in changed)
+          assert "wallet-crypto.js" not in changed
+          PY
+
+      - name: Verify replayed WTX-01 product blobs
+        working-directory: fae
+        run: |
+          python - <<'PY'
+          import subprocess
+          expected={
+            "core.js":"5a973fa05727754fd45252d6390a375709f0fd9e",
+            "index.html":"ab08d5a17150167844d297152b7eaecdbb0a4a22",
+            "tests/client-smoke.mjs":"466c16d19e1f220b4d884d995922a3b5c1ba9f75",
+            "wallet.js":"c1d1d1c0497ffe3b7a0c800df23e185009aebca2",
+          }
+          for path,want in expected.items():
+              got=subprocess.check_output(["git","hash-object",path],text=True).strip()
+              assert got==want,(path,got,want)
+          PY
+
+      - name: Verify source manifests and syntax
+        working-directory: fae
+        run: |
+          sha256sum -c FAE_FORGE_MAIN.sha256
+          (cd supabase && sha256sum -c SOURCE_MANIFEST.sha256)
+          node --check core.js
+          node --check wallet-crypto.js
+          node --check wallet.js
+          node --check wallet-transactions.js
+          node --check mining.js
+          node --check network-status.js
+
+      - name: Independent Wallet UX behavioral verification
+        working-directory: fae
+        run: |
+          node tests/wallet-transactions-contract.mjs
+          node tests/crypto-compat.mjs
+          node tests/client-smoke.mjs
+
+      - name: Independent node compatibility
+        working-directory: fae
+        run: |
+          npm ci --prefix sovereign-forge/node
+          npm run --prefix sovereign-forge/node check
+          node sovereign-forge/tests/smoke-independent-node.mjs

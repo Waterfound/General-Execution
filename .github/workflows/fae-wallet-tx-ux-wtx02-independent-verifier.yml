@@ -1,0 +1,72 @@
+name: FAE Wallet UX WTX02 independent verifier
+
+on:
+  push:
+    branches:
+      - feature/durable-asp-portfolio-state
+    paths:
+      - .github/workflows/fae-wallet-tx-ux-wtx02-independent-verifier.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  FAE_BASE: 189ddbd381c953ad6effeb0548b98d4daa74a844
+  FAE_CANDIDATE: 2b19764abdfc400276f22c235cfa0ae2a6963209
+
+jobs:
+  project-assurance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: Waterfound/FAE-testnet
+          ref: 2b19764abdfc400276f22c235cfa0ae2a6963209
+          fetch-depth: 1
+          path: fae
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify immutable WTX02 delta
+        working-directory: fae
+        run: |
+          test "$(git rev-parse HEAD)" = "$FAE_CANDIDATE"
+          git fetch --depth=1 origin "$FAE_BASE"
+          python - <<'PY'
+          import os, subprocess
+          expected={
+            ".github/workflows/wallet-tx-ux-current-main.yml",
+            "tests/fixtures/wallet-transactions-acceptance.json",
+            "tests/wallet-transactions-acceptance.mjs",
+          }
+          changed=set(subprocess.check_output(
+              ["git","diff","--name-only",os.environ["FAE_BASE"],os.environ["FAE_CANDIDATE"]],
+              text=True,
+          ).splitlines())
+          assert changed==expected,(sorted(changed),sorted(expected))
+          assert not {"core.js","index.html","wallet.js","wallet-transactions.js","wallet-crypto.js"} & changed
+          assert not any(path.startswith(("supabase/","sovereign-forge/")) for path in changed)
+          PY
+
+      - name: Verify fixture matrix and WTX01 contract
+        working-directory: fae
+        run: |
+          node --check tests/wallet-transactions-acceptance.mjs
+          node tests/wallet-transactions-contract.mjs
+          node tests/wallet-transactions-acceptance.mjs
+
+      - name: Regress Wallet UX and cryptography
+        working-directory: fae
+        run: |
+          node tests/crypto-compat.mjs
+          node tests/client-smoke.mjs
+
+      - name: Regress independent node
+        working-directory: fae
+        run: |
+          npm ci --prefix sovereign-forge/node
+          npm run --prefix sovereign-forge/node check
+          node sovereign-forge/tests/smoke-independent-node.mjs

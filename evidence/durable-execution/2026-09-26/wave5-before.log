@@ -1,0 +1,156 @@
+.......FFFFFFF.FFFFFFF.F................................................ [ 23%]
+........................................................................ [ 47%]
+........................................................................ [ 70%]
+.................................................................F...... [ 94%]
+.................                                                        [100%]
+=================================== FAILURES ===================================
+__________________ test_missing_policy_evidence_fails_closed ___________________
+tests/test_asp_transition.py:222: in test_missing_policy_evidence_fails_closed
+    apply(state, "execution_started", (ev("wrong"),))
+tests/test_asp_transition.py:189: in apply
+    return apply_active_transition(
+src/general_execution/asp_transition.py:465: in apply_active_transition
+    _verify_evidence(rule, evidence)
+src/general_execution/asp_transition.py:73: in _verify_evidence
+    raise AspTransitionError(
+E   general_execution.asp_transition.AspTransitionError: transition is missing policy-required evidence: ['dispatch_admitted']
+____________________ test_unmatched_transition_fails_closed ____________________
+src/general_execution/asp_transition.py:457: in apply_active_transition
+    rule = match_transition_rule(policy, state.active.state, event)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/general_execution/transition_policy.py:333: in match_transition_rule
+    raise TransitionPolicyError(
+E   general_execution.transition_policy.TransitionPolicyError: no unique admissible transition; default disposition is stop
+
+The above exception was the direct cause of the following exception:
+tests/test_asp_transition.py:228: in test_unmatched_transition_fails_closed
+    apply(state, "fatal_failure", (ev("failure"),))
+tests/test_asp_transition.py:189: in apply
+    return apply_active_transition(
+src/general_execution/asp_transition.py:459: in apply_active_transition
+    raise AspTransitionError(str(exc)) from exc
+E   general_execution.asp_transition.AspTransitionError: no unique admissible transition; default disposition is stop
+________ test_verified_completion_promotes_secondary_from_woken_passive ________
+tests/test_asp_transition.py:237: in test_verified_completion_promotes_secondary_from_woken_passive
+    admission = admit_passive_wake(
+src/general_execution/asp_transition_engine.py:194: in admit_passive_wake
+    if entry.role != "passive" or entry.state != "passive":
+       ^^^^^^^^^^
+E   AttributeError: 'TransitionPolicy' object has no attribute 'role'. Did you mean: 'rules'?
+_________ test_rotating_transition_never_invents_replacement_secondary _________
+tests/test_asp_transition.py:280: in test_rotating_transition_never_invents_replacement_secondary
+    apply(state, "verification_passed", (ev("verifier_pass"),))
+tests/test_asp_transition.py:189: in apply
+    return apply_active_transition(
+src/general_execution/asp_transition.py:477: in apply_active_transition
+    replacement, passive_entries, wake_admission_digest = _replacement_secondary(
+src/general_execution/asp_transition.py:373: in _replacement_secondary
+    raise AspTransitionError(
+E   general_execution.asp_transition.AspTransitionError: rotating transition requires a valid passive wake admission
+________ test_external_replacement_selection_is_not_authorized_in_core _________
+tests/test_asp_transition.py:289: in test_external_replacement_selection_is_not_authorized_in_core
+    apply(
+tests/test_asp_transition.py:189: in apply
+    return apply_active_transition(
+src/general_execution/asp_transition.py:477: in apply_active_transition
+    replacement, passive_entries, wake_admission_digest = _replacement_secondary(
+src/general_execution/asp_transition.py:369: in _replacement_secondary
+    raise AspTransitionError(
+E   general_execution.asp_transition.AspTransitionError: external replacement selection is not authorized by core ASP engine
+____ test_external_blocker_parks_active_only_with_no_internal_work_evidence ____
+tests/test_asp_transition.py:300: in test_external_blocker_parks_active_only_with_no_internal_work_evidence
+    admission = admit_passive_wake(
+src/general_execution/asp_transition_engine.py:194: in admit_passive_wake
+    if entry.role != "passive" or entry.state != "passive":
+       ^^^^^^^^^^
+E   AttributeError: 'TransitionPolicy' object has no attribute 'role'. Did you mean: 'rules'?
+___________ test_park_active_rejects_missing_no_internal_work_proof ____________
+tests/test_asp_transition.py:337: in test_park_active_rejects_missing_no_internal_work_proof
+    admission = admit_passive_wake(
+src/general_execution/asp_transition_engine.py:194: in admit_passive_wake
+    if entry.role != "passive" or entry.state != "passive":
+       ^^^^^^^^^^
+E   AttributeError: 'TransitionPolicy' object has no attribute 'role'. Did you mean: 'rules'?
+_______ test_human_required_transition_rejects_premature_authority_grant _______
+tests/test_asp_transition.py:390: in test_human_required_transition_rejects_premature_authority_grant
+    apply_active_transition(
+src/general_execution/asp_transition.py:466: in apply_active_transition
+    authority_grant_digest = _verify_authority(
+src/general_execution/asp_transition.py:239: in _verify_authority
+    raise AspTransitionError(
+E   general_execution.asp_transition.AspTransitionError: human-required transition stops before authority is granted
+__________ test_preauthorized_transition_requires_exact_bounded_grant __________
+tests/test_asp_transition.py:412: in test_preauthorized_transition_requires_exact_bounded_grant
+    apply_active_transition(
+src/general_execution/asp_transition.py:466: in apply_active_transition
+    authority_grant_digest = _verify_authority(
+src/general_execution/asp_transition.py:247: in _verify_authority
+    raise AspTransitionError(
+E   general_execution.asp_transition.AspTransitionError: preauthorized transition requires bounded authority grant
+__________ test_passive_wake_requires_explicit_satisfaction_evidence ___________
+tests/test_asp_transition.py:449: in test_passive_wake_requires_explicit_satisfaction_evidence
+    admit_passive_wake(
+src/general_execution/asp_transition_engine.py:194: in admit_passive_wake
+    if entry.role != "passive" or entry.state != "passive":
+       ^^^^^^^^^^
+E   AttributeError: 'TransitionPolicy' object has no attribute 'role'. Did you mean: 'rules'?
+_____ test_woken_passive_can_fill_secondary_slot_during_verified_rotation ______
+tests/test_asp_transition.py:470: in test_woken_passive_can_fill_secondary_slot_during_verified_rotation
+    admission = admit_passive_wake(
+src/general_execution/asp_transition_engine.py:194: in admit_passive_wake
+    if entry.role != "passive" or entry.state != "passive":
+       ^^^^^^^^^^
+E   AttributeError: 'TransitionPolicy' object has no attribute 'role'. Did you mean: 'rules'?
+__________ test_wake_admission_evidence_is_revalidated_when_consumed ___________
+tests/test_asp_transition.py:502: in test_wake_admission_evidence_is_revalidated_when_consumed
+    admission = admit_passive_wake(
+src/general_execution/asp_transition_engine.py:194: in admit_passive_wake
+    if entry.role != "passive" or entry.state != "passive":
+       ^^^^^^^^^^
+E   AttributeError: 'TransitionPolicy' object has no attribute 'role'. Did you mean: 'rules'?
+__________ test_wake_admission_authority_is_revalidated_when_consumed __________
+tests/test_asp_transition.py:532: in test_wake_admission_authority_is_revalidated_when_consumed
+    admission = admit_passive_wake(
+src/general_execution/asp_transition_engine.py:194: in admit_passive_wake
+    if entry.role != "passive" or entry.state != "passive":
+       ^^^^^^^^^^
+E   AttributeError: 'TransitionPolicy' object has no attribute 'role'. Did you mean: 'rules'?
+____________________ test_stale_wake_admission_is_rejected _____________________
+tests/test_asp_transition.py:567: in test_stale_wake_admission_is_rejected
+    admission = admit_passive_wake(
+src/general_execution/asp_transition_engine.py:194: in admit_passive_wake
+    if entry.role != "passive" or entry.state != "passive":
+       ^^^^^^^^^^
+E   AttributeError: 'TransitionPolicy' object has no attribute 'role'. Did you mean: 'rules'?
+_________________ test_input_state_is_immutable_after_rotation _________________
+tests/test_asp_transition.py:624: in test_input_state_is_immutable_after_rotation
+    admission = admit_passive_wake(
+src/general_execution/asp_transition_engine.py:194: in admit_passive_wake
+    if entry.role != "passive" or entry.state != "passive":
+       ^^^^^^^^^^
+E   AttributeError: 'TransitionPolicy' object has no attribute 'role'. Did you mean: 'rules'?
+_______________ test_wake_passive_is_constrained_to_passive_wake _______________
+tests/test_transition_policy.py:226: in test_wake_passive_is_constrained_to_passive_wake
+    with pytest.raises(TransitionPolicyError, match=r"passive \\+ wake_satisfied"):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AssertionError: Regex pattern did not match.
+E     Expected regex: 'passive \\\\+ wake_satisfied'
+E     Actual message: 'wake_passive requires passive + wake_satisfied'
+=========================== short test summary info ============================
+FAILED tests/test_asp_transition.py::test_missing_policy_evidence_fails_closed
+FAILED tests/test_asp_transition.py::test_unmatched_transition_fails_closed
+FAILED tests/test_asp_transition.py::test_verified_completion_promotes_secondary_from_woken_passive
+FAILED tests/test_asp_transition.py::test_rotating_transition_never_invents_replacement_secondary
+FAILED tests/test_asp_transition.py::test_external_replacement_selection_is_not_authorized_in_core
+FAILED tests/test_asp_transition.py::test_external_blocker_parks_active_only_with_no_internal_work_evidence
+FAILED tests/test_asp_transition.py::test_park_active_rejects_missing_no_internal_work_proof
+FAILED tests/test_asp_transition.py::test_human_required_transition_rejects_premature_authority_grant
+FAILED tests/test_asp_transition.py::test_preauthorized_transition_requires_exact_bounded_grant
+FAILED tests/test_asp_transition.py::test_passive_wake_requires_explicit_satisfaction_evidence
+FAILED tests/test_asp_transition.py::test_woken_passive_can_fill_secondary_slot_during_verified_rotation
+FAILED tests/test_asp_transition.py::test_wake_admission_evidence_is_revalidated_when_consumed
+FAILED tests/test_asp_transition.py::test_wake_admission_authority_is_revalidated_when_consumed
+FAILED tests/test_asp_transition.py::test_stale_wake_admission_is_rejected - ...
+FAILED tests/test_asp_transition.py::test_input_state_is_immutable_after_rotation
+FAILED tests/test_transition_policy.py::test_wake_passive_is_constrained_to_passive_wake
+16 failed, 289 passed in 1.86s

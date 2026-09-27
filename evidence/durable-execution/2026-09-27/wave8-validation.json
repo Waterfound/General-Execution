@@ -1,0 +1,23 @@
+{
+  "schema_version": "ge.wave8-offline-validation.v1",
+  "status": "PASS_NOT_ACTIVATED",
+  "source_files": {
+    "src/general_execution/external_trigger.py": "53f73fc4f90eb25fac3392a24c9119d1723931a91d0afb024dc9ff43520709bd",
+    "src/general_execution/thin_envelope_escalation.py": "b7f237f645bc2377483e942996072ce9b89d9af7ac335cfa0a5f7162754e9008",
+    "tests/test_wave8_adapters.py": "87b86405161e6922b4907c95d6c8d111df2d5ef6506f6e05277becb159666ff7"
+  },
+  "focused_tests": 15,
+  "full_repository_tests": 360,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "compileall": "PASS",
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "sqlite": "3.53.1",
+  "core_candidate_receipt_applies_only_to": "04a47cd7031b608368de15ec2c99ccc715eb6cbf",
+  "provider_trigger_enabled": false,
+  "unattended_runtime_enabled": false,
+  "external_verification_of_wave8": false,
+  "next_frontier": "verification-escalation",
+  "activation_authorized": false
+}

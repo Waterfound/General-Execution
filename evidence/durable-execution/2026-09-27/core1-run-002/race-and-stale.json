@@ -1,0 +1,121 @@
+{
+  "stale": {
+    "checkpoint_digest": null,
+    "disposition": "stale_observation",
+    "human_required": false,
+    "observation_digest": "sha256:175cdf7d9cdd77cb10bddebbdc07bff823f9c415945df6b42dabbf27e468feff",
+    "portfolio_id": "durable-asp",
+    "post_generation": 1,
+    "post_state_digest": "sha256:6c2f098c4c173c38de60da8c09eac8a20a57b83aafa229069e59fc8dff4b17d3",
+    "pre_generation": 1,
+    "pre_state_digest": "sha256:6c2f098c4c173c38de60da8c09eac8a20a57b83aafa229069e59fc8dff4b17d3",
+    "recovery_report_digest": "sha256:6e2b4b11a06e79246d4c6359e006e39c5801e1192a768fe492890d025d091d4f",
+    "requested_action_ref": null,
+    "requested_work_id": null,
+    "schema_version": "ge.resume-tick-result.v1",
+    "transition_result_digest": null
+  },
+  "state": {
+    "active": {
+      "active_gate": "ACTIVE_GATE",
+      "authority_boundary": null,
+      "authority_ref": null,
+      "blockers": [],
+      "checkpoint_ref": null,
+      "evidence_required": [
+        "result"
+      ],
+      "next_action_ref": "action://observe-run",
+      "objective": "Advance active frontier",
+      "role": "active",
+      "schema_version": "ge.portfolio-entry.v1",
+      "source_revision": "src-active",
+      "state": "running",
+      "wake_condition": null,
+      "work_id": "ACTIVE"
+    },
+    "generation": 1,
+    "passive": [
+      {
+        "active_gate": "PASSIVE_GATE",
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [
+          {
+            "detail": "PASSIVE blocked",
+            "evidence_refs": [],
+            "kind": "external_dependency",
+            "schema_version": "ge.portfolio-blocker.v1"
+          }
+        ],
+        "checkpoint_ref": null,
+        "evidence_required": [],
+        "next_action_ref": "action://passive",
+        "objective": "Wait for PASSIVE",
+        "role": "passive",
+        "schema_version": "ge.portfolio-entry.v1",
+        "source_revision": "src-passive",
+        "state": "passive",
+        "wake_condition": {
+          "kind": "event_received",
+          "schema_version": "ge.wake-condition.v1",
+          "value": "passive.ready"
+        },
+        "work_id": "PASSIVE"
+      }
+    ],
+    "portfolio_id": "durable-asp",
+    "previous_state_digest": "sha256:60eb45c96017f97c0108bfd5b5bc5f58cf22c99be68c2ee7372551f141c6cd6c",
+    "schema_version": "ge.portfolio-state.v1",
+    "secondary": {
+      "active_gate": "SECONDARY_GATE",
+      "authority_boundary": null,
+      "authority_ref": null,
+      "blockers": [],
+      "checkpoint_ref": null,
+      "evidence_required": [],
+      "next_action_ref": "action://secondary",
+      "objective": "Prepare SECONDARY",
+      "role": "secondary",
+      "schema_version": "ge.portfolio-entry.v1",
+      "source_revision": "src-secondary",
+      "state": "ready",
+      "wake_condition": null,
+      "work_id": "SECONDARY"
+    }
+  },
+  "ticks": [
+    {
+      "checkpoint_digest": "sha256:0473f9529bca222eb8558cb1734f808ad599d6c7f3130bae50259148f2ec2b36",
+      "disposition": "committed",
+      "human_required": false,
+      "observation_digest": "sha256:87aefdc4e5ed301db14aff990405733a3e46a251e289ceec49615761cb38c2fa",
+      "portfolio_id": "durable-asp",
+      "post_generation": 1,
+      "post_state_digest": "sha256:6c2f098c4c173c38de60da8c09eac8a20a57b83aafa229069e59fc8dff4b17d3",
+      "pre_generation": 0,
+      "pre_state_digest": "sha256:60eb45c96017f97c0108bfd5b5bc5f58cf22c99be68c2ee7372551f141c6cd6c",
+      "recovery_report_digest": "sha256:6e2b4b11a06e79246d4c6359e006e39c5801e1192a768fe492890d025d091d4f",
+      "requested_action_ref": null,
+      "requested_work_id": null,
+      "schema_version": "ge.resume-tick-result.v1",
+      "transition_result_digest": "sha256:b84c0cd4e8bb0d1305b4e607a52be6875581e64a8a58a77852c7c457dc89f0c4"
+    },
+    {
+      "checkpoint_digest": "sha256:0473f9529bca222eb8558cb1734f808ad599d6c7f3130bae50259148f2ec2b36",
+      "disposition": "already_applied",
+      "human_required": false,
+      "observation_digest": "sha256:87aefdc4e5ed301db14aff990405733a3e46a251e289ceec49615761cb38c2fa",
+      "portfolio_id": "durable-asp",
+      "post_generation": 1,
+      "post_state_digest": "sha256:6c2f098c4c173c38de60da8c09eac8a20a57b83aafa229069e59fc8dff4b17d3",
+      "pre_generation": 1,
+      "pre_state_digest": "sha256:6c2f098c4c173c38de60da8c09eac8a20a57b83aafa229069e59fc8dff4b17d3",
+      "recovery_report_digest": "sha256:6e2b4b11a06e79246d4c6359e006e39c5801e1192a768fe492890d025d091d4f",
+      "requested_action_ref": null,
+      "requested_work_id": null,
+      "schema_version": "ge.resume-tick-result.v1",
+      "transition_result_digest": null
+    }
+  ]
+}

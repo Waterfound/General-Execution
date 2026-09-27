@@ -1,0 +1,66 @@
+{
+  "schema_version": "ge.wave5-work-execution-surface.v1",
+  "recorded_at": "2026-09-26T20:51:16.885158+00:00",
+  "checkpoint_resumed": "1e145c9a2672ba423c6a49acfaee482142e3924e",
+  "remote_heads_confirmed": {
+    "main": "ccc616ea77e6345b6fa3c61448cf17958fefba3d",
+    "feature/durable-asp-portfolio-state": "1e145c9a2672ba423c6a49acfaee482142e3924e",
+    "ops/wave5-vercel-verification": "0949c447d988caaf7f083cb6d2798cfd2301c018"
+  },
+  "candidate_revision": "04a47cd7031b608368de15ec2c99ccc715eb6cbf",
+  "ops_revision": "0949c447d988caaf7f083cb6d2798cfd2301c018",
+  "candidate_source_modified": false,
+  "browser": {
+    "authenticated": true,
+    "team": "Waterfound",
+    "plan": "Hobby",
+    "project": "general-execution-colony-runner",
+    "project_id": "prj_0eyS5MBoYLjAMpWmHMJGBv5cjdIK",
+    "url": "https://vercel.com/waterfound/general-execution-colony-runner",
+    "existing_production_deployment": "dpl_6Uic6nBTvSQTNpUmThaY9V4F9Ymn"
+  },
+  "git_connection": {
+    "status": "NOT_CREATED",
+    "automatic_review": "DENIED",
+    "reason": "Connecting the repository may enable provider-triggered deployments before the required gates.",
+    "repository_selection": "Waterfound/General-Execution",
+    "project_mutated": false
+  },
+  "cli": {
+    "version": "60.1.3",
+    "node": "24.19.0",
+    "vercel_https_status": 200,
+    "npm_registry_https_status": 200,
+    "authentication_file_present_before_login": false,
+    "device_authorization_requested": true,
+    "device_approval_status": "UNAVAILABLE_ALLOW_ACCESS_DISABLED_NO_AUTHORIZATION_GRANTED",
+    "visible_page": "Authorize Device",
+    "reload_attempts": 1,
+    "credentials_exposed": false,
+    "login_waiter_stopped": true
+  },
+  "external_verification": {
+    "deployment_id": null,
+    "deployment_url": null,
+    "ops_sha_deployed": null,
+    "sandbox_created": false,
+    "provider_invoked": false,
+    "observed_revision": null,
+    "revision_verified": null,
+    "pytest": "NOT_EXECUTED",
+    "compileall": "NOT_EXECUTED",
+    "exit_code": null,
+    "shutdown_status": "NOT_APPLICABLE_NO_SANDBOX_CREATED",
+    "receipt": null,
+    "receipt_digest": null
+  },
+  "core1": {
+    "status": "PREPARED_NOT_EXECUTED",
+    "assertions_proven": 0,
+    "assertions_required": 13,
+    "blocked_by": "External exact-candidate CoreVerificationReceipt absent"
+  },
+  "next_action": "Obtain explicit authority for a temporary Git connection before connecting General-Execution and creating the exact isolated preview; otherwise restore a usable CLI device-approval flow.",
+  "replan_required": false,
+  "build_colony_reconciliation": "NOT_EXECUTED_CORE1_PASS_NOT_ADMITTED"
+}
