@@ -1,0 +1,66 @@
+{
+  "schema_version": "ge.wave5-core1-postcrash-recovery.v1",
+  "recorded_at": "2026-09-27T02:55:00Z",
+  "provider": {
+    "project": "general-execution-colony-runner",
+    "project_id": "prj_0eyS5MBoYLjAMpWmHMJGBv5cjdIK",
+    "deployment_id": "dpl_6bGPsH3mfEgRkvGtQw9AsrooRkpq",
+    "deployment_url": "general-execution-colony-runner-ex3jin6i3-waterfound.vercel.app",
+    "deployment_state": "READY",
+    "target": null,
+    "git_repo": "Waterfound/General-Execution",
+    "git_ref": "ops/wave5-vercel-verification",
+    "deployed_ops_revision": "be27c2a4b194b938fa6affd32605574398414533"
+  },
+  "wave5": {
+    "candidate_revision": "04a47cd7031b608368de15ec2c99ccc715eb6cbf",
+    "exact_revision_verified": true,
+    "commands_total": 6,
+    "commands_exit_zero": 6,
+    "full_repository_pytest": "PASS",
+    "compileall": "PASS",
+    "sandbox_shutdown": "Stopped",
+    "external_gate": "PASS",
+    "receipt_readmitted_from_real_artifact": true,
+    "receipt_digests_verified_in_work": true,
+    "receipt_json_externalized": false,
+    "receipt_digest": null
+  },
+  "core1": {
+    "status": "PASS",
+    "assertions_passed": 13,
+    "assertions_required": 13,
+    "cold_resume": "PASS_same_digests_recovered_in_fresh_process",
+    "duplicate_tick": "PASS_second_tick_already_applied",
+    "concurrent_commit": "PASS_single_commit",
+    "assertion_ids": [
+      "bounded_retry",
+      "checkpoint_reconstruction",
+      "cold_resume",
+      "cost_security_authority_stop",
+      "duplicate_tick_idempotent",
+      "external_blocker_parking",
+      "human_gate_stop",
+      "no_chat_dependency",
+      "no_hidden_authority",
+      "passive_wake_admission",
+      "stale_write_rejected",
+      "unknown_failure_single_reproduction",
+      "verified_secondary_promotion"
+    ],
+    "canonical_report_externalized": false
+  },
+  "remaining_work": [
+    "copy exact wave5-verification.json / CoreVerificationReceipt fields and digest into GitHub evidence",
+    "externalize canonical CORE-1 evidence/report with exact receipt digest binding",
+    "reconcile Build Colony after portable evidence copy",
+    "disconnect temporary Vercel Git integration"
+  ],
+  "authority": {
+    "main_modified": false,
+    "merge_authorized": false,
+    "release_authorized": false,
+    "new_spending_authorized": false,
+    "unattended_runtime_enabled": false
+  }
+}
