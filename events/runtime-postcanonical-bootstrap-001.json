@@ -1,0 +1,46 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "runtime-postcanonical-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "durable-runtime-postcanonical-smoke",
+      "generation": 0,
+      "active": {
+        "work_id": "POSTCANON-ACTIVE",
+        "role": "active",
+        "state": "ready",
+        "objective": "Prove persistent runtime executes from canonical merged source after main canonicalization",
+        "active_gate": "POSTCANON-SMOKE",
+        "next_action_ref": "action://await-postcanonical-verification",
+        "source_revision": "fcec2964b2100709a5ecbde38b0bfe0abb8eb2d1",
+        "evidence_required": [],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": null,
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "POSTCANON-SECONDARY",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Remain inert during canonical runtime source verification",
+        "active_gate": "SECONDARY",
+        "next_action_ref": "action://secondary",
+        "source_revision": "fcec2964b2100709a5ecbde38b0bfe0abb8eb2d1",
+        "evidence_required": [],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": null,
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
