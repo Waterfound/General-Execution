@@ -58,7 +58,9 @@
     "lab_verified": true,
     "integrated_main": true,
     "combined_main_verified": true,
-    "live": true
+    "live": true,
+    "closure_evidence_merged": true,
+    "final_post_merge_verified": true
   },
   "limitations": [
     "WTX-05 touch evidence uses real Chromium browser touch emulation, not a physical iPad/iPhone.",
@@ -69,5 +71,68 @@
     "manual_deployment_authorized_in_current_turn": false,
     "new_manual_deployment_triggered": false,
     "release_action_triggered_by_assistant": false
+  },
+  "final_closeout": {
+    "recorded_at": "2026-09-27T18:51:47Z",
+    "fae_pull_request": 260,
+    "evidence_branch_head": "2449f83ea8a05c5eec3a98a400471deef7fa4bb2",
+    "evidence_merge_revision": "48ba1df01075f7e6714d2e98d5ce8df827d1e5f2",
+    "evidence_merged_to_main": true,
+    "merge_commit_verified_signature": true,
+    "post_merge_workflows": [
+      {
+        "name": "cross-lab-integration-gate",
+        "run_id": 36342090977,
+        "conclusion": "success"
+      },
+      {
+        "name": "verify-canonical-source",
+        "run_id": 36342090992,
+        "conclusion": "success"
+      },
+      {
+        "name": "public-code-security-recurring-assurance",
+        "run_id": 36342090959,
+        "conclusion": "success"
+      },
+      {
+        "name": "codeql-security",
+        "run_id": 36342090955,
+        "conclusion": "success"
+      }
+    ],
+    "vercel": {
+      "project_name": "fairyelf-fae-testnet",
+      "production_deployment_id": "dpl_5rpSVGkrvuoLaXD5uWLzf8iDZ66q",
+      "state": "READY",
+      "target": "production",
+      "github_commit_ref": "main",
+      "github_commit_sha": "48ba1df01075f7e6714d2e98d5ce8df827d1e5f2",
+      "production_alias": "fairyelf-fae-testnet.vercel.app"
+    },
+    "exact_public_byte_binding_after_evidence_merge": {
+      "index.html": {
+        "http_status": 200,
+        "exact_text_match": true,
+        "length": 18905
+      },
+      "wallet.js": {
+        "http_status": 200,
+        "exact_text_match": true,
+        "length": 22857
+      },
+      "wallet-transactions.js": {
+        "http_status": 200,
+        "exact_text_match": true,
+        "length": 7884
+      },
+      "core.js": {
+        "http_status": 200,
+        "exact_text_match": true,
+        "length": 22583
+      },
+      "all_exact": true
+    },
+    "conclusion": "WTX-01R through WTX-07 are closed for the Wallet Transaction UX workstream; final evidence is merged in FAE main and the production alias serves the exact integrated Wallet UX bytes."
   }
 }
