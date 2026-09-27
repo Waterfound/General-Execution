@@ -1,0 +1,90 @@
+{
+  "schema_version": "ge.durable-authority-canonicalization.v1",
+  "recorded_at": "2026-09-27T21:23:10Z",
+  "repository": "Waterfound/General-Execution",
+  "canonical_main_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+  "branch": "feature/durable-authority-canonicalization-20260927",
+  "runtime_pins": {
+    "persistent_runtime_from": "fcec2964b2100709a5ecbde38b0bfe0abb8eb2d1",
+    "human_authority_from": "71873e182f5f0d93c35ed35805fe818946bae819",
+    "canonical_to": "a27a558d4ed0e28d96c3fec408212353d0077060"
+  },
+  "verification": {
+    "persistent_runtime": {
+      "run_id": 36351506018,
+      "head_sha": "0893ea5fa831d3db68de27d1b3dd8217149216c5",
+      "conclusion": "success",
+      "focused_tests": "PASS",
+      "envelope_audit": "PASS",
+      "full_regression": "PASS"
+    },
+    "human_authority_bridge": {
+      "run_id": 36351510363,
+      "head_sha": "d08cb0c5833cae28b925f0b424368a2f11e2f9b7",
+      "conclusion": "success",
+      "focused_tests": "PASS",
+      "envelope_audit": "PASS",
+      "full_regression": "PASS"
+    }
+  },
+  "live_human_authority_proof": {
+    "bridge_main_merge_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+    "runtime_workflow_install_commit": "d94a538c7787cddf8c3863fad05f47bffbbd1099",
+    "bootstrap": {
+      "trigger_commit": "35df564b3ffacd27703cdc545a18f53448f834e0",
+      "run_id": 36351261942,
+      "conclusion": "success",
+      "portfolio_id": "durable-human-authority-smoke",
+      "generation": 0,
+      "state_digest": "sha256:eeab23d988b65c597d1186ebbe40eb52d070c1ca84c3ca07a3774f4c29a7e10d"
+    },
+    "human_gate": {
+      "trigger_commit": "a517d69654f7c6a8894183d8441350454c1250f0",
+      "run_id": 36351338843,
+      "conclusion": "success",
+      "pre_generation": 0,
+      "post_generation": 1,
+      "post_state_digest": "sha256:1cfe20be9aa26b9ca821ee79d4a28db8480e23ec793d01c9b4bcfc525bee61a3",
+      "human_required": true,
+      "requested_action_ref": "authority://durable-human-authority-smoke/resume",
+      "checkpoint_digest": "sha256:173868c52b3ba148a2ccd99441e473b48a69753a998033174cd9c715447f2771"
+    },
+    "human_authority_resume": {
+      "trigger_commit": "de3864f5cb0c0d886ae1a3bdcaf17c53c6eb3868",
+      "run_id": 36351403766,
+      "conclusion": "success",
+      "pre_generation": 1,
+      "post_generation": 2,
+      "post_state_digest": "sha256:40734051247834161509c7438bd0dc95396e87da1910eda5aaba0bb67e58bd0b",
+      "human_required": false,
+      "authority_receipt_digest": "sha256:349f90a64e772e09a85f0c21e98aa8d13753f3ea5037251b95745f7c8f2322a7",
+      "authority_grant_digest": "sha256:c844c07e2ce3a2a4d2dd8eaa0e54b9b70c977937285c37cf4a41b9138ef83a5d",
+      "execution_report_digest": "sha256:5671aca0fe9ce11060701c5a5f17c35b8942547af4887e86606cb890be0486c8",
+      "checkpoint_digest": "sha256:486fef0976c5b356acf4cb72c3408065323dd457877f51658fe7c31181ed8a3e",
+      "authority_created": false
+    }
+  },
+  "bridge_source_equivalence": {
+    "from_verified_revision": "71873e182f5f0d93c35ed35805fe818946bae819",
+    "to_canonical_main": "a27a558d4ed0e28d96c3fec408212353d0077060",
+    "exact_files": [
+      "src/general_execution/human_authority.py",
+      "src/general_execution/asp_transition.py",
+      "src/general_execution/transition_policy.py",
+      "scripts/run_human_authority_event.py"
+    ],
+    "all_exact": true
+  },
+  "authority_boundary": {
+    "ordinary_events_cannot_carry_authority": true,
+    "authority_receipts_create_only": true,
+    "trusted_actor_enforced": "Waterfound",
+    "same_runtime_concurrency_group": true,
+    "production_modified": false,
+    "release_modified": false,
+    "new_spend_authorized": false,
+    "credentials_added": false,
+    "runtime_branch_pin_activation_pending_post_merge": true
+  },
+  "next_gate": "Human authorization required to merge canonical pin update and live proof into main. After merge, copy the two canonical workflow files to runtime/durable-asp-control and perform a no-authority source-pin smoke."
+}

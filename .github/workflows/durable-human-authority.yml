@@ -16,7 +16,7 @@ concurrency:
 
 env:
   RUNTIME_BRANCH: runtime/durable-asp-control
-  HUMAN_AUTHORITY_RUNTIME_REVISION: 71873e182f5f0d93c35ed35805fe818946bae819
+  HUMAN_AUTHORITY_RUNTIME_REVISION: a27a558d4ed0e28d96c3fec408212353d0077060
 
 jobs:
   consume-human-authority:
@@ -105,7 +105,7 @@ jobs:
       - name: Prepare pinned verified human authority source
         if: env.already_processed != 'true'
         run: |
-          test "$HUMAN_AUTHORITY_RUNTIME_REVISION" = "71873e182f5f0d93c35ed35805fe818946bae819"
+          test "$HUMAN_AUTHORITY_RUNTIME_REVISION" = "a27a558d4ed0e28d96c3fec408212353d0077060"
           git cat-file -e "$HUMAN_AUTHORITY_RUNTIME_REVISION^{commit}"
           git worktree add --detach /tmp/human-authority-src "$HUMAN_AUTHORITY_RUNTIME_REVISION"
           cd /tmp/human-authority-src
