@@ -1,0 +1,67 @@
+{
+  "schema_version": "ge.unattended-pilot-live-validation.v1",
+  "recorded_at": "2026-09-27T15:30:00Z",
+  "status": "PASS_VERIFIED",
+  "provider": "github_actions",
+  "provider_event": "push",
+  "provider_run_id": 36329375324,
+  "provider_job_id": 108648260843,
+  "provider_conclusion": "success",
+  "activation_commit": "e14e52cc7882e01a18c4cad5849ce76f01207e18",
+  "tested_revision": "1827175ba7b926dfabaeca57791f83595ece11e0",
+  "canonical_report_path": "evidence/durable-execution/2026-09-27/unattended-pilot-live-report.json",
+  "report_digest": "sha256:af7fa8aeef5b9703b140d5d77e387cedbcd8d9b2afe736ee5e745e839546129d",
+  "report_digest_recalculated": true,
+  "artifact": {
+    "artifact_id": 10935630399,
+    "name": "durable-asp-live-pilot-2026-09-27-001",
+    "size_in_bytes": 13282,
+    "github_digest": "sha256:13cd0d5d7dd37ec337095d96a4ae4c61eb9933f154aa798135919817467a78f7",
+    "downloaded_zip_digest": "sha256:13cd0d5d7dd37ec337095d96a4ae4c61eb9933f154aa798135919817467a78f7",
+    "digest_match": true,
+    "files": 11
+  },
+  "runtime": {
+    "process_invocations": 8,
+    "state_transitions": 5,
+    "final_generation": 5,
+    "final_state": "human_gate",
+    "authority_stop": true,
+    "human_required": true,
+    "chat_context_required": false,
+    "real_provider_trigger_observed": true,
+    "bounded_unattended_execution_observed": true
+  },
+  "regression": {
+    "compileall": "PASS",
+    "full_repository_tests": 378,
+    "failures": 0
+  },
+  "cleanup": {
+    "workflow_removed_commit": "3056a0bf9d90de9deb1a99537a08afa1ae46249a",
+    "activation_marker_removed_commit": "0fee094e1952c59a59b6043b7662a8b0896c0980",
+    "additional_live_runs_after_cleanup": 0,
+    "persistent_provider_trigger_enabled": false,
+    "persistent_unattended_runtime_enabled": false
+  },
+  "authority": {
+    "main_revision": "ccc616ea77e6345b6fa3c61448cf17958fefba3d",
+    "main_modified": false,
+    "merge_performed": false,
+    "release_performed": false,
+    "production_modified": false,
+    "new_spend_authorized": false,
+    "new_spend_observed": false
+  },
+  "gate": {
+    "domain": "unattended-pilot",
+    "gate_id": "unattended-proof",
+    "evidence_kind": [
+      "reproduction",
+      "artifact",
+      "hash",
+      "test"
+    ],
+    "verdict": "verified"
+  }
+}
