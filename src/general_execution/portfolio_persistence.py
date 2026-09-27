@@ -379,13 +379,76 @@ class SqlitePortfolioHeadStore:
             raise PortfolioPersistenceError("durable checkpoint metadata mismatch")
         return checkpoint
 
-    def latest_checkpoint(self, portfolio_id: str) -> ExecutionCheckpoint | None:
-        state, head = self.load(portfolio_id)
+    def load_recovery_snapshot(
+        self,
+        portfolio_id: str,
+    ) -> tuple[PortfolioState, DurablePortfolioHead, ExecutionCheckpoint | None]:
+        """Load head and its current-generation checkpoint from one SQLite snapshot."""
+        _nonempty("portfolio_id", portfolio_id)
+        with self._connect() as connection:
+            row = connection.execute(
+                """
+                SELECT h.state_digest, h.generation, h.snapshot_digest,
+                       h.snapshot_json, h.latest_checkpoint_digest,
+                       c.checkpoint_id, c.checkpoint_digest, c.checkpoint_json
+                FROM portfolio_heads AS h
+                LEFT JOIN portfolio_checkpoints AS c
+                  ON c.portfolio_id = h.portfolio_id
+                 AND c.generation = h.generation
+                WHERE h.portfolio_id = ?
+                """,
+                (portfolio_id,),
+            ).fetchone()
+        if row is None:
+            raise PortfolioPersistenceError("durable portfolio head does not exist")
+
+        state, head = _decode_row(row[:5], portfolio_id)
+        checkpoint_id, checkpoint_digest, checkpoint_json = row[5:]
+
         if state.generation == 0:
-            return None
-        checkpoint = self.load_checkpoint(portfolio_id, state.generation)
+            if (
+                head.latest_checkpoint_digest is not None
+                or checkpoint_id is not None
+                or checkpoint_digest is not None
+                or checkpoint_json is not None
+            ):
+                raise PortfolioPersistenceError(
+                    "generation zero cannot bind a checkpoint"
+                )
+            return state, head, None
+
+        if (
+            checkpoint_id is None
+            or checkpoint_digest is None
+            or checkpoint_json is None
+        ):
+            raise PortfolioPersistenceError(
+                "durable portfolio head is missing its current checkpoint"
+            )
+        try:
+            checkpoint = deserialize_checkpoint(checkpoint_json)
+        except ValueError as exc:
+            raise PortfolioPersistenceError(
+                "invalid durable portfolio checkpoint"
+            ) from exc
+        if checkpoint.checkpoint_id != checkpoint_id:
+            raise PortfolioPersistenceError("durable checkpoint id mismatch")
+        if checkpoint.digest != checkpoint_digest:
+            raise PortfolioPersistenceError("durable checkpoint digest mismatch")
         if checkpoint.digest != head.latest_checkpoint_digest:
             raise PortfolioPersistenceError("latest checkpoint digest mismatch")
+        if (
+            checkpoint.portfolio_id != portfolio_id
+            or checkpoint.portfolio_generation != state.generation
+            or checkpoint.portfolio_state_digest != state.digest
+        ):
+            raise PortfolioPersistenceError(
+                "durable checkpoint does not bind current head"
+            )
+        return state, head, checkpoint
+
+    def latest_checkpoint(self, portfolio_id: str) -> ExecutionCheckpoint | None:
+        _, _, checkpoint = self.load_recovery_snapshot(portfolio_id)
         return checkpoint
 
     def commit(
@@ -541,8 +604,7 @@ def recover_portfolio_after_restart(
     store: SqlitePortfolioHeadStore,
     portfolio_id: str,
 ) -> tuple[PortfolioState, ExecutionCheckpoint | None, PortfolioRecoveryReport]:
-    state, head = store.load(portfolio_id)
-    checkpoint = store.latest_checkpoint(portfolio_id)
+    state, head, checkpoint = store.load_recovery_snapshot(portfolio_id)
     report = PortfolioRecoveryReport(
         portfolio_id=state.portfolio_id,
         generation=state.generation,
