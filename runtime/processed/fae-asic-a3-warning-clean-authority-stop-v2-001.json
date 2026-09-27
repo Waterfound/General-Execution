@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:696800fbe3ce3b7766aa277b6b687fb67472a977a90ac7a534cca30852af6a26",
+  "event_id": "fae-asic-a3-warning-clean-authority-stop-v2-001",
+  "event_report_digest": "sha256:06b25112d19bdaef6848b52ae6817f97d89e8896b9c01e078e5cc395354b8f9d",
+  "operation": "transition",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "12fcec590d421742ad0c2613ade6bc80d5e11ec1"
+}
