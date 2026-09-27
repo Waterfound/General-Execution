@@ -1,0 +1,93 @@
+{
+  "schema_version": "ge.fae-wallet-tx-ux-wtx05-independent-verification.v1",
+  "recorded_at": "2026-09-27T17:28:00Z",
+  "portfolio_id": "fae-wallet-transaction-ux-wtx05",
+  "package": "WTX-05-browser-validation",
+  "outcome": "PASS",
+  "base_revision": "8f478e374a92d61d79aedc0cc816b0525a6c03dd",
+  "candidate_revision": "d36c2302cbdcce1fa7b38896362bd58b0a24dd00",
+  "exact_delta": [
+    ".github/workflows/wallet-tx-ux-browser.yml",
+    ".github/workflows/wallet-tx-ux-current-main.yml",
+    "tests/wallet-browser-validation.spec.mjs"
+  ],
+  "product_files_changed": false,
+  "deterministic_verification": {
+    "run_id": 36336818778,
+    "job_id": 108669141733,
+    "conclusion": "success",
+    "checks": [
+      "source_manifests",
+      "browser_source_syntax",
+      "wtx01_contract",
+      "wtx02_acceptance_fixtures",
+      "wtx04_history_lifecycle",
+      "crypto_compatibility",
+      "client_smoke",
+      "independent_node"
+    ]
+  },
+  "real_browser_validation": {
+    "workflow": "Wallet Transaction UX browser validation",
+    "run_id": 36336818799,
+    "job_id": 108669142043,
+    "conclusion": "success",
+    "browser": "Chromium via Playwright 1.55.0",
+    "profiles": [
+      "desktop-mouse 1440x900",
+      "tablet-touch 834x1194",
+      "mobile-touch 390x844"
+    ],
+    "tests": "4/4 PASS",
+    "behaviors": [
+      "wallet creation",
+      "history visible and ready",
+      "keyboard and touch history toggle",
+      "transaction detail open",
+      "full selectable TXID",
+      "exact clipboard copy",
+      "accepted-unconfirmed send receipt",
+      "receipt TXID copy",
+      "bounded coverage disclosure",
+      "no horizontal page overflow"
+    ],
+    "limitation": "Browser-CI touch emulation is not physical iPad/iPhone evidence."
+  },
+  "independent_verification": {
+    "workflow": "FAE Wallet UX WTX05 independent verifier",
+    "workflow_revision": "29cc35f46f21b2e4c97a9e6fccc6ac97107a5d58",
+    "run_id": 36336972956,
+    "job_id": 108669569142,
+    "conclusion": "success",
+    "exact_candidate_checkout": true,
+    "exact_delta_allowlist": true,
+    "deterministic_gates_replayed": true,
+    "real_browser_journeys_replayed": true,
+    "browser_tests": "4/4 PASS"
+  },
+  "non_selective_failure_ledger": [
+    {
+      "run_id": 36336377229,
+      "head_sha": "5802cb230e16bcc10927dfa42f3d9483d3970ac6",
+      "conclusion": "failure",
+      "classification": "EARLY_BROWSER_HARNESS_ITERATION"
+    },
+    {
+      "run_id": 36336534812,
+      "head_sha": "85f4a841ad0c598fb0b250700fe75a1cfe80abdc",
+      "conclusion": "failure",
+      "classification": "EARLY_BROWSER_HARNESS_ITERATION"
+    }
+  ],
+  "authority": {
+    "main_modified": false,
+    "merge_performed": false,
+    "release_performed": false,
+    "production_modified": false,
+    "backend_changed": false,
+    "consensus_changed": false,
+    "wallet_key_material_changed": false,
+    "new_spend_authorized": false
+  },
+  "next_package": "WTX-06-integration"
+}
