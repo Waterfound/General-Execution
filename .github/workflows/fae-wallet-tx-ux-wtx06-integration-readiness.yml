@@ -1,0 +1,83 @@
+name: FAE Wallet UX WTX06 integration readiness
+
+on:
+  push:
+    branches:
+      - feature/durable-asp-portfolio-state
+    paths:
+      - .github/workflows/fae-wallet-tx-ux-wtx06-integration-readiness.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  FAE_MAIN: c34f8287fb7e09d05e762b3061060a9c03c692d9
+  FAE_CANDIDATE: d36c2302cbdcce1fa7b38896362bd58b0a24dd00
+
+jobs:
+  integration-readiness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: Waterfound/FAE-testnet
+          ref: d36c2302cbdcce1fa7b38896362bd58b0a24dd00
+          fetch-depth: 1
+          path: fae
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Bind exact candidate and latest main
+        working-directory: fae
+        run: |
+          test "$(git rev-parse HEAD)" = "$FAE_CANDIDATE"
+          git fetch --depth=1 origin main
+          test "$(git rev-parse FETCH_HEAD)" = "$FAE_MAIN"
+          git merge-base --is-ancestor "$FAE_MAIN" "$FAE_CANDIDATE"
+
+      - name: Run cross-lab integration gate
+        working-directory: fae
+        run: node tools/verify-lab-integration.mjs --require-latest-main --run
+
+      - name: Re-run Wallet UX deterministic gates
+        working-directory: fae
+        run: |
+          node --check core.js
+          node --check wallet.js
+          node --check wallet-transactions.js
+          node tests/wallet-transactions-contract.mjs
+          node tests/wallet-transactions-acceptance.mjs
+          node tests/wallet-history-lifecycle.mjs
+          node tests/crypto-compat.mjs
+          node tests/client-smoke.mjs
+          npm ci --prefix sovereign-forge/node
+          npm run --prefix sovereign-forge/node check
+          node sovereign-forge/tests/smoke-independent-node.mjs
+
+      - name: Install pinned Chromium verifier
+        working-directory: fae
+        run: |
+          printf '{"private":true}\n' > package.json
+          npm install --no-save --package-lock=false @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Start isolated local client
+        working-directory: fae
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/wtx06-http.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/wtx06-http.log
+          exit 1
+
+      - name: Re-run browser journeys on integration candidate
+        working-directory: fae
+        run: npx playwright test tests/wallet-browser-validation.spec.mjs --reporter=line --workers=1
