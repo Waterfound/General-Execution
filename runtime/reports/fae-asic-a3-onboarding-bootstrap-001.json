@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:45af3fe0369b7dd677ad9e135e57c7ab42964bfd0fe0c0921de62877a3f2e9c0",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "fae-asic-a3-onboarding-bootstrap-001",
+    "human_required": false,
+    "operation": "bootstrap",
+    "portfolio_id": "fae-asic-a3-topology",
+    "post_generation": 0,
+    "post_state_digest": "sha256:60129a52ca46fc4d2ce45c27beb6de96b0088f1fef61d73da905adddb994b2e9",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:60129a52ca46fc4d2ce45c27beb6de96b0088f1fef61d73da905adddb994b2e9",
+    "requested_action_ref": "github://Waterfound/FAE-testnet/tree/lab/asic-f2-timing-hardening-bc-001/labs/asic-f2-pre-go/runtime/F2_ATTACKER_SWEEP_A3_TOPOLOGY_PLAN.json",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:909044e141d3e46341d05d9bed664a5ad4c3487149ce95ad0424518a760a66ad",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
