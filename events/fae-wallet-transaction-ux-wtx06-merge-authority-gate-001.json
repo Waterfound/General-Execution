@@ -1,0 +1,73 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-wallet-transaction-ux-wtx06-merge-authority-gate-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-wallet-transaction-ux-wtx06-v1",
+      "revision": "3",
+      "rules": [
+        {
+          "rule_id": "01-merge-authority-gate",
+          "from_state": "verifying",
+          "event": "authority_required",
+          "to_state": "human_gate",
+          "next_action_ref": "github://Waterfound/FAE-testnet/pull/259",
+          "effect": "stop_human_gate",
+          "required_evidence": [
+            "merge_authority_required"
+          ],
+          "authority_mode": "human_required",
+          "authority_boundary": "Explicit human authorization is required before merging PR #259 into canonical main. This gate does not authorize release, deployment, LIVE, backend/consensus changes, wallet key-material changes, spending, credentials, or destructive infrastructure.",
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-push",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-wallet-transaction-ux-wtx06",
+      "policy_digest": "sha256:d1793de54f5cb61c8bfb316d0cc3c55f7e444c8d66c6fdefaf01c563d5beb66b",
+      "transition_event": "authority_required"
+    },
+    "trigger": {
+      "source": "github-push",
+      "event_id": "fae-wallet-transaction-ux-wtx06-merge-authority-gate-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:8b2de2c918b33b4f1da2def7dc1957ea1d42c7f6f30f816cddf94ab423521137",
+      "observation_digest": "sha256:05e4c4c04670bf4d08b1fe8e72c90f7a7c2ead6665ddcabc2609dd650aca5de3",
+      "admission_ref": "github://runtime/durable-asp-control/fae-wallet-transaction-ux-wtx06-merge-authority-gate-001"
+    },
+    "observation": {
+      "portfolio_id": "fae-wallet-transaction-ux-wtx06",
+      "expected_generation": 2,
+      "expected_state_digest": "sha256:f1df8e6bae62c973f35f7ff94ff1fb134d725ad3e3c95ae713cfff221b115f7e",
+      "policy_digest": "sha256:d1793de54f5cb61c8bfb316d0cc3c55f7e444c8d66c6fdefaf01c563d5beb66b",
+      "event": "authority_required",
+      "evidence": [
+        {
+          "kind": "merge_authority_required",
+          "locator": "github://Waterfound/FAE-testnet/pull/259",
+          "digest": "sha256:719d55436aa3dcb2736ac8d292d44b5c34e16875a75c12e86bcada0f9f91fc47",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "github://Waterfound/FAE-testnet/pull/259",
+      "observed_at": "2026-09-27T17:46:00Z",
+      "summary": "WTX-06 is integration-ready and PR #259 is prepared as draft. Stop before canonical main merge until explicit human authority is provided.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/main/c34f8287fb7e09d05e762b3061060a9c03c692d9",
+        "github://Waterfound/FAE-testnet/commit/a18484c7fc56d914a42105a0be80f9b974ee202f",
+        "github://Waterfound/FAE-testnet/pull/259",
+        "github://Waterfound/General-Execution/actions/runs/36337927016",
+        "github://Waterfound/General-Execution/evidence/durable-execution/2026-09-27/fae-wallet-tx-ux-wtx06-integration-readiness.json"
+      ],
+      "uncertainties": [],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
