@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:6f60cb457be3d62a6ebbd476dcab0ce9fd4858d2bf30bd43c881db1f47fe576c",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "runtime-protection-smoke-001",
+    "human_required": false,
+    "operation": "bootstrap",
+    "portfolio_id": "durable-runtime-protection-smoke",
+    "post_generation": 0,
+    "post_state_digest": "sha256:f1e0c574d9c9b7e325d999be5f74dcbb7bd6fa1866622ffad21af07302d1b59a",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:f1e0c574d9c9b7e325d999be5f74dcbb7bd6fa1866622ffad21af07302d1b59a",
+    "requested_action_ref": "action://runtime-protection-verified",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:0de8f0a0d9465d0c014227111a66d7c30505149b4da05214c70fb39f0fd31e64",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}

@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:6f60cb457be3d62a6ebbd476dcab0ce9fd4858d2bf30bd43c881db1f47fe576c",
+  "event_id": "runtime-protection-smoke-001",
+  "event_report_digest": "sha256:0de8f0a0d9465d0c014227111a66d7c30505149b4da05214c70fb39f0fd31e64",
+  "operation": "bootstrap",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "031747f11ec6dcacb81b55d693681729d92dca7e"
+}
