@@ -1,0 +1,74 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-wallet-transaction-ux-wtx05-execution-complete-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-wallet-transaction-ux-wtx05-v1",
+      "revision": "2",
+      "rules": [
+        {
+          "rule_id": "01-execution-complete",
+          "from_state": "running",
+          "event": "execution_completed",
+          "to_state": "verifying",
+          "next_action_ref": "action://project-assurance/wtx05",
+          "effect": "none",
+          "required_evidence": [
+            "execution_result"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-push",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-wallet-transaction-ux-wtx05",
+      "policy_digest": "sha256:aee413a392b2d6e97e6e62aafdd8ac9ded5a2c799d4049e6592a9adc07b08beb",
+      "transition_event": "execution_completed"
+    },
+    "trigger": {
+      "source": "github-push",
+      "event_id": "fae-wallet-transaction-ux-wtx05-execution-complete-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:601376a56ed62d33af1c8075510d9ffd86324640c00e4e7af171d9b01f345f0d",
+      "observation_digest": "sha256:ff008aec1c0dcdcb97c1920a06457e9e70c0528b253831925d5f2a049fd6846a",
+      "admission_ref": "github://runtime/durable-asp-control/fae-wallet-transaction-ux-wtx05-execution-complete-001"
+    },
+    "observation": {
+      "portfolio_id": "fae-wallet-transaction-ux-wtx05",
+      "expected_generation": 1,
+      "expected_state_digest": "sha256:2711980a9e00ba1b3137317674dc97b67410a7f1a8c886243adeb5f946601c4c",
+      "policy_digest": "sha256:aee413a392b2d6e97e6e62aafdd8ac9ded5a2c799d4049e6592a9adc07b08beb",
+      "event": "execution_completed",
+      "evidence": [
+        {
+          "kind": "execution_result",
+          "locator": "github://Waterfound/FAE-testnet/actions/runs/36336818799",
+          "digest": "sha256:601376a56ed62d33af1c8075510d9ffd86324640c00e4e7af171d9b01f345f0d",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "github://Waterfound/FAE-testnet/commit/d36c2302cbdcce1fa7b38896362bd58b0a24dd00",
+      "observed_at": "2026-09-27T17:26:00Z",
+      "summary": "WTX-05 deterministic and real-Chromium browser validation completed on the same immutable candidate across desktop mouse, tablet touch, mobile touch, keyboard focus, clipboard, transaction details, lifecycle coverage, and narrow viewport overflow.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/d36c2302cbdcce1fa7b38896362bd58b0a24dd00",
+        "github://Waterfound/FAE-testnet/actions/runs/36336818778",
+        "github://Waterfound/FAE-testnet/actions/runs/36336818799",
+        "github://Waterfound/General-Execution/evidence/durable-execution/2026-09-27/fae-wallet-tx-ux-wtx04-independent-verification.json"
+      ],
+      "uncertainties": [
+        "Chromium CI with emulated tablet/mobile touch is real-browser evidence, not physical iPad/iPhone evidence."
+      ],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
