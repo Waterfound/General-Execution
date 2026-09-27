@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:fbff9eaafc2959f8ad7df79e6d391566524f41404ddc0806f808b90be1702b57",
+  "event_id": "fae-wallet-transaction-ux-wtx06-execution-complete-001",
+  "event_report_digest": "sha256:5f509e23d78521c1ab4b8a6b4fbc40cc27d05ec3d493ee583dd17e5fced8bafd",
+  "operation": "transition",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "0ee552364eae07cd23b94da4cb4fa9c4cac23763",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "930450ee47f04c411169f5d062963f97e34fe194"
+}
