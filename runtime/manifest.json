@@ -1,10 +1,10 @@
 {
   "authority_created": false,
-  "database_sha256": "sha256:529e7eb7713ce8e47056fd479cddf7bd3da30f91b2fb20c7d68792cf01a291fe",
-  "last_event_id": "fae-wallet-transaction-ux-execution-start-001",
-  "last_event_report_digest": "sha256:7cefdc2535914737a63d5a20104c057d98143ca50ee368a961cbab525015ba44",
+  "database_sha256": "sha256:582b2fabf0529f80b330573321225548827292431386ccce62e7dbdb7b68ecbb",
+  "last_event_id": "fae-wallet-transaction-ux-execution-complete-001",
+  "last_event_report_digest": "sha256:31add136a850ae929dd911496a89c7c542f6e21be8009089b22899e2344c2570",
   "last_operation": "transition",
-  "last_trigger_commit": "8fe5c75dd0f4133890f2fe52df355501852c7552",
+  "last_trigger_commit": "6f5ffcfd00c714ec23fe5d4ff227d316a0dad45c",
   "persistent_provider_trigger_enabled": true,
   "runtime_source_revision": "0ee552364eae07cd23b94da4cb4fa9c4cac23763",
   "schema_version": "ge.persistent-runtime-manifest.v1"
