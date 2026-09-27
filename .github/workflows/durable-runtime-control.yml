@@ -48,8 +48,10 @@ jobs:
           assert path.startswith("events/") and path.endswith(".json")
           with open(os.environ["GITHUB_OUTPUT"],"a") as out:
               out.write(f"path={path}\n")
+          pathlib.Path("/tmp/event-path.txt").write_text(path)
           PY
-          git show "$GITHUB_SHA:${{ steps.event.outputs.path }}" > /tmp/event.json
+          EVENT_PATH="$(cat /tmp/event-path.txt)"
+          git show "$GITHUB_SHA:$EVENT_PATH" > /tmp/event.json
 
       - name: Reject credential-shaped event data
         run: |
