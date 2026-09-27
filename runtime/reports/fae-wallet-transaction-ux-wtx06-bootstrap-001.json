@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:5dd311baf7f2a76168e2e2ab020ad1d72c1f61668ae4f9fd1c954057714ca680",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "fae-wallet-transaction-ux-wtx06-bootstrap-001",
+    "human_required": false,
+    "operation": "bootstrap",
+    "portfolio_id": "fae-wallet-transaction-ux-wtx06",
+    "post_generation": 0,
+    "post_state_digest": "sha256:42339d71a3a685dd040ae31ea4a2f6fe0b08d2118e08e71d91c0074afc3a8076",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:42339d71a3a685dd040ae31ea4a2f6fe0b08d2118e08e71d91c0074afc3a8076",
+    "requested_action_ref": "github://Waterfound/FAE-testnet/branch/build-colony/wallet-tx-ux-current-main-20260927",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:e64831f293e63d88c86682aa08e950a2da845d45b497661898c3c1e0652335dc",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
