@@ -47,10 +47,19 @@
     "tests": 345
   },
   "next_action": {
-    "frontier": null,
-    "mode": "frozen Durable ASP plan reached verified ceiling",
-    "authority_gate": "Any move toward persistent unattended activation, merge to main, release, production deployment, broader provider triggers, or new spending requires a separate explicit authority decision.",
-    "automatic_continuation": false
+    "frontier": "real-work-onboarding",
+    "mode": "admit the first real work portfolio into the verified persistent runtime",
+    "automatic_continuation": false,
+    "authority_gate": "Select/admit a real work item and its project-specific authority envelope before replacing the smoke canary with real operational state.",
+    "persistent_runtime_may_remain_armed": true,
+    "forbidden_without_new_authority": [
+      "main merge",
+      "release",
+      "production deployment",
+      "new spending",
+      "credentials",
+      "project-specific destructive actions outside the admitted envelope"
+    ]
   },
   "operational_runner": {
     "auto_deployment_detected": false,
@@ -78,8 +87,8 @@
     }
   },
   "previous_candidate": "6cad261424c9f28e3b6651e656c6adafdb6954ee",
-  "previous_checkpoint": "f717d64448561ff6dcd28400a0fbf69732685b9c",
-  "recorded_at": "2026-09-27T15:31:00Z",
+  "previous_checkpoint": "b107ba8ceb9fa106271366419bffbcb27c84acb8",
+  "recorded_at": "2026-09-27T15:59:00Z",
   "schema_version": "ge.durable-development-checkpoint.v1",
   "source_publication": {
     "identical_git_tree": "823c81c75aac5f343980b98e52bd8dc493779b96",
@@ -239,5 +248,27 @@
     "failed_domains": [],
     "project_goal_evidence_complete": true,
     "main_modified": false
+  },
+  "persistent_runtime": {
+    "schema_version": "ge.persistent-runtime-live-validation.v1",
+    "status": "ACTIVE_VERIFIED",
+    "evidence_path": "evidence/durable-execution/2026-09-27/persistent-runtime-live-validation.json",
+    "runtime_branch": "runtime/durable-asp-control",
+    "runtime_branch_head": "1d406099ee58656e2c4a5e6e021300c77ca7a20c",
+    "pinned_source_revision": "0ee552364eae07cd23b94da4cb4fa9c4cac23763",
+    "verification_run_id": 36330937794,
+    "focused_tests": 6,
+    "full_repository_tests": 384,
+    "bootstrap_run_id": 36331002152,
+    "transition_run_id": 36331174028,
+    "cross_runner_state_recovery_proven": true,
+    "persistent_provider_trigger_enabled": true,
+    "persistent_schedule_enabled": false,
+    "authority_created": false,
+    "current_runtime_portfolio": "durable-runtime-smoke",
+    "current_generation": 1,
+    "current_state": "human_gate",
+    "current_database_sha256": "sha256:b83d0ce9dd1280173e5e68501a921f90387ff3bdd003a5d62e08c1470de64293",
+    "real_project_onboarded": false
   }
 }
