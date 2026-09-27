@@ -1,0 +1,41 @@
+{
+  "authority_grant_digest": "sha256:c844c07e2ce3a2a4d2dd8eaa0e54b9b70c977937285c37cf4a41b9138ef83a5d",
+  "authority_receipt": {
+    "approved_action_ref": "authority://durable-human-authority-smoke/resume",
+    "approved_at": "2026-09-27T21:22:00Z",
+    "authority_boundary": "resume isolated durable human authority smoke",
+    "authority_ref": "github://Waterfound/General-Execution/commit/de3864f5cb0c0d886ae1a3bdcaf17c53c6eb3868/authority/runtime-human-authority-resume-001.json",
+    "event_id": "runtime-human-authority-resume-001",
+    "expected_generation": 1,
+    "expected_state_digest": "sha256:1cfe20be9aa26b9ca821ee79d4a28db8480e23ec793d01c9b4bcfc525bee61a3",
+    "policy_digest": "sha256:afd4c95c84e419321b9f811afccbda8e600896eec4566c5d5480b93b40579ef1",
+    "portfolio_id": "durable-human-authority-smoke",
+    "provider_actor": "Waterfound",
+    "rule_digest": "sha256:21dde2e28ed147c5a426af7c48027bcfdb41a4c619eb8037d10bbaaeea96a20b",
+    "schema_version": "ge.human-authority-receipt.v1"
+  },
+  "authority_receipt_digest": "sha256:349f90a64e772e09a85f0c21e98aa8d13753f3ea5037251b95745f7c8f2322a7",
+  "authority_ref": "github://Waterfound/General-Execution/commit/de3864f5cb0c0d886ae1a3bdcaf17c53c6eb3868/authority/runtime-human-authority-resume-001.json",
+  "database_sha256": "sha256:631b26bc06ef9a9904900426ca49152ff087c8c6c0172a90d7c9d93cf4d7aabd",
+  "event_id": "runtime-human-authority-resume-001",
+  "execution_report_digest": "sha256:5671aca0fe9ce11060701c5a5f17c35b8942547af4887e86606cb890be0486c8",
+  "observation_digest": "sha256:306b9247a8ae1b2ed6c968b1236c63b54e4138a8e555834334e150575c9ed903",
+  "provider_actor": "Waterfound",
+  "schema_version": "ge.human-authority-execution.v1",
+  "tick": {
+    "checkpoint_digest": "sha256:486fef0976c5b356acf4cb72c3408065323dd457877f51658fe7c31181ed8a3e",
+    "disposition": "committed",
+    "human_required": false,
+    "observation_digest": "sha256:306b9247a8ae1b2ed6c968b1236c63b54e4138a8e555834334e150575c9ed903",
+    "portfolio_id": "durable-human-authority-smoke",
+    "post_generation": 2,
+    "post_state_digest": "sha256:40734051247834161509c7438bd0dc95396e87da1910eda5aaba0bb67e58bd0b",
+    "pre_generation": 1,
+    "pre_state_digest": "sha256:1cfe20be9aa26b9ca821ee79d4a28db8480e23ec793d01c9b4bcfc525bee61a3",
+    "recovery_report_digest": "sha256:91f1043bab6699b673ab1498b99fe9e6e29298cc08eaa3d1fcfcf9b2bab2b2bc",
+    "requested_action_ref": null,
+    "requested_work_id": null,
+    "schema_version": "ge.resume-tick-result.v1",
+    "transition_result_digest": "sha256:a1369cf1d9ea373496338691d429fbe0309f9da4be2c52ba0e1efb16a91ba43f"
+  }
+}

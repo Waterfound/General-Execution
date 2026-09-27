@@ -1,0 +1,12 @@
+{
+  "authority_grant_digest": "sha256:c844c07e2ce3a2a4d2dd8eaa0e54b9b70c977937285c37cf4a41b9138ef83a5d",
+  "authority_receipt_digest": "sha256:349f90a64e772e09a85f0c21e98aa8d13753f3ea5037251b95745f7c8f2322a7",
+  "authority_ref": "github://Waterfound/General-Execution/commit/de3864f5cb0c0d886ae1a3bdcaf17c53c6eb3868/authority/runtime-human-authority-resume-001.json",
+  "database_sha256": "sha256:631b26bc06ef9a9904900426ca49152ff087c8c6c0172a90d7c9d93cf4d7aabd",
+  "event_id": "runtime-human-authority-resume-001",
+  "execution_report_digest": "sha256:5671aca0fe9ce11060701c5a5f17c35b8942547af4887e86606cb890be0486c8",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "71873e182f5f0d93c35ed35805fe818946bae819",
+  "schema_version": "ge.human-authority-processed-event.v1",
+  "trigger_commit": "de3864f5cb0c0d886ae1a3bdcaf17c53c6eb3868"
+}
