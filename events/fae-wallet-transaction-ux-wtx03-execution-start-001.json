@@ -1,0 +1,70 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-wallet-transaction-ux-wtx03-execution-start-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-wallet-transaction-ux-wtx03-v1",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-execution-start",
+          "from_state": "ready",
+          "event": "execution_started",
+          "to_state": "running",
+          "next_action_ref": "github://Waterfound/FAE-testnet/branch/build-colony/wallet-tx-ux-current-main-20260927",
+          "effect": "none",
+          "required_evidence": [
+            "dispatch_admitted"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-push",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-wallet-transaction-ux-wtx03",
+      "policy_digest": "sha256:34eb59ccd7610a9ed1245463b0ea495b565bb510bf178e641e56db2d03566ed7",
+      "transition_event": "execution_started"
+    },
+    "trigger": {
+      "source": "github-push",
+      "event_id": "fae-wallet-transaction-ux-wtx03-execution-start-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:79af3df66b63185064f4880ff0b4676e6a4e69f9b74d7acf5acbb287572412f7",
+      "observation_digest": "sha256:de81155696b78e2cd186230081e511224fa1783bbcd91b5c617e548db1ad60d3",
+      "admission_ref": "github://runtime/durable-asp-control/fae-wallet-transaction-ux-wtx03-execution-start-001"
+    },
+    "observation": {
+      "portfolio_id": "fae-wallet-transaction-ux-wtx03",
+      "expected_generation": 0,
+      "expected_state_digest": "sha256:e9e0b9c81e5d6a7504878f770ced613be9d3656e8fff6cbc06d509860e4a8798",
+      "policy_digest": "sha256:34eb59ccd7610a9ed1245463b0ea495b565bb510bf178e641e56db2d03566ed7",
+      "event": "execution_started",
+      "evidence": [
+        {
+          "kind": "dispatch_admitted",
+          "locator": "github://Waterfound/FAE-testnet/branch/build-colony/wallet-tx-ux-current-main-20260927",
+          "digest": "sha256:79af3df66b63185064f4880ff0b4676e6a4e69f9b74d7acf5acbb287572412f7",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "github://Waterfound/FAE-testnet/branch/build-colony/wallet-tx-ux-current-main-20260927",
+      "observed_at": "2026-09-27T16:55:00Z",
+      "summary": "Dispatch WTX-03 TXID receipt and transaction detail hardening on the verified current-main Wallet UX branch.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/2b19764abdfc400276f22c235cfa0ae2a6963209",
+        "github://Waterfound/General-Execution/evidence/durable-execution/2026-09-27/fae-wallet-tx-ux-wtx02-independent-verification.json"
+      ],
+      "uncertainties": [],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
