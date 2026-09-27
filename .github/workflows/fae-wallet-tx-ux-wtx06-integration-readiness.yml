@@ -24,7 +24,7 @@ jobs:
         with:
           repository: Waterfound/FAE-testnet
           ref: d36c2302cbdcce1fa7b38896362bd58b0a24dd00
-          fetch-depth: 1
+          fetch-depth: 0
           path: fae
 
       - uses: actions/setup-node@v4
@@ -35,7 +35,7 @@ jobs:
         working-directory: fae
         run: |
           test "$(git rev-parse HEAD)" = "$FAE_CANDIDATE"
-          git fetch --depth=1 origin main
+          git fetch --no-tags origin main
           test "$(git rev-parse FETCH_HEAD)" = "$FAE_MAIN"
           git merge-base --is-ancestor "$FAE_MAIN" "$FAE_CANDIDATE"
 
