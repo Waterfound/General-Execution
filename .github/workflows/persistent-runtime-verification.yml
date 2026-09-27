@@ -55,6 +55,8 @@ jobs:
           assert "branches:\n      - main" not in text
           assert "production" not in text.lower()
           assert "release" not in text.lower()
+          assert "__PINNED_RUNTIME_REVISION__" not in text
+          assert "0ee552364eae07cd23b94da4cb4fa9c4cac23763" in text
           PY
       - name: Full regression
         run: python -m pytest -q
