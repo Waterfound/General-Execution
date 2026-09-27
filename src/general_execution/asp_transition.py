@@ -503,11 +503,26 @@ def apply_active_transition(
             new_active = _authority_stopped_active(state.active, rule, evidence)
         else:
             try:
-                new_active = replace(
-                    state.active,
-                    state=rule.to_state,
-                    next_action_ref=rule.next_action_ref,
-                )
+                if state.active.state == "human_gate":
+                    if authority_grant is None:
+                        raise AspTransitionError(
+                            "leaving human_gate requires bounded authority grant"
+                        )
+                    new_active = replace(
+                        state.active,
+                        state=rule.to_state,
+                        next_action_ref=rule.next_action_ref,
+                        authority_boundary=None,
+                        authority_ref=authority_grant.authority_ref,
+                        blockers=(),
+                        wake_condition=None,
+                    )
+                else:
+                    new_active = replace(
+                        state.active,
+                        state=rule.to_state,
+                        next_action_ref=rule.next_action_ref,
+                    )
             except ValueError as exc:
                 raise AspTransitionError(
                     "transition target is incompatible with current Active metadata"
