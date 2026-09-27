@@ -1,0 +1,59 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-asic-a3-warning-clean-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "fae-asic-a3-warning-clean-revalidation",
+      "generation": 0,
+      "active": {
+        "work_id": "FAE-ASIC-A3-WARNING-CLEAN-REVALIDATION",
+        "role": "active",
+        "state": "human_gate",
+        "objective": "Revalidate the AXI4-Lite warning-clean A3 direct-split candidate in AWS/Vivado without physical implementation or AFI creation.",
+        "active_gate": "A3-WARNING-CLEAN-STATIC-REVALIDATION",
+        "next_action_ref": "authority://fae-asic/a3/warning-clean-static-revalidation",
+        "source_revision": "4246c098468f59bca2c41d8db1e8651912ac9167",
+        "evidence_required": [
+          "a3_warning_clean_static_revalidation"
+        ],
+        "authority_boundary": "Authorize bounded AWS/Vivado A3 static revalidation of the AXI4-Lite warning-clean candidate only; remain within the existing ASIC Lab spend envelope; no physical implementation, AFI creation, release, consensus activation, or mainnet action.",
+        "authority_ref": null,
+        "blockers": [
+          {
+            "kind": "authority",
+            "detail": "Explicit human authorization required before provider infrastructure is used for the warning-clean static revalidation.",
+            "evidence_refs": [
+              "github-actions://Waterfound/FAE-testnet/runs/36359254418"
+            ],
+            "schema_version": "ge.portfolio-blocker.v1"
+          }
+        ],
+        "wake_condition": null,
+        "checkpoint_ref": "fae://asic/f2/a3-warning-clean-static-revalidation",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "FAE-ASIC-A3-PHYSICAL-DECISION",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "After warning-clean provider validation, evaluate whether a physical implementation is justified; no physical build without separate authority.",
+        "active_gate": "A3-PHYSICAL-DECISION",
+        "next_action_ref": "authority://fae-asic/a3/physical-build",
+        "source_revision": "4246c098468f59bca2c41d8db1e8651912ac9167",
+        "evidence_required": [
+          "a3_warning_clean_static_revalidation"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "fae://asic/f2/a3-physical-decision",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
