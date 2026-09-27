@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:1069f599fe39bf353f5f23734c21edff8bdc18c8df46e61806f041d17bccd4dd",
+  "event_report": {
+    "checkpoint_digest": "sha256:48c28d7cb49491de5ef54948d6c5f316e2eb30ec3d3dfa343da16b03da5cc17e",
+    "event_id": "fae-asic-a3-provider-authority-stop-001",
+    "human_required": true,
+    "operation": "transition",
+    "portfolio_id": "fae-asic-a3-topology",
+    "post_generation": 2,
+    "post_state_digest": "sha256:943d66e9398c5977fa1454e1173e2a115c5a770066c4f6b8d1993fc23038380f",
+    "pre_generation": 1,
+    "pre_state_digest": "sha256:6abf0c8a98fa70a5c9a41d058ca457eab328b8f763e8e4bd9c57b79344a8d69a",
+    "requested_action_ref": "authority://fae-asic/a3/aws-vivado-static-validation",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "committed"
+  },
+  "event_report_digest": "sha256:a5ce2b61703b2e353213079bace217f04dfa6cc548fef7759c7d327ba6845d3b",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
