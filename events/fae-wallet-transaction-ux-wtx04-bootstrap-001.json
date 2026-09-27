@@ -1,0 +1,58 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-wallet-transaction-ux-wtx04-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "fae-wallet-transaction-ux-wtx04",
+      "generation": 0,
+      "active": {
+        "work_id": "WTX-04-history-lifecycle",
+        "role": "active",
+        "state": "ready",
+        "objective": "Implement Wallet Transaction UX history lifecycle on the verified WTX-03 candidate: explicit loading/ready/empty/unavailable/invalid/stale states, bounded coverage messaging, retry, and request-generation protection including A-to-B-to-A races.",
+        "active_gate": "WTX-04",
+        "next_action_ref": "github://Waterfound/FAE-testnet/branch/build-colony/wallet-tx-ux-current-main-20260927",
+        "source_revision": "2c4e3cf0ed958d1ab28d7bbcaaf01c9424fc1e1d",
+        "evidence_required": [
+          "history_lifecycle_states",
+          "bounded_coverage_message",
+          "retry_path",
+          "stale_history_preservation",
+          "a_b_a_stale_response_rejection",
+          "invalid_payload_not_empty",
+          "wallet_ux_ci_green"
+        ],
+        "authority_boundary": "Wallet Transaction UX development branch only. Stop before main merge, release, production deployment, new spending, credentials, backend/consensus changes, wallet key-material changes, or destructive infrastructure.",
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": null,
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "WTX-05-browser-validation",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Validate the complete Wallet Transaction UX journey deterministically and in a real browser across desktop/tablet/mobile viewports after WTX-04 verifies.",
+        "active_gate": "WTX-05",
+        "next_action_ref": "action://browser-validation/wallet-transaction-ux",
+        "source_revision": "2c4e3cf0ed958d1ab28d7bbcaaf01c9424fc1e1d",
+        "evidence_required": [
+          "wtx04_verified_revision",
+          "deterministic_journey_checks",
+          "real_browser_desktop_tablet_mobile"
+        ],
+        "authority_boundary": "Browser validation only; no main/merge/release/production/spend/backend/consensus/key-material authority.",
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": null,
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
