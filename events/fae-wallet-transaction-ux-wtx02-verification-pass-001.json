@@ -1,0 +1,71 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-wallet-transaction-ux-wtx02-verification-pass-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-wallet-transaction-ux-wtx02-v1",
+      "revision": "3",
+      "rules": [
+        {
+          "rule_id": "01-verification-pass",
+          "from_state": "verifying",
+          "event": "verification_passed",
+          "to_state": "complete",
+          "next_action_ref": "action://portfolio-complete/wtx02",
+          "effect": "none",
+          "required_evidence": [
+            "verifier_pass"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-push",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-wallet-transaction-ux-wtx02",
+      "policy_digest": "sha256:05a86fc3c56f3417d0f422fa3fb407ae91dd96b0eeb6fd645ff76e6deb673ec6",
+      "transition_event": "verification_passed"
+    },
+    "trigger": {
+      "source": "github-push",
+      "event_id": "fae-wallet-transaction-ux-wtx02-verification-pass-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:b75ad6a8d677cbe145a439bd0ccc55d79186358e68f6b7d083b42c7a36f21ab7",
+      "observation_digest": "sha256:67ce9c99989cd32c715d054d76b33c325981f01d1c61bd9a242277020a6a54e9",
+      "admission_ref": "github://runtime/durable-asp-control/fae-wallet-transaction-ux-wtx02-verification-pass-001"
+    },
+    "observation": {
+      "portfolio_id": "fae-wallet-transaction-ux-wtx02",
+      "expected_generation": 2,
+      "expected_state_digest": "sha256:7921d3b2460bc7222c6a15e1f1023ec161deaa56320e4f8a7481816978e80f2a",
+      "policy_digest": "sha256:05a86fc3c56f3417d0f422fa3fb407ae91dd96b0eeb6fd645ff76e6deb673ec6",
+      "event": "verification_passed",
+      "evidence": [
+        {
+          "kind": "verifier_pass",
+          "locator": "github://Waterfound/General-Execution/actions/runs/36333095505",
+          "digest": "sha256:b75ad6a8d677cbe145a439bd0ccc55d79186358e68f6b7d083b42c7a36f21ab7",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "github://Waterfound/General-Execution/evidence/durable-execution/2026-09-27/fae-wallet-tx-ux-wtx02-independent-verification.json",
+      "observed_at": "2026-09-27T16:24:30Z",
+      "summary": "Independent Project Assurance verified WTX-02 acceptance fixtures and exact fixture-only delta.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/2b19764abdfc400276f22c235cfa0ae2a6963209",
+        "github://Waterfound/General-Execution/actions/runs/36333095505",
+        "github://Waterfound/General-Execution/evidence/durable-execution/2026-09-27/fae-wallet-tx-ux-wtx02-independent-verification.json"
+      ],
+      "uncertainties": [],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
