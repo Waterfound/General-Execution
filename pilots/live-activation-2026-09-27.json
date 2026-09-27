@@ -1,0 +1,18 @@
+{
+  "schema_version": "ge.unattended-pilot-live-activation.v1",
+  "activation_id": "durable-asp-live-pilot-2026-09-27-001",
+  "recorded_at": "2026-09-27T15:20:00Z",
+  "authorized": true,
+  "authorization_ref": "operator-authority://2026-09-27/bounded-live-pilot",
+  "scope": "one-bounded-real-provider-triggered-pilot",
+  "provider": "github_actions",
+  "branch": "feature/durable-asp-portfolio-state",
+  "tested_revision": "1827175ba7b926dfabaeca57791f83595ece11e0",
+  "checkpoint_before_activation": "f717d64448561ff6dcd28400a0fbf69732685b9c",
+  "allow_main": false,
+  "allow_merge": false,
+  "allow_release": false,
+  "allow_production": false,
+  "allow_new_spend": false,
+  "must_stop_at_human_gate": true
+}
