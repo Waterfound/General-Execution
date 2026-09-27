@@ -1,0 +1,71 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-wallet-transaction-ux-wtx06-execution-start-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-wallet-transaction-ux-wtx06-v1",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-execution-start",
+          "from_state": "ready",
+          "event": "execution_started",
+          "to_state": "running",
+          "next_action_ref": "action://integration-readiness/wtx06",
+          "effect": "none",
+          "required_evidence": [
+            "dispatch_admitted"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-push",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-wallet-transaction-ux-wtx06",
+      "policy_digest": "sha256:0c5b604551e129e3a257308a3ef4936c9aa1544e39e1337b5b417cdec349eca3",
+      "transition_event": "execution_started"
+    },
+    "trigger": {
+      "source": "github-push",
+      "event_id": "fae-wallet-transaction-ux-wtx06-execution-start-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:193b595b27c226734dfdc74c73d6637a36eeb6ff1c8b731150f30ef058420a42",
+      "observation_digest": "sha256:96c608ad55e37b18afe9b8e2eadbd1af5e2d09cec2bd086d0f0e5e2cbec29b46",
+      "admission_ref": "github://runtime/durable-asp-control/fae-wallet-transaction-ux-wtx06-execution-start-001"
+    },
+    "observation": {
+      "portfolio_id": "fae-wallet-transaction-ux-wtx06",
+      "expected_generation": 0,
+      "expected_state_digest": "sha256:42339d71a3a685dd040ae31ea4a2f6fe0b08d2118e08e71d91c0074afc3a8076",
+      "policy_digest": "sha256:0c5b604551e129e3a257308a3ef4936c9aa1544e39e1337b5b417cdec349eca3",
+      "event": "execution_started",
+      "evidence": [
+        {
+          "kind": "dispatch_admitted",
+          "locator": "github://Waterfound/FAE-testnet/commit/d36c2302cbdcce1fa7b38896362bd58b0a24dd00",
+          "digest": "sha256:d94d5abcc867193283e85f29b594b388e7094380bc42ead5b585c1b0c244ec89",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "action://integration-readiness/wtx06",
+      "observed_at": "2026-09-27T17:36:00Z",
+      "summary": "Dispatch WTX-06 integration readiness against current main c34f8287 without granting merge authority.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/main/c34f8287fb7e09d05e762b3061060a9c03c692d9",
+        "github://Waterfound/FAE-testnet/commit/d36c2302cbdcce1fa7b38896362bd58b0a24dd00",
+        "github://Waterfound/General-Execution/evidence/durable-execution/2026-09-27/fae-wallet-tx-ux-wtx05-independent-verification.json"
+      ],
+      "uncertainties": [],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
