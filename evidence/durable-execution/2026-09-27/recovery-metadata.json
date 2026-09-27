@@ -1,0 +1,27 @@
+{
+  "schema_version": "ge.wave5-recovery-metadata.v1",
+  "recovered_at": "2026-09-27T13:38:09.537583+00:00",
+  "deployment_id": "dpl_6bGPsH3mfEgRkvGtQw9AsrooRkpq",
+  "deployment_url": "https://general-execution-colony-runner-ex3jin6i3-waterfound.vercel.app",
+  "ops_revision": "be27c2a4b194b938fa6affd32605574398414533",
+  "candidate_revision": "04a47cd7031b608368de15ec2c99ccc715eb6cbf",
+  "receipt_digest": "sha256:3f94aba849e194e589ccf98639bc81a49a8785dc86111679118bcfe175a10c9d",
+  "run_digest": "sha256:1205dbde1821247ef642afe9bf68c963b61cdd02cf2d8b66c8903c80330f2f9a",
+  "core1_report_digest": "sha256:455752a60da71defc20c63afaec012a67fa3fea116e07c6a1a56a24a36ad984b",
+  "full_repository_pytest": "PASS",
+  "command_exit_codes": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "shutdown_status": "Stopped",
+  "recovery_method": "Existing deployment Output viewer; JSON text copied unchanged after removing UI line number. HTTP byte-level identity is not asserted. All canonical digests validated. Original CORE-1 report and individual evidence recovered from prior Work filesystem; no rerun.",
+  "test_count_semantics": "receipt test_count=18 is the manifest focused minimum; full repository pytest ran with exit 0; total count is not serialized in provider artifact.",
+  "original_text_sha256": "8332aa61b8481facc90dc5ad466ab357a7816d06b64c42ef74e8b9ef3b14ffac",
+  "external_rerun": false,
+  "core1_rerun": false,
+  "git_disconnected": false
+}

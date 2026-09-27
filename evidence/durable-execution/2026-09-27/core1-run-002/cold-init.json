@@ -1,0 +1,44 @@
+{
+  "observation": {
+    "action_ref": "rehearsal://execution_started",
+    "authority_grant": null,
+    "canonical_refs": [
+      "fixture://rehearsals/core1-v1.json"
+    ],
+    "event": "execution_started",
+    "evidence": [
+      {
+        "digest": "sha256:e90638e0ba028df737f751dbe7a8ecf85a3a561a2642004524b42161c7609c76",
+        "kind": "dispatch_admitted",
+        "locator": "fixture://core1/dispatch_admitted",
+        "schema_version": "ge.checkpoint-evidence.v1"
+      }
+    ],
+    "expected_generation": 0,
+    "expected_state_digest": "sha256:60eb45c96017f97c0108bfd5b5bc5f58cf22c99be68c2ee7372551f141c6cd6c",
+    "observed_at": "2026-09-27T02:35:44.588899+00:00",
+    "policy_digest": "sha256:013519a606522aea1522e7dfa5887a09bdcbe7df8444892395b7ddc3a5da65cd",
+    "portfolio_id": "durable-asp",
+    "schema_version": "ge.resume-tick-observation.v1",
+    "summary": "Bounded CORE-1 fixture execution_started",
+    "uncertainties": [],
+    "wake_admission": null
+  },
+  "pid": 39,
+  "tick": {
+    "checkpoint_digest": "sha256:0473f9529bca222eb8558cb1734f808ad599d6c7f3130bae50259148f2ec2b36",
+    "disposition": "committed",
+    "human_required": false,
+    "observation_digest": "sha256:87aefdc4e5ed301db14aff990405733a3e46a251e289ceec49615761cb38c2fa",
+    "portfolio_id": "durable-asp",
+    "post_generation": 1,
+    "post_state_digest": "sha256:6c2f098c4c173c38de60da8c09eac8a20a57b83aafa229069e59fc8dff4b17d3",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:60eb45c96017f97c0108bfd5b5bc5f58cf22c99be68c2ee7372551f141c6cd6c",
+    "recovery_report_digest": "sha256:6e2b4b11a06e79246d4c6359e006e39c5801e1192a768fe492890d025d091d4f",
+    "requested_action_ref": null,
+    "requested_work_id": null,
+    "schema_version": "ge.resume-tick-result.v1",
+    "transition_result_digest": "sha256:b84c0cd4e8bb0d1305b4e607a52be6875581e64a8a58a77852c7c457dc89f0c4"
+  }
+}

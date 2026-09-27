@@ -1,0 +1,160 @@
+{
+  "assertions": {
+    "bounded_retry": {
+      "assertion_id": "bounded_retry",
+      "evidence_digests": [
+        "sha256:f0671afa73f1b28b3626ecf9ebe404b640e406ae5114555cd14a02c61124b25a"
+      ],
+      "evidence_refs": [
+        "evidence/durable-execution/2026-09-27/core1-run-002/retry-boundaries.json"
+      ],
+      "passed": true,
+      "schema_version": "ge.core-rehearsal-assertion.v1"
+    },
+    "checkpoint_reconstruction": {
+      "assertion_id": "checkpoint_reconstruction",
+      "evidence_digests": [
+        "sha256:699bef3998129d24e8718a1d0cb65d84ec1829b12909b84603cf8e3a3c8a44ce"
+      ],
+      "evidence_refs": [
+        "evidence/durable-execution/2026-09-27/core1-run-002/cold-resume-proof.json"
+      ],
+      "passed": true,
+      "schema_version": "ge.core-rehearsal-assertion.v1"
+    },
+    "cold_resume": {
+      "assertion_id": "cold_resume",
+      "evidence_digests": [
+        "sha256:699bef3998129d24e8718a1d0cb65d84ec1829b12909b84603cf8e3a3c8a44ce"
+      ],
+      "evidence_refs": [
+        "evidence/durable-execution/2026-09-27/core1-run-002/cold-resume-proof.json"
+      ],
+      "passed": true,
+      "schema_version": "ge.core-rehearsal-assertion.v1"
+    },
+    "cost_security_authority_stop": {
+      "assertion_id": "cost_security_authority_stop",
+      "evidence_digests": [
+        "sha256:f0671afa73f1b28b3626ecf9ebe404b640e406ae5114555cd14a02c61124b25a"
+      ],
+      "evidence_refs": [
+        "evidence/durable-execution/2026-09-27/core1-run-002/retry-boundaries.json"
+      ],
+      "passed": true,
+      "schema_version": "ge.core-rehearsal-assertion.v1"
+    },
+    "duplicate_tick_idempotent": {
+      "assertion_id": "duplicate_tick_idempotent",
+      "evidence_digests": [
+        "sha256:fd85384260d39c2be3340e76b9a95d162fbeee34fe2653d0b58ce6f4c86ee7b7"
+      ],
+      "evidence_refs": [
+        "evidence/durable-execution/2026-09-27/core1-run-002/race-and-stale.json"
+      ],
+      "passed": true,
+      "schema_version": "ge.core-rehearsal-assertion.v1"
+    },
+    "external_blocker_parking": {
+      "assertion_id": "external_blocker_parking",
+      "evidence_digests": [
+        "sha256:90dc3a6e8942e661a150232a7477a1cae4b7cb8a4ecd25cb52c47feff09ee43f"
+      ],
+      "evidence_refs": [
+        "evidence/durable-execution/2026-09-27/core1-run-002/parking.json"
+      ],
+      "passed": true,
+      "schema_version": "ge.core-rehearsal-assertion.v1"
+    },
+    "human_gate_stop": {
+      "assertion_id": "human_gate_stop",
+      "evidence_digests": [
+        "sha256:8402eb667a39401f1d82706d5dc3a229a476d93109cd4a861d91918539742c80"
+      ],
+      "evidence_refs": [
+        "evidence/durable-execution/2026-09-27/core1-run-002/human-stop.json"
+      ],
+      "passed": true,
+      "schema_version": "ge.core-rehearsal-assertion.v1"
+    },
+    "no_chat_dependency": {
+      "assertion_id": "no_chat_dependency",
+      "evidence_digests": [
+        "sha256:699bef3998129d24e8718a1d0cb65d84ec1829b12909b84603cf8e3a3c8a44ce"
+      ],
+      "evidence_refs": [
+        "evidence/durable-execution/2026-09-27/core1-run-002/cold-resume-proof.json"
+      ],
+      "passed": true,
+      "schema_version": "ge.core-rehearsal-assertion.v1"
+    },
+    "no_hidden_authority": {
+      "assertion_id": "no_hidden_authority",
+      "evidence_digests": [
+        "sha256:8402eb667a39401f1d82706d5dc3a229a476d93109cd4a861d91918539742c80",
+        "sha256:8e1c8807a5d09e665ce7b576189c6bfe0317c62bae10b041d44ba34fe3f7402b",
+        "sha256:90dc3a6e8942e661a150232a7477a1cae4b7cb8a4ecd25cb52c47feff09ee43f"
+      ],
+      "evidence_refs": [
+        "evidence/durable-execution/2026-09-27/core1-run-002/human-stop.json",
+        "evidence/durable-execution/2026-09-27/core1-run-002/parking.json",
+        "evidence/durable-execution/2026-09-27/core1-run-002/promotion.json"
+      ],
+      "passed": true,
+      "schema_version": "ge.core-rehearsal-assertion.v1"
+    },
+    "passive_wake_admission": {
+      "assertion_id": "passive_wake_admission",
+      "evidence_digests": [
+        "sha256:8e1c8807a5d09e665ce7b576189c6bfe0317c62bae10b041d44ba34fe3f7402b",
+        "sha256:90dc3a6e8942e661a150232a7477a1cae4b7cb8a4ecd25cb52c47feff09ee43f"
+      ],
+      "evidence_refs": [
+        "evidence/durable-execution/2026-09-27/core1-run-002/parking.json",
+        "evidence/durable-execution/2026-09-27/core1-run-002/promotion.json"
+      ],
+      "passed": true,
+      "schema_version": "ge.core-rehearsal-assertion.v1"
+    },
+    "stale_write_rejected": {
+      "assertion_id": "stale_write_rejected",
+      "evidence_digests": [
+        "sha256:fd85384260d39c2be3340e76b9a95d162fbeee34fe2653d0b58ce6f4c86ee7b7"
+      ],
+      "evidence_refs": [
+        "evidence/durable-execution/2026-09-27/core1-run-002/race-and-stale.json"
+      ],
+      "passed": true,
+      "schema_version": "ge.core-rehearsal-assertion.v1"
+    },
+    "unknown_failure_single_reproduction": {
+      "assertion_id": "unknown_failure_single_reproduction",
+      "evidence_digests": [
+        "sha256:f0671afa73f1b28b3626ecf9ebe404b640e406ae5114555cd14a02c61124b25a"
+      ],
+      "evidence_refs": [
+        "evidence/durable-execution/2026-09-27/core1-run-002/retry-boundaries.json"
+      ],
+      "passed": true,
+      "schema_version": "ge.core-rehearsal-assertion.v1"
+    },
+    "verified_secondary_promotion": {
+      "assertion_id": "verified_secondary_promotion",
+      "evidence_digests": [
+        "sha256:8e1c8807a5d09e665ce7b576189c6bfe0317c62bae10b041d44ba34fe3f7402b"
+      ],
+      "evidence_refs": [
+        "evidence/durable-execution/2026-09-27/core1-run-002/promotion.json"
+      ],
+      "passed": true,
+      "schema_version": "ge.core-rehearsal-assertion.v1"
+    }
+  },
+  "candidate_revision": "04a47cd7031b608368de15ec2c99ccc715eb6cbf",
+  "executed_at": "2026-09-27T02:41:58.240256+00:00",
+  "provider_invoked": false,
+  "report_digest": "sha256:455752a60da71defc20c63afaec012a67fa3fea116e07c6a1a56a24a36ad984b",
+  "schema_version": "ge.core1-evidence-ledger.v1",
+  "unattended_runtime_enabled": false,
+  "verification_receipt_digest": "sha256:3f94aba849e194e589ccf98639bc81a49a8785dc86111679118bcfe175a10c9d"
+}
