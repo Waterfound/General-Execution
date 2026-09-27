@@ -6,6 +6,10 @@ on:
       - feature/durable-asp-portfolio-state
     paths:
       - scripts/run_unattended_pilot.py
+      - src/general_execution/portfolio_persistence.py
+      - src/general_execution/external_trigger.py
+      - tests/test_portfolio_persistence.py
+      - tests/test_wave8_adapters.py
       - tests/test_unattended_pilot_preflight.py
       - .github/workflows/unattended-pilot-preflight.yml
 
