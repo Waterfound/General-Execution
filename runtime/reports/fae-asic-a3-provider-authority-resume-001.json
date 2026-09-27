@@ -1,0 +1,41 @@
+{
+  "authority_grant_digest": "sha256:365569e969d226beae631e63f5072f2b1349fc434118e1528bbf85d6ecf4fd57",
+  "authority_receipt": {
+    "approved_action_ref": "authority://fae-asic/a3/aws-vivado-static-validation",
+    "approved_at": "2026-09-27T23:20:00Z",
+    "authority_boundary": "Authorize bounded AWS/Vivado A3 provider static validation only; no paid physical implementation, AFI creation, release, consensus activation, or spend beyond the existing ASIC Lab envelope.",
+    "authority_ref": "github://Waterfound/General-Execution/commit/7b96473f1484ae2ed8fa92c2c2105516e0cac42c/authority/fae-asic-a3-provider-authority-resume-001.json",
+    "event_id": "fae-asic-a3-provider-authority-resume-001",
+    "expected_generation": 2,
+    "expected_state_digest": "sha256:943d66e9398c5977fa1454e1173e2a115c5a770066c4f6b8d1993fc23038380f",
+    "policy_digest": "sha256:d9b5428ec3e4f4789e7956b5086feb0ac6b1962066e41b26247a5b7a528fd659",
+    "portfolio_id": "fae-asic-a3-topology",
+    "provider_actor": "Waterfound",
+    "rule_digest": "sha256:438ce2d0074abd8555e63094c9ccf29d4edc153967c05547b18d91d8a712f98a",
+    "schema_version": "ge.human-authority-receipt.v1"
+  },
+  "authority_receipt_digest": "sha256:53dda591d01b3c487832e8cd9dc9410054beee38f44dde621d4e697e82dfdbee",
+  "authority_ref": "github://Waterfound/General-Execution/commit/7b96473f1484ae2ed8fa92c2c2105516e0cac42c/authority/fae-asic-a3-provider-authority-resume-001.json",
+  "database_sha256": "sha256:ad68d119d0d2b25935eccb1199c076ad487f90e33529822ae0a8f92b1afeb3ce",
+  "event_id": "fae-asic-a3-provider-authority-resume-001",
+  "execution_report_digest": "sha256:6f619414fe38013c83469f965b5e4f538e251b7e8627a0c9fc831c623038526b",
+  "observation_digest": "sha256:664371aeda452bad945a9bda58edd8b6c58bcbeb2bfe2a0e354b32edc8a2ae5c",
+  "provider_actor": "Waterfound",
+  "schema_version": "ge.human-authority-execution.v1",
+  "tick": {
+    "checkpoint_digest": "sha256:972b4f1c27eec2fcd80aa7ad10435e80a8fcc40e53e71b56f5b58221d0c0c42f",
+    "disposition": "committed",
+    "human_required": false,
+    "observation_digest": "sha256:664371aeda452bad945a9bda58edd8b6c58bcbeb2bfe2a0e354b32edc8a2ae5c",
+    "portfolio_id": "fae-asic-a3-topology",
+    "post_generation": 3,
+    "post_state_digest": "sha256:f32be9699f4c1fd9f7dc58a051691ae7c2991abf166c1c84ed955b6f5764ea1c",
+    "pre_generation": 2,
+    "pre_state_digest": "sha256:943d66e9398c5977fa1454e1173e2a115c5a770066c4f6b8d1993fc23038380f",
+    "recovery_report_digest": "sha256:3c53ce704c8bf92bf687f20eb2d78ad8f59ab9a41197ccaea33eb7f9f073b24f",
+    "requested_action_ref": null,
+    "requested_work_id": null,
+    "schema_version": "ge.resume-tick-result.v1",
+    "transition_result_digest": "sha256:9d37145779196eb11694d2ec6849d2dc258f51846604ce0c9c3f5007a35b7177"
+  }
+}
