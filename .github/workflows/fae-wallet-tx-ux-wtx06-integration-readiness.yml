@@ -13,7 +13,7 @@ permissions:
 
 env:
   FAE_MAIN: c34f8287fb7e09d05e762b3061060a9c03c692d9
-  FAE_CANDIDATE: d36c2302cbdcce1fa7b38896362bd58b0a24dd00
+  FAE_CANDIDATE: a18484c7fc56d914a42105a0be80f9b974ee202f
 
 jobs:
   integration-readiness:
@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: Waterfound/FAE-testnet
-          ref: d36c2302cbdcce1fa7b38896362bd58b0a24dd00
+          ref: a18484c7fc56d914a42105a0be80f9b974ee202f
           fetch-depth: 0
           path: fae
 
