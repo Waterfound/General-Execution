@@ -7,7 +7,7 @@ import hashlib
 import json
 from pathlib import Path
 
-from general_execution.canonical import canonical_json
+from general_execution.canonical import canonical_json, sha256_digest
 from general_execution.human_authority import consume_human_authority
 from general_execution.persistent_runtime import _observation
 from general_execution.portfolio_persistence import SqlitePortfolioHeadStore
@@ -94,7 +94,7 @@ def main(argv=None) -> int:
     if result.disposition != "committed":
         raise ValueError(f"human authority transition did not commit: {result.disposition}")
 
-    envelope = {
+    material = {
         "schema_version": EXECUTION_SCHEMA,
         "event_id": obj["event_id"],
         "provider_actor": args.provider_actor,
@@ -105,6 +105,10 @@ def main(argv=None) -> int:
         "observation_digest": bound.digest,
         "tick": encode(result),
         "database_sha256": sha256_file(args.database),
+    }
+    envelope = {
+        **material,
+        "execution_report_digest": sha256_digest(material),
     }
     args.report.parent.mkdir(parents=True, exist_ok=True)
     args.report.write_text(
