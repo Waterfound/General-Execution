@@ -3,7 +3,8 @@ name: Human authority bridge verification
 on:
   push:
     branches:
-      - feature/durable-human-authority-bridge-20260927
+      - main
+      - feature/durable-authority-canonicalization-20260927
     paths:
       - src/general_execution/human_authority.py
       - src/general_execution/asp_transition.py
@@ -49,7 +50,7 @@ jobs:
               "durable-asp-persistent-runtime",
               "immutable create-only",
               "credential-shaped",
-              "71873e182f5f0d93c35ed35805fe818946bae819",
+              "a27a558d4ed0e28d96c3fec408212353d0077060",
               "authority_created",
           ]
           for item in required:
