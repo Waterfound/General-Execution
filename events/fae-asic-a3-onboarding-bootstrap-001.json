@@ -1,0 +1,86 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-asic-a3-onboarding-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "fae-asic-a3-topology",
+      "generation": 0,
+      "active": {
+        "work_id": "FAE-ASIC-A3-STATIC",
+        "role": "active",
+        "state": "ready",
+        "objective": "Statically redesign and validate the F2 two-lane memory/interconnect topology to reduce routing congestion without changing DP6 semantics or incurring a paid AWS physical build.",
+        "active_gate": "A3-STATIC-TOPOLOGY-VALIDATION",
+        "next_action_ref": "github://Waterfound/FAE-testnet/tree/lab/asic-f2-timing-hardening-bc-001/labs/asic-f2-pre-go/runtime/F2_ATTACKER_SWEEP_A3_TOPOLOGY_PLAN.json",
+        "source_revision": "d00a49c07f9c6b8d87076e7e90a19a84f2259c4b",
+        "evidence_required": [
+          "artifact://A3-topology-diff",
+          "artifact://A3-interface-address-clock-map",
+          "test://A3-static-validation",
+          "artifact://A3-routability-resource-estimate"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "fae://asic/f2/a3-topology-plan",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "FAE-ASIC-A3-PHYSICAL-DECISION",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Evaluate static A3 evidence and decide whether a paid physical F2 build is justified under the existing fail-closed timing gates and AWS spend envelope.",
+        "active_gate": "A3-PAID-BUILD-DECISION",
+        "next_action_ref": "action://fae-asic/a3/evaluate-paid-build",
+        "source_revision": "d00a49c07f9c6b8d87076e7e90a19a84f2259c4b",
+        "evidence_required": [
+          "artifact://A3-static-validation",
+          "artifact://A3-routability-resource-estimate"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "fae://asic/f2/a3-paid-build-decision",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [
+        {
+          "work_id": "FAE-ASIC-SUSTAINED-HFB",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Run sustained >=1800 s attacker validation and HFB economics only after a faster parity-preserving physical candidate passes, or otherwise evaluate the current admissible A1 attacker.",
+          "active_gate": "SUSTAINED-HFB",
+          "next_action_ref": "action://fae-asic/sustained-hfb",
+          "source_revision": "d00a49c07f9c6b8d87076e7e90a19a84f2259c4b",
+          "evidence_required": [
+            "evidence://physical-attacker-candidate"
+          ],
+          "authority_boundary": null,
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "evidence",
+              "detail": "Requires an admissible physical attacker candidate decision after A3.",
+              "evidence_refs": [
+                "github://Waterfound/FAE-testnet/labs/asic-f2-pre-go/runtime/F2_ATTACKER_SWEEP_A3_TOPOLOGY_PLAN.json"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "event_received",
+            "value": "A3_ATTACKER_CANDIDATE_DECIDED",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "fae://asic/f2/sustained-hfb",
+          "schema_version": "ge.portfolio-entry.v1"
+        }
+      ],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
