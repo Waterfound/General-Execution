@@ -1,0 +1,71 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-wallet-transaction-ux-execution-complete-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-wallet-transaction-ux-reconciliation-v1",
+      "revision": "2",
+      "rules": [
+        {
+          "rule_id": "01-execution-complete",
+          "from_state": "running",
+          "event": "execution_completed",
+          "to_state": "verifying",
+          "next_action_ref": "action://project-assurance/wtx01r",
+          "effect": "none",
+          "required_evidence": [
+            "execution_result"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-push",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-wallet-transaction-ux",
+      "policy_digest": "sha256:513257b87594a15253090a94fcbe8e5bd480454dfe67579f98d63a6c8f4b7ce2",
+      "transition_event": "execution_completed"
+    },
+    "trigger": {
+      "source": "github-push",
+      "event_id": "fae-wallet-transaction-ux-execution-complete-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:449883dcd3c117c351a2b37a19f9a4a99e9d1c075a6c001ed69c096b38f488b4",
+      "observation_digest": "sha256:0ac21276f25c1bce9df5814215c5f5609c1eab1e5b2a5bb27cc2a732dd9a174c",
+      "admission_ref": "github://runtime/durable-asp-control/fae-wallet-transaction-ux-execution-complete-001"
+    },
+    "observation": {
+      "portfolio_id": "fae-wallet-transaction-ux",
+      "expected_generation": 1,
+      "expected_state_digest": "sha256:156278da5ccc233440679c2b2ef4ecd425ff41a5367c391dab069d4cc183fb6c",
+      "policy_digest": "sha256:513257b87594a15253090a94fcbe8e5bd480454dfe67579f98d63a6c8f4b7ce2",
+      "event": "execution_completed",
+      "evidence": [
+        {
+          "kind": "execution_result",
+          "locator": "github://Waterfound/FAE-testnet/actions/runs/36332358174",
+          "digest": "sha256:449883dcd3c117c351a2b37a19f9a4a99e9d1c075a6c001ed69c096b38f488b4",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "github://Waterfound/FAE-testnet/commit/189ddbd381c953ad6effeb0548b98d4daa74a844",
+      "observed_at": "2026-09-27T16:13:00Z",
+      "summary": "WTX-01R current-main reconciliation completed with reproducible GitHub Actions verification.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/main/c34f8287fb7e09d05e762b3061060a9c03c692d9",
+        "github://Waterfound/FAE-testnet/commit/189ddbd381c953ad6effeb0548b98d4daa74a844",
+        "github://Waterfound/FAE-testnet/actions/runs/36332358174"
+      ],
+      "uncertainties": [],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
