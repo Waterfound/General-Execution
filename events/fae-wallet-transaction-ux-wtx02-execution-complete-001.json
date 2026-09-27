@@ -1,0 +1,70 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-wallet-transaction-ux-wtx02-execution-complete-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-wallet-transaction-ux-wtx02-v1",
+      "revision": "2",
+      "rules": [
+        {
+          "rule_id": "01-execution-complete",
+          "from_state": "running",
+          "event": "execution_completed",
+          "to_state": "verifying",
+          "next_action_ref": "action://project-assurance/wtx02",
+          "effect": "none",
+          "required_evidence": [
+            "execution_result"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-push",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-wallet-transaction-ux-wtx02",
+      "policy_digest": "sha256:5968be3c43fa916784835a4ca151b6abc05781145fda739318bc2a6339902ff4",
+      "transition_event": "execution_completed"
+    },
+    "trigger": {
+      "source": "github-push",
+      "event_id": "fae-wallet-transaction-ux-wtx02-execution-complete-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:4a3a97321364494707ba607ab2e683aede8f9494f7acea13daec07fa25f30807",
+      "observation_digest": "sha256:9c64c21a34b508a0a2d6934b5a9d6a19bfba88d5c2a8065d8bcac1ca04f841f3",
+      "admission_ref": "github://runtime/durable-asp-control/fae-wallet-transaction-ux-wtx02-execution-complete-001"
+    },
+    "observation": {
+      "portfolio_id": "fae-wallet-transaction-ux-wtx02",
+      "expected_generation": 1,
+      "expected_state_digest": "sha256:2a1b6deda8591d7bac5e3f02455ec8b1cb41c1f11cc905d7fb7eb3144eaf6ad0",
+      "policy_digest": "sha256:5968be3c43fa916784835a4ca151b6abc05781145fda739318bc2a6339902ff4",
+      "event": "execution_completed",
+      "evidence": [
+        {
+          "kind": "execution_result",
+          "locator": "github://Waterfound/FAE-testnet/actions/runs/36332990354",
+          "digest": "sha256:4a3a97321364494707ba607ab2e683aede8f9494f7acea13daec07fa25f30807",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "github://Waterfound/FAE-testnet/commit/2b19764abdfc400276f22c235cfa0ae2a6963209",
+      "observed_at": "2026-09-27T16:23:00Z",
+      "summary": "WTX-02 acceptance fixture package completed with 11/11 fixtures and full FAE Wallet UX baseline green.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/2b19764abdfc400276f22c235cfa0ae2a6963209",
+        "github://Waterfound/FAE-testnet/actions/runs/36332990354"
+      ],
+      "uncertainties": [],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
