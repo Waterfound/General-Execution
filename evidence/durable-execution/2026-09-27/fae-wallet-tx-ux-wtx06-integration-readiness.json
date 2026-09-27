@@ -1,0 +1,90 @@
+{
+  "schema_version": "ge.fae-wallet-tx-ux-wtx06-integration-readiness.v1",
+  "recorded_at": "2026-09-27T17:44:30Z",
+  "portfolio_id": "fae-wallet-transaction-ux-wtx06",
+  "package": "WTX-06-integration-readiness",
+  "outcome": "INTEGRATION_READY_AWAITING_MERGE_AUTHORITY",
+  "canonical_main_revision": "c34f8287fb7e09d05e762b3061060a9c03c692d9",
+  "candidate_revision": "a18484c7fc56d914a42105a0be80f9b974ee202f",
+  "ancestry": {
+    "main_is_ancestor": true,
+    "behind_by": 0,
+    "ahead_by": 26
+  },
+  "candidate_repair": {
+    "predecessor_candidate": "d36c2302cbdcce1fa7b38896362bd58b0a24dd00",
+    "repair_commit": "a18484c7fc56d914a42105a0be80f9b974ee202f",
+    "issue": "Opening transaction history triggered an asynchronous refresh that could replace the focused <summary> during keyboard navigation.",
+    "correction": "History show/hide is now presentation-only; explicit refresh/retry paths remain responsible for data refresh.",
+    "product_scope": [
+      "wallet.js"
+    ]
+  },
+  "final_verification": {
+    "workflow": "FAE Wallet UX WTX06 integration readiness",
+    "workflow_revision": "20797ba00bc776cc7528e56a9f369fea093a90b1",
+    "run_id": 36337927016,
+    "job_id": 108672240032,
+    "conclusion": "success",
+    "exact_candidate_checkout": true,
+    "exact_main_binding": true,
+    "latest_main_ancestry": true,
+    "cross_lab_integration_gate": "PASS",
+    "combined_checks_executed": true,
+    "wallet_ux_deterministic_regression": "PASS",
+    "browser_journeys": "4/4 PASS"
+  },
+  "repaired_candidate_direct_checks": {
+    "deterministic_run_id": 36337823125,
+    "deterministic_job_id": 108671951342,
+    "deterministic_conclusion": "success",
+    "browser_run_id": 36337823236,
+    "browser_job_id": 108671951942,
+    "browser_conclusion": "success"
+  },
+  "non_selective_failure_ledger": [
+    {
+      "run_id": 36337620956,
+      "conclusion": "failure",
+      "classification": "VERIFIER_HARNESS_SHALLOW_GIT_HISTORY",
+      "candidate_revision": "d36c2302cbdcce1fa7b38896362bd58b0a24dd00",
+      "resolution": "Verifier checkout changed from fetch-depth 1 to full history; candidate unchanged for this repair."
+    },
+    {
+      "run_id": 36337661668,
+      "conclusion": "failure",
+      "classification": "INTEGRATION_VALIDATION_DISCOVERED_KEYBOARD_FOCUS_RACE",
+      "candidate_revision": "d36c2302cbdcce1fa7b38896362bd58b0a24dd00",
+      "resolution": "Product repaired in wallet.js; new candidate a18484c7fc56d914a42105a0be80f9b974ee202f passed deterministic and browser gates."
+    }
+  ],
+  "pull_request": {
+    "number": 259,
+    "url": "https://github.com/Waterfound/FAE-testnet/pull/259",
+    "draft": true,
+    "state": "open",
+    "merged": false,
+    "base": "main",
+    "base_sha": "c34f8287fb7e09d05e762b3061060a9c03c692d9",
+    "head": "build-colony/wallet-tx-ux-current-main-20260927",
+    "head_sha": "a18484c7fc56d914a42105a0be80f9b974ee202f"
+  },
+  "status_semantics": {
+    "lab_verified": true,
+    "integration_ready": true,
+    "integrated_main": false,
+    "combined_main_verified": false,
+    "live": false
+  },
+  "authority": {
+    "merge_authorized": false,
+    "main_modified": false,
+    "release_authorized": false,
+    "production_modified": false,
+    "backend_changed": false,
+    "consensus_changed": false,
+    "wallet_key_material_changed": false,
+    "new_spend_authorized": false
+  },
+  "next_required_action": "Explicit human authorization to merge PR #259 serially into main. After merge, run combined-main verification on the exact resulting main revision before any LIVE claim."
+}
