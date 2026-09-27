@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:f569e7cb03a75c86650d94446a20f382ce5151b63cb2151c0299d96b89b3f3bf",
+  "event_id": "runtime-smoke-bootstrap-002",
+  "event_report_digest": "sha256:bea94505209bec3130716bd21d08bbf02fc557ea3e595047e852733f0fb24a62",
+  "operation": "bootstrap",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "0ee552364eae07cd23b94da4cb4fa9c4cac23763",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "306165387d92838555ec532a080e575866584169"
+}

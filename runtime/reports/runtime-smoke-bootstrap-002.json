@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:f569e7cb03a75c86650d94446a20f382ce5151b63cb2151c0299d96b89b3f3bf",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "runtime-smoke-bootstrap-002",
+    "human_required": false,
+    "operation": "bootstrap",
+    "portfolio_id": "durable-runtime-smoke",
+    "post_generation": 0,
+    "post_state_digest": "sha256:9f18fa5a57cb5294ca3472a1c2a701fdcae7554f03f43ba0844fab9be4f98af9",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:9f18fa5a57cb5294ca3472a1c2a701fdcae7554f03f43ba0844fab9be4f98af9",
+    "requested_action_ref": "action://await-smoke-transition",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:bea94505209bec3130716bd21d08bbf02fc557ea3e595047e852733f0fb24a62",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
