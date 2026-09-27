@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:4d49ea76b39641104243440d008c612fc0bdb279cd85b84cd855a4fe80c632e6",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "fae-asic-a3-warning-clean-bootstrap-v2-001",
+    "human_required": false,
+    "operation": "bootstrap",
+    "portfolio_id": "fae-asic-a3-warning-clean-revalidation-v2",
+    "post_generation": 0,
+    "post_state_digest": "sha256:15be8abb0a38a4e338e37d6d885d8513286122acfab8a74c950a796a49572e95",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:15be8abb0a38a4e338e37d6d885d8513286122acfab8a74c950a796a49572e95",
+    "requested_action_ref": "action://fae-asic/a3/request-warning-clean-static-revalidation-authority",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:ad41c43e212ee3985f4db568911d77d654f77bf90da13577006d2a713ff46de6",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}

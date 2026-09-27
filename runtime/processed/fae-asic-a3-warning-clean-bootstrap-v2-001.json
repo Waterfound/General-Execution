@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:4d49ea76b39641104243440d008c612fc0bdb279cd85b84cd855a4fe80c632e6",
+  "event_id": "fae-asic-a3-warning-clean-bootstrap-v2-001",
+  "event_report_digest": "sha256:ad41c43e212ee3985f4db568911d77d654f77bf90da13577006d2a713ff46de6",
+  "operation": "bootstrap",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "b0a386f6e99e9f9995875790bb4a843e069ca3e8"
+}
