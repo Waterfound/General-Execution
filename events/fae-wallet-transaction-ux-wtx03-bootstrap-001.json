@@ -1,0 +1,57 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-wallet-transaction-ux-wtx03-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "fae-wallet-transaction-ux-wtx03",
+      "generation": 0,
+      "active": {
+        "work_id": "WTX-03-txid-details",
+        "role": "active",
+        "state": "ready",
+        "objective": "Complete Wallet Transaction UX TXID receipt and transaction details on the current-main development branch: preserve accepted-unconfirmed receipts across refresh failure, expose full selectable TXIDs, exact copy with accessible feedback, and faithful transaction detail fields without false confirmation.",
+        "active_gate": "WTX-03",
+        "next_action_ref": "github://Waterfound/FAE-testnet/branch/build-colony/wallet-tx-ux-current-main-20260927",
+        "source_revision": "2b19764abdfc400276f22c235cfa0ae2a6963209",
+        "evidence_required": [
+          "accepted_receipt_survives_refresh_failure",
+          "full_selectable_txid",
+          "exact_copy_feedback",
+          "transaction_detail_fields",
+          "no_false_confirmation",
+          "wallet_ux_ci_green"
+        ],
+        "authority_boundary": "Wallet Transaction UX development branch only. Stop before main merge, release, production deployment, new spending, credentials, backend/consensus changes, wallet key-material changes, or destructive infrastructure.",
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": null,
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "WTX-04-history-lifecycle",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Implement history access and lifecycle states, bounded coverage messaging, retry behavior, and stale-response protection after WTX-03 verifies.",
+        "active_gate": "WTX-04",
+        "next_action_ref": "github://Waterfound/FAE-testnet/wallet-transaction-ux/history-lifecycle",
+        "source_revision": "2b19764abdfc400276f22c235cfa0ae2a6963209",
+        "evidence_required": [
+          "wtx03_verified_revision",
+          "history_lifecycle_state_matrix",
+          "stale_response_protection"
+        ],
+        "authority_boundary": "Same bounded Wallet Transaction UX development envelope; no main/merge/release/production/spend/backend/consensus/key-material authority.",
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": null,
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
