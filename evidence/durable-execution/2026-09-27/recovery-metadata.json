@@ -23,5 +23,7 @@
   "original_text_sha256": "8332aa61b8481facc90dc5ad466ab357a7816d06b64c42ef74e8b9ef3b14ffac",
   "external_rerun": false,
   "core1_rerun": false,
-  "git_disconnected": false
+  "git_disconnected": true,
+  "git_disconnection_observed_at": "2026-09-27T13:46:49.004732+00:00",
+  "git_disconnection_evidence": "Vercel Git settings: This Project is not connected to a Git repository."
 }

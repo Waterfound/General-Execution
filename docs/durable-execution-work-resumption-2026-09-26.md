@@ -1,3 +1,5 @@
+> Historical record. Superseded on 2026-09-27 by the canonical checkpoint: Wave 5 PASS, CORE-1 13/13 recovered, Git disconnected, Wave 8 offline PASS. See [Wave 8](durable-execution-wave8-offline.md).
+
 # Durable Execution — Work resumption, 2026-09-26
 
 The original Wave 5 source was retrieved and failed full local regression in

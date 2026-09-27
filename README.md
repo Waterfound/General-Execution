@@ -5,7 +5,7 @@
 Durable Execution candidate update (2026-09-26): the 1 Active + 1 Secondary + N
 Passive branch now has **345 passing local Python 3.13 tests** after repairing
 public ASP API collisions and verification-harness defects. The exact-source
-Vercel gate and CORE-1 remain pending; unattended runtime is disabled. See the
+Wave 5 external gate and CORE-1 are PASS (13/13) for `04a47cd…`. Wave 8 offline adapters pass 360 full-repository tests; provider triggers and unattended runtime remain disabled. See the
 [resumption record](docs/durable-execution-work-resumption-2026-09-26.md) and
 [fixed harness](docs/durable-execution-wave5-verification-harness.md).
 

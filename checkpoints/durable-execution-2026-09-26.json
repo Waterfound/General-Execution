@@ -6,7 +6,7 @@
     "provider_trigger_enabled": false,
     "release_authorized": false,
     "unattended_runtime_enabled": false,
-    "temporary_verification_git_connection_authorized": true,
+    "temporary_verification_git_connection_authorized": false,
     "temporary_verification_git_trigger_scope": "ops/wave5-vercel-verification* only"
   },
   "branch": "feature/durable-asp-portfolio-state",
@@ -47,12 +47,10 @@
     "tests": 345
   },
   "next_action": {
-    "frontier": [
-      "external-trigger-adapter",
-      "thin-envelope-escalation"
-    ],
-    "mode": "implementation_and_tests_only",
-    "activation_authorized": false
+    "frontier": "verification-escalation",
+    "mode": "independent_verification_and_rejection_rework_contract",
+    "provider_activation_authorized": false,
+    "unattended_pilot_authorized": false
   },
   "operational_runner": {
     "auto_deployment_detected": false,
@@ -80,8 +78,8 @@
     }
   },
   "previous_candidate": "6cad261424c9f28e3b6651e656c6adafdb6954ee",
-  "previous_checkpoint": "05b53ef9afe22d97e99ac015c3fa8f046190b257",
-  "recorded_at": "2026-09-27T13:38:09.537583+00:00",
+  "previous_checkpoint": "3a4fa4432392e8e32d56c0b62a16974082ed7c1f",
+  "recorded_at": "2026-09-27T13:46:49.005859+00:00",
   "schema_version": "ge.durable-development-checkpoint.v1",
   "source_publication": {
     "identical_git_tree": "823c81c75aac5f343980b98e52bd8dc493779b96",
@@ -128,10 +126,12 @@
     "authorized_branch_pattern": "ops/wave5-vercel-verification*",
     "disconnect_after_verification": true,
     "deployment_url": "https://general-execution-colony-runner-ex3jin6i3-waterfound.vercel.app",
-    "run_digest": "sha256:1205dbde1821247ef642afe9bf68c963b61cdd02cf2d8b66c8903c80330f2f9a"
+    "run_digest": "sha256:1205dbde1821247ef642afe9bf68c963b61cdd02cf2d8b66c8903c80330f2f9a",
+    "temporary_git_connection_status": "DISCONNECTED",
+    "evidence_metadata": "evidence/durable-execution/2026-09-27/recovery-metadata.json"
   },
   "execution_surface_exhaustion": {
-    "status": "NORMAL_CHAT_SURFACES_EXHAUSTED",
+    "status": "HISTORICAL_SUPERSEDED_BY_VERIFIED_EXTERNAL_PASS",
     "observations": [
       "Vercel MCP deploy_to_vercel remains advertised but server returns Tool not found.",
       "Vercel MCP get_deployment_build_logs remains advertised but server returns Tool not found.",
@@ -152,5 +152,28 @@
       "git_connection_approval_denied": true,
       "deployment_created": false
     }
+  },
+  "wave8": {
+    "schema_version": "ge.wave8-offline-validation.v1",
+    "status": "PASS_NOT_ACTIVATED",
+    "source_files": {
+      "src/general_execution/external_trigger.py": "53f73fc4f90eb25fac3392a24c9119d1723931a91d0afb024dc9ff43520709bd",
+      "src/general_execution/thin_envelope_escalation.py": "b7f237f645bc2377483e942996072ce9b89d9af7ac335cfa0a5f7162754e9008",
+      "tests/test_wave8_adapters.py": "87b86405161e6922b4907c95d6c8d111df2d5ef6506f6e05277becb159666ff7"
+    },
+    "focused_tests": 15,
+    "full_repository_tests": 360,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "compileall": "PASS",
+    "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "sqlite": "3.53.1",
+    "core_candidate_receipt_applies_only_to": "04a47cd7031b608368de15ec2c99ccc715eb6cbf",
+    "provider_trigger_enabled": false,
+    "unattended_runtime_enabled": false,
+    "external_verification_of_wave8": false,
+    "next_frontier": "verification-escalation",
+    "activation_authorized": false
   }
 }
