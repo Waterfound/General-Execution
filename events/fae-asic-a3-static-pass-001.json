@@ -1,0 +1,73 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-asic-a3-static-pass-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-asic-a3-static-progress",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-static-source-pass",
+          "from_state": "ready",
+          "event": "verification_passed",
+          "to_state": "verifying",
+          "next_action_ref": "action://fae-asic/a3/provider-vivado-static-validation",
+          "effect": "none",
+          "required_evidence": [
+            "a3_static_source_validation"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-actions",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-asic-a3-topology",
+      "policy_digest": "sha256:b4f119da9626a63017e9cccb3baa0c779a31ae1bf93f88e372cd81cd86176873",
+      "transition_event": "verification_passed"
+    },
+    "trigger": {
+      "source": "github-actions",
+      "event_id": "fae-asic-a3-static-pass-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:287dba650541b4ade6532e61205a482e7dde622a89ad281da9bc4b5014aa7c6d",
+      "observation_digest": "sha256:60f6786dc7ebe6549bfc63c491380c36baa7820a363e45c498bad8794103b371",
+      "admission_ref": "github-actions://Waterfound/FAE-testnet/runs/36358111094"
+    },
+    "observation": {
+      "portfolio_id": "fae-asic-a3-topology",
+      "expected_generation": 0,
+      "expected_state_digest": "sha256:60129a52ca46fc4d2ce45c27beb6de96b0088f1fef61d73da905adddb994b2e9",
+      "policy_digest": "sha256:b4f119da9626a63017e9cccb3baa0c779a31ae1bf93f88e372cd81cd86176873",
+      "event": "verification_passed",
+      "evidence": [
+        {
+          "kind": "a3_static_source_validation",
+          "locator": "github-actions://Waterfound/FAE-testnet/runs/36358111094",
+          "digest": "sha256:505dde139b512bf938dcaa40fedf2c70227a4e4e657323cf41e7ef6c1299588e",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "github-actions://Waterfound/FAE-testnet/runs/36358111094",
+      "observed_at": "2026-09-27T23:10:00Z",
+      "summary": "A3 direct-split source topology invariants passed repository-level fail-closed verification; Vivado/AWS validate_bd_design remains the next provider verification gate and no paid physical build has been launched.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/ba0ff6c25fffc4207392b6c30a62db6492be5697",
+        "github://Waterfound/FAE-testnet/blob/lab/asic-a3-directsplit-static-20260927/labs/asic-f2-pre-go/hdk/integrate_fae_f2_2lane_200mhz_a3_directsplit.tcl"
+      ],
+      "uncertainties": [
+        "Vivado validate_bd_design has not yet been executed for A3 in an AWS HLx environment.",
+        "No routability or timing-closure claim is made from source-level validation."
+      ],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
