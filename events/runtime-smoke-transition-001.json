@@ -1,0 +1,69 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "runtime-smoke-transition-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "persistent-smoke-stop",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-human-stop",
+          "from_state": "ready",
+          "event": "authority_required",
+          "to_state": "human_gate",
+          "next_action_ref": "authority://persistent-runtime-smoke",
+          "effect": "stop_human_gate",
+          "required_evidence": [
+            "authority_boundary_reached"
+          ],
+          "authority_mode": "human_required",
+          "authority_boundary": "persistent runtime smoke authority",
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-push",
+      "event_kind": "durable-transition",
+      "portfolio_id": "durable-runtime-smoke",
+      "policy_digest": "sha256:fbf7bea5c40e1dee77bc99a7a7a1b160b8ebf8347943ce71a5e7fe5c3f67eba6",
+      "transition_event": "authority_required"
+    },
+    "trigger": {
+      "source": "github-push",
+      "event_id": "runtime-smoke-transition-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:5084b3d93c069a04e923f640296b509009b9fb8158321d57386de2936da1b358",
+      "observation_digest": "sha256:4c23f1eae81108a57f3cd04f1ae12876ed33e5f0f3b4cd0a93004f5249be68e7",
+      "admission_ref": "github://runtime/durable-asp-control/runtime-smoke-transition-001"
+    },
+    "observation": {
+      "portfolio_id": "durable-runtime-smoke",
+      "expected_generation": 0,
+      "expected_state_digest": "sha256:9f18fa5a57cb5294ca3472a1c2a701fdcae7554f03f43ba0844fab9be4f98af9",
+      "policy_digest": "sha256:fbf7bea5c40e1dee77bc99a7a7a1b160b8ebf8347943ce71a5e7fe5c3f67eba6",
+      "event": "authority_required",
+      "evidence": [
+        {
+          "kind": "authority_boundary_reached",
+          "locator": "runtime://smoke/authority",
+          "digest": "sha256:7d72b25c86ded618afd35480d043a9ad4a2856e4b640d812c60944f2fd05d3f2",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "runtime://smoke/authority-stop",
+      "observed_at": "2026-09-27T15:55:00Z",
+      "summary": "Persistent runtime smoke reaches bounded authority stop",
+      "canonical_refs": [
+        "runtime://smoke/bootstrap-002"
+      ],
+      "uncertainties": [],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
