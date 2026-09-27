@@ -1,0 +1,56 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-wallet-transaction-ux-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "fae-wallet-transaction-ux",
+      "generation": 0,
+      "active": {
+        "work_id": "WTX-01R-current-main-reconciliation",
+        "role": "active",
+        "state": "ready",
+        "objective": "Reconcile the verified WTX-01 contract head afb0a989c051dfd10d3c6a16571ecacff54e16ca and Wallet UX implementation head e18cb6001c416fd6f78680f3340c37cfd8b15b29 against current FAE-testnet main c34f8287fb7e09d05e762b3061060a9c03c692d9, preserving verified TXID/copy/history behavior while identifying the exact remaining WTX-02/03 gap.",
+        "active_gate": "WTX-01R",
+        "next_action_ref": "github://Waterfound/FAE-testnet/wallet-transaction-ux/current-main-reconciliation",
+        "source_revision": "c34f8287fb7e09d05e762b3061060a9c03c692d9",
+        "evidence_required": [
+          "wtx01_contract_head_afb0a989",
+          "wtx01_ui_head_e18cb600",
+          "current_main_diff",
+          "client_smoke",
+          "no_consensus_backend_key_material_change"
+        ],
+        "authority_boundary": "Development-branch Wallet Transaction UX only. Stop before main merge, release, production deployment, new spending, credentials, backend/consensus authority, wallet key-material changes, or destructive infrastructure.",
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": null,
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "WTX-02-acceptance-fixtures",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Build acceptance fixtures for the verified Wallet Transaction UX contract after current-main reconciliation proves the source baseline.",
+        "active_gate": "WTX-02",
+        "next_action_ref": "github://Waterfound/FAE-testnet/wallet-transaction-ux/acceptance-fixtures",
+        "source_revision": "c34f8287fb7e09d05e762b3061060a9c03c692d9",
+        "evidence_required": [
+          "reconciled_source_revision",
+          "contract_coverage",
+          "acceptance_fixture_matrix"
+        ],
+        "authority_boundary": "Same bounded Wallet Transaction UX development envelope; no main/merge/release/production/spend/backend/consensus/key-material authority.",
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": null,
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
