@@ -1,0 +1,43 @@
+{
+  "schema_version": "ge.human-authority-bridge-verification.v1",
+  "recorded_at": "2026-09-27T20:04:00Z",
+  "repository": "Waterfound/General-Execution",
+  "base_main_revision": "4d65f96ba21b8abda8e7243a5ccc91a49ce533ea",
+  "development_branch": "feature/durable-human-authority-bridge-20260927",
+  "pinned_human_authority_runtime_source": "71873e182f5f0d93c35ed35805fe818946bae819",
+  "verification": {
+    "workflow": "Human authority bridge verification",
+    "run_id": 36346609209,
+    "job_id": 108696877757,
+    "conclusion": "success",
+    "compile": "PASS",
+    "focused_tests": "PASS",
+    "workflow_envelope_audit": "PASS",
+    "full_regression": "PASS"
+  },
+  "invariants": {
+    "ordinary_persistent_transport_still_rejects_authority_grants": true,
+    "human_authority_channel_is_separate": true,
+    "trusted_provider_actor": "Waterfound",
+    "authority_receipt_create_only": true,
+    "credential_shaped_keys_rejected": true,
+    "same_runtime_concurrency_group": true,
+    "human_gate_exit_requires_preauthorized_required": true,
+    "consumed_gate_clears_authority_blocker": true,
+    "consumed_gate_preserves_authority_ref": true,
+    "runtime_branch_not_activated_by_this_verification": true,
+    "main_not_modified_by_this_verification": true,
+    "production_not_modified": true,
+    "new_spend_authorized": false
+  },
+  "preexisting_runtime_canonicalization_proof": {
+    "main_revision": "4d65f96ba21b8abda8e7243a5ccc91a49ce533ea",
+    "runtime_repin_commit": "7246010bf2a27cec6c4b2b92328aaab49b5dcb50",
+    "postcanonical_bootstrap_trigger": "134494c57a0b19346449fb482764c42dad65e282",
+    "provider_run_id": 36346168253,
+    "provider_conclusion": "success",
+    "runtime_source_revision": "fcec2964b2100709a5ecbde38b0bfe0abb8eb2d1",
+    "authority_created": false
+  },
+  "next_gate": "Human authorization required before merge into main. Runtime human-authority workflow installation/real authority-resume smoke remains post-merge."
+}
