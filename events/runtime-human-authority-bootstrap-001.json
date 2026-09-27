@@ -1,0 +1,46 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "runtime-human-authority-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "durable-human-authority-smoke",
+      "generation": 0,
+      "active": {
+        "work_id": "AUTH-SMOKE-ACTIVE",
+        "role": "active",
+        "state": "ready",
+        "objective": "Prove durable human authority bridge end to end",
+        "active_gate": "AUTHORITY-SMOKE",
+        "next_action_ref": "action://reach-human-authority-gate",
+        "source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+        "evidence_required": [],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": null,
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "AUTH-SMOKE-SECONDARY",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Remain inert during human authority smoke",
+        "active_gate": "SECONDARY",
+        "next_action_ref": "action://secondary",
+        "source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+        "evidence_required": [],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": null,
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
