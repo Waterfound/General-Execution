@@ -1,11 +1,11 @@
 {
   "authority_created": false,
-  "database_sha256": "sha256:a0e5cdafef5ee0f571ce0fbcde762d9e8c6ed1e6fb84a0f452fc968a714d0751",
-  "last_event_id": "fae-wallet-transaction-ux-wtx06-merge-authority-gate-001",
-  "last_event_report_digest": "sha256:56afc3d57e17b53b0e1e0a263bcff616978be07a9340e924fe40b65dc3ccc0f5",
-  "last_operation": "transition",
-  "last_trigger_commit": "48808c513023e4ae35d9dedd4fe145f6548a1ad6",
+  "database_sha256": "sha256:852207e9f17ce6da906e6d57d795fbc84934a7e646ab82a35c10677885c06738",
+  "last_event_id": "runtime-postcanonical-bootstrap-001",
+  "last_event_report_digest": "sha256:8e81000ab00b5c3e9c146c21fbec1166898e95f6bcb8c5d18b0c4567cacc509b",
+  "last_operation": "bootstrap",
+  "last_trigger_commit": "134494c57a0b19346449fb482764c42dad65e282",
   "persistent_provider_trigger_enabled": true,
-  "runtime_source_revision": "0ee552364eae07cd23b94da4cb4fa9c4cac23763",
+  "runtime_source_revision": "fcec2964b2100709a5ecbde38b0bfe0abb8eb2d1",
   "schema_version": "ge.persistent-runtime-manifest.v1"
 }

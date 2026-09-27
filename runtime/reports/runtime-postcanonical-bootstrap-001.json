@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:852207e9f17ce6da906e6d57d795fbc84934a7e646ab82a35c10677885c06738",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "runtime-postcanonical-bootstrap-001",
+    "human_required": false,
+    "operation": "bootstrap",
+    "portfolio_id": "durable-runtime-postcanonical-smoke",
+    "post_generation": 0,
+    "post_state_digest": "sha256:40629b9d85d2265d90bba2124dabcc2cedf1322b713ae2b5dc765e85d59cf21e",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:40629b9d85d2265d90bba2124dabcc2cedf1322b713ae2b5dc765e85d59cf21e",
+    "requested_action_ref": "action://await-postcanonical-verification",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:8e81000ab00b5c3e9c146c21fbec1166898e95f6bcb8c5d18b0c4567cacc509b",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
