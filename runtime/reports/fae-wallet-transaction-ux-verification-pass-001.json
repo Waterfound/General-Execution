@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:26cd0902b3b158048c8debe8cd3b15855199c88c92cec21d1fe3d3a394a06fc4",
+  "event_report": {
+    "checkpoint_digest": "sha256:af0990409c3f6e38ff4ac0a082fc794afa3206404bb869474b56517d8825381d",
+    "event_id": "fae-wallet-transaction-ux-verification-pass-001",
+    "human_required": false,
+    "operation": "transition",
+    "portfolio_id": "fae-wallet-transaction-ux",
+    "post_generation": 3,
+    "post_state_digest": "sha256:dbaadeda597d3d2264f1a2b07dbacc79cd2829f707070a9ce0b15fd509801852",
+    "pre_generation": 2,
+    "pre_state_digest": "sha256:0100244e79ad4454bdd3cfef576b7f64374d67c4a4ef8dd8f3f78af5d250bdad",
+    "requested_action_ref": null,
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "committed"
+  },
+  "event_report_digest": "sha256:dae7be131de0659df7acd227034ee52e0b62742a61ad0c6314228dd93ca57f22",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
