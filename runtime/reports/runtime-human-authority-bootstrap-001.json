@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:d4146c606941dea76b9c8f01f1c56ac2522aa4551ba6457f41b3ae4447531078",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "runtime-human-authority-bootstrap-001",
+    "human_required": false,
+    "operation": "bootstrap",
+    "portfolio_id": "durable-human-authority-smoke",
+    "post_generation": 0,
+    "post_state_digest": "sha256:eeab23d988b65c597d1186ebbe40eb52d070c1ca84c3ca07a3774f4c29a7e10d",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:eeab23d988b65c597d1186ebbe40eb52d070c1ca84c3ca07a3774f4c29a7e10d",
+    "requested_action_ref": "action://reach-human-authority-gate",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:7157c3f0075291c778156a67e8e66b0a6550255399848296912ec29340817703",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}

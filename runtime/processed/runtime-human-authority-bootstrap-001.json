@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:d4146c606941dea76b9c8f01f1c56ac2522aa4551ba6457f41b3ae4447531078",
+  "event_id": "runtime-human-authority-bootstrap-001",
+  "event_report_digest": "sha256:7157c3f0075291c778156a67e8e66b0a6550255399848296912ec29340817703",
+  "operation": "bootstrap",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "fcec2964b2100709a5ecbde38b0bfe0abb8eb2d1",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "35df564b3ffacd27703cdc545a18f53448f834e0"
+}
