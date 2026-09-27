@@ -224,6 +224,8 @@ def load_tick(path: Path) -> ResumeTickResult:
 def decode_verification_observation(data) -> ResumeTickObservation:
     values = dict(data)
     values["evidence"] = tuple(CheckpointEvidence(**item) for item in data["evidence"])
+    values["canonical_refs"] = tuple(data["canonical_refs"])
+    values["uncertainties"] = tuple(data.get("uncertainties", ()))
     return ResumeTickObservation(**values)
 
 
