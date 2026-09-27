@@ -47,10 +47,11 @@
     "tests": 345
   },
   "next_action": {
-    "frontier": "verification-escalation",
-    "mode": "independent_verification_and_rejection_rework_contract",
+    "frontier": "unattended-pilot",
+    "mode": "bounded real pilot with multi-invocation durable evidence and exact authority stop",
     "provider_activation_authorized": false,
-    "unattended_pilot_authorized": false
+    "unattended_pilot_authorized": false,
+    "authority_gate": "Explicit authorization is required before activating a real provider trigger or unattended pilot."
   },
   "operational_runner": {
     "auto_deployment_detected": false,
@@ -78,8 +79,8 @@
     }
   },
   "previous_candidate": "6cad261424c9f28e3b6651e656c6adafdb6954ee",
-  "previous_checkpoint": "3a4fa4432392e8e32d56c0b62a16974082ed7c1f",
-  "recorded_at": "2026-09-27T13:46:49.005859+00:00",
+  "previous_checkpoint": "d92d83ab30a7d72a272067873e0c6754993d9a1a",
+  "recorded_at": "2026-09-27T15:01:00Z",
   "schema_version": "ge.durable-development-checkpoint.v1",
   "source_publication": {
     "identical_git_tree": "823c81c75aac5f343980b98e52bd8dc493779b96",
@@ -174,6 +175,24 @@
     "unattended_runtime_enabled": false,
     "external_verification_of_wave8": false,
     "next_frontier": "verification-escalation",
+    "activation_authorized": false
+  },
+  "wave9": {
+    "schema_version": "ge.wave9-verification-escalation-validation.v1",
+    "status": "PASS",
+    "evidence_path": "evidence/durable-execution/2026-09-27/wave9-validation.json",
+    "tested_revision": "6095e3024c373dbf96ea2be91989c35ebf44f238",
+    "github_actions_run_id": 36327835171,
+    "github_actions_job_id": 108643917513,
+    "focused_tests": 15,
+    "full_repository_tests": 375,
+    "compileall": "PASS",
+    "verifier_separation": true,
+    "rejection_rework_path": true,
+    "red_team_escalation_advisory_only": true,
+    "provider_trigger_enabled": false,
+    "unattended_runtime_enabled": false,
+    "next_frontier": "unattended-pilot",
     "activation_authorized": false
   }
 }
