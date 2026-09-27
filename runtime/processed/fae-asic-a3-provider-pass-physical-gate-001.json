@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:5ace0159ee9825fd11ed416aaa2b16a313b6aeb3a7426775bff451017266f20f",
+  "event_id": "fae-asic-a3-provider-pass-physical-gate-001",
+  "event_report_digest": "sha256:34ff863aea4b9541c892835111d5177ab962d4a861631a9c2b73e9e4816ac7cf",
+  "operation": "transition",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "9506ad7406f4f9b2acb72c943b1f9583cbf5242a"
+}
