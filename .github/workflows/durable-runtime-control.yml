@@ -1,0 +1,200 @@
+name: Durable ASP persistent runtime
+
+on:
+  push:
+    branches:
+      - runtime/durable-asp-control
+    paths:
+      - "events/*.json"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: durable-asp-persistent-runtime
+  cancel-in-progress: false
+
+env:
+  RUNTIME_BRANCH: runtime/durable-asp-control
+  PERSISTENT_RUNTIME_REVISION: __PINNED_RUNTIME_REVISION__
+
+jobs:
+  consume-event:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Enforce host boundary
+        run: |
+          test "$GITHUB_ACTOR" = "Waterfound"
+          test "$GITHUB_REF_NAME" = "$RUNTIME_BRANCH"
+          test "$GITHUB_REF" = "refs/heads/$RUNTIME_BRANCH"
+
+      - name: Checkout trigger commit
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.sha }}
+
+      - name: Admit exactly one immutable event file
+        id: event
+        run: |
+          git diff-tree --no-commit-id --name-status -r "$GITHUB_SHA" -- 'events/*.json' > /tmp/event-changes.txt
+          python - <<'PY'
+          import os, pathlib
+          rows=[line.strip().split("\t",1) for line in pathlib.Path("/tmp/event-changes.txt").read_text().splitlines() if line.strip()]
+          assert len(rows)==1, f"expected exactly one event file, got {rows}"
+          status,path=rows[0]
+          assert status=="A", f"event must be immutable create-only, got {status}"
+          assert path.startswith("events/") and path.endswith(".json")
+          with open(os.environ["GITHUB_OUTPUT"],"a") as out:
+              out.write(f"path={path}\n")
+          PY
+          git show "$GITHUB_SHA:${{ steps.event.outputs.path }}" > /tmp/event.json
+
+      - name: Reject credential-shaped event data
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          data=json.loads(pathlib.Path("/tmp/event.json").read_text())
+          forbidden=("secret","password","token","credential","private_key","private-key","api_key","api-key")
+          def walk(value,path="$"):
+              if isinstance(value,dict):
+                  for k,v in value.items():
+                      low=k.lower()
+                      assert not any(term in low for term in forbidden), f"credential-shaped key forbidden: {path}.{k}"
+                      walk(v,f"{path}.{k}")
+              elif isinstance(value,list):
+                  for i,v in enumerate(value): walk(v,f"{path}[{i}]")
+          walk(data)
+          PY
+
+      - name: Resolve event identity
+        id: identity
+        run: |
+          python - <<'PY'
+          import json, os, pathlib
+          data=json.loads(pathlib.Path("/tmp/event.json").read_text())
+          assert data.get("schema_version")=="ge.persistent-runtime-event.v1"
+          event_id=data.get("event_id")
+          assert isinstance(event_id,str) and event_id and all(c.isalnum() or c in "._-" for c in event_id)
+          assert len(event_id)<=120
+          with open(os.environ["GITHUB_OUTPUT"],"a") as out:
+              out.write(f"event_id={event_id}\n")
+              out.write(f"operation={data.get('operation','')}\n")
+          PY
+
+      - name: Move to latest durable runtime branch
+        run: |
+          git fetch origin "$RUNTIME_BRANCH"
+          git checkout -B "$RUNTIME_BRANCH" "origin/$RUNTIME_BRANCH"
+          if test -f "runtime/processed/${{ steps.identity.outputs.event_id }}.json"; then
+            echo "already_processed=true" >> "$GITHUB_ENV"
+          else
+            echo "already_processed=false" >> "$GITHUB_ENV"
+          fi
+
+      - name: Setup Python
+        if: env.already_processed != 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Prepare pinned verified runtime source
+        if: env.already_processed != 'true'
+        run: |
+          test "$PERSISTENT_RUNTIME_REVISION" != "__PINNED_RUNTIME_REVISION__"
+          git cat-file -e "$PERSISTENT_RUNTIME_REVISION^{commit}"
+          git worktree add --detach /tmp/runtime-src "$PERSISTENT_RUNTIME_REVISION"
+          cd /tmp/runtime-src
+          python -m pip install -e '.[dev]' --disable-pip-version-check
+          python -m compileall -q src scripts
+
+      - name: Restore durable SQLite state
+        if: env.already_processed != 'true'
+        run: |
+          rm -f /tmp/durable-runtime.db
+          if test -f runtime/state.sqlite.b64; then
+            base64 --decode runtime/state.sqlite.b64 > /tmp/durable-runtime.db
+          fi
+
+      - name: Authenticate exact trigger body
+        if: env.already_processed != 'true'
+        id: admission
+        run: |
+          cd /tmp/runtime-src
+          digest="$(python scripts/run_persistent_runtime_event.py --event /tmp/event.json --print-trigger-digest)"
+          echo "digest=$digest" >> "$GITHUB_OUTPUT"
+
+      - name: Consume at most one admitted transition
+        if: env.already_processed != 'true'
+        run: |
+          cd /tmp/runtime-src
+          args=(--event /tmp/event.json --database /tmp/durable-runtime.db --report /tmp/runtime-report.json)
+          if test "${{ steps.identity.outputs.operation }}" = "transition"; then
+            test "${{ steps.admission.outputs.digest }}" != "NONE"
+            args+=(--authenticated-trigger-digest "${{ steps.admission.outputs.digest }}")
+          else
+            test "${{ steps.admission.outputs.digest }}" = "NONE"
+          fi
+          python scripts/run_persistent_runtime_event.py "${args[@]}"
+
+      - name: Persist state and evidence
+        if: env.already_processed != 'true'
+        run: |
+          mkdir -p runtime/reports runtime/processed
+          base64 -w 0 /tmp/durable-runtime.db > runtime/state.sqlite.b64
+          printf '\n' >> runtime/state.sqlite.b64
+          cp /tmp/runtime-report.json "runtime/reports/${{ steps.identity.outputs.event_id }}.json"
+          python - <<'PY'
+          import hashlib,json,os,pathlib
+          event=json.loads(pathlib.Path("/tmp/event.json").read_text())
+          report=json.loads(pathlib.Path("/tmp/runtime-report.json").read_text())
+          db=pathlib.Path("/tmp/durable-runtime.db").read_bytes()
+          db_digest="sha256:"+hashlib.sha256(db).hexdigest()
+          assert report["database_sha256"]==db_digest
+          processed={
+              "schema_version":"ge.persistent-runtime-processed-event.v1",
+              "event_id":event["event_id"],
+              "operation":event["operation"],
+              "trigger_commit":os.environ["GITHUB_SHA"],
+              "provider_actor":os.environ["GITHUB_ACTOR"],
+              "event_report_digest":report["event_report_digest"],
+              "database_sha256":db_digest,
+              "runtime_source_revision":os.environ["PERSISTENT_RUNTIME_REVISION"],
+          }
+          manifest={
+              "schema_version":"ge.persistent-runtime-manifest.v1",
+              "last_event_id":event["event_id"],
+              "last_operation":event["operation"],
+              "last_trigger_commit":os.environ["GITHUB_SHA"],
+              "last_event_report_digest":report["event_report_digest"],
+              "database_sha256":db_digest,
+              "runtime_source_revision":os.environ["PERSISTENT_RUNTIME_REVISION"],
+              "persistent_provider_trigger_enabled":True,
+              "authority_created":False,
+          }
+          pathlib.Path(f"runtime/processed/{event['event_id']}.json").write_text(json.dumps(processed,sort_keys=True,indent=2)+"\n")
+          pathlib.Path("runtime/manifest.json").write_text(json.dumps(manifest,sort_keys=True,indent=2)+"\n")
+          PY
+
+      - name: Commit durable state only to runtime branch
+        if: env.already_processed != 'true'
+        run: |
+          git config user.name "durable-asp-runtime"
+          git config user.email "durable-asp-runtime@users.noreply.github.com"
+          git add runtime/
+          git diff --cached --quiet && exit 0
+          git commit -m "runtime: consume ${{ steps.identity.outputs.event_id }} [skip ci]"
+          git fetch origin "$RUNTIME_BRANCH"
+          git rebase "origin/$RUNTIME_BRANCH"
+          test "$(git branch --show-current)" = "$RUNTIME_BRANCH"
+          git push origin "HEAD:refs/heads/$RUNTIME_BRANCH"
+
+      - name: Upload event evidence
+        if: env.already_processed != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: durable-runtime-${{ steps.identity.outputs.event_id }}-${{ github.run_id }}
+          path: /tmp/runtime-report.json
+          if-no-files-found: error
+          retention-days: 30
