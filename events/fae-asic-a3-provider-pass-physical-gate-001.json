@@ -1,0 +1,73 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-asic-a3-provider-pass-physical-gate-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-asic-a3-physical-build-gate",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-provider-pass-stop-before-physical-build",
+          "from_state": "running",
+          "event": "authority_required",
+          "to_state": "human_gate",
+          "next_action_ref": "authority://fae-asic/a3/physical-build",
+          "effect": "stop_human_gate",
+          "required_evidence": [
+            "a3_provider_static_validation"
+          ],
+          "authority_mode": "human_required",
+          "authority_boundary": "Authorize one A3 physical implementation build only after accepting the provider static PASS_WITH_WARNINGS; preserve frozen DP6 semantics, fail closed on timing, remain within the existing ASIC Lab USD 20 out-of-pocket cap, and do not create an AFI unless separately authorized.",
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "durable-execution",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-asic-a3-topology",
+      "policy_digest": "sha256:5568fe447474069f1200565e67c58a546ef08be0b9e3b27a2d7a5a85b6aff31c",
+      "transition_event": "authority_required"
+    },
+    "trigger": {
+      "source": "durable-execution",
+      "event_id": "fae-asic-a3-provider-pass-physical-gate-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:b889ce1397846b73cc576911357bd0e8b08a51eed01295ce8e027cb790f63e74",
+      "observation_digest": "sha256:acee701bff65f0e30a9f76b0c909bdddf3707c51d7dff32b2a88b8f882a4ade4",
+      "admission_ref": "aws://us-east-1/i-07d5c60cd831f135e/a3-directsplit-validate"
+    },
+    "observation": {
+      "portfolio_id": "fae-asic-a3-topology",
+      "expected_generation": 3,
+      "expected_state_digest": "sha256:f32be9699f4c1fd9f7dc58a051691ae7c2991abf166c1c84ed955b6f5764ea1c",
+      "policy_digest": "sha256:5568fe447474069f1200565e67c58a546ef08be0b9e3b27a2d7a5a85b6aff31c",
+      "event": "authority_required",
+      "evidence": [
+        {
+          "kind": "a3_provider_static_validation",
+          "locator": "github://Waterfound/FAE-testnet/blob/lab/asic-a3-directsplit-static-20260927/labs/asic-f2-pre-go/runtime/F2_ATTACKER_SWEEP_A3_PROVIDER_STATIC_RESULT.json",
+          "digest": "sha256:b889ce1397846b73cc576911357bd0e8b08a51eed01295ce8e027cb790f63e74",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "aws://us-east-1/i-07d5c60cd831f135e/a3-directsplit-validate",
+      "observed_at": "2026-09-27T23:05:00Z",
+      "summary": "A3 direct-split passed AWS/Vivado provider-level validate_bd_design on exact source d00a49c with exit code 0. Two AXI-Lite MAX_BURST_LENGTH critical warnings remain explicit; no physical implementation or AFI was launched.",
+      "canonical_refs": [
+        "s3://fae-asic-lab-203842200752-20260922/evidence/i-07d5c60cd831f135e/a3-directsplit-validate/",
+        "github://Waterfound/FAE-testnet/commit/b1d94ce733c9e678c7b5b5a6b1cc3f1a7c42d354"
+      ],
+      "uncertainties": [
+        "The two BD 41-237 MAX_BURST_LENGTH metadata warnings remain unresolved before physical implementation.",
+        "Provider validation proves block-design admission, not routability or timing closure."
+      ],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
