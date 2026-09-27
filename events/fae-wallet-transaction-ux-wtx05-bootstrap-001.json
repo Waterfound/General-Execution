@@ -1,0 +1,61 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-wallet-transaction-ux-wtx05-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "fae-wallet-transaction-ux-wtx05",
+      "generation": 0,
+      "active": {
+        "work_id": "WTX-05-browser-validation",
+        "role": "active",
+        "state": "ready",
+        "objective": "Validate the complete Wallet Transaction UX journey in a real browser on the immutable WTX-04 candidate using desktop, tablet-touch, and mobile-touch viewports; verify keyboard/focus, full TXID selection/copy, transaction details, history lifecycle/coverage, and narrow-viewport overflow without claiming physical-device validation.",
+        "active_gate": "WTX-05",
+        "next_action_ref": "github://Waterfound/FAE-testnet/branch/build-colony/wallet-tx-ux-current-main-20260927",
+        "source_revision": "8f478e374a92d61d79aedc0cc816b0525a6c03dd",
+        "evidence_required": [
+          "real_browser_engine",
+          "desktop_mouse_journey",
+          "tablet_touch_journey",
+          "mobile_touch_journey",
+          "keyboard_focus",
+          "exact_txid_clipboard",
+          "history_lifecycle_and_coverage",
+          "no_horizontal_page_overflow",
+          "no_physical_device_claim",
+          "wallet_ux_ci_green"
+        ],
+        "authority_boundary": "Browser validation and development-branch fixes only. Stop before main merge, release, production deployment, new spending, credentials, backend/consensus changes, wallet key-material changes, or destructive infrastructure.",
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": null,
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "WTX-06-integration",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Reconcile the verified Wallet UX candidate with the then-current main and prepare serialized integration evidence. Integration into main itself is an explicit authority boundary.",
+        "active_gate": "WTX-06",
+        "next_action_ref": "action://wallet-transaction-ux/integration-preflight",
+        "source_revision": "8f478e374a92d61d79aedc0cc816b0525a6c03dd",
+        "evidence_required": [
+          "wtx05_verified_revision",
+          "latest_main_reconciliation",
+          "combined_verification"
+        ],
+        "authority_boundary": "Preparation/reconciliation only. STOP before merging or otherwise modifying FAE-testnet main unless explicit human authorization is present.",
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": null,
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
