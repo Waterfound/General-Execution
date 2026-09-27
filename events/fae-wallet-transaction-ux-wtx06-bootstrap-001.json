@@ -1,0 +1,58 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-wallet-transaction-ux-wtx06-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "fae-wallet-transaction-ux-wtx06",
+      "generation": 0,
+      "active": {
+        "work_id": "WTX-06-integration-readiness",
+        "role": "active",
+        "state": "ready",
+        "objective": "Prove Wallet Transaction UX integration readiness against the exact current FAE-testnet main: latest-main ancestry, full lab-specific regression, cross-lab integration gate, exact candidate review, and a serial pull request. Stop before merging into main.",
+        "active_gate": "WTX-06",
+        "next_action_ref": "github://Waterfound/FAE-testnet/branch/build-colony/wallet-tx-ux-current-main-20260927",
+        "source_revision": "d36c2302cbdcce1fa7b38896362bd58b0a24dd00",
+        "evidence_required": [
+          "latest_main_ancestry",
+          "wallet_ux_regression_green",
+          "cross_lab_integration_gate_green",
+          "exact_candidate_review",
+          "serial_pull_request_ready"
+        ],
+        "authority_boundary": "Stop before merging into main. Main merge changes canonical engineering state and requires explicit human authority. Also stop before release, production deployment, new spending, credentials, backend/consensus changes, wallet key-material changes, or destructive infrastructure.",
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": null,
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "WTX-07-publication-and-closure",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "After an explicitly authorized merge and combined-main verification, bind the exact integrated revision to the authorized frontend deployment and verify public bytes/read-only smoke before declaring LIVE.",
+        "active_gate": "WTX-07",
+        "next_action_ref": "action://wallet-transaction-ux/publication",
+        "source_revision": "d36c2302cbdcce1fa7b38896362bd58b0a24dd00",
+        "evidence_required": [
+          "integrated_main_revision",
+          "combined_main_verified",
+          "deployment_authority",
+          "public_bytes_bound",
+          "public_read_smoke"
+        ],
+        "authority_boundary": "Requires separate merge and deployment/release authority; no implicit production or release authority.",
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": null,
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
