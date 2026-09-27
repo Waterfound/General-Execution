@@ -1,0 +1,54 @@
+{
+  "schema_version": "ge.human-authority-event.v1",
+  "event_id": "fae-asic-a3-warning-clean-authority-resume-001",
+  "approved_action_ref": "authority://fae-asic/a3/warning-clean-static-revalidation",
+  "approved_at": "2026-09-27T23:31:00Z",
+  "policy": {
+    "policy_id": "fae-asic-a3-warning-clean-authority-resume",
+    "revision": "1",
+    "rules": [
+      {
+        "rule_id": "01-authorized-warning-clean-revalidation",
+        "from_state": "human_gate",
+        "event": "verification_passed",
+        "to_state": "running",
+        "next_action_ref": "action://fae-asic/a3/warning-clean-static-revalidation",
+        "effect": "none",
+        "required_evidence": [
+          "human_authority_recorded"
+        ],
+        "authority_mode": "preauthorized_required",
+        "authority_boundary": "Authorize bounded AWS/Vivado A3 static revalidation of the AXI4-Lite warning-clean candidate only; remain within the existing ASIC Lab spend envelope; no physical implementation, AFI creation, release, consensus activation, or mainnet action.",
+        "schema_version": "ge.transition-rule.v1"
+      }
+    ],
+    "default_disposition": "stop",
+    "schema_version": "ge.transition-policy.v1"
+  },
+  "observation": {
+    "portfolio_id": "fae-asic-a3-warning-clean-revalidation",
+    "expected_generation": 0,
+    "expected_state_digest": "sha256:46eebec317f005fd9ad49744d533ec3ffc50a5b708fa523b493e854845a2436b",
+    "policy_digest": "sha256:6f3a700023a6aac48444082b4db13bc66aca3297c0296924d039f545bb1771b2",
+    "event": "verification_passed",
+    "evidence": [
+      {
+        "kind": "human_authority_recorded",
+        "locator": "runtime://fae-asic-a3-warning-clean-revalidation/explicit-user-authorization-20260927",
+        "digest": "sha256:aee4dd945f2bcf1c991cae94913c0efcfd2b062c0e6e6360ea896336870da6da",
+        "schema_version": "ge.checkpoint-evidence.v1"
+      }
+    ],
+    "action_ref": "runtime://fae-asic-a3-warning-clean-revalidation/resume-after-explicit-authorization",
+    "observed_at": "2026-09-27T23:31:00Z",
+    "summary": "Explicit human authorization admits one bounded AWS/Vivado static revalidation of the AXI4-Lite warning-clean A3 candidate; physical implementation and AFI creation remain forbidden.",
+    "canonical_refs": [
+      "runtime://fae-asic-a3-warning-clean-revalidation/bootstrap-001",
+      "github-actions://Waterfound/FAE-testnet/runs/36359254418"
+    ],
+    "uncertainties": [],
+    "wake_admission": null,
+    "authority_grant": null,
+    "schema_version": "ge.resume-tick-observation.v1"
+  }
+}
