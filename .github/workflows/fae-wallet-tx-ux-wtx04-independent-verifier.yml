@@ -1,0 +1,89 @@
+name: FAE Wallet UX WTX04 independent verifier
+
+on:
+  push:
+    branches:
+      - feature/durable-asp-portfolio-state
+    paths:
+      - .github/workflows/fae-wallet-tx-ux-wtx04-independent-verifier.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  FAE_BASE: 2c4e3cf0ed958d1ab28d7bbcaaf01c9424fc1e1d
+  FAE_CANDIDATE: 8f478e374a92d61d79aedc0cc816b0525a6c03dd
+
+jobs:
+  project-assurance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: Waterfound/FAE-testnet
+          ref: 8f478e374a92d61d79aedc0cc816b0525a6c03dd
+          fetch-depth: 1
+          path: fae
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify immutable WTX04 delta
+        working-directory: fae
+        run: |
+          test "$(git rev-parse HEAD)" = "$FAE_CANDIDATE"
+          git fetch --depth=1 origin "$FAE_BASE"
+          python - <<'PY'
+          import os, subprocess
+          expected={
+            ".github/workflows/wallet-tx-ux-current-main.yml",
+            "core.js",
+            "index.html",
+            "tests/wallet-history-lifecycle.mjs",
+          }
+          changed=set(subprocess.check_output(
+              ["git","diff","--name-only",os.environ["FAE_BASE"],os.environ["FAE_CANDIDATE"]],
+              text=True,
+          ).splitlines())
+          assert changed==expected,(sorted(changed),sorted(expected))
+          assert "wallet.js" not in changed
+          assert "wallet-crypto.js" not in changed
+          assert "wallet-transactions.js" not in changed
+          assert not any(path.startswith(("supabase/","sovereign-forge/")) for path in changed)
+          PY
+
+      - name: Verify browser source syntax
+        working-directory: fae
+        run: |
+          node --check core.js
+          node --check wallet.js
+          node --check wallet-transactions.js
+          node --check wallet-crypto.js
+          node --check mining.js
+          node --check network-status.js
+          node --check tests/wallet-history-lifecycle.mjs
+
+      - name: Verify Wallet UX contracts and fixtures
+        working-directory: fae
+        run: |
+          node tests/wallet-transactions-contract.mjs
+          node tests/wallet-transactions-acceptance.mjs
+
+      - name: Verify WTX04 history lifecycle
+        working-directory: fae
+        run: node tests/wallet-history-lifecycle.mjs
+
+      - name: Regress Wallet UX and cryptography
+        working-directory: fae
+        run: |
+          node tests/crypto-compat.mjs
+          node tests/client-smoke.mjs
+
+      - name: Regress independent node
+        working-directory: fae
+        run: |
+          npm ci --prefix sovereign-forge/node
+          npm run --prefix sovereign-forge/node check
+          node sovereign-forge/tests/smoke-independent-node.mjs
