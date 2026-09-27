@@ -1,0 +1,69 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "runtime-human-authority-stop-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "durable-human-authority-smoke-stop",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-human-stop",
+          "from_state": "ready",
+          "event": "authority_required",
+          "to_state": "human_gate",
+          "next_action_ref": "authority://durable-human-authority-smoke/resume",
+          "effect": "stop_human_gate",
+          "required_evidence": [
+            "authority_boundary_reached"
+          ],
+          "authority_mode": "human_required",
+          "authority_boundary": "resume isolated durable human authority smoke",
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-push",
+      "event_kind": "durable-transition",
+      "portfolio_id": "durable-human-authority-smoke",
+      "policy_digest": "sha256:fe433784d4fb5bc1e057899376fdf6a562b0de7d2a58699e6259c5d36a166479",
+      "transition_event": "authority_required"
+    },
+    "trigger": {
+      "source": "github-push",
+      "event_id": "runtime-human-authority-stop-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:b1f190be5ba3a66154576f2352c960245e5e2720ddc1f02bfb2a7bb104b5a9a0",
+      "observation_digest": "sha256:3cc96045d776c33c857518eaee5ac607a9afaf0b5f82d645923fa43580a77737",
+      "admission_ref": "github://runtime/durable-asp-control/runtime-human-authority-stop-001"
+    },
+    "observation": {
+      "portfolio_id": "durable-human-authority-smoke",
+      "expected_generation": 0,
+      "expected_state_digest": "sha256:eeab23d988b65c597d1186ebbe40eb52d070c1ca84c3ca07a3774f4c29a7e10d",
+      "policy_digest": "sha256:fe433784d4fb5bc1e057899376fdf6a562b0de7d2a58699e6259c5d36a166479",
+      "event": "authority_required",
+      "evidence": [
+        {
+          "kind": "authority_boundary_reached",
+          "locator": "runtime://durable-human-authority-smoke/human-gate",
+          "digest": "sha256:25474e795b9ed418f2e1876b72ee3ae799dabf27f751149feacce5d3a5e8d0b1",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "runtime://durable-human-authority-smoke/reach-gate",
+      "observed_at": "2026-09-27T21:20:00Z",
+      "summary": "Isolated smoke must stop at the durable human authority gate",
+      "canonical_refs": [
+        "runtime://durable-human-authority-smoke/bootstrap-001"
+      ],
+      "uncertainties": [],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
