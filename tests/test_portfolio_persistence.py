@@ -350,3 +350,32 @@ def test_missing_head_and_checkpoint_fail_closed(tmp_path):
         store.load("missing")
     with pytest.raises(PortfolioPersistenceError, match="checkpoint does not exist"):
         store.load_checkpoint("missing", 1)
+
+
+def test_recovery_uses_atomic_head_checkpoint_snapshot(tmp_path):
+    state = genesis()
+    db = tmp_path / "portfolio.db"
+    store = SqlitePortfolioHeadStore(db)
+    store.initialize(state)
+    updated = next_state(state)
+    cp = checkpoint(updated)
+    store.commit(state.portfolio_id, state.digest, updated, cp)
+
+    class SplitReadForbiddenStore(SqlitePortfolioHeadStore):
+        def load(self, portfolio_id):
+            raise AssertionError("recovery must not split head and checkpoint reads")
+
+        def load_checkpoint(self, portfolio_id, generation):
+            raise AssertionError("recovery must not split head and checkpoint reads")
+
+    restarted = SplitReadForbiddenStore(db)
+    recovered, recovered_cp, report = recover_portfolio_after_restart(
+        restarted,
+        state.portfolio_id,
+    )
+    assert recovered == updated
+    assert recovered_cp == cp
+    assert report.generation == updated.generation
+    assert report.state_digest == updated.digest
+    assert report.latest_checkpoint_digest == cp.digest
+    assert report.checkpoint_present
