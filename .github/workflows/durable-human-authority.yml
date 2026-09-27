@@ -1,0 +1,196 @@
+name: Durable ASP human authority bridge
+
+on:
+  push:
+    branches:
+      - runtime/durable-asp-control
+    paths:
+      - "authority/*.json"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: durable-asp-persistent-runtime
+  cancel-in-progress: false
+
+env:
+  RUNTIME_BRANCH: runtime/durable-asp-control
+  HUMAN_AUTHORITY_RUNTIME_REVISION: 71873e182f5f0d93c35ed35805fe818946bae819
+
+jobs:
+  consume-human-authority:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Enforce human authority host boundary
+        run: |
+          test "$GITHUB_ACTOR" = "Waterfound"
+          test "$GITHUB_REF_NAME" = "$RUNTIME_BRANCH"
+          test "$GITHUB_REF" = "refs/heads/$RUNTIME_BRANCH"
+
+      - name: Checkout authority commit
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.sha }}
+
+      - name: Admit exactly one immutable authority receipt
+        id: authority
+        run: |
+          git diff-tree --no-commit-id --name-status -r "$GITHUB_SHA" -- 'authority/*.json' > /tmp/authority-changes.txt
+          python - <<'PY'
+          import os, pathlib
+          rows=[line.strip().split("\t",1) for line in pathlib.Path("/tmp/authority-changes.txt").read_text().splitlines() if line.strip()]
+          assert len(rows)==1, f"expected exactly one authority file, got {rows}"
+          status,path=rows[0]
+          assert status=="A", f"authority receipt must be immutable create-only, got {status}"
+          assert path.startswith("authority/") and path.endswith(".json")
+          with open(os.environ["GITHUB_OUTPUT"],"a") as out:
+              out.write(f"path={path}\n")
+          pathlib.Path("/tmp/authority-path.txt").write_text(path)
+          PY
+          AUTHORITY_PATH="$(cat /tmp/authority-path.txt)"
+          git show "$GITHUB_SHA:$AUTHORITY_PATH" > /tmp/authority.json
+
+      - name: Reject credential-shaped authority data
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          data=json.loads(pathlib.Path("/tmp/authority.json").read_text())
+          forbidden=("secret","password","token","credential","private_key","private-key","api_key","api-key")
+          def walk(value,path="$"):
+              if isinstance(value,dict):
+                  for k,v in value.items():
+                      low=k.lower()
+                      assert not any(term in low for term in forbidden), f"credential-shaped key forbidden: {path}.{k}"
+                      walk(v,f"{path}.{k}")
+              elif isinstance(value,list):
+                  for i,v in enumerate(value): walk(v,f"{path}[{i}]")
+          walk(data)
+          PY
+
+      - name: Resolve authority identity
+        id: identity
+        run: |
+          python - <<'PY'
+          import json, os, pathlib
+          data=json.loads(pathlib.Path("/tmp/authority.json").read_text())
+          assert data.get("schema_version")=="ge.human-authority-event.v1"
+          event_id=data.get("event_id")
+          assert isinstance(event_id,str) and event_id and all(c.isalnum() or c in "._-" for c in event_id)
+          assert len(event_id)<=120
+          assert isinstance(data.get("approved_action_ref"),str) and data["approved_action_ref"]
+          assert isinstance(data.get("approved_at"),str) and data["approved_at"]
+          with open(os.environ["GITHUB_OUTPUT"],"a") as out:
+              out.write(f"event_id={event_id}\n")
+          PY
+
+      - name: Move to latest durable runtime branch
+        run: |
+          git fetch origin "$RUNTIME_BRANCH"
+          git checkout -B "$RUNTIME_BRANCH" "origin/$RUNTIME_BRANCH"
+          if test -f "runtime/processed/${{ steps.identity.outputs.event_id }}.json"; then
+            echo "already_processed=true" >> "$GITHUB_ENV"
+          else
+            echo "already_processed=false" >> "$GITHUB_ENV"
+          fi
+
+      - name: Setup Python
+        if: env.already_processed != 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Prepare pinned verified human authority source
+        if: env.already_processed != 'true'
+        run: |
+          test "$HUMAN_AUTHORITY_RUNTIME_REVISION" = "71873e182f5f0d93c35ed35805fe818946bae819"
+          git cat-file -e "$HUMAN_AUTHORITY_RUNTIME_REVISION^{commit}"
+          git worktree add --detach /tmp/human-authority-src "$HUMAN_AUTHORITY_RUNTIME_REVISION"
+          cd /tmp/human-authority-src
+          python -m pip install -e '.[dev]' --disable-pip-version-check
+          python -m compileall -q src scripts
+
+      - name: Restore durable SQLite state
+        if: env.already_processed != 'true'
+        run: |
+          rm -f /tmp/durable-runtime.db
+          test -f runtime/state.sqlite.b64
+          base64 --decode runtime/state.sqlite.b64 > /tmp/durable-runtime.db
+
+      - name: Consume bounded human authority
+        if: env.already_processed != 'true'
+        run: |
+          AUTHORITY_PATH="${{ steps.authority.outputs.path }}"
+          AUTHORITY_REF="github://Waterfound/General-Execution/commit/$GITHUB_SHA/$AUTHORITY_PATH"
+          cd /tmp/human-authority-src
+          python scripts/run_human_authority_event.py \
+            --receipt /tmp/authority.json \
+            --database /tmp/durable-runtime.db \
+            --report /tmp/human-authority-report.json \
+            --provider-actor "$GITHUB_ACTOR" \
+            --authority-ref "$AUTHORITY_REF"
+
+      - name: Persist state and authority evidence
+        if: env.already_processed != 'true'
+        run: |
+          mkdir -p runtime/reports runtime/processed
+          base64 -w 0 /tmp/durable-runtime.db > runtime/state.sqlite.b64
+          printf '\n' >> runtime/state.sqlite.b64
+          cp /tmp/human-authority-report.json "runtime/reports/${{ steps.identity.outputs.event_id }}.json"
+          python - <<'PY'
+          import hashlib,json,os,pathlib
+          report=json.loads(pathlib.Path("/tmp/human-authority-report.json").read_text())
+          db=pathlib.Path("/tmp/durable-runtime.db").read_bytes()
+          db_digest="sha256:"+hashlib.sha256(db).hexdigest()
+          assert report["database_sha256"]==db_digest
+          event_id=report["event_id"]
+          processed={
+              "schema_version":"ge.human-authority-processed-event.v1",
+              "event_id":event_id,
+              "trigger_commit":os.environ["GITHUB_SHA"],
+              "provider_actor":report["provider_actor"],
+              "authority_ref":report["authority_ref"],
+              "authority_receipt_digest":report["authority_receipt_digest"],
+              "authority_grant_digest":report["authority_grant_digest"],
+              "execution_report_digest":report["execution_report_digest"],
+              "database_sha256":db_digest,
+              "runtime_source_revision":os.environ["HUMAN_AUTHORITY_RUNTIME_REVISION"],
+          }
+          manifest={
+              "schema_version":"ge.persistent-runtime-manifest.v1",
+              "last_event_id":event_id,
+              "last_operation":"human_authority",
+              "last_trigger_commit":os.environ["GITHUB_SHA"],
+              "last_event_report_digest":report["execution_report_digest"],
+              "database_sha256":db_digest,
+              "runtime_source_revision":os.environ["HUMAN_AUTHORITY_RUNTIME_REVISION"],
+              "persistent_provider_trigger_enabled":True,
+              "authority_created":False,
+          }
+          pathlib.Path(f"runtime/processed/{event_id}.json").write_text(json.dumps(processed,sort_keys=True,indent=2)+"\n")
+          pathlib.Path("runtime/manifest.json").write_text(json.dumps(manifest,sort_keys=True,indent=2)+"\n")
+          PY
+
+      - name: Commit durable state only to runtime branch
+        if: env.already_processed != 'true'
+        run: |
+          git config user.name "durable-asp-runtime"
+          git config user.email "durable-asp-runtime@users.noreply.github.com"
+          git add runtime/
+          git diff --cached --quiet && exit 0
+          git commit -m "runtime: consume human authority ${{ steps.identity.outputs.event_id }} [skip ci]"
+          git fetch origin "$RUNTIME_BRANCH"
+          git rebase "origin/$RUNTIME_BRANCH"
+          test "$(git branch --show-current)" = "$RUNTIME_BRANCH"
+          git push origin "HEAD:refs/heads/$RUNTIME_BRANCH"
+
+      - name: Upload human authority evidence
+        if: env.already_processed != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: durable-human-authority-${{ steps.identity.outputs.event_id }}-${{ github.run_id }}
+          path: /tmp/human-authority-report.json
+          if-no-files-found: error
+          retention-days: 30
