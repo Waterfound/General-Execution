@@ -1,0 +1,73 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-asic-a3-provider-authority-stop-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-asic-a3-provider-authority",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-provider-validation-authority",
+          "from_state": "verifying",
+          "event": "authority_required",
+          "to_state": "human_gate",
+          "next_action_ref": "authority://fae-asic/a3/aws-vivado-static-validation",
+          "effect": "stop_human_gate",
+          "required_evidence": [
+            "a3_provider_validation_boundary"
+          ],
+          "authority_mode": "human_required",
+          "authority_boundary": "Authorize bounded AWS/Vivado A3 provider static validation only; no paid physical implementation, AFI creation, release, consensus activation, or spend beyond the existing ASIC Lab envelope.",
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "durable-execution",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-asic-a3-topology",
+      "policy_digest": "sha256:9b59a0cd934f283c401d5fcf151c5b68ddc9133f320b86db00bdae83264526cf",
+      "transition_event": "authority_required"
+    },
+    "trigger": {
+      "source": "durable-execution",
+      "event_id": "fae-asic-a3-provider-authority-stop-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:a5ed056bf631dbbe1263c3652c72caf89037fd060d91e4f3fe636e0de7805eb5",
+      "observation_digest": "sha256:f0faf6e103d747c48e31d970f4adb2dead793ab02a6191c6ea6364fe42345ceb",
+      "admission_ref": "durable://fae-asic/a3/provider-authority-boundary"
+    },
+    "observation": {
+      "portfolio_id": "fae-asic-a3-topology",
+      "expected_generation": 1,
+      "expected_state_digest": "sha256:6abf0c8a98fa70a5c9a41d058ca457eab328b8f763e8e4bd9c57b79344a8d69a",
+      "policy_digest": "sha256:9b59a0cd934f283c401d5fcf151c5b68ddc9133f320b86db00bdae83264526cf",
+      "event": "authority_required",
+      "evidence": [
+        {
+          "kind": "a3_provider_validation_boundary",
+          "locator": "github://Waterfound/FAE-testnet/commit/ba0ff6c25fffc4207392b6c30a62db6492be5697",
+          "digest": "sha256:180d4274a762c0f80c998719e95a8a93e56755bf443486994d37f4065c3d0493",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "action://fae-asic/a3/stop-before-provider-infrastructure",
+      "observed_at": "2026-09-27T23:15:00Z",
+      "summary": "Repository-level A3 static verification passed. The next meaningful gate requires an AWS HLx/Vivado provider environment, so Durable Execution stops before any infrastructure/spend action.",
+      "canonical_refs": [
+        "github-actions://Waterfound/FAE-testnet/runs/36358111094",
+        "github://Waterfound/General-Execution/runtime/reports/fae-asic-a3-static-pass-001.json"
+      ],
+      "uncertainties": [
+        "No claim is made that the A3 design passes Vivado validate_bd_design, routing, or timing.",
+        "Current EC2 instance availability could not be verified through the connected AWS wrapper."
+      ],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
