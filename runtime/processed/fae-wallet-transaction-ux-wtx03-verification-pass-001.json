@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:06065379cd8d06035fbe9ea897067254134e9361616dfbb942f7a4198982e666",
+  "event_id": "fae-wallet-transaction-ux-wtx03-verification-pass-001",
+  "event_report_digest": "sha256:92150bd317731bc7524ab705a75f4b9df6c319c4f7844708992f1f81e52cc507",
+  "operation": "transition",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "0ee552364eae07cd23b94da4cb4fa9c4cac23763",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "5bbf78044f6ed1e1c35b6e1e69c81f87ae56aebd"
+}
