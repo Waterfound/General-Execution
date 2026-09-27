@@ -1,0 +1,59 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-wallet-transaction-ux-wtx02-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "fae-wallet-transaction-ux-wtx02",
+      "generation": 0,
+      "active": {
+        "work_id": "WTX-02-acceptance-fixtures",
+        "role": "active",
+        "state": "ready",
+        "objective": "Complete independent Wallet Transaction UX acceptance fixtures not yet proven by WTX-01R: clipboard denied/unavailable, multiple TXIDs and consecutive copies, submit accepted followed by offline history, reload/recovery behavior, out-of-order responses and rapid address switching, historical coverage boundaries, watch-only behavior, and absent/corrupt cache only if cache is introduced.",
+        "active_gate": "WTX-02",
+        "next_action_ref": "github://Waterfound/FAE-testnet/branch/build-colony/wallet-tx-ux-current-main-20260927/tests/wallet-transactions-acceptance.mjs",
+        "source_revision": "189ddbd381c953ad6effeb0548b98d4daa74a844",
+        "evidence_required": [
+          "acceptance_fixture_matrix",
+          "clipboard_failure_behavior",
+          "multi_txid_copy_isolation",
+          "offline_after_submit",
+          "reload_recovery",
+          "stale_response_address_switch",
+          "coverage_boundary",
+          "watch_only"
+        ],
+        "authority_boundary": "Development-only Wallet Transaction UX fixtures and product corrections strictly required by those fixtures. Stop before main merge, release, production, spending, credentials, backend/consensus changes, or wallet key-material changes.",
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": null,
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "WTX-03-txid-details",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Verify and harden receipt/detail/full-TXID/manual-selection/copy feedback after WTX-02 acceptance fixtures are independently verified.",
+        "active_gate": "WTX-03",
+        "next_action_ref": "github://Waterfound/FAE-testnet/wallet-transaction-ux/txid-details",
+        "source_revision": "189ddbd381c953ad6effeb0548b98d4daa74a844",
+        "evidence_required": [
+          "wtx02_verified",
+          "txid_detail_journey",
+          "copy_feedback"
+        ],
+        "authority_boundary": "Same bounded Wallet Transaction UX development envelope; no main/merge/release/production/spend/backend/consensus/key-material authority.",
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": null,
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
