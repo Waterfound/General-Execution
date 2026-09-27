@@ -1,0 +1,57 @@
+{
+  "schema_version": "ge.human-authority-event.v1",
+  "event_id": "fae-asic-a3-provider-authority-resume-001",
+  "approved_action_ref": "authority://fae-asic/a3/aws-vivado-static-validation",
+  "approved_at": "2026-09-27T23:20:00Z",
+  "policy": {
+    "policy_id": "fae-asic-a3-provider-authority-resume",
+    "revision": "1",
+    "rules": [
+      {
+        "rule_id": "01-authorized-provider-validation",
+        "from_state": "human_gate",
+        "event": "verification_passed",
+        "to_state": "running",
+        "next_action_ref": "action://fae-asic/a3/aws-vivado-static-validation",
+        "effect": "none",
+        "required_evidence": [
+          "human_authority_recorded"
+        ],
+        "authority_mode": "preauthorized_required",
+        "authority_boundary": "Authorize bounded AWS/Vivado A3 provider static validation only; no paid physical implementation, AFI creation, release, consensus activation, or spend beyond the existing ASIC Lab envelope.",
+        "schema_version": "ge.transition-rule.v1"
+      }
+    ],
+    "default_disposition": "stop",
+    "schema_version": "ge.transition-policy.v1"
+  },
+  "observation": {
+    "portfolio_id": "fae-asic-a3-topology",
+    "expected_generation": 2,
+    "expected_state_digest": "sha256:943d66e9398c5977fa1454e1173e2a115c5a770066c4f6b8d1993fc23038380f",
+    "policy_digest": "sha256:d9b5428ec3e4f4789e7956b5086feb0ac6b1962066e41b26247a5b7a528fd659",
+    "event": "verification_passed",
+    "evidence": [
+      {
+        "kind": "human_authority_recorded",
+        "locator": "runtime://fae-asic-a3-topology/aws-vivado-static-validation-authority",
+        "digest": "sha256:470a47a96e61ff3a4eb77c01ae7001fbdd688ae7c62ce3af8eacf1b2e5e87bfc",
+        "schema_version": "ge.checkpoint-evidence.v1"
+      }
+    ],
+    "action_ref": "runtime://fae-asic-a3-topology/resume-provider-static-validation",
+    "observed_at": "2026-09-27T23:20:00Z",
+    "summary": "Explicit human authorization admits one bounded AWS/Vivado A3 provider static validation only, preserving the existing ASIC Lab spend envelope and forbidding physical implementation.",
+    "canonical_refs": [
+      "runtime://fae-asic-a3-topology/fae-asic-a3-provider-authority-stop-001",
+      "github-actions://Waterfound/FAE-testnet/runs/36358111094"
+    ],
+    "uncertainties": [
+      "Current AWS EC2 instance availability remains to be verified before any provider action.",
+      "This authority does not admit a paid physical implementation or AFI creation."
+    ],
+    "wake_admission": null,
+    "authority_grant": null,
+    "schema_version": "ge.resume-tick-observation.v1"
+  }
+}
