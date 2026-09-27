@@ -1,0 +1,71 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-wallet-transaction-ux-wtx04-execution-complete-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-wallet-transaction-ux-wtx04-v1",
+      "revision": "2",
+      "rules": [
+        {
+          "rule_id": "01-execution-complete",
+          "from_state": "running",
+          "event": "execution_completed",
+          "to_state": "verifying",
+          "next_action_ref": "action://project-assurance/wtx04",
+          "effect": "none",
+          "required_evidence": [
+            "execution_result"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-push",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-wallet-transaction-ux-wtx04",
+      "policy_digest": "sha256:d79b6fbbedc4baef6d2e5b4330ffa3713bca8bc8e5f5646496727c982a31d7f9",
+      "transition_event": "execution_completed"
+    },
+    "trigger": {
+      "source": "github-push",
+      "event_id": "fae-wallet-transaction-ux-wtx04-execution-complete-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:8b69ce647552c7293a44e1a9d23ddfd29d133f96780cd168619f7115d7afd8ff",
+      "observation_digest": "sha256:908f2bf081cfea41d14d2ade2c1510ce6099c5ffca2283834d18ab2ad0e963e7",
+      "admission_ref": "github://runtime/durable-asp-control/fae-wallet-transaction-ux-wtx04-execution-complete-001"
+    },
+    "observation": {
+      "portfolio_id": "fae-wallet-transaction-ux-wtx04",
+      "expected_generation": 1,
+      "expected_state_digest": "sha256:e64d688f58feed28a4c145c323e71fdc8f454b352ae475b3c12c4b195064b1dd",
+      "policy_digest": "sha256:d79b6fbbedc4baef6d2e5b4330ffa3713bca8bc8e5f5646496727c982a31d7f9",
+      "event": "execution_completed",
+      "evidence": [
+        {
+          "kind": "execution_result",
+          "locator": "github://Waterfound/FAE-testnet/actions/runs/36335967395",
+          "digest": "sha256:8b69ce647552c7293a44e1a9d23ddfd29d133f96780cd168619f7115d7afd8ff",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "github://Waterfound/FAE-testnet/commit/8f478e374a92d61d79aedc0cc816b0525a6c03dd",
+      "observed_at": "2026-09-27T17:12:00Z",
+      "summary": "WTX-04 history lifecycle hardening completed on the immutable candidate with bounded coverage, retry, stale preservation, invalid-payload separation, and A-B-A stale-response rejection verified.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/8f478e374a92d61d79aedc0cc816b0525a6c03dd",
+        "github://Waterfound/FAE-testnet/actions/runs/36335967395",
+        "github://Waterfound/General-Execution/evidence/durable-execution/2026-09-27/fae-wallet-tx-ux-wtx03-independent-verification.json"
+      ],
+      "uncertainties": [],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
