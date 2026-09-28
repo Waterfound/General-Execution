@@ -1,0 +1,223 @@
+name: Durable FAE snapshot missed-event pilot
+
+on:
+  push:
+    branches:
+      - runtime/durable-asp-control
+    paths:
+      - provider-inbox/fae-a3-r4-afi-available-001.json
+      - .github/workflows/durable-fae-snapshot-pilot.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: durable-asp-persistent-runtime
+  cancel-in-progress: false
+
+env:
+  RUNTIME_BRANCH: runtime/durable-asp-control
+  PROVIDER_HOST_REVISION: d3be76a6f44b531c92834c9ccad28133ed418b60
+  SNAPSHOT_PATH: provider-inbox/fae-a3-r4-afi-available-001.json
+  SNAPSHOT_SOURCE_COMMIT: 9751c2a616207a9a809d2e9168fad6cc4dae4e61
+
+jobs:
+  consume-missed-provider-event:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Enforce runtime boundary
+        run: |
+          test "$GITHUB_REF" = "refs/heads/$RUNTIME_BRANCH"
+          test "$GITHUB_ACTOR" = "Waterfound"
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.sha }}
+
+      - name: Verify immutable snapshot provenance
+        shell: bash
+        run: |
+          git cat-file -e "$SNAPSHOT_SOURCE_COMMIT^{commit}"
+          test "$(git log --diff-filter=A -1 --format=%H -- "$SNAPSHOT_PATH")" = "$SNAPSHOT_SOURCE_COMMIT"
+          git show "$SNAPSHOT_SOURCE_COMMIT:$SNAPSHOT_PATH" > /tmp/provider-snapshot.json
+          python - <<'PY'
+          import hashlib,json,pathlib
+          s=json.loads(pathlib.Path('/tmp/provider-snapshot.json').read_text())
+          assert s['schema_version']=='ge.provider-snapshot.v1'
+          assert s['watch_id']=='fae-a3-r4-afi-available'
+          assert s['provider']=='aws-ec2'
+          assert s['resource_id']=='afi-0bd37117433ff02d7'
+          assert s['observed_state']=='available'
+          assert s['observed_at']=='2026-09-28T14:09:35+00:00'
+          selected={
+            'afi_id':'afi-0bd37117433ff02d7',
+            'agfi':'agfi-01ca0856fe3a85305',
+            'state':'available',
+            'update_time':'2026-09-28T14:09:35+00:00',
+            'candidate':'C6-2LANE-LOCAL200-DIRECTSPLIT-CTRL-PC-R4',
+            'git_commit':'a208b245da98052b60b9d47cd676f7c0a23e74a3',
+            'developer_cl_sha256':'cb369bca24dbe0c17e015adf5668d2d4117c77d31896c3a3b1faedab09e2f7a5',
+          }
+          raw=json.dumps(selected,sort_keys=True,separators=(',',':')).encode()
+          expected='sha256:'+hashlib.sha256(raw).hexdigest()
+          assert s['metadata_digest']==expected,(s['metadata_digest'],expected)
+          required_refs={
+            'aws://us-east-1/afi-0bd37117433ff02d7',
+            'github://Waterfound/FAE-testnet/commit/d1d98251dc2c58d53a843d5f04c2fc8ff3af0d4d',
+            'github://Waterfound/FAE-testnet/commit/787d76a374d48a4e5088f384519db174321a98c1',
+          }
+          assert set(s['canonical_refs'])==required_refs
+          PY
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Prepare independently verified Provider Host
+        shell: bash
+        run: |
+          git fetch origin feature/durable-provider-host-terminal-20260928
+          git cat-file -e "$PROVIDER_HOST_REVISION^{commit}"
+          git worktree add --detach /tmp/provider-src "$PROVIDER_HOST_REVISION"
+          cd /tmp/provider-src
+          python -m pip install -e '.[dev]' --disable-pip-version-check
+          python -m compileall -q src scripts
+          python -m pytest tests/test_provider_host.py -q
+
+      - name: Recover current durable state
+        shell: bash
+        run: |
+          git fetch origin "$RUNTIME_BRANCH"
+          git show "origin/$RUNTIME_BRANCH:runtime/state.sqlite.b64" | base64 --decode > /tmp/durable-runtime.db
+          sha256sum /tmp/durable-runtime.db | awk '{print $1}' > /tmp/pre-db-sha256.txt
+          if git cat-file -e "origin/$RUNTIME_BRANCH:runtime/provider-host/processed-snapshots/$SNAPSHOT_SOURCE_COMMIT.json" 2>/dev/null; then
+            echo "already_processed=true" >> "$GITHUB_ENV"
+          else
+            echo "already_processed=false" >> "$GITHUB_ENV"
+          fi
+
+      - name: Convert exact snapshot to bounded provider input
+        if: env.already_processed != 'true'
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,pathlib
+          s=json.loads(pathlib.Path('/tmp/provider-snapshot.json').read_text())
+          provider={
+            'watch_id':'fae-a3-r4-afi-available',
+            'provider':'aws-ec2-fpga-image',
+            'provider_event_id':s['provider_event_id'],
+            'subject_ref':'aws://us-east-1/afi-0bd37117433ff02d7',
+            'observed_state':'available',
+            'observed_at':s['observed_at'],
+            'evidence_locator':s['evidence_locator'],
+            'evidence_digest':s['metadata_digest'],
+            'bindings':{
+              'candidate':'C6-2LANE-LOCAL200-DIRECTSPLIT-CTRL-PC-R4',
+              'developer_cl_sha256':'cb369bca24dbe0c17e015adf5668d2d4117c77d31896c3a3b1faedab09e2f7a5',
+              'fpga_image_global_id':'agfi-01ca0856fe3a85305',
+              'git_commit':'a208b245da98052b60b9d47cd676f7c0a23e74a3',
+            },
+            'canonical_refs':sorted(set(s['canonical_refs']+[
+              'github://Waterfound/General-Execution/commit/9751c2a616207a9a809d2e9168fad6cc4dae4e61'
+            ])),
+            'schema_version':'ge.provider-input.v1',
+          }
+          pathlib.Path('/tmp/provider-input.json').write_text(json.dumps(provider,sort_keys=True,indent=2)+'\n')
+          PY
+
+      - name: Build and consume delayed provider event
+        if: env.already_processed != 'true'
+        shell: bash
+        run: |
+          cd /tmp/provider-src
+          python scripts/run_provider_host.py \
+            --input /tmp/provider-input.json \
+            --contract provider-contracts/fae-a3-r4-afi-available.json \
+            --database /tmp/durable-runtime.db \
+            --event-out /tmp/provider-event.json \
+            --report /tmp/provider-host-report.json
+          digest="$(python scripts/run_persistent_runtime_event.py --event /tmp/provider-event.json --print-trigger-digest)"
+          test "$digest" != NONE
+          python scripts/run_persistent_runtime_event.py \
+            --event /tmp/provider-event.json \
+            --database /tmp/durable-runtime.db \
+            --report /tmp/provider-runtime-first.json \
+            --authenticated-trigger-digest "$digest"
+          cp /tmp/durable-runtime.db /tmp/durable-runtime-replay.db
+          python scripts/run_persistent_runtime_event.py \
+            --event /tmp/provider-event.json \
+            --database /tmp/durable-runtime-replay.db \
+            --report /tmp/provider-runtime-replay.json \
+            --authenticated-trigger-digest "$digest"
+          python - <<'PY'
+          import hashlib,json
+          first=json.load(open('/tmp/provider-runtime-first.json'))['event_report']
+          replay=json.load(open('/tmp/provider-runtime-replay.json'))['event_report']
+          assert first['status']=='committed',first
+          assert first['human_required'] is True,first
+          assert first['requested_action_ref']=='authority://fae-asic/a3/r4/runtime-f2',first
+          assert replay['status']=='already_applied',replay
+          assert replay['post_generation']==first['post_generation'],(first,replay)
+          def h(p): return hashlib.sha256(open(p,'rb').read()).hexdigest()
+          assert h('/tmp/durable-runtime.db')==h('/tmp/durable-runtime-replay.db')
+          PY
+
+      - name: Persist missed-event recovery proof
+        if: env.already_processed != 'true'
+        shell: bash
+        run: |
+          git fetch origin "$RUNTIME_BRANCH"
+          git checkout -B "$RUNTIME_BRANCH" "origin/$RUNTIME_BRANCH"
+          current="$(git show HEAD:runtime/state.sqlite.b64 | base64 --decode | sha256sum | awk '{print $1}')"
+          test "$current" = "$(cat /tmp/pre-db-sha256.txt)"
+          event_id="$(python -c "import json; print(json.load(open('/tmp/provider-event.json'))['event_id'])")"
+          mkdir -p runtime/provider-host/fae-snapshot-pilot runtime/provider-host/events runtime/provider-host/processed-snapshots runtime/reports
+          base64 -w 0 /tmp/durable-runtime.db > runtime/state.sqlite.b64
+          printf '\n' >> runtime/state.sqlite.b64
+          cp /tmp/provider-snapshot.json runtime/provider-host/fae-snapshot-pilot/provider-snapshot.json
+          cp /tmp/provider-input.json runtime/provider-host/fae-snapshot-pilot/provider-input.json
+          cp /tmp/provider-host-report.json runtime/provider-host/fae-snapshot-pilot/provider-host-report.json
+          cp /tmp/provider-runtime-first.json runtime/provider-host/fae-snapshot-pilot/first-runtime-report.json
+          cp /tmp/provider-runtime-replay.json runtime/provider-host/fae-snapshot-pilot/replay-runtime-report.json
+          cp /tmp/provider-event.json "runtime/provider-host/events/$event_id.json"
+          cp /tmp/provider-runtime-first.json "runtime/reports/$event_id.json"
+          python - <<'PY'
+          import json,os,pathlib
+          record={
+            'schema_version':'ge.provider-snapshot-consumption.v1',
+            'snapshot_source_commit':os.environ['SNAPSHOT_SOURCE_COMMIT'],
+            'snapshot_path':os.environ['SNAPSHOT_PATH'],
+            'provider_host_revision':os.environ['PROVIDER_HOST_REVISION'],
+            'runtime_f2_executed':False,
+            'authority_created':False,
+            'status':'PASS_MISSED_EVENT_RECOVERED_TO_HUMAN_GATE',
+          }
+          pathlib.Path(
+            'runtime/provider-host/processed-snapshots/'+os.environ['SNAPSHOT_SOURCE_COMMIT']+'.json'
+          ).write_text(json.dumps(record,sort_keys=True,indent=2)+'\n')
+          PY
+          git config user.name "durable-provider-host"
+          git config user.email "durable-provider-host@users.noreply.github.com"
+          git add runtime/
+          git commit -m "runtime: recover FAE AFI missed provider event [skip ci]"
+          git fetch origin "$RUNTIME_BRANCH"
+          git rebase "origin/$RUNTIME_BRANCH"
+          git push origin "HEAD:refs/heads/$RUNTIME_BRANCH"
+
+      - name: Upload FAE missed-event evidence
+        if: always() && env.already_processed != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: durable-fae-snapshot-pilot-${{ github.run_id }}
+          path: |
+            /tmp/provider-snapshot.json
+            /tmp/provider-input.json
+            /tmp/provider-host-report.json
+            /tmp/provider-event.json
+            /tmp/provider-runtime-first.json
+            /tmp/provider-runtime-replay.json
+          if-no-files-found: error
+          retention-days: 30
