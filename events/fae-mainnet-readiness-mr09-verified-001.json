@@ -1,0 +1,76 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-mainnet-readiness-mr09-verified-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-mainnet-readiness-mr09-v1",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-verification-pass",
+          "from_state": "verifying",
+          "event": "verification_passed",
+          "to_state": "complete",
+          "next_action_ref": "action://fae-mainnet-readiness/MR-09-complete",
+          "effect": "none",
+          "required_evidence": [
+            "verifier_pass"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-push",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-mainnet-readiness-mr09",
+      "policy_digest": "sha256:3c434abeb32376108f019f947f6d3e771252b15275c99692e1c4f8201d7e4e3a",
+      "transition_event": "verification_passed"
+    },
+    "trigger": {
+      "source": "github-push",
+      "event_id": "fae-mainnet-readiness-mr09-verified-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:548888a3f8e5e65c75b803649f19613b386862c88ba0d05cac5584f57e7d1c99",
+      "observation_digest": "sha256:bb8fb3c0945c6103b0059f172e99c6f087c85e2f1221ed0019208abb7fd129f9",
+      "admission_ref": "github://Waterfound/General-Execution/runtime/durable-asp-control/fae-mainnet-readiness-mr09-verified-001"
+    },
+    "observation": {
+      "portfolio_id": "fae-mainnet-readiness-mr09",
+      "expected_generation": 0,
+      "expected_state_digest": "sha256:30d425adc92b3e2f9871422928b81f1c882ca3bfb2f53c943d8b48aa3b0d7543",
+      "policy_digest": "sha256:3c434abeb32376108f019f947f6d3e771252b15275c99692e1c4f8201d7e4e3a",
+      "event": "verification_passed",
+      "evidence": [
+        {
+          "kind": "verifier_pass",
+          "locator": "github://Waterfound/FAE-testnet/commit/d648184ad221f1a08664c73fe3e6530ac4404cab",
+          "digest": "sha256:548888a3f8e5e65c75b803649f19613b386862c88ba0d05cac5584f57e7d1c99",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "github://Waterfound/FAE-testnet/commit/d648184ad221f1a08664c73fe3e6530ac4404cab",
+      "observed_at": "2026-09-28T16:18:00Z",
+      "summary": "MR-09 exact closure candidate passed readiness, canonical-source, cross-Lab, recurring-assurance and CodeQL verification; current main remained unchanged and active Research 180s remained isolated from shared readiness state.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/d648184ad221f1a08664c73fe3e6530ac4404cab",
+        "github://Waterfound/FAE-testnet/actions/runs/36449773772",
+        "github://Waterfound/FAE-testnet/actions/runs/36449774181",
+        "github://Waterfound/FAE-testnet/actions/runs/36449774061",
+        "github://Waterfound/FAE-testnet/actions/runs/36449773738",
+        "github://Waterfound/FAE-testnet/actions/runs/36449773864",
+        "github://Waterfound/FAE-testnet/commit/48ba1df01075f7e6714d2e98d5ce8df827d1e5f2",
+        "github://Waterfound/FAE-testnet/commit/109d86a9152faad9d4a01b8578588490929babbb"
+      ],
+      "uncertainties": [],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
