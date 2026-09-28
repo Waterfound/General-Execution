@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:f2b33e6742a41956119cfda22241924cdd443b069e21e70319e0d29185f542a3",
+  "event_report": {
+    "checkpoint_digest": "sha256:4cb4ce574169d645c730f6f421c590925ef76f24bf0fa702e5081cdb38c1ce68",
+    "event_id": "fae-mainnet-readiness-mr08-verified-001",
+    "human_required": false,
+    "operation": "transition",
+    "portfolio_id": "fae-mainnet-readiness-mr08",
+    "post_generation": 1,
+    "post_state_digest": "sha256:25e47e71cfce663b24b676402fad7ed2e31dac39715b1f803f596c800d4e4440",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:9b9a1b52a4ed20163c85b139b0a47f1aed0d0a3c9af8c361221a2b63b0c210bc",
+    "requested_action_ref": null,
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "committed"
+  },
+  "event_report_digest": "sha256:d32107b504fca1b99c1145f66213606b8ecbbf08456e51ee60eb4cc93bdfe220",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
