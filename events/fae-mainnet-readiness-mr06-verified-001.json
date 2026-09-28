@@ -1,0 +1,70 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-mainnet-readiness-mr06-verified-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-mainnet-readiness-mr06-v1",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-verification-pass",
+          "from_state": "verifying",
+          "event": "verification_passed",
+          "to_state": "complete",
+          "next_action_ref": "action://fae-mainnet-readiness/MR-06-complete",
+          "effect": "none",
+          "required_evidence": [
+            "verifier_pass"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-push",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-mainnet-readiness-mr06",
+      "policy_digest": "sha256:21fdbf64f8321f4ab217f2be924e7d7920151238eeb8bbd36dc989e6db7d171b",
+      "transition_event": "verification_passed"
+    },
+    "trigger": {
+      "source": "github-push",
+      "event_id": "fae-mainnet-readiness-mr06-verified-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:a67b566cea0e2084474140902ccd39a01367fd5a6846d2aa82de3dbc534358eb",
+      "observation_digest": "sha256:0f35f2251ba7141230d92ac645433995a1e30ab56dd1741706f40b9d64452993",
+      "admission_ref": "github://Waterfound/General-Execution/runtime/durable-asp-control/fae-mainnet-readiness-mr06-verified-001"
+    },
+    "observation": {
+      "portfolio_id": "fae-mainnet-readiness-mr06",
+      "expected_generation": 0,
+      "expected_state_digest": "sha256:7d69aab3530b40c6a975f3b4e88144ec07f73d163fa5d8d5c4c247bb230033bc",
+      "policy_digest": "sha256:21fdbf64f8321f4ab217f2be924e7d7920151238eeb8bbd36dc989e6db7d171b",
+      "event": "verification_passed",
+      "evidence": [
+        {
+          "kind": "verifier_pass",
+          "locator": "github://Waterfound/FAE-testnet/docs/FAE_MAINNET_READINESS_RECONCILIATION_REPORT.json",
+          "digest": "sha256:a67b566cea0e2084474140902ccd39a01367fd5a6846d2aa82de3dbc534358eb",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "github://Waterfound/FAE-testnet/commit/5d75f4781caa7b8d2c9bc5df35f7c8bbf1e813a7",
+      "observed_at": "2026-09-28T15:56:30Z",
+      "summary": "MR-06 newest-main and active Research 180s serialization cross-check is evidence-bound, zero-conflict, and passes the readiness verifier.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/5d75f4781caa7b8d2c9bc5df35f7c8bbf1e813a7",
+        "github://Waterfound/FAE-testnet/actions/runs/36447145854"
+      ],
+      "uncertainties": [],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
