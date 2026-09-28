@@ -1,0 +1,112 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-180s-ebtv-f180-06-complete-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-180s-ebtv-f180-06-complete",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-complete-active",
+          "from_state": "ready",
+          "event": "verification_passed",
+          "to_state": "complete",
+          "next_action_ref": "action://fae-180s/F180-04",
+          "effect": "promote_secondary",
+          "required_evidence": [
+            "frontier_result",
+            "verifier_pass"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        },
+        {
+          "rule_id": "02-wake-passive",
+          "from_state": "passive",
+          "event": "wake_satisfied",
+          "to_state": "ready",
+          "next_action_ref": "action://fae-180s/F180-05",
+          "effect": "wake_passive",
+          "required_evidence": [
+            "wake_condition_satisfied"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "build-colony-fae-180s",
+      "event_kind": "frontier-verification",
+      "portfolio_id": "fae-180s-economic-blocktime-validation",
+      "policy_digest": "sha256:f1ca775e8af92c782bed1eafccacdd41d17e9938158598c040b0b2a42085d384",
+      "transition_event": "verification_passed"
+    },
+    "trigger": {
+      "source": "build-colony-fae-180s",
+      "event_id": "fae-180s-ebtv-f180-06-complete-001",
+      "event_kind": "frontier-verification",
+      "payload_digest": "sha256:5b351f4534977bf71c0d606853dbc82ed81f748882e9e973a9aab022c521f3c2",
+      "observation_digest": "sha256:8e899abc64e312ddb4dff306fdbcba3e41b63fbc573aa7e3e2d34997efdcfd76",
+      "admission_ref": "build-colony://bc-fae-180s-ebtv-20260928-001/F180-06"
+    },
+    "observation": {
+      "portfolio_id": "fae-180s-economic-blocktime-validation",
+      "expected_generation": 3,
+      "expected_state_digest": "sha256:dca1f01ec513a1a78372968f378d7a1e6f1cb99ad1dc6dc2836a1ab76b7b2715",
+      "policy_digest": "sha256:f1ca775e8af92c782bed1eafccacdd41d17e9938158598c040b0b2a42085d384",
+      "event": "verification_passed",
+      "evidence": [
+        {
+          "kind": "frontier_result",
+          "locator": "github://Waterfound/FAE-testnet/commit/9f0ad1b6622aa61514aa99fd4acfe52af6f0d1cd",
+          "digest": "sha256:ffc75f9f9c3eaf28bda0e0b806a0c2796a9f00e18740a5f06014007d23c582d0",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "verifier_pass",
+          "locator": "github-actions://Waterfound/FAE-testnet/runs/36447679621",
+          "digest": "sha256:1f1629f61c1cacd958137ae4b0514dbf52759ed9e8b9aa8d4c3a27ec5b68fccc",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "build-colony://bc-fae-180s-ebtv-20260928-001/F180-06",
+      "observed_at": "2026-09-28T16:09:30Z",
+      "summary": "F180-06 completed with WARN: 180s improves small-miner event frequency and payout variance relative to longer targets, while very small miners still face material solo lumpiness.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/9f0ad1b6622aa61514aa99fd4acfe52af6f0d1cd",
+        "github-actions://Waterfound/FAE-testnet/runs/36447679621"
+      ],
+      "uncertainties": [
+        "Pool-pressure is a Poisson variance proxy; observed pool adoption, energy costs and switching are not modeled."
+      ],
+      "wake_admission": {
+        "portfolio_id": "fae-180s-economic-blocktime-validation",
+        "portfolio_generation": 3,
+        "portfolio_state_digest": "sha256:dca1f01ec513a1a78372968f378d7a1e6f1cb99ad1dc6dc2836a1ab76b7b2715",
+        "work_id": "F180-05",
+        "wake_condition_digest": "sha256:fe6667130429c4e2060981a64f482de63fbd9fb628d8d98d12ada8a6ca63ce15",
+        "policy_digest": "sha256:f1ca775e8af92c782bed1eafccacdd41d17e9938158598c040b0b2a42085d384",
+        "rule_digest": "sha256:01fc4a39b67620f942f531414a79db216c0235c80aa9c57efc55e02d0d7f3110",
+        "evidence": [
+          {
+            "kind": "wake_condition_satisfied",
+            "locator": "github://Waterfound/FAE-testnet/commit/472da503f49510cc317b3834ea90a26e4a1b28da",
+            "digest": "sha256:40b4d7e8373acfd508407a0318869e394da08960425a8e5dc48a21498bc5aea9",
+            "schema_version": "ge.checkpoint-evidence.v1"
+          }
+        ],
+        "next_action_ref": "action://fae-180s/F180-05",
+        "authority_grant": null,
+        "schema_version": "ge.passive-wake-admission.v1"
+      },
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
