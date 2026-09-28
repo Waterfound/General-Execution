@@ -16,7 +16,7 @@ concurrency:
 
 env:
   RUNTIME_BRANCH: runtime/durable-asp-control
-  HUMAN_GATE_DECISION_RUNTIME_REVISION: fe47b5210430b3ca44c964b70e4c26fa79c1e5af
+  HUMAN_GATE_DECISION_RUNTIME_REVISION: 0915acb8f17dde2c09022fad3828c8633772c44f
 
 jobs:
   consume-human-decision:
