@@ -1,0 +1,275 @@
+name: Durable AWS FAE provider observer
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  push:
+    branches:
+      - provider/aws-fae-observer
+    paths:
+      - pilot-provider/aws-fae-observer-trigger/*.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  id-token: write
+
+concurrency:
+  group: durable-asp-persistent-runtime
+  cancel-in-progress: false
+
+env:
+  RUNTIME_BRANCH: runtime/durable-asp-control
+  AWS_REGION: us-east-1
+  OBSERVER_ROLE_ARN: arn:aws:iam::203842200752:role/DurableExecution-AWS-Observer
+  AFI_ID: afi-0bd37117433ff02d7
+  AFI_AGFI: agfi-01ca0856fe3a85305
+  WATCH_ID: fae-a3-r4-afi-available
+
+jobs:
+  observe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Enforce observer source boundary
+        shell: bash
+        run: |
+          case "$GITHUB_REF" in
+            refs/heads/main|refs/heads/provider/aws-fae-observer) ;;
+            *) echo "observer ref not authorized: $GITHUB_REF" >&2; exit 1 ;;
+          esac
+          test "$GITHUB_REPOSITORY" = "Waterfound/General-Execution"
+
+      - name: Checkout exact observer revision
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.sha }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Verify provider host before observation
+        run: |
+          python -m pip install -e '.[dev]' --disable-pip-version-check
+          python -m compileall -q src scripts
+          python -m pytest tests/test_provider_host.py -q
+
+      - name: Configure AWS read-only OIDC session
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.OBSERVER_ROLE_ARN }}
+          role-session-name: durable-fae-observer-${{ github.run_id }}
+          aws-region: ${{ env.AWS_REGION }}
+          role-duration-seconds: 900
+          mask-aws-account-id: true
+          inline-session-policy: >-
+            {"Version":"2012-10-17","Statement":[{"Effect":"Allow","Action":["ec2:DescribeFpgaImages"],"Resource":"*"}]}
+
+      - name: Observe exact AFI and build provider input
+        id: aws
+        shell: bash
+        run: |
+          set -euo pipefail
+          aws ec2 describe-fpga-images --fpga-image-ids "$AFI_ID" --region "$AWS_REGION" > /tmp/aws-afi.json
+          python - <<'PY'
+          import hashlib,json,os,pathlib
+          raw=json.loads(pathlib.Path('/tmp/aws-afi.json').read_text())
+          images=raw.get('FpgaImages',[])
+          assert len(images)==1, images
+          image=images[0]
+          assert image['FpgaImageId']==os.environ['AFI_ID']
+          assert image['FpgaImageGlobalId']==os.environ['AFI_AGFI']
+          assert image.get('Public') is False
+          tags={x['Key']:x['Value'] for x in image.get('Tags',[])}
+          expected={
+            'Candidate':'C6-2LANE-LOCAL200-DIRECTSPLIT-CTRL-PC-R4',
+            'GitCommit':'a208b245da98052b60b9d47cd676f7c0a23e74a3',
+            'DeveloperCLSHA256':'cb369bca24dbe0c17e015adf5668d2d4117c77d31896c3a3b1faedab09e2f7a5',
+            'Project':'FAE',
+            'Lab':'ASIC-F2',
+            'Stage':'A3-R4-AFI',
+          }
+          assert all(tags.get(k)==v for k,v in expected.items()), (tags,expected)
+          state=image['State']['Code']
+          sanitized={
+            'FpgaImageId':image['FpgaImageId'],
+            'FpgaImageGlobalId':image['FpgaImageGlobalId'],
+            'State':state,
+            'CreateTime':str(image.get('CreateTime')),
+            'UpdateTime':str(image.get('UpdateTime')),
+            'Public':image.get('Public'),
+            'Tags':expected,
+          }
+          encoded=json.dumps(sanitized,sort_keys=True,separators=(',',':')).encode()
+          evidence_digest='sha256:'+hashlib.sha256(encoded).hexdigest()
+          pathlib.Path('/tmp/aws-afi-sanitized.json').write_text(json.dumps(sanitized,sort_keys=True,indent=2)+'\n')
+          if state=='available':
+            provider={
+              'watch_id':os.environ['WATCH_ID'],
+              'provider':'aws-ec2-fpga-image',
+              'provider_event_id':f"{image['FpgaImageId']}:{image.get('UpdateTime')}:{os.environ['GITHUB_RUN_ID']}",
+              'subject_ref':f"aws://{os.environ['AWS_REGION']}/{image['FpgaImageId']}",
+              'observed_state':'available',
+              'observed_at':str(image.get('UpdateTime')),
+              'evidence_locator':f"github-actions://Waterfound/General-Execution/runs/{os.environ['GITHUB_RUN_ID']}/aws-afi-observation",
+              'evidence_digest':evidence_digest,
+              'bindings':{
+                'candidate':expected['Candidate'],
+                'developer_cl_sha256':expected['DeveloperCLSHA256'],
+                'fpga_image_global_id':image['FpgaImageGlobalId'],
+                'git_commit':expected['GitCommit'],
+              },
+              'canonical_refs':sorted([
+                f"aws://{os.environ['AWS_REGION']}/{image['FpgaImageId']}",
+                f"github-actions://Waterfound/General-Execution/runs/{os.environ['GITHUB_RUN_ID']}",
+              ]),
+              'schema_version':'ge.provider-input.v1',
+            }
+            pathlib.Path('/tmp/provider-input.json').write_text(json.dumps(provider,sort_keys=True,indent=2)+'\n')
+          with open(os.environ['GITHUB_OUTPUT'],'a') as out:
+            out.write(f"state={state}\n")
+          PY
+
+      - name: Stop cleanly when AFI condition is not satisfied
+        if: steps.aws.outputs.state != 'available'
+        run: echo "AFI is not available; no durable transition is emitted."
+
+      - name: Restore latest durable state
+        if: steps.aws.outputs.state == 'available'
+        shell: bash
+        run: |
+          git fetch origin "$RUNTIME_BRANCH"
+          git show "origin/$RUNTIME_BRANCH:runtime/state.sqlite.b64" | base64 --decode > /tmp/durable-runtime.db
+          sha256sum /tmp/durable-runtime.db | awk '{print $1}' > /tmp/pre-db-sha256.txt
+
+      - name: Detect already-satisfied durable state
+        if: steps.aws.outputs.state == 'available'
+        id: durable
+        shell: bash
+        run: |
+          python - <<'PY'
+          import os
+          from general_execution.portfolio_persistence import SqlitePortfolioHeadStore, recover_portfolio_after_restart
+          state,_,_=recover_portfolio_after_restart(
+              SqlitePortfolioHeadStore('/tmp/durable-runtime.db'),
+              'fae-asic-a3-r4-existing-afi-admission',
+          )
+          satisfied=(
+              state.active.state=='human_gate'
+              and state.active.next_action_ref=='authority://fae-asic/a3/r4/runtime-f2'
+          )
+          admissible=state.active.state=='verifying'
+          assert satisfied or admissible, (
+              state.generation,state.active.state,state.active.next_action_ref
+          )
+          with open(os.environ['GITHUB_OUTPUT'],'a') as out:
+              out.write(f"already_satisfied={'true' if satisfied else 'false'}\n")
+              out.write(f"generation={state.generation}\n")
+              out.write(f"state_digest={state.digest}\n")
+          PY
+
+      - name: Build state-bound AWS provider event
+        if: steps.aws.outputs.state == 'available' && steps.durable.outputs.already_satisfied != 'true'
+        shell: bash
+        run: |
+          rm -f /tmp/provider-event.json /tmp/provider-host-report.json
+          python scripts/run_provider_host.py \
+            --input /tmp/provider-input.json \
+            --contract "provider-contracts/$WATCH_ID.json" \
+            --database /tmp/durable-runtime.db \
+            --event-out /tmp/provider-event.json \
+            --report /tmp/provider-host-report.json
+          python - <<'PY'
+          import json
+          r=json.load(open('/tmp/provider-host-report.json'))
+          assert r['result']['status']=='event_ready', r
+          assert r['authority_created'] is False
+          assert r['provider_command_executed'] is False
+          PY
+
+      - name: Consume exact AWS observation
+        if: steps.aws.outputs.state == 'available' && steps.durable.outputs.already_satisfied != 'true'
+        shell: bash
+        run: |
+          digest="$(python scripts/run_persistent_runtime_event.py --event /tmp/provider-event.json --print-trigger-digest)"
+          test "$digest" != NONE
+          python scripts/run_persistent_runtime_event.py \
+            --event /tmp/provider-event.json \
+            --database /tmp/durable-runtime.db \
+            --report /tmp/provider-runtime-report.json \
+            --authenticated-trigger-digest "$digest"
+          python - <<'PY'
+          import json
+          r=json.load(open('/tmp/provider-runtime-report.json'))['event_report']
+          assert r['status'] in {'committed','already_applied'}, r
+          assert r['human_required'] is True, r
+          assert r['requested_action_ref']=='authority://fae-asic/a3/r4/runtime-f2', r
+          PY
+
+      - name: Persist AWS observer evidence and durable transition
+        if: steps.aws.outputs.state == 'available'
+        shell: bash
+        env:
+          ALREADY_SATISFIED: ${{ steps.durable.outputs.already_satisfied }}
+        run: |
+          git fetch origin "$RUNTIME_BRANCH"
+          git checkout -B "$RUNTIME_BRANCH" "origin/$RUNTIME_BRANCH"
+          current="$(git show HEAD:runtime/state.sqlite.b64 | base64 --decode | sha256sum | awk '{print $1}')"
+          test "$current" = "$(cat /tmp/pre-db-sha256.txt)"
+          mkdir -p runtime/provider-host/aws-fae-observer runtime/provider-host/events runtime/reports
+          cp /tmp/aws-afi-sanitized.json "runtime/provider-host/aws-fae-observer/aws-afi-$GITHUB_RUN_ID.json"
+          cp /tmp/provider-input.json "runtime/provider-host/aws-fae-observer/provider-input-$GITHUB_RUN_ID.json"
+          if test "$ALREADY_SATISFIED" != "true"; then
+            event_id="$(python -c "import json; print(json.load(open('/tmp/provider-event.json'))['event_id'])")"
+            base64 -w 0 /tmp/durable-runtime.db > runtime/state.sqlite.b64
+            printf '\n' >> runtime/state.sqlite.b64
+            cp /tmp/provider-event.json "runtime/provider-host/events/$event_id.json"
+            cp /tmp/provider-host-report.json "runtime/provider-host/aws-fae-observer/provider-host-$GITHUB_RUN_ID.json"
+            cp /tmp/provider-runtime-report.json "runtime/reports/$event_id.json"
+          fi
+          python - <<'PY'
+          import json,os,pathlib
+          record={
+            'schema_version':'ge.aws-fae-observer-completion.v1',
+            'watch_id':os.environ['WATCH_ID'],
+            'afi_id':os.environ['AFI_ID'],
+            'agfi':os.environ['AFI_AGFI'],
+            'github_run_id':os.environ['GITHUB_RUN_ID'],
+            'source_revision':os.environ['GITHUB_SHA'],
+            'already_satisfied':os.environ.get('ALREADY_SATISFIED')=='true',
+            'runtime_f2_executed':False,
+            'authority_created':False,
+          }
+          pathlib.Path('runtime/provider-host/aws-fae-observer/latest.json').write_text(
+            json.dumps(record,sort_keys=True,indent=2)+'\n'
+          )
+          PY
+
+      - name: Commit runtime evidence
+        if: steps.aws.outputs.state == 'available'
+        shell: bash
+        run: |
+          git config user.name "durable-aws-observer"
+          git config user.email "durable-aws-observer@users.noreply.github.com"
+          git add runtime/
+          git diff --cached --quiet && exit 0
+          git commit -m "runtime: AWS FAE observer reached human gate [skip ci]"
+          git fetch origin "$RUNTIME_BRANCH"
+          git rebase "origin/$RUNTIME_BRANCH"
+          git push origin "HEAD:refs/heads/$RUNTIME_BRANCH"
+
+      - name: Upload observer evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: durable-aws-fae-observer-${{ github.run_id }}
+          path: |
+            /tmp/aws-afi-sanitized.json
+            /tmp/provider-input.json
+            /tmp/provider-host-report.json
+            /tmp/provider-event.json
+            /tmp/provider-runtime-report.json
+          if-no-files-found: warn
+          retention-days: 30
