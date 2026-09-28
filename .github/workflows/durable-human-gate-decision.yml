@@ -1,0 +1,189 @@
+name: Durable human gate decision bridge
+
+on:
+  push:
+    branches:
+      - runtime/durable-asp-control
+    paths:
+      - "human-decisions/*.json"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: durable-asp-persistent-runtime
+  cancel-in-progress: false
+
+env:
+  RUNTIME_BRANCH: runtime/durable-asp-control
+  HUMAN_GATE_DECISION_RUNTIME_REVISION: 0915acb8f17dde2c09022fad3828c8633772c44f
+
+jobs:
+  consume-human-decision:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Enforce human decision host boundary
+        run: |
+          test "$GITHUB_ACTOR" = "Waterfound"
+          test "$GITHUB_REF_NAME" = "$RUNTIME_BRANCH"
+          test "$GITHUB_REF" = "refs/heads/$RUNTIME_BRANCH"
+
+      - name: Checkout decision commit
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.sha }}
+
+      - name: Admit exactly one immutable decision
+        id: decision
+        shell: bash
+        run: |
+          git diff-tree --no-commit-id --name-status -r "$GITHUB_SHA" -- 'human-decisions/*.json' > /tmp/decision-changes.txt
+          python - <<'PY'
+          import json,os,pathlib,re
+          rows=[line.strip().split("\t",1) for line in pathlib.Path('/tmp/decision-changes.txt').read_text().splitlines() if line.strip()]
+          assert len(rows)==1, f"expected exactly one human decision file, got {rows}"
+          status,path=rows[0]
+          assert status=='A', f"human decision must be immutable create-only, got {status}"
+          raw=pathlib.Path(path).read_bytes()
+          data=json.loads(raw)
+          assert data.get('schema_version')=='ge.human-gate-decision-event.v1'
+          event_id=data.get('event_id')
+          assert isinstance(event_id,str) and re.fullmatch(r'[A-Za-z0-9._-]{1,120}',event_id)
+          assert data.get('decision') in {'reject','supersede'}
+          assert data.get('target_state') in {'rework','failed'}
+          assert isinstance(data.get('pending_action_ref'),str) and data['pending_action_ref']
+          pathlib.Path('/tmp/human-decision.json').write_bytes(raw)
+          with open(os.environ['GITHUB_OUTPUT'],'a') as out:
+              out.write(f"path={path}\n")
+              out.write(f"event_id={event_id}\n")
+          PY
+
+      - name: Reject credential-shaped decision data
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,pathlib
+          data=json.loads(pathlib.Path('/tmp/human-decision.json').read_text())
+          forbidden=('secret','password','token','credential','private_key','private-key','api_key','api-key')
+          def walk(value,path='$'):
+              if isinstance(value,dict):
+                  for k,v in value.items():
+                      low=k.lower()
+                      assert not any(term in low for term in forbidden), f"credential-shaped key forbidden: {path}.{k}"
+                      walk(v,f"{path}.{k}")
+              elif isinstance(value,list):
+                  for i,v in enumerate(value): walk(v,f"{path}[{i}]")
+          walk(data)
+          PY
+
+      - name: Move to latest durable runtime branch
+        shell: bash
+        run: |
+          git fetch origin "$RUNTIME_BRANCH"
+          git checkout -B "$RUNTIME_BRANCH" "origin/$RUNTIME_BRANCH"
+          if test -f "runtime/processed-human-decisions/${{ steps.decision.outputs.event_id }}.json"; then
+            echo "already_processed=true" >> "$GITHUB_ENV"
+          else
+            echo "already_processed=false" >> "$GITHUB_ENV"
+          fi
+
+      - uses: actions/setup-python@v5
+        if: env.already_processed != 'true'
+        with:
+          python-version: "3.13"
+
+      - name: Prepare pinned verified human decision source
+        if: env.already_processed != 'true'
+        shell: bash
+        run: |
+          git fetch origin feature/durable-provider-host-terminal-20260928
+          git cat-file -e "$HUMAN_GATE_DECISION_RUNTIME_REVISION^{commit}"
+          git worktree add --detach /tmp/human-decision-src "$HUMAN_GATE_DECISION_RUNTIME_REVISION"
+          cd /tmp/human-decision-src
+          python -m pip install -e '.[dev]' --disable-pip-version-check
+          python -m compileall -q src scripts
+          python -m pytest tests/test_human_gate_decision.py -q
+
+      - name: Restore durable SQLite state
+        if: env.already_processed != 'true'
+        run: |
+          test -f runtime/state.sqlite.b64
+          base64 --decode runtime/state.sqlite.b64 > /tmp/durable-runtime.db
+
+      - name: Consume explicit reject or supersede decision
+        if: env.already_processed != 'true'
+        shell: bash
+        run: |
+          DECISION_PATH="${{ steps.decision.outputs.path }}"
+          DECISION_REF="github://Waterfound/General-Execution/commit/$GITHUB_SHA/$DECISION_PATH"
+          cd /tmp/human-decision-src
+          python scripts/run_human_gate_decision.py \
+            --decision /tmp/human-decision.json \
+            --database /tmp/durable-runtime.db \
+            --report /tmp/human-gate-decision-report.json \
+            --provider-actor "$GITHUB_ACTOR" \
+            --decision-ref "$DECISION_REF"
+          python - <<'PY'
+          import json
+          r=json.load(open('/tmp/human-gate-decision-report.json'))
+          assert r['authority_grant_created'] is False
+          assert r['provider_actor']=='Waterfound'
+          assert r['state']['active']['state'] in {'rework','failed'}
+          PY
+
+      - name: Persist human decision state and evidence
+        if: env.already_processed != 'true'
+        shell: bash
+        run: |
+          mkdir -p runtime/reports runtime/processed-human-decisions
+          base64 -w 0 /tmp/durable-runtime.db > runtime/state.sqlite.b64
+          printf '\n' >> runtime/state.sqlite.b64
+          cp /tmp/human-gate-decision-report.json "runtime/reports/${{ steps.decision.outputs.event_id }}.json"
+          python - <<'PY'
+          import hashlib,json,os,pathlib
+          report=json.loads(pathlib.Path('/tmp/human-gate-decision-report.json').read_text())
+          db=pathlib.Path('/tmp/durable-runtime.db').read_bytes()
+          db_digest='sha256:'+hashlib.sha256(db).hexdigest()
+          assert report['database_sha256']==db_digest
+          event_id=report['event_id']
+          processed={
+            'schema_version':'ge.human-gate-decision-processed.v1',
+            'event_id':event_id,
+            'trigger_commit':os.environ['GITHUB_SHA'],
+            'provider_actor':report['provider_actor'],
+            'decision_ref':report['decision_ref'],
+            'decision_digest':report['decision_digest'],
+            'receipt_digest':report['receipt_digest'],
+            'execution_report_digest':report['execution_report_digest'],
+            'database_sha256':db_digest,
+            'runtime_source_revision':os.environ['HUMAN_GATE_DECISION_RUNTIME_REVISION'],
+            'authority_grant_created':False,
+          }
+          pathlib.Path(f'runtime/processed-human-decisions/{event_id}.json').write_text(
+            json.dumps(processed,sort_keys=True,indent=2)+'\n'
+          )
+          PY
+
+      - name: Commit durable decision state
+        if: env.already_processed != 'true'
+        shell: bash
+        run: |
+          git config user.name "durable-human-decision"
+          git config user.email "durable-human-decision@users.noreply.github.com"
+          git add runtime/
+          git diff --cached --quiet && exit 0
+          git commit -m "runtime: consume human gate decision ${{ steps.decision.outputs.event_id }} [skip ci]"
+          git fetch origin "$RUNTIME_BRANCH"
+          git rebase "origin/$RUNTIME_BRANCH"
+          git push origin "HEAD:refs/heads/$RUNTIME_BRANCH"
+
+      - name: Upload human decision evidence
+        if: env.already_processed != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: durable-human-gate-decision-${{ steps.decision.outputs.event_id }}-${{ github.run_id }}
+          path: /tmp/human-gate-decision-report.json
+          if-no-files-found: error
+          retention-days: 30

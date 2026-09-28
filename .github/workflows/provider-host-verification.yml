@@ -1,0 +1,52 @@
+name: Durable provider host verification
+
+on:
+  push:
+    branches:
+      - feature/durable-provider-host-terminal-20260928
+    paths:
+      - src/general_execution/provider_host.py
+      - scripts/run_provider_host.py
+      - provider-contracts/**
+      - tests/test_provider_host.py
+      - src/general_execution/human_gate_decision.py
+      - scripts/run_human_gate_decision.py
+      - tests/test_human_gate_decision.py
+      - .github/workflows/durable-human-gate-decision.yml
+      - .github/workflows/provider-host-verification.yml
+      - .github/workflows/durable-provider-host.yml
+      - .github/workflows/generalized-github-provider-pilot.yml
+  pull_request:
+    paths:
+      - src/general_execution/provider_host.py
+      - scripts/run_provider_host.py
+      - provider-contracts/**
+      - tests/test_provider_host.py
+      - src/general_execution/human_gate_decision.py
+      - scripts/run_human_gate_decision.py
+      - tests/test_human_gate_decision.py
+      - .github/workflows/durable-human-gate-decision.yml
+      - .github/workflows/provider-host-verification.yml
+      - .github/workflows/durable-provider-host.yml
+      - .github/workflows/generalized-github-provider-pilot.yml
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install
+        run: python -m pip install -e '.[dev]' --disable-pip-version-check
+      - name: Compile
+        run: python -m compileall -q src scripts
+      - name: Provider host and human decision focused regression
+        run: python -m pytest tests/test_provider_host.py tests/test_human_gate_decision.py -q
+      - name: Full repository regression
+        run: python -m pytest -q

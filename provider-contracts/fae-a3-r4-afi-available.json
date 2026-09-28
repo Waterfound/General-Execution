@@ -1,0 +1,39 @@
+{
+  "watch_id": "fae-a3-r4-afi-available",
+  "provider": "aws-ec2-fpga-image",
+  "subject_ref": "aws://us-east-1/afi-0bd37117433ff02d7",
+  "satisfied_state": "available",
+  "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+  "transition_event": "authority_required",
+  "evidence_kind": "a3_r4_afi_available",
+  "contract_ref": "github://Waterfound/General-Execution/provider-contracts/fae-a3-r4-afi-available.json",
+  "required_bindings": {
+    "candidate": "C6-2LANE-LOCAL200-DIRECTSPLIT-CTRL-PC-R4",
+    "developer_cl_sha256": "cb369bca24dbe0c17e015adf5668d2d4117c77d31896c3a3b1faedab09e2f7a5",
+    "fpga_image_global_id": "agfi-01ca0856fe3a85305",
+    "git_commit": "a208b245da98052b60b9d47cd676f7c0a23e74a3"
+  },
+  "policy": {
+    "policy_id": "fae-asic-a3-r4-afi-available-runtime-gate",
+    "revision": "1",
+    "rules": [
+      {
+        "rule_id": "01-afi-available-stop-before-f2",
+        "from_state": "verifying",
+        "event": "authority_required",
+        "to_state": "human_gate",
+        "next_action_ref": "authority://fae-asic/a3/r4/runtime-f2",
+        "effect": "stop_human_gate",
+        "required_evidence": [
+          "a3_r4_afi_available"
+        ],
+        "authority_mode": "human_required",
+        "authority_boundary": "Authorize one bounded F2 runtime parity execution using admitted AFI afi-0bd37117433ff02d7 only; do not benchmark, run attacker sweep, release, activate consensus, or take mainnet action unless separately authorized.",
+        "schema_version": "ge.transition-rule.v1"
+      }
+    ],
+    "default_disposition": "stop",
+    "schema_version": "ge.transition-policy.v1"
+  },
+  "schema_version": "ge.provider-watch-contract.v1"
+}

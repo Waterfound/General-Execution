@@ -1,0 +1,95 @@
+name: Provider host independent verifier
+
+on:
+  push:
+    branches:
+      - feature/durable-provider-host-terminal-20260928
+    paths:
+      - src/general_execution/provider_host.py
+      - src/general_execution/human_gate_decision.py
+      - scripts/run_human_gate_decision.py
+      - tests/test_human_gate_decision.py
+      - .github/workflows/durable-human-gate-decision.yml
+      - scripts/run_provider_host.py
+      - provider-contracts/**
+      - .github/workflows/durable-provider-host.yml
+      - .github/workflows/generalized-github-provider-pilot.yml
+      - .github/workflows/provider-host-independent-verifier.yml
+  pull_request:
+    paths:
+      - src/general_execution/provider_host.py
+      - src/general_execution/human_gate_decision.py
+      - scripts/run_human_gate_decision.py
+      - tests/test_human_gate_decision.py
+      - .github/workflows/durable-human-gate-decision.yml
+      - scripts/run_provider_host.py
+      - provider-contracts/**
+      - .github/workflows/durable-provider-host.yml
+      - .github/workflows/generalized-github-provider-pilot.yml
+      - .github/workflows/provider-host-independent-verifier.yml
+
+permissions:
+  contents: read
+
+jobs:
+  independent-verifier:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install
+        run: python -m pip install -e '.[dev]' --disable-pip-version-check
+      - name: Independent capability audit
+        shell: bash
+        run: |
+          python - <<'PY'
+          import ast,json,pathlib
+          src=pathlib.Path('src/general_execution/provider_host.py').read_text()
+          tree=ast.parse(src)
+          forbidden_import_roots={'boto3','requests','httpx','subprocess','socket'}
+          imported=set()
+          for node in ast.walk(tree):
+              if isinstance(node,ast.Import):
+                  imported.update(alias.name.split('.')[0] for alias in node.names)
+              elif isinstance(node,ast.ImportFrom) and node.module:
+                  imported.add(node.module.split('.')[0])
+          assert not (imported & forbidden_import_roots), imported & forbidden_import_roots
+          assert 'TransitionAuthorityGrant' not in src
+          assert 'preauthorized_required' in src
+          assert 'provider host cannot cross a human authority gate' in src
+          contract=json.loads(pathlib.Path('provider-contracts/fae-a3-r4-afi-available.json').read_text())
+          assert contract['subject_ref']=='aws://us-east-1/afi-0bd37117433ff02d7'
+          assert contract['required_bindings']['git_commit']=='a208b245da98052b60b9d47cd676f7c0a23e74a3'
+          assert contract['required_bindings']['developer_cl_sha256']=='cb369bca24dbe0c17e015adf5668d2d4117c77d31896c3a3b1faedab09e2f7a5'
+          rule=contract['policy']['rules'][0]
+          assert rule['authority_mode']=='human_required'
+          assert rule['effect']=='stop_human_gate'
+          assert rule['to_state']=='human_gate'
+          assert rule['next_action_ref']=='authority://fae-asic/a3/r4/runtime-f2'
+          gh=json.loads(pathlib.Path('provider-contracts/generalized-github-push.json').read_text())
+          assert gh['provider']=='github-actions-push'
+          assert gh['policy']['rules'][0]['authority_mode']=='human_required'
+          decision_src=pathlib.Path('src/general_execution/human_gate_decision.py').read_text()
+          decision_tree=ast.parse(decision_src)
+          decision_imports=set()
+          for node in ast.walk(decision_tree):
+              if isinstance(node,ast.Import):
+                  decision_imports.update(alias.name.split('.')[0] for alias in node.names)
+              elif isinstance(node,ast.ImportFrom) and node.module:
+                  decision_imports.add(node.module.split('.')[0])
+          assert not (decision_imports & forbidden_import_roots)
+          decision_symbols={
+              node.id for node in ast.walk(decision_tree) if isinstance(node,ast.Name)
+          } | {
+              node.attr for node in ast.walk(decision_tree) if isinstance(node,ast.Attribute)
+          }
+          assert 'TransitionAuthorityGrant' not in decision_symbols
+          assert 'target must be rework or failed' in decision_src
+          assert 'provider_actor != "Waterfound"' in decision_src
+          assert 'state.active.state != "human_gate"' in decision_src
+          PY
+      - name: Reproduce provider-host and human-decision adversarial banks
+        run: python -m pytest tests/test_provider_host.py tests/test_human_gate_decision.py -q

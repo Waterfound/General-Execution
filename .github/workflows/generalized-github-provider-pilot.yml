@@ -1,0 +1,210 @@
+name: Durable generalized GitHub provider pilot
+
+on:
+  push:
+    branches:
+      - pilot/durable-github-provider
+    paths:
+      - pilot-provider/*.json
+
+permissions:
+  contents: write
+
+concurrency:
+  group: durable-asp-persistent-runtime
+  cancel-in-progress: false
+
+env:
+  RUNTIME_BRANCH: runtime/durable-asp-control
+  PROVIDER_HOST_REVISION: 546e8d57210fb769190a2826572b9fc3a83290b2
+  WATCH_ID: generalized-github-push
+
+jobs:
+  provider-pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Enforce native GitHub provider boundary
+        shell: bash
+        run: |
+          test "$GITHUB_REF" = 'refs/heads/pilot/durable-github-provider'
+          test "$GITHUB_REPOSITORY" = 'Waterfound/General-Execution'
+
+      - name: Checkout provider event commit
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.sha }}
+
+      - name: Admit exactly one immutable pilot marker
+        shell: bash
+        run: |
+          git diff-tree --no-commit-id --name-status -r "$GITHUB_SHA" -- 'pilot-provider/*.json' > /tmp/pilot-changes.txt
+          python - <<'PY'
+          import pathlib
+          rows=[line.strip().split('\t',1) for line in pathlib.Path('/tmp/pilot-changes.txt').read_text().splitlines() if line.strip()]
+          assert len(rows)==1, rows
+          status,path=rows[0]
+          assert status=='A', rows
+          assert path=='pilot-provider/generalized-github-push-001.json', path
+          PY
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Prepare pinned verified provider host
+        shell: bash
+        run: |
+          git cat-file -e "$PROVIDER_HOST_REVISION^{commit}"
+          git worktree add --detach /tmp/provider-src "$PROVIDER_HOST_REVISION"
+          cd /tmp/provider-src
+          python -m pip install -e '.[dev]' --disable-pip-version-check
+          python -m compileall -q src scripts
+          python -m pytest tests/test_provider_host.py -q
+
+      - name: Build provider-native observation
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib,json,os,pathlib,subprocess
+          sha=os.environ['GITHUB_SHA']
+          repo=os.environ['GITHUB_REPOSITORY']
+          ref=os.environ['GITHUB_REF']
+          actor=os.environ['GITHUB_ACTOR']
+          run_id=os.environ['GITHUB_RUN_ID']
+          run_attempt=os.environ['GITHUB_RUN_ATTEMPT']
+          observed_at=subprocess.check_output(['git','show','-s','--format=%cI',sha],text=True).strip()
+          evidence_material={'repository':repo,'ref':ref,'sha':sha,'actor':actor,'run_id':run_id,'run_attempt':run_attempt}
+          payload=json.dumps(evidence_material,sort_keys=True,separators=(',',':')).encode()
+          digest='sha256:'+hashlib.sha256(payload).hexdigest()
+          data={
+            'watch_id':'generalized-github-push',
+            'provider':'github-actions-push',
+            'provider_event_id':f'{run_id}:{run_attempt}:{sha}',
+            'subject_ref':'github://Waterfound/General-Execution/refs/heads/pilot/durable-github-provider',
+            'observed_state':'push_observed',
+            'observed_at':observed_at,
+            'evidence_locator':f'github-actions://Waterfound/General-Execution/runs/{run_id}',
+            'evidence_digest':digest,
+            'bindings':{
+              'repository':'Waterfound/General-Execution',
+              'ref':'refs/heads/pilot/durable-github-provider',
+              'marker':'durable-generalization-v1',
+            },
+            'canonical_refs':sorted([
+              f'github://Waterfound/General-Execution/commit/{sha}',
+              f'github-actions://Waterfound/General-Execution/runs/{run_id}',
+            ]),
+            'schema_version':'ge.provider-input.v1',
+          }
+          pathlib.Path('/tmp/provider-input.json').write_text(json.dumps(data,sort_keys=True,indent=2)+'\n')
+          pathlib.Path('/tmp/provider-evidence-material.json').write_text(json.dumps(evidence_material,sort_keys=True,indent=2)+'\n')
+          PY
+
+      - name: Restore exact latest durable state
+        shell: bash
+        run: |
+          git fetch origin "$RUNTIME_BRANCH"
+          git show "origin/$RUNTIME_BRANCH:runtime/state.sqlite.b64" | base64 --decode > /tmp/durable-runtime.db
+          sha256sum /tmp/durable-runtime.db | awk '{print $1}' > /tmp/pre-db-sha256.txt
+
+      - name: Build state-bound event
+        shell: bash
+        run: |
+          cd /tmp/provider-src
+          python scripts/run_provider_host.py \
+            --input /tmp/provider-input.json \
+            --contract "provider-contracts/${WATCH_ID}.json" \
+            --database /tmp/durable-runtime.db \
+            --event-out /tmp/provider-event.json \
+            --report /tmp/provider-host-report.json
+          python - <<'PY'
+          import json
+          r=json.load(open('/tmp/provider-host-report.json'))
+          assert r['result']['status']=='event_ready', r
+          assert not r['authority_created']
+          assert not r['provider_command_executed']
+          PY
+
+      - name: Consume exact provider event
+        shell: bash
+        run: |
+          cd /tmp/provider-src
+          digest="$(python scripts/run_persistent_runtime_event.py --event /tmp/provider-event.json --print-trigger-digest)"
+          test "$digest" != NONE
+          python scripts/run_persistent_runtime_event.py \
+            --event /tmp/provider-event.json \
+            --database /tmp/durable-runtime.db \
+            --report /tmp/provider-runtime-first.json \
+            --authenticated-trigger-digest "$digest"
+          python - <<'PY'
+          import json
+          r=json.load(open('/tmp/provider-runtime-first.json'))['event_report']
+          assert r['status']=='committed', r
+          assert r['human_required'] is True, r
+          assert r['requested_action_ref']=='authority://durable/generalized-provider-pilot/acknowledge', r
+          assert r['post_generation']==r['pre_generation']+1, r
+          PY
+
+      - name: Cold replay exact same provider event
+        shell: bash
+        run: |
+          cp /tmp/durable-runtime.db /tmp/durable-runtime-cold.db
+          cd /tmp/provider-src
+          digest="$(python scripts/run_persistent_runtime_event.py --event /tmp/provider-event.json --print-trigger-digest)"
+          python scripts/run_persistent_runtime_event.py \
+            --event /tmp/provider-event.json \
+            --database /tmp/durable-runtime-cold.db \
+            --report /tmp/provider-runtime-replay.json \
+            --authenticated-trigger-digest "$digest"
+          python - <<'PY'
+          import hashlib,json
+          first=json.load(open('/tmp/provider-runtime-first.json'))['event_report']
+          replay=json.load(open('/tmp/provider-runtime-replay.json'))['event_report']
+          assert replay['status']=='already_applied', replay
+          assert replay['post_generation']==first['post_generation'], (first,replay)
+          def h(p): return hashlib.sha256(open(p,'rb').read()).hexdigest()
+          assert h('/tmp/durable-runtime.db')==h('/tmp/durable-runtime-cold.db')
+          PY
+
+      - name: Persist live generalized provider evidence
+        shell: bash
+        run: |
+          git fetch origin "$RUNTIME_BRANCH"
+          git checkout -B "$RUNTIME_BRANCH" "origin/$RUNTIME_BRANCH"
+          current="$(git show HEAD:runtime/state.sqlite.b64 | base64 --decode | sha256sum | awk '{print $1}')"
+          test "$current" = "$(cat /tmp/pre-db-sha256.txt)"
+          event_id="$(python -c "import json; print(json.load(open('/tmp/provider-event.json'))['event_id'])")"
+          mkdir -p runtime/provider-host/generalized-pilot runtime/provider-host/events runtime/reports
+          base64 -w 0 /tmp/durable-runtime.db > runtime/state.sqlite.b64
+          printf '\n' >> runtime/state.sqlite.b64
+          cp /tmp/provider-input.json runtime/provider-host/generalized-pilot/provider-input.json
+          cp /tmp/provider-evidence-material.json runtime/provider-host/generalized-pilot/provider-evidence-material.json
+          cp /tmp/provider-host-report.json runtime/provider-host/generalized-pilot/provider-host-report.json
+          cp /tmp/provider-runtime-first.json runtime/provider-host/generalized-pilot/first-runtime-report.json
+          cp /tmp/provider-runtime-replay.json runtime/provider-host/generalized-pilot/replay-runtime-report.json
+          cp /tmp/provider-event.json "runtime/provider-host/events/${event_id}.json"
+          cp /tmp/provider-runtime-first.json "runtime/reports/${event_id}.json"
+          git config user.name 'durable-provider-host'
+          git config user.email 'durable-provider-host@users.noreply.github.com'
+          git add runtime/
+          git commit -m "runtime: generalized GitHub provider pilot PASS [skip ci]"
+          git fetch origin "$RUNTIME_BRANCH"
+          git rebase "origin/$RUNTIME_BRANCH"
+          git push origin "HEAD:refs/heads/$RUNTIME_BRANCH"
+
+      - name: Upload generalized pilot evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: durable-generalized-provider-${{ github.run_id }}
+          path: |
+            /tmp/provider-input.json
+            /tmp/provider-evidence-material.json
+            /tmp/provider-host-report.json
+            /tmp/provider-event.json
+            /tmp/provider-runtime-first.json
+            /tmp/provider-runtime-replay.json
+          if-no-files-found: error
+          retention-days: 30

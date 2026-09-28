@@ -1,0 +1,197 @@
+name: Durable provider host
+
+on:
+  push:
+    branches:
+      - provider/durable-input
+    paths:
+      - provider-input/*.json
+
+permissions:
+  contents: write
+
+concurrency:
+  group: durable-asp-persistent-runtime
+  cancel-in-progress: false
+
+env:
+  RUNTIME_BRANCH: runtime/durable-asp-control
+  PROVIDER_HOST_REVISION: dcbae30c7912a8d76c38dafdb18932cb51d2a488
+
+jobs:
+  consume-provider-input:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Enforce host boundary
+        shell: bash
+        run: |
+          test "$GITHUB_REF_NAME" = "provider/durable-input"
+          case "$GITHUB_ACTOR" in
+            Waterfound|github-actions\[bot\]) ;;
+            *) echo "unauthorized provider-input actor: $GITHUB_ACTOR" >&2; exit 1 ;;
+          esac
+
+      - name: Checkout immutable provider-input commit
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.sha }}
+
+      - name: Admit exactly one immutable provider input
+        id: input
+        shell: bash
+        run: |
+          git diff-tree --no-commit-id --name-status -r "$GITHUB_SHA" -- 'provider-input/*.json' > /tmp/provider-input-changes.txt
+          python - <<'PY'
+          import hashlib,json,os,pathlib,re
+          rows=[line.strip().split('\t',1) for line in pathlib.Path('/tmp/provider-input-changes.txt').read_text().splitlines() if line.strip()]
+          assert len(rows)==1, f'expected exactly one provider input, got {rows}'
+          status,path=rows[0]
+          assert status=='A', f'provider input must be immutable create-only, got {status}'
+          assert path.startswith('provider-input/') and path.endswith('.json')
+          raw=pathlib.Path(path).read_bytes()
+          digest=hashlib.sha256(raw).hexdigest()
+          data=json.loads(raw)
+          watch=data.get('watch_id')
+          assert isinstance(watch,str) and re.fullmatch(r'[A-Za-z0-9._-]{1,120}',watch)
+          with open(os.environ['GITHUB_OUTPUT'],'a') as out:
+              out.write(f'path={path}\n')
+              out.write(f'input_sha256={digest}\n')
+              out.write(f'watch_id={watch}\n')
+          pathlib.Path('/tmp/provider-input.json').write_bytes(raw)
+          PY
+
+      - name: Reject credential-shaped provider input
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,pathlib
+          data=json.loads(pathlib.Path('/tmp/provider-input.json').read_text())
+          forbidden=('secret','password','token','credential','private_key','private-key','api_key','api-key')
+          def walk(value,path='$'):
+              if isinstance(value,dict):
+                  for k,v in value.items():
+                      low=k.lower()
+                      assert not any(term in low for term in forbidden), f'credential-shaped key forbidden: {path}.{k}'
+                      walk(v,f'{path}.{k}')
+              elif isinstance(value,list):
+                  for i,v in enumerate(value): walk(v,f'{path}[{i}]')
+          walk(data)
+          PY
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Prepare pinned verified provider host source
+        shell: bash
+        run: |
+          git cat-file -e "$PROVIDER_HOST_REVISION^{commit}"
+          git worktree add --detach /tmp/provider-src "$PROVIDER_HOST_REVISION"
+          cd /tmp/provider-src
+          python -m pip install -e '.[dev]' --disable-pip-version-check
+          python -m compileall -q src scripts
+          python -m pytest tests/test_provider_host.py -q
+
+      - name: Restore latest durable state
+        shell: bash
+        run: |
+          git fetch origin "$RUNTIME_BRANCH"
+          git show "origin/$RUNTIME_BRANCH:runtime/state.sqlite.b64" | base64 --decode > /tmp/durable-runtime.db
+          sha256sum /tmp/durable-runtime.db | awk '{print $1}' > /tmp/pre-db-sha256.txt
+
+      - name: Skip already processed provider input
+        id: replay
+        shell: bash
+        run: |
+          key="runtime/provider-host/processed-inputs/${{ steps.input.outputs.input_sha256 }}.json"
+          if git cat-file -e "origin/$RUNTIME_BRANCH:$key" 2>/dev/null; then
+            echo 'already_processed=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'already_processed=false' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build state-bound provider event
+        if: steps.replay.outputs.already_processed != 'true'
+        shell: bash
+        run: |
+          cd /tmp/provider-src
+          contract="provider-contracts/${{ steps.input.outputs.watch_id }}.json"
+          test -f "$contract"
+          rm -f /tmp/provider-event.json /tmp/provider-host-report.json
+          python scripts/run_provider_host.py \
+            --input /tmp/provider-input.json \
+            --contract "$contract" \
+            --database /tmp/durable-runtime.db \
+            --event-out /tmp/provider-event.json \
+            --report /tmp/provider-host-report.json
+          cat /tmp/provider-host-report.json
+
+      - name: Resolve provider result
+        if: steps.replay.outputs.already_processed != 'true'
+        id: provider
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,os,pathlib
+          data=json.loads(pathlib.Path('/tmp/provider-host-report.json').read_text())
+          status=data['result']['status']
+          with open(os.environ['GITHUB_OUTPUT'],'a') as out:
+              out.write(f'status={status}\n')
+              if data['result']['event_id']:
+                  out.write(f"event_id={data['result']['event_id']}\n")
+          PY
+
+      - name: Consume provider event through canonical runtime
+        if: steps.replay.outputs.already_processed != 'true' && steps.provider.outputs.status == 'event_ready'
+        shell: bash
+        run: |
+          cd /tmp/provider-src
+          digest="$(python scripts/run_persistent_runtime_event.py --event /tmp/provider-event.json --print-trigger-digest)"
+          test "$digest" != "NONE"
+          python scripts/run_persistent_runtime_event.py \
+            --event /tmp/provider-event.json \
+            --database /tmp/durable-runtime.db \
+            --report /tmp/provider-runtime-report.json \
+            --authenticated-trigger-digest "$digest"
+
+      - name: Persist provider-host outcome
+        if: steps.replay.outputs.already_processed != 'true'
+        shell: bash
+        run: |
+          git fetch origin "$RUNTIME_BRANCH"
+          git checkout -B "$RUNTIME_BRANCH" "origin/$RUNTIME_BRANCH"
+          current="$(git show HEAD:runtime/state.sqlite.b64 | base64 --decode | sha256sum | awk '{print $1}')"
+          test "$current" = "$(cat /tmp/pre-db-sha256.txt)"
+          mkdir -p runtime/provider-host/processed-inputs runtime/provider-host/reports runtime/provider-host/events
+          cp /tmp/provider-host-report.json "runtime/provider-host/reports/${{ steps.input.outputs.input_sha256 }}.json"
+          cp /tmp/provider-input.json "runtime/provider-host/processed-inputs/${{ steps.input.outputs.input_sha256 }}.json"
+          if test "${{ steps.provider.outputs.status }}" = "event_ready"; then
+            test -f /tmp/provider-runtime-report.json
+            base64 -w 0 /tmp/durable-runtime.db > runtime/state.sqlite.b64
+            printf '\n' >> runtime/state.sqlite.b64
+            cp /tmp/provider-event.json "runtime/provider-host/events/${{ steps.provider.outputs.event_id }}.json"
+            cp /tmp/provider-runtime-report.json "runtime/reports/${{ steps.provider.outputs.event_id }}.json"
+          fi
+          git config user.name 'durable-provider-host'
+          git config user.email 'durable-provider-host@users.noreply.github.com'
+          git add runtime/
+          git diff --cached --quiet && exit 0
+          git commit -m "runtime: consume provider input ${{ steps.input.outputs.input_sha256 }} [skip ci]"
+          git fetch origin "$RUNTIME_BRANCH"
+          git rebase "origin/$RUNTIME_BRANCH"
+          git push origin "HEAD:refs/heads/$RUNTIME_BRANCH"
+
+      - name: Upload provider host evidence
+        if: always() && steps.replay.outputs.already_processed != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: durable-provider-host-${{ steps.input.outputs.input_sha256 }}-${{ github.run_id }}
+          path: |
+            /tmp/provider-host-report.json
+            /tmp/provider-event.json
+            /tmp/provider-runtime-report.json
+          if-no-files-found: warn
+          retention-days: 30
