@@ -1,0 +1,13 @@
+{
+  "authority_grant_created": false,
+  "database_sha256": "sha256:8a5665888eb3be83e72e7242cde7e4172e571dea5564685f51dfb7f724342258",
+  "decision_digest": "sha256:aab92aa60f0df070ba542f33ab71c5b84530b374bc48c22be399b81d31153a84",
+  "decision_ref": "github://Waterfound/General-Execution/commit/88555ca47653dff2b6ee61e75479917c02085975/human-decisions/durable-terminal-no-iam-supersede-002.json",
+  "event_id": "durable-terminal-no-iam-supersede-002",
+  "execution_report_digest": "sha256:9cae0320a9da924ae4ac3754765b3d7a458cef088db4890fb0a32970feba4eb1",
+  "provider_actor": "Waterfound",
+  "receipt_digest": "sha256:eed75813219faaa3b8ab81cd40f2f8fd417e8ac34998f65affafde547ae50088",
+  "runtime_source_revision": "0915acb8f17dde2c09022fad3828c8633772c44f",
+  "schema_version": "ge.human-gate-decision-processed.v1",
+  "trigger_commit": "88555ca47653dff2b6ee61e75479917c02085975"
+}

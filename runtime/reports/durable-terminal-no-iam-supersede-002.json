@@ -1,0 +1,154 @@
+{
+  "authority_grant_created": false,
+  "checkpoint": {
+    "action_ref": "human-decision://durable-terminal-no-iam-supersede-002",
+    "authority_boundary": null,
+    "authority_stop": false,
+    "canonical_refs": [
+      "github://Waterfound/General-Execution/commit/9751c2a616207a9a809d2e9168fad6cc4dae4e61",
+      "github://Waterfound/General-Execution/commit/780943f53ca167834fadc975cfb3e6905c933e73",
+      "build-colony://bc2-1aff60eac9c1ce94/fae-unattended-provider-pilot",
+      "authority://durable/aws-readonly-oidc-observer",
+      "github://Waterfound/General-Execution/commit/88555ca47653dff2b6ee61e75479917c02085975/human-decisions/durable-terminal-no-iam-supersede-002.json"
+    ],
+    "evidence": [
+      {
+        "digest": "sha256:7497098a5ce550f4f72ea3d82fdd7b40a7d4b5e4fe41d5b4509dd1bb32272fb7",
+        "kind": "superseding_evidence",
+        "locator": "github-actions://Waterfound/General-Execution/runs/36445713247",
+        "schema_version": "ge.checkpoint-evidence.v1"
+      },
+      {
+        "digest": "sha256:3e6c8f59dd96a16b98949ce7e6317c342b7a3a9a63938ef36e38ddc9886a2961",
+        "kind": "fae_missed_event_replay",
+        "locator": "github://Waterfound/General-Execution/runtime/provider-host/processed-snapshots/9751c2a616207a9a809d2e9168fad6cc4dae4e61.json",
+        "schema_version": "ge.checkpoint-evidence.v1"
+      },
+      {
+        "digest": "sha256:eed75813219faaa3b8ab81cd40f2f8fd417e8ac34998f65affafde547ae50088",
+        "kind": "human_gate_decision",
+        "locator": "github://Waterfound/General-Execution/commit/88555ca47653dff2b6ee61e75479917c02085975/human-decisions/durable-terminal-no-iam-supersede-002.json",
+        "schema_version": "ge.checkpoint-evidence.v1"
+      }
+    ],
+    "next_transition_refs": [
+      "action://durable/terminal-closure/no-iam-evidence-admission"
+    ],
+    "observed_at": "2026-09-28T16:10:00Z",
+    "portfolio_generation": 3,
+    "portfolio_id": "durable-terminal-closure",
+    "portfolio_state_digest": "sha256:338b90f7ddb22b59e89b51da60fe26583fb30bc3d6fb4c27c3f5e87a105b18ac",
+    "role": "active",
+    "schema_version": "ge.execution-checkpoint.v1",
+    "source_revision": "6c593797d23706df686ae32c4dfb8482ece02f37",
+    "state_after": "rework",
+    "state_before": "human_gate",
+    "summary": "Waterfound supersede decision for authority://durable/aws-readonly-oidc-observer: Waterfound explicitly superseded the obsolete AWS OIDC/IAM observer gate. The already-completed FAE provider snapshot missed-event recovery pilot proves the narrower no-IAM provider path, while F2 runtime and all broader execution remain unauthorized.",
+    "uncertainties": [],
+    "work_id": "DURABLE-FAE-UNATTENDED-PROVIDER-PILOT"
+  },
+  "checkpoint_digest": "sha256:065f3348c24b15bc916989fd847b2891ce5ee352bd7ad5e1a5e936f345325292",
+  "database_sha256": "sha256:8a5665888eb3be83e72e7242cde7e4172e571dea5564685f51dfb7f724342258",
+  "decision_digest": "sha256:aab92aa60f0df070ba542f33ab71c5b84530b374bc48c22be399b81d31153a84",
+  "decision_ref": "github://Waterfound/General-Execution/commit/88555ca47653dff2b6ee61e75479917c02085975/human-decisions/durable-terminal-no-iam-supersede-002.json",
+  "event_id": "durable-terminal-no-iam-supersede-002",
+  "execution_report_digest": "sha256:9cae0320a9da924ae4ac3754765b3d7a458cef088db4890fb0a32970feba4eb1",
+  "provider_actor": "Waterfound",
+  "receipt": {
+    "authority_boundary": "Authorize creation, only if absent, of the GitHub Actions OIDC provider token.actions.githubusercontent.com and IAM role DurableExecution-AWS-Observer, trusted only for Waterfound/General-Execution main and provider/aws-fae-observer, with effective permission limited to ec2:DescribeFpgaImages; authorize one live read-only FAE AFI observer pilot. Do not authorize F2 runtime, benchmark, attacker sweep, AFI creation, broader IAM permissions, release, consensus activation, or mainnet.",
+    "decision": "supersede",
+    "decision_digest": "sha256:aab92aa60f0df070ba542f33ab71c5b84530b374bc48c22be399b81d31153a84",
+    "decision_ref": "github://Waterfound/General-Execution/commit/88555ca47653dff2b6ee61e75479917c02085975/human-decisions/durable-terminal-no-iam-supersede-002.json",
+    "event_id": "durable-terminal-no-iam-supersede-002",
+    "expected_generation": 2,
+    "expected_state_digest": "sha256:38451910dff0958d3956416ffb6cdbb4fd54166fe60c89f8755a3c082019ac5e",
+    "next_action_ref": "action://durable/terminal-closure/no-iam-evidence-admission",
+    "pending_action_ref": "authority://durable/aws-readonly-oidc-observer",
+    "portfolio_id": "durable-terminal-closure",
+    "provider_actor": "Waterfound",
+    "schema_version": "ge.human-gate-decision-receipt.v1",
+    "target_state": "rework"
+  },
+  "receipt_digest": "sha256:eed75813219faaa3b8ab81cd40f2f8fd417e8ac34998f65affafde547ae50088",
+  "recovery_digest": "sha256:baa0416a4ca3785116dd6305c9f04785a27bb42cd319df3b25f20526bea6016c",
+  "schema_version": "ge.human-gate-decision-execution.v1",
+  "state": {
+    "active": {
+      "active_gate": "FAE-UNATTENDED-PROVIDER-PILOT",
+      "authority_boundary": null,
+      "authority_ref": null,
+      "blockers": [],
+      "checkpoint_ref": "build-colony://bc2-1aff60eac9c1ce94/fae-unattended-provider-pilot",
+      "evidence_required": [
+        "fae_provider_wake_verified"
+      ],
+      "next_action_ref": "action://durable/terminal-closure/no-iam-evidence-admission",
+      "objective": "Use the admitted A3 R4 AFI as the real AWS provider wake pilot; observe state and reach the next human gate without chat-constructed observations and without launching F2 runtime.",
+      "role": "active",
+      "schema_version": "ge.portfolio-entry.v1",
+      "source_revision": "6c593797d23706df686ae32c4dfb8482ece02f37",
+      "state": "rework",
+      "wake_condition": null,
+      "work_id": "DURABLE-FAE-UNATTENDED-PROVIDER-PILOT"
+    },
+    "generation": 3,
+    "passive": [
+      {
+        "active_gate": "TERMINAL-VERIFICATION-INTEGRATION",
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [
+          {
+            "detail": "Both real FAE provider wake and generalized provider pilot must be independently verified before terminal integration.",
+            "evidence_refs": [
+              "build-colony://bc2-1aff60eac9c1ce94/fae-unattended-provider-pilot",
+              "build-colony://bc2-1aff60eac9c1ce94/generalized-provider-pilot"
+            ],
+            "kind": "external_dependency",
+            "schema_version": "ge.portfolio-blocker.v1"
+          }
+        ],
+        "checkpoint_ref": "build-colony://bc2-1aff60eac9c1ce94/terminal-verification-integration",
+        "evidence_required": [
+          "terminal_verification_pass",
+          "main_integration_gate_pass",
+          "human_notification_verified"
+        ],
+        "next_action_ref": "action://durable/terminal-verification-integration",
+        "objective": "Run terminal crash/replay/stale/provider-failure/human-stop tests, prove notification delivery, integrate only GREEN changes through main-integration-gate, and freeze the final completion record.",
+        "role": "passive",
+        "schema_version": "ge.portfolio-entry.v1",
+        "source_revision": "6c593797d23706df686ae32c4dfb8482ece02f37",
+        "state": "passive",
+        "wake_condition": {
+          "kind": "evidence_predicate_satisfied",
+          "schema_version": "ge.wake-condition.v1",
+          "value": "fae_provider_wake_verified && generalized_provider_pilot_verified"
+        },
+        "work_id": "DURABLE-TERMINAL-VERIFICATION-INTEGRATION"
+      }
+    ],
+    "portfolio_id": "durable-terminal-closure",
+    "previous_state_digest": "sha256:38451910dff0958d3956416ffb6cdbb4fd54166fe60c89f8755a3c082019ac5e",
+    "schema_version": "ge.portfolio-state.v1",
+    "secondary": {
+      "active_gate": "GENERALIZED-PROVIDER-PILOT",
+      "authority_boundary": null,
+      "authority_ref": null,
+      "blockers": [],
+      "checkpoint_ref": "build-colony://bc2-1aff60eac9c1ce94/generalized-provider-pilot",
+      "evidence_required": [
+        "generalized_provider_pilot_verified"
+      ],
+      "next_action_ref": "action://durable/generalized-provider-pilot",
+      "objective": "Prove the same provider-host contract on a non-FAE provider workflow so the host is not ASIC/AWS-specific.",
+      "role": "secondary",
+      "schema_version": "ge.portfolio-entry.v1",
+      "source_revision": "6c593797d23706df686ae32c4dfb8482ece02f37",
+      "state": "ready",
+      "wake_condition": null,
+      "work_id": "DURABLE-GENERALIZED-PROVIDER-PILOT"
+    }
+  },
+  "state_digest": "sha256:338b90f7ddb22b59e89b51da60fe26583fb30bc3d6fb4c27c3f5e87a105b18ac"
+}
