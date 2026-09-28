@@ -1,0 +1,86 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-visual-language-vl09-complete-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-visual-language-vl09-close-v1",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-vl09-verified-to-vl10",
+          "from_state": "verifying",
+          "event": "verification_passed",
+          "to_state": "verifying",
+          "next_action_ref": "action://fae-visual-language/direction-d/VL-10",
+          "effect": "none",
+          "required_evidence": [
+            "wallet_surface_ci",
+            "wallet_public_qa",
+            "wallet_source_contract"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-push",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-visual-language-art-direction",
+      "policy_digest": "sha256:85446325687edda0efe4cf26be79a3be78b182abdadaff0fc09d1f7b74b05291",
+      "transition_event": "verification_passed"
+    },
+    "trigger": {
+      "source": "github-push",
+      "event_id": "fae-visual-language-vl09-complete-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:763145943759076d6d0cd884f4ddf310e07ac426c6d5e4a9a1cb8151a671db24",
+      "observation_digest": "sha256:f9f838e5cda6ec8a350a6030958f32440dba28041eabb11da42eee09492d2ecf",
+      "admission_ref": "github://Waterfound/General-Execution/events/fae-visual-language-vl09-complete-001"
+    },
+    "observation": {
+      "portfolio_id": "fae-visual-language-art-direction",
+      "expected_generation": 4,
+      "expected_state_digest": "sha256:7718956cb04bf235ac828e3e560baa505f18d2e62c26d4889d794531d618e243",
+      "policy_digest": "sha256:85446325687edda0efe4cf26be79a3be78b182abdadaff0fc09d1f7b74b05291",
+      "event": "verification_passed",
+      "evidence": [
+        {
+          "kind": "wallet_surface_ci",
+          "locator": "github://Waterfound/FAE-testnet/actions/runs/36480774355",
+          "digest": "sha256:5ae47a2b48aa75aadcf583250654148bd85e74e027a46a747e84031a5aad11c5",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "wallet_public_qa",
+          "locator": "https://agent.tinyfish.ai/runs/00f47615-0b80-4999-8ab2-4e426a87fb41",
+          "digest": "sha256:4464fccdaae5224c8833826e54edca219a414aa7abab8245d442853de69000f1",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "wallet_source_contract",
+          "locator": "github://Waterfound/FAE-testnet/commit/d9fb61cd5ed14c938643c58cc60d88027a042e71",
+          "digest": "sha256:f0e3f33270d8ee7047fe84e1fcb8d632ebc71460bff27d079e72ee9fa5a80735",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "github://Waterfound/FAE-testnet/commit/d9fb61cd5ed14c938643c58cc60d88027a042e71",
+      "observed_at": "2026-09-28T20:45:00Z",
+      "summary": "VL-09 closed: Direction D Wallet specialization passed CI and public read-only browser QA. Local custody/signing, recovery/backup, send/receive and full-TXID/history controls remain visible and legible with no observed layout issues.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/d9fb61cd5ed14c938643c58cc60d88027a042e71",
+        "github://Waterfound/FAE-testnet/actions/runs/36480774355",
+        "https://fae-direction-d-vl08-qa-ii0d80.v2.appdeploy.ai/",
+        "https://agent.tinyfish.ai/runs/00f47615-0b80-4999-8ab2-4e426a87fb41"
+      ],
+      "uncertainties": [],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
