@@ -1,0 +1,137 @@
+{
+  "schema": "CONTINUITY_CHECK_BUILD_COLONY_RUN_V1",
+  "run_kind": "REAL_BUILD_COLONY_RUN",
+  "run_date": "2026-09-28",
+  "repository": "Waterfound/General-Execution",
+  "branch": "colony/continuity-check-v1-001",
+  "source_main_revision": "f247bac35b3174e4826491609129f9a008942019",
+  "mission": "Implement Continuity Check V1 as a thin read-only protocol/tool inside General Execution without creating a new system or authority layer.",
+  "architectural_invariants": [
+    "Continuity Check observes execution; it does not execute.",
+    "Continuity Check reports authority; it does not grant authority.",
+    "Continuity Check does not replace Durable Execution, Human Authority Bridge, Diagnostic Intelligence, or Total Systems Steward.",
+    "Provider failure isolated from the workload does not automatically imply development failure.",
+    "conversation interruption != development interruption",
+    "conversation still open != development progressing",
+    "Evidence before status. Memory suggests. Evidence decides."
+  ],
+  "authority_envelope": {
+    "authority_owner": "Waterfound",
+    "allowed": [
+      "software/documentation-only development",
+      "isolated branches and pull requests",
+      "provider-neutral local verification",
+      "read-only replay of existing historical evidence",
+      "integration after frozen gates are green"
+    ],
+    "forbidden": [
+      "paid infrastructure",
+      "external workload restart merely for Continuity Check",
+      "destructive operations",
+      "authority creation",
+      "consensus/economic/mainnet changes",
+      "new central system or state database"
+    ]
+  },
+  "frontiers": [
+    {
+      "id": "CC-00",
+      "name": "Canonical General Execution inventory",
+      "state": "PASS"
+    },
+    {
+      "id": "CC-01",
+      "name": "Responsibility and non-system classification",
+      "state": "PASS"
+    },
+    {
+      "id": "CC-02",
+      "name": "Evidence source model",
+      "state": "PASS"
+    },
+    {
+      "id": "CC-03",
+      "name": "Evidence precedence and freshness model",
+      "state": "PASS"
+    },
+    {
+      "id": "CC-04",
+      "name": "Verdict taxonomy",
+      "state": "PASS"
+    },
+    {
+      "id": "CC-05",
+      "name": "Machine-readable schema",
+      "state": "PASS"
+    },
+    {
+      "id": "CC-06",
+      "name": "Workstream resolver",
+      "state": "PASS"
+    },
+    {
+      "id": "CC-07",
+      "name": "Repository continuity adapter",
+      "state": "PASS"
+    },
+    {
+      "id": "CC-08",
+      "name": "Durable Execution state adapter",
+      "state": "PASS"
+    },
+    {
+      "id": "CC-09",
+      "name": "Build Colony state adapter",
+      "state": "PASS"
+    },
+    {
+      "id": "CC-10",
+      "name": "Workflow/provider evidence adapter",
+      "state": "PASS"
+    },
+    {
+      "id": "CC-11",
+      "name": "Decision engine",
+      "state": "PASS"
+    },
+    {
+      "id": "CC-12",
+      "name": "Human-readable report renderer",
+      "state": "PASS"
+    },
+    {
+      "id": "CC-13",
+      "name": "False-progress and stale-state adversarial campaign",
+      "state": "PASS"
+    },
+    {
+      "id": "CC-14",
+      "name": "Provider-neutral failure semantics",
+      "state": "PASS"
+    },
+    {
+      "id": "CC-15",
+      "name": "Real historical replay",
+      "state": "PASS"
+    },
+    {
+      "id": "CC-16",
+      "name": "Systems documentation integration",
+      "state": "ACTIVE"
+    },
+    {
+      "id": "CC-17",
+      "name": "General Execution canonical integration verification",
+      "state": "PENDING"
+    },
+    {
+      "id": "CC-18",
+      "name": "Closure",
+      "state": "PENDING"
+    }
+  ],
+  "current_frontier": "CC-16",
+  "terminal_verdict": null,
+  "genuine_external_or_human_gates": [],
+  "shared_state_rule": "Parallelize independence. Serialize shared state."
+}
