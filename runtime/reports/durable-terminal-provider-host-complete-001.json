@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:80399b612fb04cf820868786ef3bbe45d8401af30a23ff14689a7262ca603564",
+  "event_report": {
+    "checkpoint_digest": "sha256:2abe51105f0596b587f1647bb52c7b6392c4b4c815153f38806d11a5e1c110c4",
+    "event_id": "durable-terminal-provider-host-complete-001",
+    "human_required": false,
+    "operation": "transition",
+    "portfolio_id": "durable-terminal-closure",
+    "post_generation": 1,
+    "post_state_digest": "sha256:e9f864db0fc27b0d4174c662f9b37d4276721d419f51f57e812abd67a07853af",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:1529a0ce6296d7456d435246a2757de6a51252378ce5739cbfa7f8945c25a68e",
+    "requested_action_ref": null,
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "committed"
+  },
+  "event_report_digest": "sha256:e1fd93f315006838246ebbb034c3059b03b5aff1f55835ed8e702317a2b9593a",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
