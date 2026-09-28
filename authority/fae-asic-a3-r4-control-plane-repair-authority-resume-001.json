@@ -1,0 +1,54 @@
+{
+  "schema_version": "ge.human-authority-event.v1",
+  "event_id": "fae-asic-a3-r4-control-plane-repair-authority-resume-001",
+  "approved_action_ref": "authority://fae-asic/a3/r4/control-plane-repair",
+  "approved_at": "2026-09-28T23:30:00Z",
+  "policy": {
+    "policy_id": "fae-asic-a3-r4-control-plane-repair-authority-resume",
+    "revision": "1",
+    "rules": [
+      {
+        "rule_id": "01-authorized-control-plane-liveness-repair",
+        "from_state": "di_required",
+        "event": "verification_passed",
+        "to_state": "rework",
+        "next_action_ref": "action://fae-asic/a3/r4/repair-control-plane-liveness",
+        "effect": "none",
+        "required_evidence": ["human_authority_recorded"],
+        "authority_mode": "preauthorized_required",
+        "authority_boundary": "Authorize repair of A3-R4 control-plane liveness, limited to the smallest admissible candidate repair and corresponding static validation, preserving DP6, the existing memory map, and apertures; do not create a new AFI, execute a new F2 runtime, change consensus or economics, release, or take mainnet action.",
+        "schema_version": "ge.transition-rule.v1"
+      }
+    ],
+    "default_disposition": "stop",
+    "schema_version": "ge.transition-policy.v1"
+  },
+  "observation": {
+    "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+    "expected_generation": 5,
+    "expected_state_digest": "sha256:c8349cc03c33a1380ecfbafc5ff1455b41088193fe3a1d41efe92ab30ab59307",
+    "policy_digest": "sha256:d39cfe013efa5f2470cbe95887fa1b87917c6ad34d8a52e2ac1581fda3ebf1ae",
+    "event": "verification_passed",
+    "evidence": [
+      {
+        "kind": "human_authority_recorded",
+        "locator": "runtime://fae-asic-a3-r4-existing-afi-admission/waterfound-explicit-control-plane-repair-authorization",
+        "digest": "sha256:daaebeaf96ebb088e03480adc4a1811f2aae2e147fdceeb066fedc399aaedcdd",
+        "schema_version": "ge.checkpoint-evidence.v1"
+      }
+    ],
+    "action_ref": "runtime://fae-asic-a3-r4-existing-afi-admission/resume-control-plane-repair",
+    "observed_at": "2026-09-28T23:30:00Z",
+    "summary": "Waterfound explicitly authorizes only the smallest admissible A3-R4 control-plane liveness candidate repair and corresponding static validation. DP6, memory map and existing apertures remain preserved; new AFI creation, new F2 runtime, consensus/economics changes, release and mainnet action remain forbidden.",
+    "canonical_refs": [
+      "github://Waterfound/General-Execution/blob/runtime/durable-asp-control/runtime/diagnostics/fae-asic-a3-r4-control-runtime-di-001.json",
+      "authority://fae-asic/a3/r4/control-plane-repair"
+    ],
+    "uncertainties": [
+      "The DI proved the first observable divergence but did not prove the internal root cause; repair remains a bounded candidate until static validation and later separately-authorized runtime proof."
+    ],
+    "wake_admission": null,
+    "authority_grant": null,
+    "schema_version": "ge.resume-tick-observation.v1"
+  }
+}
