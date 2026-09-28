@@ -1,0 +1,73 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-asic-a3-warning-clean-v2-provider-rework-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-asic-a3-warning-clean-v2-provider-rework",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-warning-clean-v2-provider-fail",
+          "from_state": "running",
+          "event": "verification_failed",
+          "to_state": "rework",
+          "next_action_ref": "github://Waterfound/FAE-testnet/commit/365c46959ba1c09f0a3668fc9f1c5cd306e71694",
+          "effect": "none",
+          "required_evidence": [
+            "a3_warning_clean_v2_provider_fail_closed"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "aws-ec2",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-asic-a3-warning-clean-revalidation-v2",
+      "policy_digest": "sha256:9c9897f4195a795c902d0635c02be0688fba47258b4cf69c0cb700b3453244a1",
+      "transition_event": "verification_failed"
+    },
+    "trigger": {
+      "source": "aws-ec2",
+      "event_id": "fae-asic-a3-warning-clean-v2-provider-rework-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:050da484025922207c01baaab5338a3a64ce7bcae49df9cdb5debdd9f355f11f",
+      "observation_digest": "sha256:fa8da7dfc138416f91dbd26a029400a33e8911ab6b16045f72cb66f074cb5f57",
+      "admission_ref": "aws://us-east-1/i-0a17a99d1bb6b0b1f/a3-warning-clean-v2-revalidate"
+    },
+    "observation": {
+      "portfolio_id": "fae-asic-a3-warning-clean-revalidation-v2",
+      "expected_generation": 6,
+      "expected_state_digest": "sha256:2178a7380b94b20ed794dbaaee450dfa8bdf4aa70a8dcaa487419a2b044df745",
+      "policy_digest": "sha256:9c9897f4195a795c902d0635c02be0688fba47258b4cf69c0cb700b3453244a1",
+      "event": "verification_failed",
+      "evidence": [
+        {
+          "kind": "a3_warning_clean_v2_provider_fail_closed",
+          "locator": "github://Waterfound/FAE-testnet/blob/lab/asic-a3-axilite-warning-cleanup-20260927/labs/asic-f2-pre-go/runtime/F2_ATTACKER_SWEEP_A3_WARNING_CLEAN_V2_RESULT.json",
+          "digest": "sha256:050da484025922207c01baaab5338a3a64ce7bcae49df9cdb5debdd9f355f11f",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "aws://us-east-1/i-0a17a99d1bb6b0b1f/a3-warning-clean-v2-revalidate",
+      "observed_at": "2026-09-28T00:18:19Z",
+      "summary": "A3 warning-clean v2 preserved validate_bd_design PASS but failed closed because Vivado rejected direct control-interface metadata writes as read-only and both BD 41-237 MAX_BURST_LENGTH mismatches persisted; no physical implementation or AFI was launched.",
+      "canonical_refs": [
+        "s3://fae-asic-lab-203842200752-20260922/evidence/i-0a17a99d1bb6b0b1f/a3-warning-clean-revalidate/",
+        "github://Waterfound/FAE-testnet/commit/365c46959ba1c09f0a3668fc9f1c5cd306e71694",
+        "github://Waterfound/FAE-testnet/commit/84b342575097df5b2d5b3625d78c766dc5d57979"
+      ],
+      "uncertainties": [
+        "The next source-level control CDC architecture has not yet been provider-validated."
+      ],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
