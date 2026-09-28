@@ -1,0 +1,199 @@
+name: Durable provider host
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: durable-asp-persistent-runtime
+  cancel-in-progress: false
+
+env:
+  RUNTIME_BRANCH: runtime/durable-asp-control
+  PROVIDER_HOST_REVISION: ff1b4585d27e3c746e7cdbc7c729a721317c8aaa
+  PERSISTENT_RUNTIME_REVISION: a27a558d4ed0e28d96c3fec408212353d0077060
+
+jobs:
+  consume-provider-snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout runtime branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ env.RUNTIME_BRANCH }}
+
+      - name: Select at most one unprocessed snapshot
+        id: snapshot
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, os, pathlib, re
+          inbox=pathlib.Path("provider-inbox")
+          processed=pathlib.Path("runtime/provider-host/processed")
+          candidates=[]
+          if inbox.exists():
+              for path in sorted(inbox.glob("*.json")):
+                  marker=processed / path.name
+                  if not marker.exists():
+                      candidates.append(path)
+          if not candidates:
+              with open(os.environ["GITHUB_OUTPUT"],"a") as out:
+                  out.write("found=false\n")
+              raise SystemExit(0)
+          path=candidates[0]
+          data=json.loads(path.read_text())
+          watch_id=data.get("watch_id")
+          assert isinstance(watch_id,str) and re.fullmatch(r"[A-Za-z0-9._-]+",watch_id)
+          forbidden=("secret","password","token","credential","private_key","private-key","api_key","api-key")
+          def walk(value,p="$"):
+              if isinstance(value,dict):
+                  for k,v in value.items():
+                      low=k.lower()
+                      assert not any(term in low for term in forbidden), f"credential-shaped key forbidden: {p}.{k}"
+                      walk(v,f"{p}.{k}")
+              elif isinstance(value,list):
+                  for i,v in enumerate(value): walk(v,f"{p}[{i}]")
+          walk(data)
+          with open(os.environ["GITHUB_OUTPUT"],"a") as out:
+              out.write("found=true\n")
+              out.write(f"path={path}\n")
+              out.write(f"watch_id={watch_id}\n")
+          PY
+
+      - name: Setup Python
+        if: steps.snapshot.outputs.found == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Prepare pinned host and runtime sources
+        if: steps.snapshot.outputs.found == 'true'
+        run: |
+          git cat-file -e "$PROVIDER_HOST_REVISION^{commit}"
+          git cat-file -e "$PERSISTENT_RUNTIME_REVISION^{commit}"
+          git worktree add --detach /tmp/provider-host-src "$PROVIDER_HOST_REVISION"
+          git worktree add --detach /tmp/runtime-src "$PERSISTENT_RUNTIME_REVISION"
+          python -m pip install -e '/tmp/provider-host-src[dev]' --disable-pip-version-check
+          python -m compileall -q /tmp/provider-host-src/src /tmp/provider-host-src/scripts
+          python -m compileall -q /tmp/runtime-src/src /tmp/runtime-src/scripts
+
+      - name: Restore durable SQLite state
+        if: steps.snapshot.outputs.found == 'true'
+        run: |
+          test -f runtime/state.sqlite.b64
+          base64 --decode runtime/state.sqlite.b64 > /tmp/durable-runtime.db
+
+      - name: Build deterministic provider event
+        if: steps.snapshot.outputs.found == 'true'
+        id: host
+        shell: bash
+        run: |
+          SNAPSHOT="${{ steps.snapshot.outputs.path }}"
+          WATCH="/tmp/provider-host-src/.github/provider-watches/${{ steps.snapshot.outputs.watch_id }}.json"
+          test -f "$WATCH"
+          set +e
+          python /tmp/provider-host-src/scripts/run_provider_host.py \
+            --database /tmp/durable-runtime.db \
+            --watch "$WATCH" \
+            --snapshot "$SNAPSHOT" \
+            --output /tmp/provider-event.json \
+            --report /tmp/provider-host-report.json
+          rc=$?
+          set -e
+          test "$rc" -eq 0
+          if test -f /tmp/provider-event.json; then
+            echo "matched=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "matched=false" >> "$GITHUB_OUTPUT"
+          fi
+          cat /tmp/provider-host-report.json
+
+      - name: Consume matched provider event
+        if: steps.snapshot.outputs.found == 'true' && steps.host.outputs.matched == 'true'
+        id: runtime
+        shell: bash
+        run: |
+          cd /tmp/runtime-src
+          digest="$(python scripts/run_persistent_runtime_event.py --event /tmp/provider-event.json --print-trigger-digest)"
+          test "$digest" != "NONE"
+          python scripts/run_persistent_runtime_event.py \
+            --event /tmp/provider-event.json \
+            --database /tmp/durable-runtime.db \
+            --report /tmp/provider-runtime-report.json \
+            --authenticated-trigger-digest "$digest"
+          echo "trigger_digest=$digest" >> "$GITHUB_OUTPUT"
+          cat /tmp/provider-runtime-report.json
+
+      - name: Persist host evidence and durable state
+        if: steps.snapshot.outputs.found == 'true'
+        shell: bash
+        run: |
+          SNAPSHOT="${{ steps.snapshot.outputs.path }}"
+          NAME="$(basename "$SNAPSHOT")"
+          mkdir -p runtime/provider-host/processed runtime/provider-host/reports runtime/provider-host/events runtime/reports
+          cp /tmp/provider-host-report.json "runtime/provider-host/reports/$NAME"
+          if test -f /tmp/provider-event.json; then
+            EVENT_ID="$(python - <<'PY'
+          import json
+          print(json.load(open("/tmp/provider-event.json"))["event_id"])
+          PY
+          )"
+            cp /tmp/provider-event.json "runtime/provider-host/events/$EVENT_ID.json"
+            cp /tmp/provider-runtime-report.json "runtime/reports/$EVENT_ID.json"
+            base64 -w 0 /tmp/durable-runtime.db > runtime/state.sqlite.b64
+            printf '\n' >> runtime/state.sqlite.b64
+          else
+            EVENT_ID=""
+          fi
+          python - <<'PY'
+          import hashlib,json,os,pathlib
+          snapshot_path=pathlib.Path(os.environ["SNAPSHOT_PATH"])
+          host=json.loads(pathlib.Path("/tmp/provider-host-report.json").read_text())
+          marker={
+              "schema_version":"ge.provider-host-processed.v1",
+              "snapshot_path":str(snapshot_path),
+              "snapshot_sha256":"sha256:"+hashlib.sha256(snapshot_path.read_bytes()).hexdigest(),
+              "provider_host_revision":os.environ["PROVIDER_HOST_REVISION"],
+              "persistent_runtime_revision":os.environ["PERSISTENT_RUNTIME_REVISION"],
+              "matched":host["matched"],
+              "event_id":host.get("event_id"),
+              "event_digest":host.get("event_digest"),
+              "host_result_digest":host["schema_version"] and "sha256:"+hashlib.sha256(
+                  json.dumps(host,sort_keys=True,separators=(",",":")).encode()
+              ).hexdigest(),
+          }
+          out=pathlib.Path("runtime/provider-host/processed")/snapshot_path.name
+          out.write_text(json.dumps(marker,sort_keys=True,indent=2)+"\n")
+          PY
+        env:
+          SNAPSHOT_PATH: ${{ steps.snapshot.outputs.path }}
+
+      - name: Commit provider-host state
+        if: steps.snapshot.outputs.found == 'true'
+        run: |
+          git config user.name "durable-provider-host"
+          git config user.email "durable-provider-host@users.noreply.github.com"
+          git add runtime/
+          git diff --cached --quiet && exit 0
+          git commit -m "runtime: consume provider snapshot ${{ steps.snapshot.outputs.path }} [skip ci]"
+          git fetch origin "$RUNTIME_BRANCH"
+          git rebase "origin/$RUNTIME_BRANCH"
+          git push origin "HEAD:refs/heads/$RUNTIME_BRANCH"
+
+      - name: Upload provider-host evidence
+        if: steps.snapshot.outputs.found == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: durable-provider-host-${{ github.run_id }}
+          path: |
+            /tmp/provider-host-report.json
+            /tmp/provider-event.json
+            /tmp/provider-runtime-report.json
+          if-no-files-found: warn
+          retention-days: 30
