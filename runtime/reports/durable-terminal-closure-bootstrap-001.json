@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:3a312389caf46efc53d21c6cd9144b32d7e78e6a0489470369f95f079f9305b4",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "durable-terminal-closure-bootstrap-001",
+    "human_required": false,
+    "operation": "bootstrap",
+    "portfolio_id": "durable-terminal-closure",
+    "post_generation": 0,
+    "post_state_digest": "sha256:1529a0ce6296d7456d435246a2757de6a51252378ce5739cbfa7f8945c25a68e",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:1529a0ce6296d7456d435246a2757de6a51252378ce5739cbfa7f8945c25a68e",
+    "requested_action_ref": "action://durable/provider-host-activation",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:cb695a62a463cd67de2c001639874e7eb5c8a2b8fd5342134c3ae97929194b9b",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
