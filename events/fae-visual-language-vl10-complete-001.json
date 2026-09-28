@@ -1,0 +1,88 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-visual-language-vl10-complete-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-visual-language-vl10-close-v1",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-vl10-verified-to-vl11",
+          "from_state": "verifying",
+          "event": "verification_passed",
+          "to_state": "verifying",
+          "next_action_ref": "action://fae-visual-language/direction-d/VL-11",
+          "effect": "none",
+          "required_evidence": [
+            "mining_surface_ci",
+            "mining_public_qa",
+            "mining_semantic_contract"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-push",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-visual-language-art-direction",
+      "policy_digest": "sha256:9782164121734e35c5501887c82d360c97264acbbbbfd549d52072b8971ed9a7",
+      "transition_event": "verification_passed"
+    },
+    "trigger": {
+      "source": "github-push",
+      "event_id": "fae-visual-language-vl10-complete-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:674a7a425730960bb91eebaa50732cf01fd8a847c47d3292fd4f8f261e4a177a",
+      "observation_digest": "sha256:43b4484014473101df8f90c31829c445b53cc430aaeb132e7efa591b53878bf3",
+      "admission_ref": "github://Waterfound/General-Execution/events/fae-visual-language-vl10-complete-001"
+    },
+    "observation": {
+      "portfolio_id": "fae-visual-language-art-direction",
+      "expected_generation": 5,
+      "expected_state_digest": "sha256:7d68fb9edd4c4a97461a3da0f8a8248aaa4500a3dcdf53aaae7e549541514348",
+      "policy_digest": "sha256:9782164121734e35c5501887c82d360c97264acbbbbfd549d52072b8971ed9a7",
+      "event": "verification_passed",
+      "evidence": [
+        {
+          "kind": "mining_surface_ci",
+          "locator": "github://Waterfound/FAE-testnet/actions/runs/36481663906",
+          "digest": "sha256:8f00799bc73c9f081ef5dd45eb169599ae69e192a26d7106eadf2501a615e9cc",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "mining_public_qa",
+          "locator": "https://agent.tinyfish.ai/runs/7597149b-f672-4099-b7f8-50a0e200dd5f",
+          "digest": "sha256:40b26982c11b7bd3fb3b064006f0d24fbba79ee99d50a56bce407a57fd2b4f3e",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "mining_semantic_contract",
+          "locator": "github://Waterfound/FAE-testnet/commit/f328959c7b6ca00e0feea18428cb3a36d3ecdc2d",
+          "digest": "sha256:090a6c5a65d2d1a4a439b650ffe180d62532cd19214787f91ffa63078b082036",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "github://Waterfound/FAE-testnet/commit/f328959c7b6ca00e0feea18428cb3a36d3ecdc2d",
+      "observed_at": "2026-09-28T20:49:00Z",
+      "summary": "VL-10 closed: Direction D Mining specialization passed CI and public read-only QA. Blue circulation represents active device work, the UI explicitly states block discovery is probabilistic and not guaranteed reward progress, and no casino-like progress language was observed.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/f328959c7b6ca00e0feea18428cb3a36d3ecdc2d",
+        "github://Waterfound/FAE-testnet/actions/runs/36481663906",
+        "https://fae-direction-d-vl08-qa-ii0d80.v2.appdeploy.ai/",
+        "https://agent.tinyfish.ai/runs/7597149b-f672-4099-b7f8-50a0e200dd5f"
+      ],
+      "uncertainties": [
+        "Browser QA did not surface all mining controls in its current page view, while source-bound DOM evidence confirms reward address, Start mining, Stop, Copy address, Open Wallet, and external-address controls remain present. No control was removed by VL-10."
+      ],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
