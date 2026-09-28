@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:0667483ff5d652a973ad19ec0366c3c1a808cf3f285235cd3b4fcba005748868",
+  "event_id": "fae-mainnet-readiness-dependent-chain-di-001",
+  "event_report_digest": "sha256:9d2337463ff24d0de3a4e20ef73c077322362fec97e362d25af081867ac51f89",
+  "operation": "transition",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "92a9fd79bbb0e7683c8bf28fe3f9f70684f51781"
+}
