@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:75ebd3469b9ae17733d09e0348d8c42f3dbbd4f0c01f866fe8cbe93ec01105a1",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "fae-mainnet-readiness-mr09-bootstrap-001",
+    "human_required": false,
+    "operation": "bootstrap",
+    "portfolio_id": "fae-mainnet-readiness-mr09",
+    "post_generation": 0,
+    "post_state_digest": "sha256:30d425adc92b3e2f9871422928b81f1c882ca3bfb2f53c943d8b48aa3b0d7543",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:30d425adc92b3e2f9871422928b81f1c882ca3bfb2f53c943d8b48aa3b0d7543",
+    "requested_action_ref": "action://fae-mainnet-readiness/MR-09",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:5dd266754d7ce0e1e34af908f84d47b6f68df1e091dabc780f481229b1a4b113",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
