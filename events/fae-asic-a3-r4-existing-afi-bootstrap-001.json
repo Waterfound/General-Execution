@@ -1,0 +1,59 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-asic-a3-r4-existing-afi-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+      "generation": 0,
+      "active": {
+        "work_id": "FAE-ASIC-A3-R4-EXISTING-AFI-ADMISSION",
+        "role": "active",
+        "state": "ready",
+        "objective": "Admit the already-existing A3 R4 AFI as the candidate only if it remains bound to the verified commit and Developer_CL; do not launch or benchmark it.",
+        "active_gate": "A3-R4-EXISTING-AFI-ADMISSION",
+        "next_action_ref": "action://fae-asic/a3/r4/request-existing-afi-admission-authority",
+        "source_revision": "787d76a374d48a4e5088f384519db174321a98c1",
+        "evidence_required": [
+          "a3_r4_existing_afi_identity_match"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "fae://asic/f2/a3-r4-existing-afi-admission",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "FAE-ASIC-A3-R4-RUNTIME-F2",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Remain blocked until the admitted AFI is available and a separate explicit authority is granted for F2 runtime execution.",
+        "active_gate": "A3-R4-RUNTIME-F2",
+        "next_action_ref": "authority://fae-asic/a3/r4/runtime-f2",
+        "source_revision": "787d76a374d48a4e5088f384519db174321a98c1",
+        "evidence_required": [
+          "a3_r4_afi_available"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [
+          {
+            "kind": "authority",
+            "detail": "Runtime F2, benchmark, attacker sweep, release, and mainnet remain outside this admission authority.",
+            "evidence_refs": [
+              "github://Waterfound/FAE-testnet/commit/d1d98251dc2c58d53a843d5f04c2fc8ff3af0d4d"
+            ],
+            "schema_version": "ge.portfolio-blocker.v1"
+          }
+        ],
+        "wake_condition": null,
+        "checkpoint_ref": "fae://asic/f2/a3-r4-runtime-f2",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
