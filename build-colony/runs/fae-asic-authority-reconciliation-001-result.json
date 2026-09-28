@@ -1,0 +1,68 @@
+{
+  "schema_version": "build-colony.run-result.v1",
+  "run_id": "fae-asic-authority-reconciliation-001",
+  "completed_at": "2026-09-28T22:40:40Z",
+  "target_system": "Waterfound/General-Execution",
+  "target_runtime_branch": "runtime/durable-asp-control",
+  "build_colony_plan_commit": "6d2cc8962ea43f7d07e61cf13e99819c08e4b501",
+  "authority_reconciliation": {
+    "pending_gate_materialized_by_existing_provider_host": true,
+    "pending_gate_generation": 3,
+    "pending_gate_state_digest": "sha256:6833c4b952da110def07a8de630042e8fdc522cb7cf6ae9a39eaf5a62bdf6298",
+    "pending_action_ref": "authority://fae-asic/a3/r4/runtime-f2",
+    "authority_receipt_commit": "950d586911b821df6f3e0721cc688eb9f9cd7f92",
+    "authority_receipt_digest": "sha256:cfb4fbb6c4455ac6c3fd1180c6c42cf566b8433a6afecefae4b25cd1de9dc66e",
+    "authority_grant_digest": "sha256:540703498133c40ff8c44f6100db50eb36ffe948bdf093e4c3e14efd3925e8b0",
+    "post_authority_generation": 4,
+    "post_authority_state_digest": "sha256:3fc63e70334235346444310c26527abb70cd31ad212c956d4761adc93946d3e1",
+    "scope_preserved": true,
+    "scope_note": "The receipt consumed only the exact pending one-run F2 parity boundary. It did not create authority for another AFI, release, consensus, economics, activation height or mainnet."
+  },
+  "runtime_evidence": {
+    "provider_snapshot_commit": "a74a0f1ae1e6ac041cf71cb2ee03b7ef58f30df5",
+    "evidence_digest": "sha256:49d0b4d52d002921972816eb9d633f32e3fd1199a63293603bb73e9c17ba248f",
+    "instance_id": "i-0b622272546426171",
+    "instance_active": false,
+    "afi": "afi-0bd37117433ff02d7",
+    "agfi": "agfi-01ca0856fe3a85305",
+    "stage": "A3_R4_DUALLANE_RUNTIME_FAIL_CLOSED",
+    "calibration": "PASS",
+    "lane0_first_nonce": 1200,
+    "lane0_prestart_ctrl": "0x00000000",
+    "runner_rc": -801,
+    "process_exit_code": 223,
+    "ocl_slave_timeout": 1,
+    "dma_pcis_timeout": 0,
+    "pcim_axi_protocol_error": 0
+  },
+  "durable_disposition": {
+    "event_commit": "55cacd633d6f97a9a7cd658b152579fa4d56c8cf",
+    "event_id": "fae-asic-a3-r4-f2-runtime-fail-di-001",
+    "transition": "verifying -> di_required",
+    "post_generation": 5,
+    "post_state_digest": "sha256:c8349cc03c33a1380ecfbafc5ff1455b41088193fe3a1d41efe92ab30ab59307",
+    "checkpoint_digest": "sha256:94919efa7289dfd6c2c12646972c651a9cd43b1a033b76f557439bc74bc98106",
+    "event_report_digest": "sha256:bd647b7ca870d864ea5aeba5b641438681c2dee2bcc1f340bfee75149bda5224",
+    "next_action_ref": "action://fae-asic/a3/r4/diagnose-control-plane-runtime-failure",
+    "stop_reason": "real failure requiring Diagnostic Intelligence",
+    "human_required": false
+  },
+  "downstream_frontiers": {
+    "parity_correctness": "FAIL_CLOSED before first completed DP6 parity vector",
+    "benchmark": "NOT_ADMISSIBLE",
+    "attacker_sweep": "NOT_ADMISSIBLE",
+    "sustained_hfb": "NOT_ADMISSIBLE",
+    "reason": "All downstream performance/economic frontiers require parity/correctness as a predecessor gate."
+  },
+  "prohibited_actions_verified": {
+    "another_afi_created": false,
+    "consensus_changed": false,
+    "economics_changed": false,
+    "release_performed": false,
+    "activation_height_changed": false,
+    "mainnet_authority_changed": false,
+    "duplicate_f2_runtime_launched": false
+  },
+  "concurrency_rule": "Parallelize independence. Serialize shared state.",
+  "final_verdict": "STOP_DI_REQUIRED"
+}
