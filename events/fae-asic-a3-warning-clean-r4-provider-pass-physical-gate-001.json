@@ -1,0 +1,74 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-asic-a3-warning-clean-r4-provider-pass-physical-gate-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-asic-a3-r4-physical-build-gate",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-r4-provider-pass-stop-before-physical-build",
+          "from_state": "running",
+          "event": "authority_required",
+          "to_state": "human_gate",
+          "next_action_ref": "authority://fae-asic/a3/r4-physical-build",
+          "effect": "stop_human_gate",
+          "required_evidence": [
+            "a3_warning_clean_r4_provider_validation"
+          ],
+          "authority_mode": "human_required",
+          "authority_boundary": "Authorize one A3 R4 physical implementation build only after accepting the provider static PASS_TARGET_WARNINGS_CLEAN; preserve frozen DP6 semantics, fail closed on implementation/timing, remain within the existing ASIC Lab USD 20 out-of-pocket cap, and do not create an AFI, release, activate consensus, or take mainnet action unless separately authorized.",
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "durable-execution",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-asic-a3-warning-clean-revalidation-v2",
+      "policy_digest": "sha256:9627c05968e61ffb8c7194c8d2e49b433cd1ce1b9967e2c51c2af449db09df90",
+      "transition_event": "authority_required"
+    },
+    "trigger": {
+      "source": "durable-execution",
+      "event_id": "fae-asic-a3-warning-clean-r4-provider-pass-physical-gate-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:38a9d22ab6fee04008bf503105dd69bc63a7e6142e8a91b2f3aa0c8f9063ff3d",
+      "observation_digest": "sha256:ceb5c5e25a28b91a094fac7cfc2f9f3a27d87aa6658dfcb860057c710b7bf14d",
+      "admission_ref": "aws://us-east-1/i-0a78942ea16f63636/a3-warning-clean-r4-revalidate"
+    },
+    "observation": {
+      "portfolio_id": "fae-asic-a3-warning-clean-revalidation-v2",
+      "expected_generation": 10,
+      "expected_state_digest": "sha256:58d6bf6dbe160f7dfb6da70f1fbe0bbbf10323eec1552b5232c694147217a6b0",
+      "policy_digest": "sha256:9627c05968e61ffb8c7194c8d2e49b433cd1ce1b9967e2c51c2af449db09df90",
+      "event": "authority_required",
+      "evidence": [
+        {
+          "kind": "a3_warning_clean_r4_provider_validation",
+          "locator": "github://Waterfound/FAE-testnet/blob/lab/asic-a3-axilite-warning-cleanup-20260927/labs/asic-f2-pre-go/runtime/F2_ATTACKER_SWEEP_A3_WARNING_CLEAN_R4_PROVIDER_RESULT.json",
+          "digest": "sha256:38a9d22ab6fee04008bf503105dd69bc63a7e6142e8a91b2f3aa0c8f9063ff3d",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "aws://us-east-1/i-0a78942ea16f63636/a3-warning-clean-r4-revalidate",
+      "observed_at": "2026-09-28T01:10:31Z",
+      "summary": "A3 R4 passed AWS/Vivado provider static revalidation with validate_bd_design rc=0, topology marker PASS, zero BD 41-237 and zero BD 41-737 occurrences, and the validation instance terminated; no physical implementation or AFI was launched.",
+      "canonical_refs": [
+        "s3://fae-asic-lab-203842200752-20260922/evidence/i-0a78942ea16f63636/a3-warning-clean-r4-revalidate/",
+        "github://Waterfound/FAE-testnet/commit/97e61a5c14b4adff06c17673730caa323aeefdeb",
+        "github://Waterfound/FAE-testnet/commit/4fefe41c3119228e97d3822d502d6828b4381b1d"
+      ],
+      "uncertainties": [
+        "Provider static validation does not prove physical routability or timing closure.",
+        "No AFI eligibility, runtime parity, sustained performance, or attacker-sweep claim is made from this gate."
+      ],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
