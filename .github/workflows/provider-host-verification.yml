@@ -11,6 +11,7 @@ on:
       - tests/test_provider_host.py
       - .github/workflows/provider-host-verification.yml
       - .github/workflows/durable-provider-host.yml
+      - .github/workflows/generalized-github-provider-pilot.yml
   pull_request:
     paths:
       - src/general_execution/provider_host.py
@@ -19,6 +20,7 @@ on:
       - tests/test_provider_host.py
       - .github/workflows/provider-host-verification.yml
       - .github/workflows/durable-provider-host.yml
+      - .github/workflows/generalized-github-provider-pilot.yml
 
 permissions:
   contents: read
