@@ -1,0 +1,55 @@
+{
+  "schema_version": "ge.human-authority-event.v1",
+  "event_id": "fae-asic-a3-warning-clean-r4-authority-resume-001",
+  "approved_action_ref": "authority://fae-asic/a3/r4-provider-revalidation",
+  "approved_at": "2026-09-28T01:01:00Z",
+  "policy": {
+    "policy_id": "fae-asic-a3-warning-clean-r4-authority-resume",
+    "revision": "1",
+    "rules": [
+      {
+        "rule_id": "01-authorized-r4-provider-revalidation",
+        "from_state": "human_gate",
+        "event": "verification_passed",
+        "to_state": "running",
+        "next_action_ref": "action://fae-asic/a3/r4-provider-revalidation",
+        "effect": "none",
+        "required_evidence": [
+          "human_authority_recorded"
+        ],
+        "authority_mode": "preauthorized_required",
+        "authority_boundary": "Authorize one bounded AWS/Vivado static provider revalidation of A3 warning-clean R4 (explicit AXI4-to-AXI4-Lite protocol converters after control CDC) within the existing ASIC Lab spend envelope; no physical implementation, AFI creation, release, consensus activation, or mainnet action.",
+        "schema_version": "ge.transition-rule.v1"
+      }
+    ],
+    "default_disposition": "stop",
+    "schema_version": "ge.transition-policy.v1"
+  },
+  "observation": {
+    "portfolio_id": "fae-asic-a3-warning-clean-revalidation-v2",
+    "expected_generation": 9,
+    "expected_state_digest": "sha256:620bfa9ee3ca14c59fcf13752b974eadeb0d65b25295714175387858676fa961",
+    "policy_digest": "sha256:0e011407863d068a4182a4d83515ca6247d8eba215987cd3d9d6f9e2e14ef131",
+    "event": "verification_passed",
+    "evidence": [
+      {
+        "kind": "human_authority_recorded",
+        "locator": "runtime://fae-asic-a3-warning-clean-revalidation-v2/explicit-user-authorization-r4",
+        "digest": "sha256:ba29dbe2d444699009403970f3b6ec3e333970934ff252c0fdb58e17b53ad7bf",
+        "schema_version": "ge.checkpoint-evidence.v1"
+      }
+    ],
+    "action_ref": "runtime://fae-asic-a3-warning-clean-revalidation-v2/resume-r4-provider-revalidation",
+    "observed_at": "2026-09-28T01:01:00Z",
+    "summary": "Explicit human authorization admits one bounded AWS/Vivado static provider revalidation of A3 warning-clean R4 within the existing ASIC Lab spend envelope; physical implementation, AFI creation, release, consensus activation, and mainnet action remain forbidden.",
+    "canonical_refs": [
+      "runtime://fae-asic-a3-warning-clean-r4-provider-authority-stop-001",
+      "github-actions://Waterfound/FAE-testnet/runs/36362191867",
+      "github://Waterfound/FAE-testnet/commit/4fefe41c3119228e97d3822d502d6828b4381b1d"
+    ],
+    "uncertainties": [],
+    "wake_admission": null,
+    "authority_grant": null,
+    "schema_version": "ge.resume-tick-observation.v1"
+  }
+}
