@@ -1,0 +1,21 @@
+{
+  "authority_created": false,
+  "contract_path": "provider-contracts/fae-a3-r4-afi-available.json",
+  "event_path": "/tmp/provider-event.json",
+  "portfolio_checkpoint_digest": "sha256:936fa6d3bb2fb03b0cd3d655fdc2d3a00b137f365d08b092a28b5bd46a2244a6",
+  "provider_command_executed": false,
+  "provider_input_path": "/tmp/provider-input.json",
+  "recovery_report_digest": "sha256:02ab5142131e45495a65df4cc046a6724045bfba16c75d8cc916add9aa2caf6d",
+  "result": {
+    "contract_digest": "sha256:e69befac8b16fc1793eba00acd546158dfe435b82ab742f262056f140a748172",
+    "event_digest": "sha256:70b5a0e1c01e767b5759ba015baf2f73f05f917e9513c6d8c1d9057d4a622839",
+    "event_id": "geph-1cbb1a3f6b9604ab05982bd0",
+    "portfolio_generation": 2,
+    "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+    "portfolio_state_digest": "sha256:d98704b8dca2026e1cbd1ca5c3b32ba95ef366a978e334514fe195df8211039a",
+    "provider_input_digest": "sha256:7a2b3e5bddb2f8af9aa7e02913ab9d1fc67b14aaf0af74fc3a52224e31b516be",
+    "schema_version": "ge.provider-host-result.v1",
+    "status": "event_ready"
+  },
+  "schema_version": "ge.provider-host-execution.v1"
+}

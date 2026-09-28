@@ -1,0 +1,73 @@
+{
+  "body": {
+    "contract": {
+      "event_kind": "fae-a3-r4-afi-available:available",
+      "policy_digest": "sha256:6c542270a60b374bd3a4fee8faceab887478478564feb64919b8d13154de4203",
+      "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+      "source": "provider-host:aws-ec2-fpga-image",
+      "transition_event": "authority_required"
+    },
+    "observation": {
+      "action_ref": "aws://us-east-1/afi-0bd37117433ff02d7",
+      "authority_grant": null,
+      "canonical_refs": [
+        "aws://us-east-1/afi-0bd37117433ff02d7",
+        "github://Waterfound/FAE-testnet/commit/787d76a374d48a4e5088f384519db174321a98c1",
+        "github://Waterfound/FAE-testnet/commit/d1d98251dc2c58d53a843d5f04c2fc8ff3af0d4d",
+        "github://Waterfound/General-Execution/commit/9751c2a616207a9a809d2e9168fad6cc4dae4e61",
+        "github://Waterfound/General-Execution/provider-contracts/fae-a3-r4-afi-available.json"
+      ],
+      "event": "authority_required",
+      "evidence": [
+        {
+          "digest": "sha256:c035f9ea61d7b15b8acba4ff1621820a14c17b992342760ce443f2aca184dcb1",
+          "kind": "a3_r4_afi_available",
+          "locator": "aws://us-east-1/afi-0bd37117433ff02d7",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "expected_generation": 2,
+      "expected_state_digest": "sha256:d98704b8dca2026e1cbd1ca5c3b32ba95ef366a978e334514fe195df8211039a",
+      "observed_at": "2026-09-28T14:09:35+00:00",
+      "policy_digest": "sha256:6c542270a60b374bd3a4fee8faceab887478478564feb64919b8d13154de4203",
+      "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+      "schema_version": "ge.resume-tick-observation.v1",
+      "summary": "Provider watch fae-a3-r4-afi-available observed aws://us-east-1/afi-0bd37117433ff02d7 state=available.",
+      "uncertainties": [],
+      "wake_admission": null
+    },
+    "policy": {
+      "default_disposition": "stop",
+      "policy_id": "fae-asic-a3-r4-afi-available-runtime-gate",
+      "revision": "1",
+      "rules": [
+        {
+          "authority_boundary": "Authorize one bounded F2 runtime parity execution using admitted AFI afi-0bd37117433ff02d7 only; do not benchmark, run attacker sweep, release, activate consensus, or take mainnet action unless separately authorized.",
+          "authority_mode": "human_required",
+          "effect": "stop_human_gate",
+          "event": "authority_required",
+          "from_state": "verifying",
+          "next_action_ref": "authority://fae-asic/a3/r4/runtime-f2",
+          "required_evidence": [
+            "a3_r4_afi_available"
+          ],
+          "rule_id": "01-afi-available-stop-before-f2",
+          "schema_version": "ge.transition-rule.v1",
+          "to_state": "human_gate"
+        }
+      ],
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "trigger": {
+      "admission_ref": "aws://us-east-1/afi-0bd37117433ff02d7",
+      "event_id": "geph-1cbb1a3f6b9604ab05982bd0",
+      "event_kind": "fae-a3-r4-afi-available:available",
+      "observation_digest": "sha256:1e4daa4f0261ba6ca35ea1231f3d24b298413d492944e9440f0b85eaccc11469",
+      "payload_digest": "sha256:7a2b3e5bddb2f8af9aa7e02913ab9d1fc67b14aaf0af74fc3a52224e31b516be",
+      "source": "provider-host:aws-ec2-fpga-image"
+    }
+  },
+  "event_id": "geph-1cbb1a3f6b9604ab05982bd0",
+  "operation": "transition",
+  "schema_version": "ge.persistent-runtime-event.v1"
+}

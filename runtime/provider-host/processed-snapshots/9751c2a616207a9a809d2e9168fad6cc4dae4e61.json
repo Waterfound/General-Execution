@@ -1,0 +1,9 @@
+{
+  "authority_created": false,
+  "provider_host_revision": "d3be76a6f44b531c92834c9ccad28133ed418b60",
+  "runtime_f2_executed": false,
+  "schema_version": "ge.provider-snapshot-consumption.v1",
+  "snapshot_path": "provider-inbox/fae-a3-r4-afi-available-001.json",
+  "snapshot_source_commit": "9751c2a616207a9a809d2e9168fad6cc4dae4e61",
+  "status": "PASS_MISSED_EVENT_RECOVERED_TO_HUMAN_GATE"
+}

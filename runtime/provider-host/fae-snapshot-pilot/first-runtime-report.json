@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:6a24e6a4ad8b9112bb4759e29e71d2a955a0631e55a36b85655eaa3415abe4fa",
+  "event_report": {
+    "checkpoint_digest": "sha256:63291a39f95f7692b7e2a159ebe139c6996bb6ffc105a6e6d835d01fbecefa4b",
+    "event_id": "geph-1cbb1a3f6b9604ab05982bd0",
+    "human_required": true,
+    "operation": "transition",
+    "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+    "post_generation": 3,
+    "post_state_digest": "sha256:6833c4b952da110def07a8de630042e8fdc522cb7cf6ae9a39eaf5a62bdf6298",
+    "pre_generation": 2,
+    "pre_state_digest": "sha256:d98704b8dca2026e1cbd1ca5c3b32ba95ef366a978e334514fe195df8211039a",
+    "requested_action_ref": "authority://fae-asic/a3/r4/runtime-f2",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "committed"
+  },
+  "event_report_digest": "sha256:7497098a5ce550f4f72ea3d82fdd7b40a7d4b5e4fe41d5b4509dd1bb32272fb7",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}

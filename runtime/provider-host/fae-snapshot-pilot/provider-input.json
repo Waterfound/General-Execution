@@ -1,0 +1,23 @@
+{
+  "bindings": {
+    "candidate": "C6-2LANE-LOCAL200-DIRECTSPLIT-CTRL-PC-R4",
+    "developer_cl_sha256": "cb369bca24dbe0c17e015adf5668d2d4117c77d31896c3a3b1faedab09e2f7a5",
+    "fpga_image_global_id": "agfi-01ca0856fe3a85305",
+    "git_commit": "a208b245da98052b60b9d47cd676f7c0a23e74a3"
+  },
+  "canonical_refs": [
+    "aws://us-east-1/afi-0bd37117433ff02d7",
+    "github://Waterfound/FAE-testnet/commit/787d76a374d48a4e5088f384519db174321a98c1",
+    "github://Waterfound/FAE-testnet/commit/d1d98251dc2c58d53a843d5f04c2fc8ff3af0d4d",
+    "github://Waterfound/General-Execution/commit/9751c2a616207a9a809d2e9168fad6cc4dae4e61"
+  ],
+  "evidence_digest": "sha256:c035f9ea61d7b15b8acba4ff1621820a14c17b992342760ce443f2aca184dcb1",
+  "evidence_locator": "aws://us-east-1/afi-0bd37117433ff02d7",
+  "observed_at": "2026-09-28T14:09:35+00:00",
+  "observed_state": "available",
+  "provider": "aws-ec2-fpga-image",
+  "provider_event_id": "afi-0bd37117433ff02d7:available:2026-09-28T14:09:35+00:00",
+  "schema_version": "ge.provider-input.v1",
+  "subject_ref": "aws://us-east-1/afi-0bd37117433ff02d7",
+  "watch_id": "fae-a3-r4-afi-available"
+}
