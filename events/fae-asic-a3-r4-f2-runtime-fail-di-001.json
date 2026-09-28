@@ -1,0 +1,73 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-asic-a3-r4-f2-runtime-fail-di-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-asic-a3-r4-runtime-f2-failure-di",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-runtime-parity-fail-requires-di",
+          "from_state": "verifying",
+          "event": "diagnosis_required",
+          "to_state": "di_required",
+          "next_action_ref": "action://fae-asic/a3/r4/diagnose-control-plane-runtime-failure",
+          "effect": "request_di",
+          "required_evidence": [
+            "a3_r4_f2_runtime_fail_closed"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "aws-ec2+s3",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+      "policy_digest": "sha256:ef8979a3c6cdf18dbe6c770dc019b00d1de3f9d65321921ddc716b548d02f17a",
+      "transition_event": "diagnosis_required"
+    },
+    "trigger": {
+      "source": "aws-ec2+s3",
+      "event_id": "fae-asic-a3-r4-f2-runtime-fail-di-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:49d0b4d52d002921972816eb9d633f32e3fd1199a63293603bb73e9c17ba248f",
+      "observation_digest": "sha256:bc43aa5245537f7ba74e58e238b5eecb068601b251a7a7e36ccc2c0be307f1ac",
+      "admission_ref": "github://Waterfound/General-Execution/commit/a74a0f1ae1e6ac041cf71cb2ee03b7ef58f30df5/provider-inbox/fae-a3-r4-f2-runtime-fail-001.json"
+    },
+    "observation": {
+      "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+      "expected_generation": 4,
+      "expected_state_digest": "sha256:3fc63e70334235346444310c26527abb70cd31ad212c956d4761adc93946d3e1",
+      "policy_digest": "sha256:ef8979a3c6cdf18dbe6c770dc019b00d1de3f9d65321921ddc716b548d02f17a",
+      "event": "diagnosis_required",
+      "evidence": [
+        {
+          "kind": "a3_r4_f2_runtime_fail_closed",
+          "locator": "s3://fae-asic-lab-203842200752-20260922/runtime/i-0b622272546426171/f2-a3-r4-duallane/",
+          "digest": "sha256:49d0b4d52d002921972816eb9d633f32e3fd1199a63293603bb73e9c17ba248f",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "action://fae-asic/a3/r4/admit-observed-f2-runtime-failure",
+      "observed_at": "2026-09-28T14:59:28Z",
+      "summary": "The already-authorized A3-R4 F2 runtime executed once and failed closed before the first DP6 parity completion. The AFI loaded and DDR/HBM calibration passed, but lane0 control did not become idle and the shell recorded one OCL slave timeout; downstream benchmark, attacker sweep, sustained validation and HFB are not admissible until diagnosis and repair.",
+      "canonical_refs": [
+        "github://Waterfound/General-Execution/blob/runtime/durable-asp-control/provider-inbox/fae-a3-r4-f2-runtime-fail-001.json",
+        "github://Waterfound/General-Execution/commit/950d586911b821df6f3e0721cc688eb9f9cd7f92/authority/fae-asic-a3-r4-runtime-f2-authority-reconcile-001.json",
+        "s3://fae-asic-lab-203842200752-20260922/runtime/i-0b622272546426171/f2-a3-r4-duallane/"
+      ],
+      "uncertainties": [
+        "The failure is localized to the control/runtime boundary; the exact root cause requires Diagnostic Intelligence or equivalent bounded diagnosis."
+      ],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
