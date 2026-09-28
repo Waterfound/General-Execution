@@ -1,0 +1,55 @@
+{
+  "schema_version": "ge.human-authority-event.v1",
+  "event_id": "fae-asic-a3-r4-physical-build-authority-resume-001",
+  "approved_action_ref": "authority://fae-asic/a3/r4-physical-build",
+  "approved_at": "2026-09-28T01:26:00Z",
+  "policy": {
+    "policy_id": "fae-asic-a3-r4-physical-build-authority-resume",
+    "revision": "1",
+    "rules": [
+      {
+        "rule_id": "01-authorized-r4-physical-build",
+        "from_state": "human_gate",
+        "event": "verification_passed",
+        "to_state": "running",
+        "next_action_ref": "action://fae-asic/a3/r4-physical-build",
+        "effect": "none",
+        "required_evidence": [
+          "human_authority_recorded"
+        ],
+        "authority_mode": "preauthorized_required",
+        "authority_boundary": "Authorize one A3 R4 physical implementation build only after accepting the provider static PASS_TARGET_WARNINGS_CLEAN; preserve frozen DP6 semantics, fail closed on implementation/timing, remain within the existing ASIC Lab USD 20 out-of-pocket cap, and do not create an AFI, release, activate consensus, or take mainnet action unless separately authorized.",
+        "schema_version": "ge.transition-rule.v1"
+      }
+    ],
+    "default_disposition": "stop",
+    "schema_version": "ge.transition-policy.v1"
+  },
+  "observation": {
+    "portfolio_id": "fae-asic-a3-warning-clean-revalidation-v2",
+    "expected_generation": 11,
+    "expected_state_digest": "sha256:8be7b051d0c5e80f7bd82f83471fc71d7ec63bea8dde000768ac5ff37da76af5",
+    "policy_digest": "sha256:a907730ca91a72acaab0a173cc7a9bd332a6400912299d5b30143e49c75ccc57",
+    "event": "verification_passed",
+    "evidence": [
+      {
+        "kind": "human_authority_recorded",
+        "locator": "runtime://fae-asic-a3-warning-clean-revalidation-v2/explicit-user-authorization-r4-physical-build",
+        "digest": "sha256:6024909bbd6b75c543321840865dc4fef5bb8fb289498b9818f10c7907f3eb03",
+        "schema_version": "ge.checkpoint-evidence.v1"
+      }
+    ],
+    "action_ref": "runtime://fae-asic-a3-warning-clean-revalidation-v2/resume-r4-physical-build",
+    "observed_at": "2026-09-28T01:26:00Z",
+    "summary": "Explicit human authorization admits one bounded A3 R4 physical implementation build within the existing ASIC Lab spend envelope, fail-closed on implementation/timing, while AFI creation, release, consensus activation, and mainnet action remain forbidden.",
+    "canonical_refs": [
+      "runtime://fae-asic-a3-warning-clean-r4-provider-pass-physical-gate-001",
+      "github://Waterfound/FAE-testnet/commit/97e61a5c14b4adff06c17673730caa323aeefdeb",
+      "github://Waterfound/FAE-testnet/commit/4fefe41c3119228e97d3822d502d6828b4381b1d"
+    ],
+    "uncertainties": [],
+    "wake_admission": null,
+    "authority_grant": null,
+    "schema_version": "ge.resume-tick-observation.v1"
+  }
+}
