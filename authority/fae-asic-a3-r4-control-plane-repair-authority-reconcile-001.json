@@ -1,0 +1,57 @@
+{
+  "schema_version": "ge.human-authority-event.v1",
+  "event_id": "fae-asic-a3-r4-control-plane-repair-authority-reconcile-001",
+  "approved_action_ref": "authority://fae-asic/a3/r4/control-plane-repair",
+  "approved_at": "2026-09-28T23:42:00Z",
+  "policy": {
+    "policy_id": "fae-asic-a3-r4-control-plane-repair-authority-reconcile",
+    "revision": "1",
+    "rules": [
+      {
+        "rule_id": "01-authorized-control-plane-liveness-repair",
+        "from_state": "human_gate",
+        "event": "verification_passed",
+        "to_state": "rework",
+        "next_action_ref": "action://fae-asic/a3/r4/repair-control-plane-liveness",
+        "effect": "none",
+        "required_evidence": [
+          "human_authority_recorded"
+        ],
+        "authority_mode": "preauthorized_required",
+        "authority_boundary": "Authorize repair of A3-R4 control-plane liveness, limited to the smallest admissible candidate repair and corresponding static validation, preserving DP6, the existing memory map, and apertures; do not create a new AFI, execute a new F2 runtime, change consensus or economics, release, or take mainnet action.",
+        "schema_version": "ge.transition-rule.v1"
+      }
+    ],
+    "default_disposition": "stop",
+    "schema_version": "ge.transition-policy.v1"
+  },
+  "observation": {
+    "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+    "expected_generation": 6,
+    "expected_state_digest": "sha256:a37c5b293e0a4020522cd6162c143d4a5096cb2458985e66a7caa7455191a11b",
+    "policy_digest": "sha256:0edf8c3f111c58197a4b8f802b5896e00d2ffd2f9b4acc6a94ed57cc8dd88c72",
+    "event": "verification_passed",
+    "evidence": [
+      {
+        "kind": "human_authority_recorded",
+        "locator": "github://Waterfound/General-Execution/commit/0a4aa5c62dc30f516881936b9a6d075d1d51adba/authority/fae-asic-a3-r4-control-plane-repair-authority-resume-001.json",
+        "digest": "sha256:2e6f6e38c26f72cdc5861e10ca91edb8d4fb0eaed15cf4ef64e7576a5cabcf4e",
+        "schema_version": "ge.checkpoint-evidence.v1"
+      }
+    ],
+    "action_ref": "runtime://fae-asic-a3-r4-existing-afi-admission/reconcile-control-plane-repair-authority",
+    "observed_at": "2026-09-28T23:42:00Z",
+    "summary": "Reconcile Waterfound's already-recorded bounded A3-R4 control-plane repair authority against the correctly materialized generation-6 human gate; authority scope is unchanged.",
+    "canonical_refs": [
+      "github://Waterfound/General-Execution/commit/0a4aa5c62dc30f516881936b9a6d075d1d51adba/authority/fae-asic-a3-r4-control-plane-repair-authority-resume-001.json",
+      "github://Waterfound/General-Execution/blob/runtime/durable-asp-control/runtime/diagnostics/fae-asic-a3-r4-control-runtime-di-001.json",
+      "github://Waterfound/General-Execution/blob/runtime/durable-asp-control/events/fae-asic-a3-r4-control-plane-repair-authority-gate-001.json"
+    ],
+    "uncertainties": [
+      "The repair is a candidate only; root cause remains unproven and runtime proof remains outside this authority."
+    ],
+    "wake_admission": null,
+    "authority_grant": null,
+    "schema_version": "ge.resume-tick-observation.v1"
+  }
+}
