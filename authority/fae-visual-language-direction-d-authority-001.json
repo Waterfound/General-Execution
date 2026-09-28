@@ -1,0 +1,53 @@
+{
+  "schema_version": "ge.human-authority-event.v1",
+  "event_id": "fae-visual-language-direction-d-authority-001",
+  "approved_action_ref": "authority://fae-visual-language/select-art-direction",
+  "approved_at": "2026-09-28T18:11:21Z",
+  "policy": {
+    "policy_id": "fae-visual-language-direction-d-admission",
+    "revision": "1",
+    "rules": [
+      {
+        "rule_id": "01-admit-waterfound-direction-d",
+        "from_state": "human_gate",
+        "event": "verification_passed",
+        "to_state": "verifying",
+        "next_action_ref": "action://fae-visual-language/direction-d/VL-07",
+        "effect": "none",
+        "required_evidence": [
+          "human_authority_recorded"
+        ],
+        "authority_mode": "preauthorized_required",
+        "authority_boundary": "Waterfound must select one art-direction world, explicitly request a deliberate hybrid, or reject all three; machine autonomy may not make the final FAE identity choice.",
+        "schema_version": "ge.transition-rule.v1"
+      }
+    ],
+    "default_disposition": "stop",
+    "schema_version": "ge.transition-policy.v1"
+  },
+  "observation": {
+    "portfolio_id": "fae-visual-language-art-direction",
+    "expected_generation": 1,
+    "expected_state_digest": "sha256:a3717ab32a95539064f41e7f85233fcb2e5c384941295806b2f125b36c0750ee",
+    "policy_digest": "sha256:9d8d261f8cfc753d0b94624dc3f9e9fef320d90a2705450e0093265d22d5c5f9",
+    "event": "verification_passed",
+    "evidence": [
+      {
+        "kind": "human_authority_recorded",
+        "locator": "runtime://fae-visual-language/explicit-user-direction-d-20260928",
+        "digest": "sha256:e5a04c7b36ea4a6c0ec20ad1eb0a453afeed2d588ae89c4be9dfcf5e60b8bb82",
+        "schema_version": "ge.checkpoint-evidence.v1"
+      }
+    ],
+    "action_ref": "runtime://fae-visual-language/direction-d/resume",
+    "observed_at": "2026-09-28T18:11:21Z",
+    "summary": "Waterfound rejects A/B/C as final and explicitly selects Direction D: Orange Top / White Field / Blue Circulation. Continue authorized non-consensus frontiers; final logo and public rebrand remain reserved.",
+    "canonical_refs": [
+      "github://Waterfound/FAE-testnet/design/direction-d-authority.json"
+    ],
+    "uncertainties": [],
+    "wake_admission": null,
+    "authority_grant": null,
+    "schema_version": "ge.resume-tick-observation.v1"
+  }
+}
