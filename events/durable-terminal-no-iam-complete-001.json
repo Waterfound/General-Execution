@@ -1,0 +1,104 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "durable-terminal-no-iam-complete-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "durable-terminal-no-iam-completion",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-close-terminal-portfolio",
+          "from_state": "rework",
+          "event": "verification_passed",
+          "to_state": "complete",
+          "next_action_ref": "action://none",
+          "effect": "none",
+          "required_evidence": [
+            "fae_provider_wake_verified",
+            "generalized_provider_pilot_verified",
+            "terminal_verification_pass",
+            "main_integration_gate_pass",
+            "human_notification_verified"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "build-colony-terminal-closure",
+      "event_kind": "terminal-closure-evidence-complete",
+      "portfolio_id": "durable-terminal-closure",
+      "policy_digest": "sha256:3f656b832168aa8111f176e59ce2df426e65966c4b1ed5736ebffb0cba6f98b3",
+      "transition_event": "verification_passed"
+    },
+    "trigger": {
+      "source": "build-colony-terminal-closure",
+      "event_id": "durable-terminal-no-iam-complete-001",
+      "event_kind": "terminal-closure-evidence-complete",
+      "payload_digest": "sha256:cbbe2235947c695665852d5df18f0f191d569f00bba1b7b6c17f21df8363d028",
+      "observation_digest": "sha256:0a9cbbc6eb86a66e6b6cf18a35ac80331c4c2a384e364427ad53c6b53a82d523",
+      "admission_ref": "build-colony://bc2-1aff60eac9c1ce94/terminal-verification-integration"
+    },
+    "observation": {
+      "portfolio_id": "durable-terminal-closure",
+      "expected_generation": 3,
+      "expected_state_digest": "sha256:338b90f7ddb22b59e89b51da60fe26583fb30bc3d6fb4c27c3f5e87a105b18ac",
+      "policy_digest": "sha256:3f656b832168aa8111f176e59ce2df426e65966c4b1ed5736ebffb0cba6f98b3",
+      "event": "verification_passed",
+      "evidence": [
+        {
+          "kind": "fae_provider_wake_verified",
+          "locator": "github-actions://Waterfound/General-Execution/runs/36445713247",
+          "digest": "sha256:7497098a5ce550f4f72ea3d82fdd7b40a7d4b5e4fe41d5b4509dd1bb32272fb7",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "generalized_provider_pilot_verified",
+          "locator": "github-actions://Waterfound/General-Execution/runs/36442435398",
+          "digest": "sha256:ec64a4839330e7e1bc34021888582e56ef6609535da8a0d9e7a8353e19f96c09",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "terminal_verification_pass",
+          "locator": "github-actions://Waterfound/General-Execution/artifacts/10982385990",
+          "digest": "sha256:829ec4a2af96d5df1e779ef06beb3cda1a7b0b013a92ff222aab6fbe20dc347c",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "main_integration_gate_pass",
+          "locator": "github-actions://Waterfound/General-Execution/runs/36448979252",
+          "digest": "sha256:832f661a740d97f84ca561e8eaf00d35831d1987dc160deb092069b712df17e8",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "human_notification_verified",
+          "locator": "github://Waterfound/General-Execution/commit/88555ca47653dff2b6ee61e75479917c02085975/human-decisions/durable-terminal-no-iam-supersede-002.json",
+          "digest": "sha256:eed75813219faaa3b8ab81cd40f2f8fd417e8ac34998f65affafde547ae50088",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "action://durable/terminal-closure/no-iam-evidence-admission",
+      "observed_at": "2026-09-28T16:12:00Z",
+      "summary": "Terminal closure evidence is complete on the narrower no-IAM path: FAE missed-event wake reached its bounded human gate without F2 execution, the generalized provider pilot passed with cold replay idempotency, terminal verification and the PR main-integration gate are GREEN, and Waterfound received and explicitly superseded the obsolete IAM gate.",
+      "canonical_refs": [
+        "build-colony://bc2-1aff60eac9c1ce94/fae-unattended-provider-pilot",
+        "build-colony://bc2-1aff60eac9c1ce94/generalized-provider-pilot",
+        "github-actions://Waterfound/General-Execution/runs/36445713247",
+        "github-actions://Waterfound/General-Execution/runs/36442435398",
+        "github-actions://Waterfound/General-Execution/runs/36448979122",
+        "github-actions://Waterfound/General-Execution/runs/36448979252",
+        "github://Waterfound/General-Execution/commit/780943f53ca167834fadc975cfb3e6905c933e73",
+        "github://Waterfound/General-Execution/commit/88555ca47653dff2b6ee61e75479917c02085975/human-decisions/durable-terminal-no-iam-supersede-002.json"
+      ],
+      "uncertainties": [],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
