@@ -1,0 +1,86 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-visual-language-vl13-complete-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-visual-language-vl13-close-v1",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-vl13-verified-to-vl14",
+          "from_state": "verifying",
+          "event": "verification_passed",
+          "to_state": "verifying",
+          "next_action_ref": "action://fae-visual-language/direction-d/VL-14",
+          "effect": "none",
+          "required_evidence": [
+            "reference_gallery_ci",
+            "proven_primitives_frozen",
+            "no_premature_extraction"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-push",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-visual-language-art-direction",
+      "policy_digest": "sha256:b768b15b5647b74957fe364bf410d641479017e67058ece5b8c5c27dbeaa92af",
+      "transition_event": "verification_passed"
+    },
+    "trigger": {
+      "source": "github-push",
+      "event_id": "fae-visual-language-vl13-complete-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:8e2c5b2e7335b859f3cd2d0675d27e177c12b12e329095132465797ca78a90c0",
+      "observation_digest": "sha256:257327131980871e10c4bcfa1bd4611ba292cfd6760d0110314606c63641b370",
+      "admission_ref": "github://Waterfound/General-Execution/events/fae-visual-language-vl13-complete-001"
+    },
+    "observation": {
+      "portfolio_id": "fae-visual-language-art-direction",
+      "expected_generation": 8,
+      "expected_state_digest": "sha256:44a9e52bc14c6bda501fde9f499b42b674ba3fa15487abc7b6109f17c3f18e5c",
+      "policy_digest": "sha256:b768b15b5647b74957fe364bf410d641479017e67058ece5b8c5c27dbeaa92af",
+      "event": "verification_passed",
+      "evidence": [
+        {
+          "kind": "reference_gallery_ci",
+          "locator": "github://Waterfound/FAE-testnet/actions/runs/36483120330",
+          "digest": "sha256:57ce81548173331ef90a3b1a6c81ed2ce21b94078471a3e67b66db43068ab7b0",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "proven_primitives_frozen",
+          "locator": "github://Waterfound/FAE-testnet/commit/f2257b13d7f7b3860896d4c72c2a36d63339c3fc/design/proven-primitives.json",
+          "digest": "sha256:e20683f5b9813be705c58562065f9f6efbd1a4ea98e99069816221430973cd4f",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "no_premature_extraction",
+          "locator": "github://Waterfound/FAE-testnet/commit/f2257b13d7f7b3860896d4c72c2a36d63339c3fc/design/reference-gallery.md",
+          "digest": "sha256:ec6b524cc9175a1035eb6bc5911aa9fad1572fd17e550960e97396edc23c80f5",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "github://Waterfound/FAE-testnet/commit/f2257b13d7f7b3860896d4c72c2a36d63339c3fc",
+      "observed_at": "2026-09-28T21:02:00Z",
+      "summary": "VL-13 closed: source-bound reference gallery and proven cross-product primitives are frozen after Homepage, Wallet, Mining and Explorer QA. Reusable candidates remain inside FAE; FAE-specific orange-top/blue-circulation identity is explicitly not extracted into a generic system.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/f2257b13d7f7b3860896d4c72c2a36d63339c3fc",
+        "github://Waterfound/FAE-testnet/actions/runs/36483120330",
+        "github://Waterfound/FAE-testnet/design/proven-primitives.json",
+        "github://Waterfound/FAE-testnet/design/reference-gallery.md"
+      ],
+      "uncertainties": [],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
