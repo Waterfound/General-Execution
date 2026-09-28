@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Waterfound/General-Execution/schemas/continuity-check-v1.schema.json",
+  "title": "Continuity Check V1 Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema","workstream","workstream_id","checked_at","conversation_assessment",
+    "development_verdict","repository","main_revision","branch","branch_head",
+    "pull_request","durable_state","latest_execution_evidence","blocking_gate",
+    "infrastructure_status","evidence_warnings","recommended_action",
+    "canonical_state_reconciliation_recommended","authority_created","execution_triggered"
+  ],
+  "properties": {
+    "schema": {"const": "CONTINUITY_CHECK_V1"},
+    "workstream": {"type": "string", "minLength": 1},
+    "workstream_id": {"type": ["string","null"]},
+    "checked_at": {"type": "string", "minLength": 1},
+    "conversation_assessment": {"enum": [
+      "CONVERSATION_ACTIVE_OBSERVED",
+      "CONVERSATION_INTERRUPTION_SUSPECTED",
+      "CONVERSATION_STATE_UNKNOWN"
+    ]},
+    "development_verdict": {"enum": [
+      "DEVELOPMENT_PROGRESSING",
+      "CONVERSATION_INTERRUPTED_DEVELOPMENT_CONTINUED",
+      "CHECKPOINTED_RESUMABLE",
+      "CONDITION_WAIT",
+      "SCHEDULED_WAIT",
+      "HUMAN_GATE",
+      "EXTERNAL_EVIDENCE_GATE",
+      "DONE_TECHNICAL",
+      "DONE_CANONICAL",
+      "DEVELOPMENT_STALLED",
+      "FAILED",
+      "INSUFFICIENT_EVIDENCE"
+    ]},
+    "repository": {"type": ["string","null"]},
+    "main_revision": {"type": ["string","null"]},
+    "branch": {"type": ["string","null"]},
+    "branch_head": {"type": ["string","null"]},
+    "pull_request": {
+      "type": ["object","null"],
+      "additionalProperties": false,
+      "required": ["number","state","mergeable","merged"],
+      "properties": {
+        "number": {"type": "integer", "minimum": 1},
+        "state": {"type": ["string","null"]},
+        "mergeable": {"type": ["boolean","null"]},
+        "merged": {"type": "boolean"}
+      }
+    },
+    "durable_state": {
+      "type": ["object","null"],
+      "additionalProperties": false,
+      "required": ["current_frontier","completed","admissible_next","wake_condition","scheduled_checkpoint","terminal_verdict"],
+      "properties": {
+        "current_frontier": {"type": ["string","null"]},
+        "completed": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "admissible_next": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "wake_condition": {"type": ["string","null"]},
+        "scheduled_checkpoint": {"type": ["string","null"]},
+        "terminal_verdict": {"type": ["string","null"]}
+      }
+    },
+    "latest_execution_evidence": {
+      "type": ["object","null"],
+      "additionalProperties": false,
+      "required": ["observed_at","ref"],
+      "properties": {
+        "observed_at": {"type": "string"},
+        "ref": {"type": "string"}
+      }
+    },
+    "blocking_gate": {
+      "type": ["object","null"],
+      "required": ["kind","ref","reason","frontier"],
+      "properties": {
+        "kind": {"type": "string"},
+        "ref": {"type": ["string","null"]},
+        "reason": {"type": ["string","null"]},
+        "frontier": {"type": ["string","null"]}
+      }
+    },
+    "infrastructure_status": {"enum": [
+      "HEALTHY","PROVIDER_RUNNER_UNAVAILABLE","PROVIDER_FAILURE",
+      "NO_PROVIDER_EVIDENCE","MISMATCHED_EVIDENCE","UNKNOWN"
+    ]},
+    "evidence_warnings": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "recommended_action": {"enum": [
+      "NO_ACTION_DONE","NO_ACTION_ACTIVE_EXECUTION","RESUME_DURABLE_EXECUTION",
+      "WAIT_FOR_CONDITION","WAIT_UNTIL_SCHEDULED_CHECKPOINT","REQUEST_HUMAN_ACTION",
+      "REQUEST_EXTERNAL_EVIDENCE","INVESTIGATE_FAILURE","RECONCILE_CANONICAL_STATE",
+      "INSUFFICIENT_EVIDENCE"
+    ]},
+    "canonical_state_reconciliation_recommended": {"type": "boolean"},
+    "authority_created": {"const": false},
+    "execution_triggered": {"const": false}
+  }
+}

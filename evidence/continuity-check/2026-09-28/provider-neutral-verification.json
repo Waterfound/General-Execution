@@ -1,0 +1,55 @@
+{
+  "schema": "CONTINUITY_CHECK_PROVIDER_NEUTRAL_VERIFICATION_V1",
+  "verified_at": "2026-09-28",
+  "branch": "colony/continuity-check-v1-001",
+  "branch_head_before_docs": "c1827a4533d8bfae8372a5d08c1eed6d679dbf8d",
+  "source_main_revision": "f247bac35b3174e4826491609129f9a008942019",
+  "checks": {
+    "focused_pytest": {
+      "status": "PASS",
+      "passed": 31,
+      "failed": 0
+    },
+    "compileall": {
+      "status": "PASS"
+    },
+    "historical_real_replays": {
+      "status": "PASS",
+      "count": 3
+    },
+    "ambiguous_identity_fail_closed": {
+      "status": "PASS"
+    },
+    "unrelated_or_mismatched_revision_evidence_fail_closed": {
+      "status": "PASS"
+    },
+    "stale_durable_state_binding_fail_closed": {
+      "status": "PASS"
+    },
+    "open_pr_alone_not_progress": {
+      "status": "PASS"
+    },
+    "old_green_ci_alone_not_progress": {
+      "status": "PASS"
+    },
+    "provider_failure_isolated_from_workload_not_development_failure": {
+      "status": "PASS"
+    },
+    "stalled_requires_bounded_recovery_exhaustion_not_elapsed_time": {
+      "status": "PASS"
+    },
+    "authority_created_false": {
+      "status": "PASS"
+    },
+    "execution_triggered_false": {
+      "status": "PASS"
+    }
+  },
+  "github_actions": {
+    "runs_observed_for_candidate": false,
+    "required_for_verdict": false,
+    "interpretation": "Absence of a GitHub Actions run is infrastructure evidence only and is not treated as development failure."
+  },
+  "verification_mode": "PROVIDER_NEUTRAL_FOCUSED_LOCAL_REGRESSION_PLUS_CANONICAL_GITHUB_EVIDENCE",
+  "verdict": "PASS"
+}

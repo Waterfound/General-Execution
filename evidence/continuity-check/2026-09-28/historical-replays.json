@@ -1,0 +1,53 @@
+{
+  "schema": "CONTINUITY_CHECK_V1_HISTORICAL_REPLAYS",
+  "captured_at": "2026-09-28T21:50:00Z",
+  "policy": "Repository/provider facts are replay evidence only; missing historical conversation/runtime facts are not fabricated.",
+  "cases": [
+    {
+      "id": "FAE-RDE-PR263-CANONICAL",
+      "source": "Waterfound/FAE-testnet PR #263 and main",
+      "facts": {
+        "pr": 263,
+        "title": "FAE: Representative Device Evidence Readiness",
+        "head": "colony/fae-representative-device-evidence-readiness-001",
+        "head_sha": "53bb05f95fe1a31d6414a15303bed6d08cccfb91",
+        "merged_at": "2026-09-28T20:34:36Z",
+        "merge_commit_sha": "a52fa9eb7747d227245e4e38b522c0b56888b503",
+        "observed_main_sha": "a52fa9eb7747d227245e4e38b522c0b56888b503"
+      },
+      "expected": "DONE_CANONICAL"
+    },
+    {
+      "id": "FAE-BE06-ORACLE-CAPACITY",
+      "source": "Waterfound/FAE-testnet PR #257",
+      "facts": {
+        "pr": 257,
+        "title": "BE-06: record Oracle A1 capacity block",
+        "state": "open",
+        "head": "lab/block-explorer-be06-a1-capacity-block-20260923",
+        "head_sha": "d4fc49bd1f3d436b4a16615d40792377e0fa0de7",
+        "provider_observation": "OUT_OF_HOST_CAPACITY",
+        "resource_created": false,
+        "spend_occurred": false,
+        "retry_semantics": "zero-cost retry later remains allowed; paid fallback forbidden"
+      },
+      "expected": "CONDITION_WAIT"
+    },
+    {
+      "id": "SYSTEMS-DOCS-PROVIDER-NEUTRAL-CLOSURE",
+      "source": "Waterfound/Systems meta/BUILD_COLONY_RUN.json, PR #1 and main",
+      "facts": {
+        "pr": 1,
+        "head": "colony/systems-documentation-foundation-001",
+        "head_sha": "1ee8efd2e806919ff04535bdc12717e932c73ee1",
+        "merged_at": "2026-09-28T21:15:47Z",
+        "observed_main_sha": "21cfbd04728e64dcd9373a074667bfcf89b8c771",
+        "github_actions_jobs": "failed before any step started",
+        "provider_neutral_verification": "PASS",
+        "terminal_verdict": "SYSTEMS_DOCUMENTATION_FOUNDATION_READY"
+      },
+      "expected": "DONE_CANONICAL",
+      "invariant": "provider failure isolated != development failure"
+    }
+  ]
+}

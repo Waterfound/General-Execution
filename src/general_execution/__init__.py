@@ -521,3 +521,58 @@ __all__ = [
 ]
 
 __version__ = "0.0.13"
+
+
+# Thin read-only Continuity Check protocol/tool. It observes execution state and
+# emits recommendations; it never grants authority or triggers execution.
+from .continuity_check import (
+    BuildColonyEvidence,
+    ConversationAssessment,
+    ConversationEvidence,
+    ContinuityReport,
+    ContinuitySnapshot,
+    DevelopmentVerdict,
+    DurableStateEvidence,
+    EVIDENCE_PRECEDENCE,
+    FRESHNESS_RULES,
+    FailureScope,
+    GateEvidence,
+    GateKind,
+    InfrastructureStatus,
+    ProviderEvidence,
+    ProviderState,
+    RecommendedAction,
+    RepositoryEvidence,
+    SCHEMA_VERSION as CONTINUITY_CHECK_SCHEMA_VERSION,
+    WorkstreamCandidate,
+    WorkstreamResolution,
+    inspect_continuity,
+    render_report,
+    resolve_workstream,
+)
+
+__all__.extend([
+    "BuildColonyEvidence",
+    "ConversationAssessment",
+    "ConversationEvidence",
+    "ContinuityReport",
+    "ContinuitySnapshot",
+    "DevelopmentVerdict",
+    "DurableStateEvidence",
+    "EVIDENCE_PRECEDENCE",
+    "FRESHNESS_RULES",
+    "FailureScope",
+    "GateEvidence",
+    "GateKind",
+    "InfrastructureStatus",
+    "ProviderEvidence",
+    "ProviderState",
+    "RecommendedAction",
+    "RepositoryEvidence",
+    "CONTINUITY_CHECK_SCHEMA_VERSION",
+    "WorkstreamCandidate",
+    "WorkstreamResolution",
+    "inspect_continuity",
+    "render_report",
+    "resolve_workstream",
+])
