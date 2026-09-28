@@ -1,0 +1,72 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-asic-a3-warning-clean-r4-provider-authority-stop-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-asic-a3-warning-clean-r4-provider-authority",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-r4-provider-authority",
+          "from_state": "verifying",
+          "event": "authority_required",
+          "to_state": "human_gate",
+          "next_action_ref": "authority://fae-asic/a3/r4-provider-revalidation",
+          "effect": "stop_human_gate",
+          "required_evidence": [
+            "a3_warning_clean_r4_source_validation"
+          ],
+          "authority_mode": "human_required",
+          "authority_boundary": "Authorize one bounded AWS/Vivado static provider revalidation of A3 warning-clean R4 (explicit AXI4-to-AXI4-Lite protocol converters after control CDC) within the existing ASIC Lab spend envelope; no physical implementation, AFI creation, release, consensus activation, or mainnet action.",
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "durable-execution",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-asic-a3-warning-clean-revalidation-v2",
+      "policy_digest": "sha256:483555f0033cc2d60fb065d002c1e3754f105e8e74262fb6458d660585bf5242",
+      "transition_event": "authority_required"
+    },
+    "trigger": {
+      "source": "durable-execution",
+      "event_id": "fae-asic-a3-warning-clean-r4-provider-authority-stop-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:713caa713d2a8a93b35fd6a9a5b6069bb9f778d3c9e9b948501b278c899653dc",
+      "observation_digest": "sha256:403f947a95365760cc7af9170e06a210836d61d47887d4c26d0f0fbb44da6173",
+      "admission_ref": "durable://fae-asic/a3/r4-provider-authority-boundary"
+    },
+    "observation": {
+      "portfolio_id": "fae-asic-a3-warning-clean-revalidation-v2",
+      "expected_generation": 8,
+      "expected_state_digest": "sha256:eb813f40cf3980870896f2d520793d885ccc21bff616171d5a1072442f6b58c0",
+      "policy_digest": "sha256:483555f0033cc2d60fb065d002c1e3754f105e8e74262fb6458d660585bf5242",
+      "event": "authority_required",
+      "evidence": [
+        {
+          "kind": "a3_warning_clean_r4_source_validation",
+          "locator": "github-actions://Waterfound/FAE-testnet/runs/36362191867",
+          "digest": "sha256:713caa713d2a8a93b35fd6a9a5b6069bb9f778d3c9e9b948501b278c899653dc",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "action://fae-asic/a3/stop-before-r4-provider-revalidation",
+      "observed_at": "2026-09-28T00:28:00Z",
+      "summary": "A3 warning-clean R4 source verification passed; stop before AWS/Vivado provider revalidation because prior provider authority was consumed by v2.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/91828a3f3aed4c6d1643225ec9665238258c5e77",
+        "github-actions://Waterfound/FAE-testnet/runs/36362191867"
+      ],
+      "uncertainties": [
+        "Provider behavior of the R4 protocol-converter control path has not yet been validated."
+      ],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
