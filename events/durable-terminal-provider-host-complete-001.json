@@ -1,0 +1,122 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "durable-terminal-provider-host-complete-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "durable-terminal-provider-host-complete",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-promote-fae",
+          "from_state": "ready",
+          "event": "verification_passed",
+          "to_state": "complete",
+          "next_action_ref": "action://durable/promote-fae-pilot",
+          "effect": "promote_secondary",
+          "required_evidence": [
+            "provider_host_live_trigger_verified",
+            "provider_host_verified",
+            "verifier_pass"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        },
+        {
+          "rule_id": "02-wake-generalized",
+          "from_state": "passive",
+          "event": "wake_satisfied",
+          "to_state": "ready",
+          "next_action_ref": "action://durable/generalized-provider-pilot",
+          "effect": "wake_passive",
+          "required_evidence": [
+            "wake_condition_satisfied"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "build-colony-terminal-closure",
+      "event_kind": "provider-host-verification",
+      "portfolio_id": "durable-terminal-closure",
+      "policy_digest": "sha256:6d4b2ab2732975ff31c04a52f29d18a8622b2d3078ad006f6193a1af73943844",
+      "transition_event": "verification_passed"
+    },
+    "trigger": {
+      "source": "build-colony-terminal-closure",
+      "event_id": "durable-terminal-provider-host-complete-001",
+      "event_kind": "provider-host-verification",
+      "payload_digest": "sha256:874e77836c05884829c726db2f2338cb63fb920adca61eeb86382c3302307a1f",
+      "observation_digest": "sha256:9928681629bc7de0788df031feab6cedf525a2c15b8b4ffe041355c8b20dd624",
+      "admission_ref": "build-colony://bc2-1aff60eac9c1ce94/provider-host-activation"
+    },
+    "observation": {
+      "portfolio_id": "durable-terminal-closure",
+      "expected_generation": 0,
+      "expected_state_digest": "sha256:1529a0ce6296d7456d435246a2757de6a51252378ce5739cbfa7f8945c25a68e",
+      "policy_digest": "sha256:6d4b2ab2732975ff31c04a52f29d18a8622b2d3078ad006f6193a1af73943844",
+      "event": "verification_passed",
+      "evidence": [
+        {
+          "kind": "provider_host_live_trigger_verified",
+          "locator": "github-actions://Waterfound/General-Execution/runs/36442435398",
+          "digest": "sha256:36e68cb2b7650fac1a904c2d0ed0c8e19b0b8e01321a70d26f6fec95db71ec02",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "provider_host_verified",
+          "locator": "github-actions://Waterfound/General-Execution/runs/36441416753",
+          "digest": "sha256:78dbc925bf3f4d9b9671b893df0ee9a6702898d22e2d96466cee3521a6e6ddc7",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "verifier_pass",
+          "locator": "github-actions://Waterfound/General-Execution/runs/36441517401",
+          "digest": "sha256:eef6484fef53b7e41b2db40134b0b3eb3007c8cf478476c63e39ebf47f0cf39e",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "build-colony://bc2-1aff60eac9c1ce94/provider-host-activation",
+      "observed_at": "2026-09-28T15:17:30Z",
+      "summary": "Provider Host passed focused and full regression, independent capability verification, and one live native GitHub provider event with cold replay idempotency; promote the FAE pilot and wake the generalized provider work as Secondary.",
+      "canonical_refs": [
+        "github-actions://Waterfound/General-Execution/runs/36441416753",
+        "github-actions://Waterfound/General-Execution/runs/36441517401",
+        "github-actions://Waterfound/General-Execution/runs/36442435398",
+        "github://Waterfound/General-Execution/commit/6a5ec35782923b2d4dd04879323361793c7305c9",
+        "build-colony://bc2-1aff60eac9c1ce94/provider-host-activation"
+      ],
+      "uncertainties": [
+        "AWS/FAE unattended provider wake still requires a read-only AWS authentication path."
+      ],
+      "wake_admission": {
+        "portfolio_id": "durable-terminal-closure",
+        "portfolio_generation": 0,
+        "portfolio_state_digest": "sha256:1529a0ce6296d7456d435246a2757de6a51252378ce5739cbfa7f8945c25a68e",
+        "work_id": "DURABLE-GENERALIZED-PROVIDER-PILOT",
+        "wake_condition_digest": "sha256:0691b1026cce48482f19b951c2102c26ac1544916b0625cbd44668f589688464",
+        "policy_digest": "sha256:6d4b2ab2732975ff31c04a52f29d18a8622b2d3078ad006f6193a1af73943844",
+        "rule_digest": "sha256:1d5eecfbfc04300b62ac2a8ac0588d80169c6bca038df7b067e13f378d28aefe",
+        "evidence": [
+          {
+            "kind": "wake_condition_satisfied",
+            "locator": "github-actions://Waterfound/General-Execution/runs/36442435398",
+            "digest": "sha256:1ca175d8e5e4d815ae6a667af77977f1ef097e37b910c7bf6c8903e5119e566a",
+            "schema_version": "ge.checkpoint-evidence.v1"
+          }
+        ],
+        "next_action_ref": "action://durable/generalized-provider-pilot",
+        "authority_grant": null,
+        "schema_version": "ge.passive-wake-admission.v1"
+      },
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
