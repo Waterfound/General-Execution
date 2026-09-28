@@ -1,0 +1,72 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-asic-a3-warning-clean-r4-source-pass-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-asic-a3-warning-clean-r4-source-pass",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-r4-source-pass",
+          "from_state": "rework",
+          "event": "verification_passed",
+          "to_state": "verifying",
+          "next_action_ref": "action://fae-asic/a3/r4-provider-revalidation",
+          "effect": "none",
+          "required_evidence": [
+            "a3_warning_clean_r4_source_validation"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-actions",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-asic-a3-warning-clean-revalidation-v2",
+      "policy_digest": "sha256:8c1e49c9eaf2465e21983ff22fb051de5677abee4cd9fa5ce4706e27d1e06dcf",
+      "transition_event": "verification_passed"
+    },
+    "trigger": {
+      "source": "github-actions",
+      "event_id": "fae-asic-a3-warning-clean-r4-source-pass-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:713caa713d2a8a93b35fd6a9a5b6069bb9f778d3c9e9b948501b278c899653dc",
+      "observation_digest": "sha256:b6934658ad5c35ae92cb04ce64d275ac80e10b8d543eaf6ee0f4589fbc104eab",
+      "admission_ref": "github-actions://Waterfound/FAE-testnet/runs/36362191867"
+    },
+    "observation": {
+      "portfolio_id": "fae-asic-a3-warning-clean-revalidation-v2",
+      "expected_generation": 7,
+      "expected_state_digest": "sha256:c6b3d71249295ab36032bc977a36dd0416c3608b292b957db03e342a3eda64b1",
+      "policy_digest": "sha256:8c1e49c9eaf2465e21983ff22fb051de5677abee4cd9fa5ce4706e27d1e06dcf",
+      "event": "verification_passed",
+      "evidence": [
+        {
+          "kind": "a3_warning_clean_r4_source_validation",
+          "locator": "github-actions://Waterfound/FAE-testnet/runs/36362191867",
+          "digest": "sha256:713caa713d2a8a93b35fd6a9a5b6069bb9f778d3c9e9b948501b278c899653dc",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "github-actions://Waterfound/FAE-testnet/runs/36362191867",
+      "observed_at": "2026-09-28T00:25:00Z",
+      "summary": "A3 warning-clean R4 source verifier passed with explicit AXI Protocol Converters after control CDC; read-only metadata writes are removed and no provider infrastructure was used.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/91828a3f3aed4c6d1643225ec9665238258c5e77",
+        "github://Waterfound/FAE-testnet/commit/4fefe41c3119228e97d3822d502d6828b4381b1d"
+      ],
+      "uncertainties": [
+        "R4 has not yet been validated in AWS/Vivado provider execution."
+      ],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
