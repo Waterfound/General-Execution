@@ -14,6 +14,7 @@ from general_execution.human_gate_decision import (
     consume_human_gate_decision,
 )
 from general_execution.portfolio_persistence import SqlitePortfolioHeadStore
+from run_persistent_runtime_event import load_gate
 
 EVENT_SCHEMA = "ge.human-gate-decision-event.v1"
 EXECUTION_SCHEMA = "ge.human-gate-decision-execution.v1"
@@ -93,6 +94,10 @@ def main(argv=None) -> int:
         evidence=tuple(CheckpointEvidence(**item) for item in evidence),
         canonical_refs=tuple(refs),
     )
+
+    _, _, core_report = load_gate()
+    if not core_report.all_passed:
+        raise ValueError("CORE-1 gate is not PASS")
 
     store = SqlitePortfolioHeadStore(args.database)
     result = consume_human_gate_decision(
