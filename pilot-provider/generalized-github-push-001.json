@@ -1,0 +1,14 @@
+{
+  "schema_version": "ge.generalized-provider-pilot-marker.v1",
+  "marker": "durable-generalization-v1",
+  "purpose": "Trigger one native GitHub push event for the Durable Execution generalized provider pilot.",
+  "authority_created": false,
+  "repository_write_scope": "pilot-provider/generalized-github-push-001.json only",
+  "forbidden": [
+    "merge",
+    "deploy",
+    "release",
+    "spend",
+    "production authority"
+  ]
+}
