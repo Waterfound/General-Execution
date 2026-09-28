@@ -1,0 +1,73 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-asic-a3-r4-runtime-f2-authority-gate-reconcile-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-asic-a3-r4-runtime-f2-authority-gate",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-afi-available-stop-before-f2-runtime",
+          "from_state": "verifying",
+          "event": "authority_required",
+          "to_state": "human_gate",
+          "next_action_ref": "authority://fae-asic/a3/r4/runtime-f2",
+          "effect": "stop_human_gate",
+          "required_evidence": [
+            "a3_r4_afi_available"
+          ],
+          "authority_mode": "human_required",
+          "authority_boundary": "Authorize F2 runtime execution for the already-existing A3 R4 AFI afi-0bd37117433ff02d7 within the already-approved USD20 out-of-pocket ASIC Lab spend cap, credits first, including parity/correctness, benchmark, attacker sweep, sustained validation and HFB evidence only when predecessor gates pass; do not create another AFI and do not change consensus, economics, release, activation height, or mainnet authority.",
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "aws-ec2",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+      "policy_digest": "sha256:6a1300574543fdc304a661e80e8b5bb99666a28f33b0439228d6d94d3320f292",
+      "transition_event": "authority_required"
+    },
+    "trigger": {
+      "source": "aws-ec2",
+      "event_id": "fae-asic-a3-r4-runtime-f2-authority-gate-reconcile-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:c035f9ea61d7b15b8acba4ff1621820a14c17b992342760ce443f2aca184dcb1",
+      "observation_digest": "sha256:db474f123e8d8365710cca2fa72f15a55db161a1b8dd7f9271e8e16a8b072ddd",
+      "admission_ref": "github://Waterfound/General-Execution/blob/runtime/durable-asp-control/provider-inbox/fae-a3-r4-afi-available-001.json"
+    },
+    "observation": {
+      "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+      "expected_generation": 2,
+      "expected_state_digest": "sha256:d98704b8dca2026e1cbd1ca5c3b32ba95ef366a978e334514fe195df8211039a",
+      "policy_digest": "sha256:6a1300574543fdc304a661e80e8b5bb99666a28f33b0439228d6d94d3320f292",
+      "event": "authority_required",
+      "evidence": [
+        {
+          "kind": "a3_r4_afi_available",
+          "locator": "aws://us-east-1/afi-0bd37117433ff02d7",
+          "digest": "sha256:c035f9ea61d7b15b8acba4ff1621820a14c17b992342760ce443f2aca184dcb1",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "action://fae-asic/a3/r4/materialize-runtime-f2-authority-gate",
+      "observed_at": "2026-09-28T22:31:30Z",
+      "summary": "The existing A3 R4 AFI is provider-confirmed AVAILABLE and exactly the previously admitted candidate; materialize the separate F2 runtime authority boundary without creating another AFI.",
+      "canonical_refs": [
+        "aws://us-east-1/afi-0bd37117433ff02d7",
+        "github://Waterfound/General-Execution/blob/runtime/durable-asp-control/provider-inbox/fae-a3-r4-afi-available-001.json",
+        "github://Waterfound/General-Execution/blob/colony/fae-asic-authority-reconciliation-001/build-colony/runs/fae-asic-authority-reconciliation-001.json"
+      ],
+      "uncertainties": [
+        "F2 runtime was later executed outside this persisted portfolio and must be reconciled only after the authority receipt is consumed."
+      ],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
