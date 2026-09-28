@@ -1,0 +1,39 @@
+{
+  "schema_version": "ge.provider-snapshot.v1",
+  "watch_id": "fae-a3-r4-f2-runtime-fail",
+  "provider": "aws-ec2+s3",
+  "resource_id": "i-0b622272546426171",
+  "provider_event_id": "i-0b622272546426171:A3_R4_DUALLANE_RUNTIME_FAIL_CLOSED:2026-09-28T14:59:28Z",
+  "observed_state": "fail_closed",
+  "observed_at": "2026-09-28T14:59:28Z",
+  "evidence_locator": "s3://fae-asic-lab-203842200752-20260922/runtime/i-0b622272546426171/f2-a3-r4-duallane/",
+  "metadata_digest": "sha256:49d0b4d52d002921972816eb9d633f32e3fd1199a63293603bb73e9c17ba248f",
+  "canonical_refs": [
+    "aws://us-east-1/afi-0bd37117433ff02d7",
+    "aws://us-east-1/ec2/i-0b622272546426171",
+    "s3://fae-asic-lab-203842200752-20260922/runtime/i-0b622272546426171/f2-a3-r4-duallane/",
+    "github://Waterfound/FAE-testnet/commit/fc5f476196a8b31e45c7f216b55401761525f932"
+  ],
+  "observation": {
+    "candidate": "C6-2LANE-LOCAL200-DIRECTSPLIT-CTRL-PC-R4",
+    "afi": "afi-0bd37117433ff02d7",
+    "agfi": "agfi-01ca0856fe3a85305",
+    "instance_state": "terminated_or_absent_from_active_inventory",
+    "stage": "A3_R4_DUALLANE_RUNTIME_FAIL_CLOSED",
+    "calibration": "PASS:0x00000003",
+    "shell_version": "0x10212415",
+    "pci_vendor_device": "0x1d0f:0xf010",
+    "lane0_prestart_ctrl": "0x00000000",
+    "lane0_first_nonce": 1200,
+    "runner_rc": -801,
+    "process_exit_code": 223,
+    "ocl_slave_timeout": 1,
+    "ocl_slave_timeout_addr": "0x12",
+    "dma_pcis_timeout": 0,
+    "pcim_axi_protocol_error": 0,
+    "parity_completed": false,
+    "benchmark_admissible": false,
+    "attacker_sweep_admissible": false,
+    "sustained_hfb_admissible": false
+  }
+}
