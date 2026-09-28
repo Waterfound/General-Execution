@@ -1,0 +1,74 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-asic-a3-r4-physical-started-v3-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-asic-a3-r4-physical-started-v2",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-r4-physical-started-v2",
+          "from_state": "running",
+          "event": "execution_started",
+          "to_state": "running",
+          "next_action_ref": "aws://us-east-1/i-0f5e077d00bdaee79/f2-a3-r4-physical",
+          "effect": "none",
+          "required_evidence": [
+            "a3_r4_physical_started"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "aws-ec2",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-asic-a3-warning-clean-revalidation-v2",
+      "policy_digest": "sha256:bcfedcd1f9cdad7ccdcc6e93cf7ecf06be8198638d273157f9e9c08689b2bb5a",
+      "transition_event": "execution_started"
+    },
+    "trigger": {
+      "source": "aws-ec2",
+      "event_id": "fae-asic-a3-r4-physical-started-v3-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:e7d3245790ff89b2a4d5f59760f326b2e07c2a1e6d9833e200d7ba6103210f0d",
+      "observation_digest": "sha256:700914670f224595e175eb667c17a2dcc17eac1e0854829823ef90b376ec5bf7",
+      "admission_ref": "aws://us-east-1/i-0f5e077d00bdaee79/f2-a3-r4-physical"
+    },
+    "observation": {
+      "portfolio_id": "fae-asic-a3-warning-clean-revalidation-v2",
+      "expected_generation": 12,
+      "expected_state_digest": "sha256:f77f64c1b1c4ca25a9365a420aa17ee07283843358b9a6c830e226f9d96d14aa",
+      "policy_digest": "sha256:bcfedcd1f9cdad7ccdcc6e93cf7ecf06be8198638d273157f9e9c08689b2bb5a",
+      "event": "execution_started",
+      "evidence": [
+        {
+          "kind": "a3_r4_physical_started",
+          "locator": "s3://fae-asic-lab-203842200752-20260922/evidence/i-0f5e077d00bdaee79/f2-a3-r4-physical/",
+          "digest": "sha256:e7d3245790ff89b2a4d5f59760f326b2e07c2a1e6d9833e200d7ba6103210f0d",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "aws://us-east-1/i-0f5e077d00bdaee79/f2-a3-r4-physical",
+      "observed_at": "2026-09-28T01:33:30Z",
+      "summary": "A3 R4 physical implementation is running on one r7i.4xlarge using exact source commit a208b245da98052b60b9d47cd676f7c0a23e74a3 with frozen source blobs, verified HLS IP hash, fail-closed timing, 8-hour watchdog, auto-terminate, and no-AFI/no-release/no-mainnet boundary.",
+      "canonical_refs": [
+        "github-actions://Waterfound/FAE-testnet/runs/36366289850",
+        "github://Waterfound/FAE-testnet/commit/a208b245da98052b60b9d47cd676f7c0a23e74a3",
+        "s3://fae-asic-lab-203842200752-20260922/evidence/i-0f5e077d00bdaee79/f2-a3-r4-physical/"
+      ],
+      "uncertainties": [
+        "Final physical route and timing closure are not yet known.",
+        "No AFI or runtime parity claim is made."
+      ],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
