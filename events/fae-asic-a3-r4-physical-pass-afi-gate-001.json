@@ -1,0 +1,74 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-asic-a3-r4-physical-pass-afi-gate-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-asic-a3-r4-afi-creation-gate",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-physical-pass-stop-before-afi",
+          "from_state": "running",
+          "event": "authority_required",
+          "to_state": "human_gate",
+          "next_action_ref": "authority://fae-asic/a3/r4-create-afi",
+          "effect": "stop_human_gate",
+          "required_evidence": [
+            "a3_r4_physical_timing_closed"
+          ],
+          "authority_mode": "human_required",
+          "authority_boundary": "Authorize creation of one AWS AFI from the exact A3 R4 timing-closed Developer_CL only; preserve the existing ASIC Lab spend envelope and do not run the AFI, benchmark, release, activate consensus, or take mainnet action unless separately authorized.",
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "aws-ec2",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-asic-a3-warning-clean-revalidation-v2",
+      "policy_digest": "sha256:9408be5f6776ba6f56bf7022507e28236908f0d0da81000bbdbfcd976afa58b6",
+      "transition_event": "authority_required"
+    },
+    "trigger": {
+      "source": "aws-ec2",
+      "event_id": "fae-asic-a3-r4-physical-pass-afi-gate-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:79750449faf08a7239fe33dcb038b95549865c5dac83ec901fe6cb1819c7320c",
+      "observation_digest": "sha256:d3e8381487997d3ad0edc8caeb74fac69897fe954a8847c8d6f753ca4b85bfe8",
+      "admission_ref": "aws://us-east-1/i-0f5e077d00bdaee79/f2-a3-r4-physical"
+    },
+    "observation": {
+      "portfolio_id": "fae-asic-a3-warning-clean-revalidation-v2",
+      "expected_generation": 13,
+      "expected_state_digest": "sha256:64df897335ddb14300bc26c8b0da97951a0b60e35f95dd047f46648fe9c03e7a",
+      "policy_digest": "sha256:9408be5f6776ba6f56bf7022507e28236908f0d0da81000bbdbfcd976afa58b6",
+      "event": "authority_required",
+      "evidence": [
+        {
+          "kind": "a3_r4_physical_timing_closed",
+          "locator": "github://Waterfound/FAE-testnet/blob/lab/asic-a3-r4-physical-20260927/labs/asic-f2-pre-go/runtime/F2_ATTACKER_SWEEP_A3_R4_PHYSICAL_RESULT.json",
+          "digest": "sha256:79750449faf08a7239fe33dcb038b95549865c5dac83ec901fe6cb1819c7320c",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "aws://us-east-1/i-0f5e077d00bdaee79/f2-a3-r4-physical",
+      "observed_at": "2026-09-28T03:52:08Z",
+      "summary": "A3 R4 physical implementation completed with routed timing closure: WNS +0.024954 ns, TNS 0, WHS +0.009525 ns, THS 0, Developer_CL produced and the build instance terminated; no AFI was created.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/787d76a374d48a4e5088f384519db174321a98c1",
+        "github://Waterfound/FAE-testnet/commit/a208b245da98052b60b9d47cd676f7c0a23e74a3",
+        "s3://fae-asic-lab-203842200752-20260922/evidence/i-0f5e077d00bdaee79/f2-a3-r4-physical/"
+      ],
+      "uncertainties": [
+        "AFI eligibility has not yet been tested.",
+        "Runtime parity, benchmark throughput, attacker sweep, sustained validation, and HFB economics remain unproven for A3 R4."
+      ],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
