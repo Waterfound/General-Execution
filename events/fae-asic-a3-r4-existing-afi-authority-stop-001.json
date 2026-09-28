@@ -1,0 +1,73 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-asic-a3-r4-existing-afi-authority-stop-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-asic-a3-r4-existing-afi-authority-stop",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-existing-afi-admission-authority",
+          "from_state": "ready",
+          "event": "authority_required",
+          "to_state": "human_gate",
+          "next_action_ref": "authority://fae-asic/a3/r4/admit-existing-afi",
+          "effect": "stop_human_gate",
+          "required_evidence": [
+            "a3_r4_existing_afi_identity_match"
+          ],
+          "authority_mode": "human_required",
+          "authority_boundary": "Authorize admission of the already-existing AFI afi-0bd37117433ff02d7 as the A3 R4 candidate only while it remains bound to commit a208b245da98052b60b9d47cd676f7c0a23e74a3 and Developer_CL SHA-256 cb369bca24dbe0c17e015adf5668d2d4117c77d31896c3a3b1faedab09e2f7a5; do not create another AFI and do not run F2, benchmark, attacker sweep, release, consensus activation, or mainnet.",
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "aws-ec2",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+      "policy_digest": "sha256:fb5bea87a7f65ceee879bbe6800dc27d84458994649f2544131b41cbba15f77a",
+      "transition_event": "authority_required"
+    },
+    "trigger": {
+      "source": "aws-ec2",
+      "event_id": "fae-asic-a3-r4-existing-afi-authority-stop-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:108311840c7c056278b68f02d4a2449521d4ba2623edca2cb3c8563cd8e4d8a3",
+      "observation_digest": "sha256:2e49b7e034e98c4aa44b305d9e4c474249535f4b9979ab799ab3e87d2de589df",
+      "admission_ref": "aws://us-east-1/afi-0bd37117433ff02d7"
+    },
+    "observation": {
+      "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+      "expected_generation": 0,
+      "expected_state_digest": "sha256:7c560aeedc6c38bfd556081b98b98717aa04925ce6422e71628dd8fbf2f4af25",
+      "policy_digest": "sha256:fb5bea87a7f65ceee879bbe6800dc27d84458994649f2544131b41cbba15f77a",
+      "event": "authority_required",
+      "evidence": [
+        {
+          "kind": "a3_r4_existing_afi_identity_match",
+          "locator": "aws://us-east-1/afi-0bd37117433ff02d7",
+          "digest": "sha256:108311840c7c056278b68f02d4a2449521d4ba2623edca2cb3c8563cd8e4d8a3",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "action://fae-asic/a3/r4/stop-before-existing-afi-admission",
+      "observed_at": "2026-09-28T13:43:45Z",
+      "summary": "The already-existing private AFI afi-0bd37117433ff02d7 remains pending and its metadata exactly matches the verified A3 R4 commit a208b245da98052b60b9d47cd676f7c0a23e74a3 and Developer_CL SHA-256 cb369bca24dbe0c17e015adf5668d2d4117c77d31896c3a3b1faedab09e2f7a5; stop for explicit admission authority without creating or running an AFI.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/d1d98251dc2c58d53a843d5f04c2fc8ff3af0d4d",
+        "github://Waterfound/FAE-testnet/commit/787d76a374d48a4e5088f384519db174321a98c1",
+        "aws://us-east-1/afi-0bd37117433ff02d7"
+      ],
+      "uncertainties": [
+        "AFI state is pending; AFI eligibility is not yet proven until AWS reports available."
+      ],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
