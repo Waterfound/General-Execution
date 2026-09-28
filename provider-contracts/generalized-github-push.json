@@ -1,0 +1,38 @@
+{
+  "watch_id": "generalized-github-push",
+  "provider": "github-actions-push",
+  "subject_ref": "github://Waterfound/General-Execution/refs/heads/pilot/durable-github-provider",
+  "satisfied_state": "push_observed",
+  "portfolio_id": "durable-github-provider-pilot",
+  "transition_event": "authority_required",
+  "evidence_kind": "github_provider_push_observed",
+  "contract_ref": "github://Waterfound/General-Execution/provider-contracts/generalized-github-push.json",
+  "required_bindings": {
+    "repository": "Waterfound/General-Execution",
+    "ref": "refs/heads/pilot/durable-github-provider",
+    "marker": "durable-generalization-v1"
+  },
+  "policy": {
+    "policy_id": "durable-generalized-github-provider-pilot",
+    "revision": "1",
+    "rules": [
+      {
+        "rule_id": "01-provider-push-human-stop",
+        "from_state": "ready",
+        "event": "authority_required",
+        "to_state": "human_gate",
+        "next_action_ref": "authority://durable/generalized-provider-pilot/acknowledge",
+        "effect": "stop_human_gate",
+        "required_evidence": [
+          "github_provider_push_observed"
+        ],
+        "authority_mode": "human_required",
+        "authority_boundary": "Acknowledge the generalized provider pilot human stop only. This gate grants no repository merge, deployment, provider credential, spending, release, or production authority.",
+        "schema_version": "ge.transition-rule.v1"
+      }
+    ],
+    "default_disposition": "stop",
+    "schema_version": "ge.transition-policy.v1"
+  },
+  "schema_version": "ge.provider-watch-contract.v1"
+}
