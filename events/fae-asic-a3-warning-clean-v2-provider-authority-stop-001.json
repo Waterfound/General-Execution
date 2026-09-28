@@ -1,0 +1,73 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-asic-a3-warning-clean-v2-provider-authority-stop-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-asic-a3-warning-clean-v2-provider-authority",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-warning-clean-v2-provider-authority",
+          "from_state": "verifying",
+          "event": "authority_required",
+          "to_state": "human_gate",
+          "next_action_ref": "authority://fae-asic/a3/warning-clean-v2-provider-revalidation",
+          "effect": "stop_human_gate",
+          "required_evidence": [
+            "a3_warning_clean_v2_source_validation"
+          ],
+          "authority_mode": "human_required",
+          "authority_boundary": "Authorize one bounded AWS/Vivado static provider revalidation of A3 warning-clean v2 (explicit AXI4-Lite interface metadata) within the existing ASIC Lab spend envelope; no physical implementation, AFI creation, release, consensus activation, or mainnet action.",
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "durable-execution",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-asic-a3-warning-clean-revalidation-v2",
+      "policy_digest": "sha256:1f8c2d790bcc6757603879abfb0bce019a1b47e4e5ec9b91d5b30bcd2f767a02",
+      "transition_event": "authority_required"
+    },
+    "trigger": {
+      "source": "durable-execution",
+      "event_id": "fae-asic-a3-warning-clean-v2-provider-authority-stop-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:d68cb617a6d49dcaad0294ad94fbfa5f6748eed8bcac925ac3ad3f8f49f55346",
+      "observation_digest": "sha256:1f3f9ee6ae03de0dbdfd74a8161f447a10cbf90237e0ad5558cbd2c53f14a7eb",
+      "admission_ref": "durable://fae-asic/a3/warning-clean-v2-provider-authority-boundary"
+    },
+    "observation": {
+      "portfolio_id": "fae-asic-a3-warning-clean-revalidation-v2",
+      "expected_generation": 4,
+      "expected_state_digest": "sha256:b5e2f1305cfd773e0d471a656545543b347ca3d793586a78f54602f16115aa35",
+      "policy_digest": "sha256:1f8c2d790bcc6757603879abfb0bce019a1b47e4e5ec9b91d5b30bcd2f767a02",
+      "event": "authority_required",
+      "evidence": [
+        {
+          "kind": "a3_warning_clean_v2_source_validation",
+          "locator": "github-actions://Waterfound/FAE-testnet/runs/36360623493",
+          "digest": "sha256:d68cb617a6d49dcaad0294ad94fbfa5f6748eed8bcac925ac3ad3f8f49f55346",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "action://fae-asic/a3/stop-before-warning-clean-v2-provider-revalidation",
+      "observed_at": "2026-09-28T00:04:00Z",
+      "summary": "A3 warning-clean v2 source verification passed; stop before a new AWS/Vivado provider revalidation because the prior bounded provider authorization was already consumed by R3.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/84b342575097df5b2d5b3625d78c766dc5d57979",
+        "github-actions://Waterfound/FAE-testnet/runs/36360623493",
+        "github://Waterfound/FAE-testnet/commit/52f51f60b19e807c689fcf319ef83656ca4628a8"
+      ],
+      "uncertainties": [
+        "Provider behavior of the explicit control-interface MAX_BURST_LENGTH metadata has not yet been revalidated."
+      ],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
