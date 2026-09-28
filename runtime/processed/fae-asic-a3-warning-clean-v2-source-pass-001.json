@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:70c5aba47f756ea074319cce54af11012e42d099776b4fc22b3cf2185e1928ff",
+  "event_id": "fae-asic-a3-warning-clean-v2-source-pass-001",
+  "event_report_digest": "sha256:f4d89c420e83d96453e11c38633b34551b277b2dd669e01285436559b183866a",
+  "operation": "transition",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "e269b235ed23f9206f65ee9684a522526477590c"
+}
