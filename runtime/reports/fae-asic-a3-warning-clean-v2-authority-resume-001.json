@@ -1,0 +1,41 @@
+{
+  "authority_grant_digest": "sha256:57f672dd2281585c7ca299c772dc71366904194aa75e4b6c44d2dbf03ee8e056",
+  "authority_receipt": {
+    "approved_action_ref": "authority://fae-asic/a3/warning-clean-v2-provider-revalidation",
+    "approved_at": "2026-09-28T00:06:43Z",
+    "authority_boundary": "Authorize one bounded AWS/Vivado static provider revalidation of A3 warning-clean v2 (explicit AXI4-Lite interface metadata) within the existing ASIC Lab spend envelope; no physical implementation, AFI creation, release, consensus activation, or mainnet action.",
+    "authority_ref": "github://Waterfound/General-Execution/commit/0d9736281e0b9c48a0b7f292c0dc4de792600a24/authority/fae-asic-a3-warning-clean-v2-authority-resume-001.json",
+    "event_id": "fae-asic-a3-warning-clean-v2-authority-resume-001",
+    "expected_generation": 5,
+    "expected_state_digest": "sha256:57ca74dff5f6f46011902ae15a78a98d626bd072abed30343190a1e0e285546e",
+    "policy_digest": "sha256:581b54ede016bdd44058e1ea5989b73aaf8682a056492dcbd6ec1ff9c436311f",
+    "portfolio_id": "fae-asic-a3-warning-clean-revalidation-v2",
+    "provider_actor": "Waterfound",
+    "rule_digest": "sha256:8bc94b5ae63b805fe60c653c9a8d5fc14d9aac0864f40cddf42cb3ec1a87f342",
+    "schema_version": "ge.human-authority-receipt.v1"
+  },
+  "authority_receipt_digest": "sha256:6ca356ab351d6398eb831c6b5208f3668a2018600dd8fc9ce82f8ddf8aaf0e78",
+  "authority_ref": "github://Waterfound/General-Execution/commit/0d9736281e0b9c48a0b7f292c0dc4de792600a24/authority/fae-asic-a3-warning-clean-v2-authority-resume-001.json",
+  "database_sha256": "sha256:2d32df2ecfdf16e4b8a4e78d42dd91ca6c8e10e3e15749951fce604089a503bb",
+  "event_id": "fae-asic-a3-warning-clean-v2-authority-resume-001",
+  "execution_report_digest": "sha256:effeba23f21c61d7115eb72d6a5bbeb0d4b3f486e7215eb47560946e37f33021",
+  "observation_digest": "sha256:1bec045151cd69c0ef6d9cc38b6827928f993b0211f3c3c3d0f3745807b3ca4a",
+  "provider_actor": "Waterfound",
+  "schema_version": "ge.human-authority-execution.v1",
+  "tick": {
+    "checkpoint_digest": "sha256:189e369677f6589b15c3301f43005af79f588c2affda6f109a0a670f3f148509",
+    "disposition": "committed",
+    "human_required": false,
+    "observation_digest": "sha256:1bec045151cd69c0ef6d9cc38b6827928f993b0211f3c3c3d0f3745807b3ca4a",
+    "portfolio_id": "fae-asic-a3-warning-clean-revalidation-v2",
+    "post_generation": 6,
+    "post_state_digest": "sha256:2178a7380b94b20ed794dbaaee450dfa8bdf4aa70a8dcaa487419a2b044df745",
+    "pre_generation": 5,
+    "pre_state_digest": "sha256:57ca74dff5f6f46011902ae15a78a98d626bd072abed30343190a1e0e285546e",
+    "recovery_report_digest": "sha256:a5d274abf7ae45b12a452eeb25d5e36d6b5f65c665831b0047e02502ea0ad353",
+    "requested_action_ref": null,
+    "requested_work_id": null,
+    "schema_version": "ge.resume-tick-result.v1",
+    "transition_result_digest": "sha256:9440dae17aafbc0983fcb92df3a0e9e5cd75bf5084f6ebe15f4c2117fab167ec"
+  }
+}

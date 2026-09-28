@@ -1,0 +1,12 @@
+{
+  "authority_grant_digest": "sha256:57f672dd2281585c7ca299c772dc71366904194aa75e4b6c44d2dbf03ee8e056",
+  "authority_receipt_digest": "sha256:6ca356ab351d6398eb831c6b5208f3668a2018600dd8fc9ce82f8ddf8aaf0e78",
+  "authority_ref": "github://Waterfound/General-Execution/commit/0d9736281e0b9c48a0b7f292c0dc4de792600a24/authority/fae-asic-a3-warning-clean-v2-authority-resume-001.json",
+  "database_sha256": "sha256:2d32df2ecfdf16e4b8a4e78d42dd91ca6c8e10e3e15749951fce604089a503bb",
+  "event_id": "fae-asic-a3-warning-clean-v2-authority-resume-001",
+  "execution_report_digest": "sha256:effeba23f21c61d7115eb72d6a5bbeb0d4b3f486e7215eb47560946e37f33021",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+  "schema_version": "ge.human-authority-processed-event.v1",
+  "trigger_commit": "0d9736281e0b9c48a0b7f292c0dc4de792600a24"
+}
