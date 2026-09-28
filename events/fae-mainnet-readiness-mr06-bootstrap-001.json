@@ -1,0 +1,57 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-mainnet-readiness-mr06-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "fae-mainnet-readiness-mr06",
+      "generation": 0,
+      "active": {
+        "work_id": "MR-06",
+        "role": "active",
+        "state": "verifying",
+        "objective": "Verify the newest-main and active Research 180s serialization cross-check recorded by the reconciliation report.",
+        "active_gate": "newest-main-crosscheck-verification",
+        "next_action_ref": "action://fae-mainnet-readiness/MR-06",
+        "source_revision": "35db1d94ba6e00e3230778b24239d565d8038a17",
+        "evidence_required": [
+          "mr06_report",
+          "readiness_verifier_success",
+          "zero_shared_state_conflicts"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/35db1d94ba6e00e3230778b24239d565d8038a17",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "MR-08-PREP",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Prepare exact-final-revision independent consistency verification inputs without creating authority.",
+        "active_gate": "independent-verification-prep",
+        "next_action_ref": "action://fae-mainnet-readiness/MR-08-PREP",
+        "source_revision": "35db1d94ba6e00e3230778b24239d565d8038a17",
+        "evidence_required": [
+          "workflow_matrix",
+          "readiness_verifier",
+          "canonical_source",
+          "cross_lab",
+          "recurring_assurance",
+          "codeql"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/35db1d94ba6e00e3230778b24239d565d8038a17",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
