@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:a8b83150e0c59a85f1886b6c8a96590861af8113e8d343d8bf95c96af79cf0b7",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "fae-visual-language-vl05-bootstrap-001",
+    "human_required": false,
+    "operation": "bootstrap",
+    "portfolio_id": "fae-visual-language-art-direction",
+    "post_generation": 0,
+    "post_state_digest": "sha256:9154d48d88ac278606b9fc00c78e7b90c591e4c83a7d4c4c3cebe7a18b6c7854",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:9154d48d88ac278606b9fc00c78e7b90c591e4c83a7d4c4c3cebe7a18b6c7854",
+    "requested_action_ref": "verify://fae-visual-language/VL-05-options",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:61e638ed5e559124fddd0b4af9f68ecc2f4fcf8ea838d479dfe9fe0e147ae749",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
