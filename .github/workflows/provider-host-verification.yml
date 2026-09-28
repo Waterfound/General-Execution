@@ -8,6 +8,7 @@ on:
     paths:
       - src/general_execution/provider_host.py
       - scripts/run_provider_host.py
+      - scripts/run_generalized_provider_pilot.py
       - tests/test_provider_host.py
       - .github/provider-watches/**
       - .github/workflows/durable-provider-host.yml
@@ -15,6 +16,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 jobs:
   verify:
@@ -43,3 +45,60 @@ jobs:
               watch=provider_watch_from_dict(json.loads(path.read_text()))
               print(path, watch.digest)
           PY
+
+      - name: Observe this real GitHub provider run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          curl -fsS \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            > /tmp/github-run.json
+          python - <<'PY'
+          import json, pathlib
+          from general_execution import sha256_digest
+          data=json.loads(pathlib.Path('/tmp/github-run.json').read_text())
+          selected={
+              'id':data['id'],
+              'status':data['status'],
+              'head_sha':data['head_sha'],
+              'event':data['event'],
+              'run_attempt':data['run_attempt'],
+          }
+          assert selected['status']=='in_progress', selected
+          snapshot={
+              'schema_version':'ge.provider-snapshot.v1',
+              'watch_id':'generalized-github-provider-pilot',
+              'provider':'github-actions',
+              'resource_id':'Waterfound/General-Execution/durable-provider-host-verification',
+              'provider_event_id':f"github-run:{data['id']}:attempt:{data['run_attempt']}",
+              'observed_state':selected['status'],
+              'observed_at':data['updated_at'],
+              'evidence_locator':f"github-actions://Waterfound/General-Execution/runs/{data['id']}",
+              'metadata_digest':sha256_digest(selected),
+              'canonical_refs':[
+                  data['html_url'],
+                  f"github://Waterfound/General-Execution/commit/{data['head_sha']}",
+              ],
+          }
+          pathlib.Path('/tmp/github-provider-snapshot.json').write_text(
+              json.dumps(snapshot,sort_keys=True,indent=2)+'\n'
+          )
+          PY
+
+      - name: Generalized provider pilot
+        run: |
+          python scripts/run_generalized_provider_pilot.py \
+            --snapshot /tmp/github-provider-snapshot.json \
+            --watch .github/provider-watches/generalized-github-provider-pilot.json \
+            --output /tmp/generalized-provider-pilot
+          cat /tmp/generalized-provider-pilot/pilot-report.json
+
+      - name: Upload generalized provider evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: generalized-provider-pilot-${{ github.run_id }}
+          path: /tmp/generalized-provider-pilot/
+          if-no-files-found: error
+          retention-days: 30
