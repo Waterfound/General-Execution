@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:847f5436132c215aea9646e536438dd66dc583b5eefdeb63adb88006b1a911f2",
+  "event_report": {
+    "checkpoint_digest": "sha256:0c1cee1aa6dd8e462300bf41bba6b3f8a90c0b75b1694c814291b91567a1f456",
+    "event_id": "fae-asic-a3-warning-clean-r4-provider-pass-physical-gate-001",
+    "human_required": true,
+    "operation": "transition",
+    "portfolio_id": "fae-asic-a3-warning-clean-revalidation-v2",
+    "post_generation": 11,
+    "post_state_digest": "sha256:8be7b051d0c5e80f7bd82f83471fc71d7ec63bea8dde000768ac5ff37da76af5",
+    "pre_generation": 10,
+    "pre_state_digest": "sha256:58d6bf6dbe160f7dfb6da70f1fbe0bbbf10323eec1552b5232c694147217a6b0",
+    "requested_action_ref": "authority://fae-asic/a3/r4-physical-build",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "committed"
+  },
+  "event_report_digest": "sha256:bbb60ad0abc35ae1131895c8490bd9f36305d313e5c04ac09133a8bfe919eda4",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
