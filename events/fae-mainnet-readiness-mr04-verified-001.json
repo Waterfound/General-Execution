@@ -1,0 +1,103 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-mainnet-readiness-mr04-verified-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-mainnet-readiness-reconciliation-v1",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-verification-pass",
+          "from_state": "verifying",
+          "event": "verification_passed",
+          "to_state": "complete",
+          "next_action_ref": "action://fae-mainnet-readiness/MR-07",
+          "effect": "promote_secondary",
+          "required_evidence": [
+            "verifier_pass"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        },
+        {
+          "rule_id": "02-wake-passive",
+          "from_state": "passive",
+          "event": "wake_satisfied",
+          "to_state": "ready",
+          "next_action_ref": "action://fae-mainnet-readiness/MR-05",
+          "effect": "wake_passive",
+          "required_evidence": [
+            "wake_condition_satisfied"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-push",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-mainnet-readiness-reconciliation",
+      "policy_digest": "sha256:c6c1cc0e411135e8a44469dad296fb138881af0c84a67181c1727fea1a18c0f8",
+      "transition_event": "verification_passed"
+    },
+    "trigger": {
+      "source": "github-push",
+      "event_id": "fae-mainnet-readiness-mr04-verified-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:6dea975cc4f88f67c6a668718c3ffbdb1d014852e3541294cd690d4fe81e8527",
+      "observation_digest": "sha256:e043d1e25d101a2624ceced8926ce8e9493fa8c462bdbad57a333310e9cc67dc",
+      "admission_ref": "github://Waterfound/General-Execution/runtime/durable-asp-control/fae-mainnet-readiness-mr04-verified-001"
+    },
+    "observation": {
+      "portfolio_id": "fae-mainnet-readiness-reconciliation",
+      "expected_generation": 0,
+      "expected_state_digest": "sha256:07f0ddda65521679252ae018f247ad92f046a2431b5d5b1948fa8002852bdba4",
+      "policy_digest": "sha256:c6c1cc0e411135e8a44469dad296fb138881af0c84a67181c1727fea1a18c0f8",
+      "event": "verification_passed",
+      "evidence": [
+        {
+          "kind": "verifier_pass",
+          "locator": "github://Waterfound/FAE-testnet/actions/runs/36445957347",
+          "digest": "sha256:6dea975cc4f88f67c6a668718c3ffbdb1d014852e3541294cd690d4fe81e8527",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "github://Waterfound/FAE-testnet/commit/22604d2085361ee5eb24346b2e0aebac307f13c4",
+      "observed_at": "2026-09-28T15:45:00Z",
+      "summary": "MR-04 machine-readable readiness ledger passed its fail-closed verifier after serialized MR-05 registry reconciliation preparation.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/22604d2085361ee5eb24346b2e0aebac307f13c4",
+        "github://Waterfound/FAE-testnet/actions/runs/36445957347"
+      ],
+      "uncertainties": [],
+      "wake_admission": {
+        "portfolio_id": "fae-mainnet-readiness-reconciliation",
+        "portfolio_generation": 0,
+        "portfolio_state_digest": "sha256:07f0ddda65521679252ae018f247ad92f046a2431b5d5b1948fa8002852bdba4",
+        "work_id": "MR-05",
+        "wake_condition_digest": "sha256:e67314fc82869549dba6d05ff4aefff057211fdac48f69f9ad7b32611402813d",
+        "policy_digest": "sha256:c6c1cc0e411135e8a44469dad296fb138881af0c84a67181c1727fea1a18c0f8",
+        "rule_digest": "sha256:5332b6501cd21a4c3426c7df5a6a4d3de43c163d073a2e65971d7141afa53752",
+        "evidence": [
+          {
+            "kind": "wake_condition_satisfied",
+            "locator": "github://Waterfound/FAE-testnet/serialization-check/2026-09-28/mr05",
+            "digest": "sha256:c5f09d2ff1a2554bc7a1191ac96acac53bc5422fc789652c92c64baf2aa22a08",
+            "schema_version": "ge.checkpoint-evidence.v1"
+          }
+        ],
+        "next_action_ref": "action://fae-mainnet-readiness/MR-05",
+        "authority_grant": null,
+        "schema_version": "ge.passive-wake-admission.v1"
+      },
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
