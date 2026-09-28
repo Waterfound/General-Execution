@@ -1,0 +1,96 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-visual-language-vl08-complete-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-visual-language-vl08-close-v1",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-vl08-verified-to-vl09",
+          "from_state": "verifying",
+          "event": "verification_passed",
+          "to_state": "verifying",
+          "next_action_ref": "action://fae-visual-language/direction-d/VL-09",
+          "effect": "none",
+          "required_evidence": [
+            "homepage_slice_ci",
+            "vercel_preview_ready",
+            "isolated_visual_qa",
+            "direction_d_dom_contract"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-push",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-visual-language-art-direction",
+      "policy_digest": "sha256:77666ecca7e8e6c9b336ccc22a0dcfa72b6053d864ab7c43a3d563971578f590",
+      "transition_event": "verification_passed"
+    },
+    "trigger": {
+      "source": "github-push",
+      "event_id": "fae-visual-language-vl08-complete-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:b9df1382d747278aa622e2c5ac183799334524b9f01361fbe489713d33ee8504",
+      "observation_digest": "sha256:562bbe8ccbc08d6039aede1b85343ccd0ac0c3e635ca2a7f2172fc4d94fa740e",
+      "admission_ref": "github://Waterfound/General-Execution/events/fae-visual-language-vl08-complete-001"
+    },
+    "observation": {
+      "portfolio_id": "fae-visual-language-art-direction",
+      "expected_generation": 3,
+      "expected_state_digest": "sha256:63957e502e005f942d499ba1902c5a6f40bce64a2617d1604cbe97837c089451",
+      "policy_digest": "sha256:77666ecca7e8e6c9b336ccc22a0dcfa72b6053d864ab7c43a3d563971578f590",
+      "event": "verification_passed",
+      "evidence": [
+        {
+          "kind": "homepage_slice_ci",
+          "locator": "github://Waterfound/FAE-testnet/actions/runs/36479427272",
+          "digest": "sha256:a9d99bb96ef06037f8e587c78830fb10fb7417d580bc1881df685848c82159d4",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "vercel_preview_ready",
+          "locator": "vercel://dpl_EaTjYFVxXiSdjsmpqA7fff8g8hNC",
+          "digest": "sha256:b4b30035312db63871b66a98912e69940c3f2e446bdca9bae4404f5340468581",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "isolated_visual_qa",
+          "locator": "https://agent.tinyfish.ai/runs/2ee6a4f4-6b2a-4638-a8a4-8e28b0150528",
+          "digest": "sha256:59ed32709873f84ab1bb7c05a8ca19064e23587528ab54325686f26aa9758ba2",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "direction_d_dom_contract",
+          "locator": "github://Waterfound/FAE-testnet/commit/65a8362310828577f238ab30725124a6734d7aec",
+          "digest": "sha256:7ea127a7f1f1cb7da135ab761d22f8a5f7507c5dee5908cabed5db00d49a0943",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "github://Waterfound/FAE-testnet/commit/65a8362310828577f238ab30725124a6734d7aec",
+      "observed_at": "2026-09-28T20:31:00Z",
+      "summary": "VL-08 closed: Direction D homepage slice passed contract CI, built READY on Vercel, and rendered in an isolated public QA preview with orange topper, light field, blue live accents, readable hero and working Wallet/Mining tabs. Browser narrative confirmed a horizontal network ticker; deterministic DOM contract confirms the legacy fixed metrics-card is absent.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/65a8362310828577f238ab30725124a6734d7aec",
+        "github://Waterfound/FAE-testnet/actions/runs/36479427272",
+        "vercel://dpl_EaTjYFVxXiSdjsmpqA7fff8g8hNC",
+        "https://fae-direction-d-vl08-qa-ii0d80.v2.appdeploy.ai/",
+        "https://agent.tinyfish.ai/runs/2ee6a4f4-6b2a-4638-a8a4-8e28b0150528"
+      ],
+      "uncertainties": [
+        "Structured browser fields misclassified ticker_present and legacy metric balloons despite the run narrative observing the ticker and the source/CI contract proving ticker markup plus absence of metrics-card; source-bound deterministic evidence governs this acceptance point."
+      ],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
