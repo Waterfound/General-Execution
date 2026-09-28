@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:ba6741a5e9ac78912327af4c17d049d3f56ab871b20d842b6a9eb24ef713fa32",
+  "event_id": "fae-asic-a3-r4-f2-runtime-fail-di-001",
+  "event_report_digest": "sha256:bd647b7ca870d864ea5aeba5b641438681c2dee2bcc1f340bfee75149bda5224",
+  "operation": "transition",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "55cacd633d6f97a9a7cd658b152579fa4d56c8cf"
+}
