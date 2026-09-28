@@ -117,21 +117,44 @@
     {
       "id": "CC-16",
       "name": "Systems documentation integration",
-      "state": "ACTIVE"
+      "state": "PASS"
     },
     {
       "id": "CC-17",
       "name": "General Execution canonical integration verification",
-      "state": "PENDING"
+      "state": "PASS"
     },
     {
       "id": "CC-18",
       "name": "Closure",
-      "state": "PENDING"
+      "state": "PASS"
     }
   ],
-  "current_frontier": "CC-16",
-  "terminal_verdict": null,
+  "current_frontier": null,
+  "terminal_verdict": "CONTINUITY_CHECK_V1_READY",
   "genuine_external_or_human_gates": [],
-  "shared_state_rule": "Parallelize independence. Serialize shared state."
+  "shared_state_rule": "Parallelize independence. Serialize shared state.",
+  "canonical_integration": {
+    "general_execution": {
+      "pull_request": 9,
+      "main_revision": "5b36483f71042c5faa105f9723d1d9cabb701143"
+    },
+    "systems_documentation": {
+      "pull_request": 2,
+      "main_revision": "65f50f16e010b4dcb6eca74e8f0e7c51eb2a12c6"
+    }
+  },
+  "verification": {
+    "focused_regression": "31/31 PASS",
+    "compileall": "PASS",
+    "main_integration_gate": {
+      "run_id": 36489399179,
+      "conclusion": "success"
+    },
+    "durable_terminal_verification": {
+      "run_id": 36489399124,
+      "conclusion": "success"
+    },
+    "historical_real_replays": 3
+  }
 }
