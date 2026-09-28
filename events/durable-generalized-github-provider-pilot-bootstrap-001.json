@@ -1,0 +1,50 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "durable-generalized-github-provider-pilot-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "durable-github-provider-pilot",
+      "generation": 0,
+      "active": {
+        "work_id": "DURABLE-GITHUB-PROVIDER-PILOT",
+        "role": "active",
+        "state": "ready",
+        "objective": "Prove a native GitHub provider event can be converted by the same Provider Host into one authenticated durable transition, survive cold replay idempotently, and stop at a human authority gate without chat-constructed observation.",
+        "active_gate": "GENERALIZED-GITHUB-PROVIDER-PILOT",
+        "next_action_ref": "action://durable/generalized-github-provider-pilot",
+        "source_revision": "31ec5684a2ac5509d6e561479b3293372a9b9e34",
+        "evidence_required": [
+          "github_provider_push_observed"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "build-colony://bc2-1aff60eac9c1ce94/generalized-provider-pilot",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "DURABLE-GITHUB-PROVIDER-PILOT-VERIFY",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Remain ready for independent evidence admission after the native provider pilot completes.",
+        "active_gate": "GENERALIZED-GITHUB-PROVIDER-VERIFY",
+        "next_action_ref": "action://durable/generalized-github-provider-verify",
+        "source_revision": "31ec5684a2ac5509d6e561479b3293372a9b9e34",
+        "evidence_required": [
+          "generalized_provider_pilot_verified"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "build-colony://bc2-1aff60eac9c1ce94/generalized-provider-pilot-verify",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
