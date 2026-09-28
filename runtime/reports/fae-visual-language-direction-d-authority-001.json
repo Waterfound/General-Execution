@@ -1,0 +1,41 @@
+{
+  "authority_grant_digest": "sha256:b2cce3b887bd72403edcd64e07bbc7d7aefc2fac60506f6860bfc7a052fbab7c",
+  "authority_receipt": {
+    "approved_action_ref": "authority://fae-visual-language/select-art-direction",
+    "approved_at": "2026-09-28T18:11:21Z",
+    "authority_boundary": "Waterfound must select one art-direction world, explicitly request a deliberate hybrid, or reject all three; machine autonomy may not make the final FAE identity choice.",
+    "authority_ref": "github://Waterfound/General-Execution/commit/81551ee4d11a93b95c4d1573e953a515fba1369d/authority/fae-visual-language-direction-d-authority-001.json",
+    "event_id": "fae-visual-language-direction-d-authority-001",
+    "expected_generation": 1,
+    "expected_state_digest": "sha256:a3717ab32a95539064f41e7f85233fcb2e5c384941295806b2f125b36c0750ee",
+    "policy_digest": "sha256:9d8d261f8cfc753d0b94624dc3f9e9fef320d90a2705450e0093265d22d5c5f9",
+    "portfolio_id": "fae-visual-language-art-direction",
+    "provider_actor": "Waterfound",
+    "rule_digest": "sha256:b6952f4a7e775d6058181f33fbccc7b186ec0e07072ef6a1f247ec8f1ab697ee",
+    "schema_version": "ge.human-authority-receipt.v1"
+  },
+  "authority_receipt_digest": "sha256:0d1183b321bbce54b82e5a62163f0e38d550471417d13d561d69e660817c4dac",
+  "authority_ref": "github://Waterfound/General-Execution/commit/81551ee4d11a93b95c4d1573e953a515fba1369d/authority/fae-visual-language-direction-d-authority-001.json",
+  "database_sha256": "sha256:c0dc88aa84e10515a39231f585b31946fa2fb7583147f058f1b191e9a77ec180",
+  "event_id": "fae-visual-language-direction-d-authority-001",
+  "execution_report_digest": "sha256:d95e3879242d0fa2ba47f164ba8697fcf41fe0138a015745407c8570c1e5aa55",
+  "observation_digest": "sha256:abddf2b0436ff14c59c80fbb564654d97ab121fcaeeee6b9c590b64167954735",
+  "provider_actor": "Waterfound",
+  "schema_version": "ge.human-authority-execution.v1",
+  "tick": {
+    "checkpoint_digest": "sha256:2f92d5badc14fdf23a1324e89510098315e5cd890b4c43f9182bc41d4858a8d2",
+    "disposition": "committed",
+    "human_required": false,
+    "observation_digest": "sha256:abddf2b0436ff14c59c80fbb564654d97ab121fcaeeee6b9c590b64167954735",
+    "portfolio_id": "fae-visual-language-art-direction",
+    "post_generation": 2,
+    "post_state_digest": "sha256:ed0347800ee59dfedbd84f9737aa3ffed2e1f8f204c3b85fb68e0b74fab96ec4",
+    "pre_generation": 1,
+    "pre_state_digest": "sha256:a3717ab32a95539064f41e7f85233fcb2e5c384941295806b2f125b36c0750ee",
+    "recovery_report_digest": "sha256:087ddf2aaad5bf83b69895cadeda1f9fe8544ca56a6a9f90a22a9922457d6799",
+    "requested_action_ref": null,
+    "requested_work_id": null,
+    "schema_version": "ge.resume-tick-result.v1",
+    "transition_result_digest": "sha256:129ebe31e7339cbb9185d8a5ba042d9e674d01d15a84ae34ebafdf12b9685077"
+  }
+}
