@@ -1,0 +1,185 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-mainnet-readiness-reconciliation-bootstrap-002",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "fae-mainnet-readiness-reconciliation",
+      "generation": 0,
+      "active": {
+        "work_id": "MR-04",
+        "role": "active",
+        "state": "verifying",
+        "objective": "Verify the candidate machine-readable readiness ledger for the globally SECONDARY FAE canonical-state workstream without displacing the active 180s Research portfolio.",
+        "active_gate": "readiness-ledger-verification",
+        "next_action_ref": "action://fae-mainnet-readiness/MR-04",
+        "source_revision": "b0c596ab47023c392c65e52352db6551e3b79978",
+        "evidence_required": [
+          "docs/FAE_MAINNET_READINESS_STATE.json",
+          "tools/verify-mainnet-readiness-state.mjs",
+          "pr://Waterfound/FAE-testnet/261"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/b0c596ab47023c392c65e52352db6551e3b79978",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "MR-07",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Freeze the Steward/Durable consumption contract for the readiness ledger.",
+        "active_gate": "consumer-contract",
+        "next_action_ref": "action://fae-mainnet-readiness/MR-07",
+        "source_revision": "b0c596ab47023c392c65e52352db6551e3b79978",
+        "evidence_required": [
+          "docs/FAE_MAINNET_READINESS_CONSUMPTION_CONTRACT.json"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/b0c596ab47023c392c65e52352db6551e3b79978",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [
+        {
+          "work_id": "MR-05",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Reconcile docs/FAE_CANONICAL_STATE.md only after MR-04 verification, serializing shared state against current main and Research 180s.",
+          "active_gate": "canonical-registry-reconciliation",
+          "next_action_ref": "action://fae-mainnet-readiness/MR-05",
+          "source_revision": "b0c596ab47023c392c65e52352db6551e3b79978",
+          "evidence_required": [
+            "MR-04_verified",
+            "fresh_main_resolution",
+            "research_shared_state_check"
+          ],
+          "authority_boundary": null,
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "evidence",
+              "detail": "Shared canonical state cannot be edited until MR-04 is verified and current main/Research shared-state status is re-resolved.",
+              "evidence_refs": [
+                "MR-04",
+                "docs/FAE_CANONICAL_STATE.md"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "MR-04=verified AND current-main-revalidated AND no-shared-state-race",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/b0c596ab47023c392c65e52352db6551e3b79978",
+          "schema_version": "ge.portfolio-entry.v1"
+        },
+        {
+          "work_id": "MR-06",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Cross-check the reconciled registry and ledger against the newest main revision.",
+          "active_gate": "newest-main-cross-check",
+          "next_action_ref": "action://fae-mainnet-readiness/MR-06",
+          "source_revision": "b0c596ab47023c392c65e52352db6551e3b79978",
+          "evidence_required": [
+            "MR-05_complete",
+            "fresh_main_resolution"
+          ],
+          "authority_boundary": null,
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "evidence",
+              "detail": "Requires the serialized MR-05 registry candidate.",
+              "evidence_refs": [
+                "MR-05"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "MR-05=complete",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/b0c596ab47023c392c65e52352db6551e3b79978",
+          "schema_version": "ge.portfolio-entry.v1"
+        },
+        {
+          "work_id": "MR-08",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Run independent consistency verification over the exact reconciled branch revision.",
+          "active_gate": "independent-consistency-verification",
+          "next_action_ref": "action://fae-mainnet-readiness/MR-08",
+          "source_revision": "b0c596ab47023c392c65e52352db6551e3b79978",
+          "evidence_required": [
+            "MR-06_complete",
+            "MR-07_complete",
+            "workflow_gates_green"
+          ],
+          "authority_boundary": null,
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "evidence",
+              "detail": "Requires newest-main cross-check, consumption contract and exact-revision verification.",
+              "evidence_refs": [
+                "MR-06",
+                "MR-07"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "MR-06=complete AND MR-07=complete",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/b0c596ab47023c392c65e52352db6551e3b79978",
+          "schema_version": "ge.portfolio-entry.v1"
+        },
+        {
+          "work_id": "MR-09",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Emit CANONICAL_STATE_RECONCILED only if all reconciliation gates pass; never emit MAINNET_READY.",
+          "active_gate": "closure-verdict",
+          "next_action_ref": "action://fae-mainnet-readiness/MR-09",
+          "source_revision": "b0c596ab47023c392c65e52352db6551e3b79978",
+          "evidence_required": [
+            "MR-08_complete",
+            "canonical_registry_and_ledger_agree"
+          ],
+          "authority_boundary": null,
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "evidence",
+              "detail": "Requires independent consistency verification.",
+              "evidence_refs": [
+                "MR-08"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "MR-08=complete",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/b0c596ab47023c392c65e52352db6551e3b79978",
+          "schema_version": "ge.portfolio-entry.v1"
+        }
+      ],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
