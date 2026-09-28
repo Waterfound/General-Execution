@@ -1,0 +1,94 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-visual-language-vl05-verified-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-visual-language-vl05-06-v1",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-verified-options-require-human-selection",
+          "from_state": "verifying",
+          "event": "verification_passed",
+          "to_state": "human_gate",
+          "next_action_ref": "authority://fae-visual-language/select-art-direction",
+          "effect": "stop_human_gate",
+          "required_evidence": [
+            "browser_visual_qa",
+            "isolated_preview_ready",
+            "rendered_wallet_and_mining_concepts",
+            "visual_contract_ci"
+          ],
+          "authority_mode": "human_required",
+          "authority_boundary": "Waterfound must select one art-direction world, explicitly request a deliberate hybrid, or reject all three; machine autonomy may not make the final FAE identity choice.",
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-push",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-visual-language-art-direction",
+      "policy_digest": "sha256:894d28597aa2ecbbbacd9f6f50a9be551580b5067261c739a9f42406d5a99ebf",
+      "transition_event": "verification_passed"
+    },
+    "trigger": {
+      "source": "github-push",
+      "event_id": "fae-visual-language-vl05-verified-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:917a3f0af0f79d2a37eb77aae2478b91a1aa61e533fccd388f3a5402cbb4b6d1",
+      "observation_digest": "sha256:982519399f3b4420f7fed75abd8427aafc5a8427a469c64d089eec40bcfffe97",
+      "admission_ref": "github://runtime/durable-asp-control/fae-visual-language-vl05-verified-001"
+    },
+    "observation": {
+      "portfolio_id": "fae-visual-language-art-direction",
+      "expected_generation": 0,
+      "expected_state_digest": "sha256:9154d48d88ac278606b9fc00c78e7b90c591e4c83a7d4c4c3cebe7a18b6c7854",
+      "policy_digest": "sha256:894d28597aa2ecbbbacd9f6f50a9be551580b5067261c739a9f42406d5a99ebf",
+      "event": "verification_passed",
+      "evidence": [
+        {
+          "kind": "visual_contract_ci",
+          "locator": "github://Waterfound/FAE-testnet/actions/runs/36460276596",
+          "digest": "sha256:c5d3361ae0d7836a11ccdff36bf4dbed3629b35615f033ae9788454bab8a5ba6",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "isolated_preview_ready",
+          "locator": "https://fae-art-direction-study-3wl2o8.v2.appdeploy.ai/",
+          "digest": "sha256:795dc17d75580df888a71a642cb889aa6922ad5daaa687d5e6bdf9edae15829a",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "browser_visual_qa",
+          "locator": "https://agent.tinyfish.ai/runs/3519655b-b77f-4ce8-a338-7a1f820f4c3c",
+          "digest": "sha256:f8ac2a83b11ef5edb9bb5f7f0b2db92b724d7bebd9a01eefd9938351c6c0e109",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "rendered_wallet_and_mining_concepts",
+          "locator": "https://fae-art-direction-study-3wl2o8.v2.appdeploy.ai/",
+          "digest": "sha256:5b87b6c0f6f31f7a2efac7d4da48723a3089506dd245fbbcabcb099a62204ee3",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "github://Waterfound/FAE-testnet/commit/ddd8be8b85949074a7af9bc22606f03ced7a3506",
+      "observed_at": "2026-09-28T17:44:49Z",
+      "summary": "VL-05 closed: three materially divergent FAE art-direction prototypes passed isolated contract CI, public static preview readiness, rendered Wallet/Mining semantic checks, and browser visual QA; final identity selection remains Waterfound authority.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/ddd8be8b85949074a7af9bc22606f03ced7a3506",
+        "github://Waterfound/FAE-testnet/actions/runs/36460276596",
+        "github://Waterfound/General-Execution/actions/runs/36460513395",
+        "https://fae-art-direction-study-3wl2o8.v2.appdeploy.ai/",
+        "https://agent.tinyfish.ai/runs/3519655b-b77f-4ce8-a338-7a1f820f4c3c"
+      ],
+      "uncertainties": [],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
