@@ -200,7 +200,7 @@ def test_only_waterfound_can_decide_human_gate(tmp_path, actor):
 
 def test_stale_decision_fails_closed(tmp_path):
     store, g1 = human_gate_store(tmp_path)
-    stale = decision_for(g1, expected_generation=0)
+    stale = decision_for(g1, expected_generation=2)
     with pytest.raises(HumanGateDecisionError, match="stale"):
         consume_human_gate_decision(
             store,
