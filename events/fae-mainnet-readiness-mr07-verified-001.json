@@ -1,0 +1,103 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-mainnet-readiness-mr07-verified-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-mainnet-readiness-reconciliation-v1",
+      "revision": "2",
+      "rules": [
+        {
+          "rule_id": "01-verification-pass",
+          "from_state": "ready",
+          "event": "verification_passed",
+          "to_state": "complete",
+          "next_action_ref": "action://fae-mainnet-readiness/MR-05",
+          "effect": "promote_secondary",
+          "required_evidence": [
+            "verifier_pass"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        },
+        {
+          "rule_id": "02-wake-passive",
+          "from_state": "passive",
+          "event": "wake_satisfied",
+          "to_state": "ready",
+          "next_action_ref": "action://fae-mainnet-readiness/MR-06",
+          "effect": "wake_passive",
+          "required_evidence": [
+            "wake_condition_satisfied"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-push",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-mainnet-readiness-reconciliation",
+      "policy_digest": "sha256:6b5b41be81d80be6448eda3bf2b0db95ff463860bd5b0a7c8bbc34848cd96e7f",
+      "transition_event": "verification_passed"
+    },
+    "trigger": {
+      "source": "github-push",
+      "event_id": "fae-mainnet-readiness-mr07-verified-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:d57c64d210ca2e8eea05358e5ed295acdb742510dd9349b3f7a7d5de8d5a0729",
+      "observation_digest": "sha256:41330f206e91da1a7e8bc20536a293ecbab962c4006ca12018bb674b09b51883",
+      "admission_ref": "github://Waterfound/General-Execution/runtime/durable-asp-control/fae-mainnet-readiness-mr07-verified-001"
+    },
+    "observation": {
+      "portfolio_id": "fae-mainnet-readiness-reconciliation",
+      "expected_generation": 1,
+      "expected_state_digest": "sha256:fc07695ba667f8cc8a9f87d0868cd618e85fa114c3d999b36c55a9f00276f993",
+      "policy_digest": "sha256:6b5b41be81d80be6448eda3bf2b0db95ff463860bd5b0a7c8bbc34848cd96e7f",
+      "event": "verification_passed",
+      "evidence": [
+        {
+          "kind": "verifier_pass",
+          "locator": "github://Waterfound/FAE-testnet/docs/FAE_MAINNET_READINESS_CONSUMPTION_CONTRACT.json",
+          "digest": "sha256:d57c64d210ca2e8eea05358e5ed295acdb742510dd9349b3f7a7d5de8d5a0729",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "github://Waterfound/FAE-testnet/commit/8a6946a9e06b298ca551ef5da988d83964880aa9",
+      "observed_at": "2026-09-28T15:47:00Z",
+      "summary": "MR-07 Steward/Durable consumption contract is frozen and covered by the successful readiness verification set.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/8a6946a9e06b298ca551ef5da988d83964880aa9",
+        "github://Waterfound/FAE-testnet/actions/runs/36445957347"
+      ],
+      "uncertainties": [],
+      "wake_admission": {
+        "portfolio_id": "fae-mainnet-readiness-reconciliation",
+        "portfolio_generation": 1,
+        "portfolio_state_digest": "sha256:fc07695ba667f8cc8a9f87d0868cd618e85fa114c3d999b36c55a9f00276f993",
+        "work_id": "MR-06",
+        "wake_condition_digest": "sha256:87af231f72e30cd7a6312e661ce4895349395f08b3d0844244c6331d08c780b8",
+        "policy_digest": "sha256:6b5b41be81d80be6448eda3bf2b0db95ff463860bd5b0a7c8bbc34848cd96e7f",
+        "rule_digest": "sha256:b0100e6fab7616b329dce3b04d7459f984b1308206db60b2a04cfa65c272451e",
+        "evidence": [
+          {
+            "kind": "wake_condition_satisfied",
+            "locator": "github://Waterfound/FAE-testnet/commit/22604d2085361ee5eb24346b2e0aebac307f13c4",
+            "digest": "sha256:53d1352ee3a30d1530b334e2d7b730e52d06018f7a3cd9253dc19b7b98052339",
+            "schema_version": "ge.checkpoint-evidence.v1"
+          }
+        ],
+        "next_action_ref": "action://fae-mainnet-readiness/MR-06",
+        "authority_grant": null,
+        "schema_version": "ge.passive-wake-admission.v1"
+      },
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
