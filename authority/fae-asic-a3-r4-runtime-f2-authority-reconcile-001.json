@@ -1,0 +1,57 @@
+{
+  "schema_version": "ge.human-authority-event.v1",
+  "event_id": "fae-asic-a3-r4-runtime-f2-authority-reconcile-001",
+  "approved_action_ref": "authority://fae-asic/a3/r4/runtime-f2",
+  "approved_at": "2026-09-28T22:31:00Z",
+  "policy": {
+    "policy_id": "fae-asic-a3-r4-runtime-f2-authority-resume",
+    "revision": "1",
+    "rules": [
+      {
+        "rule_id": "01-authorized-runtime-f2-parity",
+        "from_state": "human_gate",
+        "event": "verification_passed",
+        "to_state": "verifying",
+        "next_action_ref": "action://fae-asic/a3/r4/reconcile-observed-f2-runtime",
+        "effect": "none",
+        "required_evidence": [
+          "human_authority_recorded"
+        ],
+        "authority_mode": "preauthorized_required",
+        "authority_boundary": "Authorize one bounded F2 runtime parity execution using admitted AFI afi-0bd37117433ff02d7 only; do not benchmark, run attacker sweep, release, activate consensus, or take mainnet action unless separately authorized.",
+        "schema_version": "ge.transition-rule.v1"
+      }
+    ],
+    "default_disposition": "stop",
+    "schema_version": "ge.transition-policy.v1"
+  },
+  "observation": {
+    "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+    "expected_generation": 3,
+    "expected_state_digest": "sha256:6833c4b952da110def07a8de630042e8fdc522cb7cf6ae9a39eaf5a62bdf6298",
+    "policy_digest": "sha256:977ac76f60a98470782577b95b824e7a32d88a3246f6f6cd107a119b9fd655ee",
+    "event": "verification_passed",
+    "evidence": [
+      {
+        "kind": "human_authority_recorded",
+        "locator": "runtime://fae-asic-a3-r4-existing-afi-admission/waterfound-explicit-runtime-f2-authorization",
+        "digest": "sha256:4367fcba575a923b3eebf4297c71ef74f32038e34bbfa7dea5120b8c2d6f4771",
+        "schema_version": "ge.checkpoint-evidence.v1"
+      }
+    ],
+    "action_ref": "runtime://fae-asic-a3-r4-existing-afi-admission/resume-runtime-f2-after-explicit-authorization",
+    "observed_at": "2026-09-28T22:31:00Z",
+    "summary": "Waterfound's later explicit ASIC Lab authorization covers the pending A3-R4 F2 parity gate within the existing USD20 out-of-pocket cap, credits first. This receipt consumes only the exact narrow parity boundary already pending in Durable Execution and does not broaden authority.",
+    "canonical_refs": [
+      "github://Waterfound/General-Execution/blob/colony/fae-asic-authority-reconciliation-001/build-colony/runs/fae-asic-authority-reconciliation-001.json",
+      "github://Waterfound/General-Execution/blob/runtime/durable-asp-control/provider-inbox/fae-a3-r4-afi-available-001.json",
+      "aws://us-east-1/afi-0bd37117433ff02d7"
+    ],
+    "uncertainties": [
+      "A3-R4 F2 runtime later occurred outside this persisted portfolio and its already-produced result must be reconciled as evidence after this authority transition."
+    ],
+    "wake_admission": null,
+    "authority_grant": null,
+    "schema_version": "ge.resume-tick-observation.v1"
+  }
+}
