@@ -1,0 +1,33 @@
+{
+  "schema_version": "ge.human-gate-decision-event.v1",
+  "event_id": "durable-terminal-no-iam-supersede-001",
+  "portfolio_id": "durable-terminal-closure",
+  "expected_generation": 2,
+  "expected_state_digest": "sha256:38451910dff0958d3956416ffb6cdbb4fd54166fe60c89f8755a3c082019ac5e",
+  "pending_action_ref": "authority://durable/aws-readonly-oidc-observer",
+  "decision": "supersede",
+  "reason": "Waterfound explicitly superseded the obsolete AWS OIDC/IAM observer gate. The already-completed FAE provider snapshot missed-event recovery pilot proves the narrower no-IAM provider path, while F2 runtime and all broader execution remain unauthorized.",
+  "target_state": "rework",
+  "next_action_ref": "action://durable/terminal-closure/no-iam-evidence-admission",
+  "observed_at": "2026-09-28T16:05:00Z",
+  "evidence": [
+    {
+      "kind": "superseding_evidence",
+      "locator": "github-actions://Waterfound/General-Execution/runs/36445713247",
+      "digest": "sha256:7497098a5ce550f4f72ea3d82fdd7b40a7d4b5e4fe41d5b4509dd1bb32272fb7",
+      "schema_version": "ge.checkpoint-evidence.v1"
+    },
+    {
+      "kind": "fae_missed_event_replay",
+      "locator": "github://Waterfound/General-Execution/runtime/provider-host/processed-snapshots/9751c2a616207a9a809d2e9168fad6cc4dae4e61.json",
+      "digest": "sha256:3e6c8f59dd96a16b98949ce7e6317c342b7a3a9a63938ef36e38ddc9886a2961",
+      "schema_version": "ge.checkpoint-evidence.v1"
+    }
+  ],
+  "canonical_refs": [
+    "github://Waterfound/General-Execution/commit/9751c2a616207a9a809d2e9168fad6cc4dae4e61",
+    "github://Waterfound/General-Execution/commit/0915acb8f17dde2c09022fad3828c8633772c44f",
+    "build-colony://bc2-1aff60eac9c1ce94/fae-unattended-provider-pilot",
+    "authority://durable/aws-readonly-oidc-observer"
+  ]
+}
