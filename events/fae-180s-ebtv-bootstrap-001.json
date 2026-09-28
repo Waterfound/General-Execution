@@ -1,0 +1,424 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-180s-ebtv-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "fae-180s-economic-blocktime-validation",
+      "generation": 0,
+      "active": {
+        "work_id": "F180-01",
+        "role": "active",
+        "state": "ready",
+        "objective": "Inventory and classify all existing 180s-relevant evidence by directness/comparability.",
+        "active_gate": "existing-evidence-ledger",
+        "next_action_ref": "action://fae-180s/F180-01",
+        "source_revision": "9b2b097f146a9abaa2523806c31ad20e1d1aec86",
+        "evidence_required": [
+          "canonical_registry",
+          "v2_research_artifacts",
+          "active_v4_core",
+          "historical_soak_cases"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/9b2b097f146a9abaa2523806c31ad20e1d1aec86",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "F180-02",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Freeze deterministic active-180 economics, capacity and wall-clock UX baseline.",
+        "active_gate": "deterministic-baseline",
+        "next_action_ref": "action://fae-180s/F180-02",
+        "source_revision": "9b2b097f146a9abaa2523806c31ad20e1d1aec86",
+        "evidence_required": [
+          "active_v4_constants",
+          "deterministic_arithmetic"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/9b2b097f146a9abaa2523806c31ad20e1d1aec86",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [
+        {
+          "work_id": "F180-03",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Exercise exact active-v4 180s DAA across frozen shock, low-hash and oscillation scenarios.",
+          "active_gate": "live-daa-falsification",
+          "next_action_ref": "action://fae-180s/F180-03",
+          "source_revision": "9b2b097f146a9abaa2523806c31ad20e1d1aec86",
+          "evidence_required": [
+            "F180-01_complete",
+            "exact_active_daa_model",
+            "reproducible_scenario_results"
+          ],
+          "authority_boundary": null,
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "evidence",
+              "detail": "Requires F180-01 comparability freeze.",
+              "evidence_refs": [
+                "F180-01"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "F180-01=complete",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/9b2b097f146a9abaa2523806c31ad20e1d1aec86",
+          "schema_version": "ge.portfolio-entry.v1"
+        },
+        {
+          "work_id": "F180-04",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Measure active +120s timestamp interaction with the live 180s DAA and compare candidate hardening only directionally.",
+          "active_gate": "timestamp-daa-coupling",
+          "next_action_ref": "action://fae-180s/F180-04",
+          "source_revision": "9b2b097f146a9abaa2523806c31ad20e1d1aec86",
+          "evidence_required": [
+            "F180-03_complete",
+            "timestamp_adversarial_results"
+          ],
+          "authority_boundary": null,
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "evidence",
+              "detail": "Requires exact DAA results from F180-03.",
+              "evidence_refs": [
+                "F180-03"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "F180-03=complete",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/9b2b097f146a9abaa2523806c31ad20e1d1aec86",
+          "schema_version": "ge.portfolio-entry.v1"
+        },
+        {
+          "work_id": "F180-05",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Reconcile propagation, stale, fork and statistical confidence evidence without promoting zero-event observations.",
+          "active_gate": "propagation-stale-reconciliation",
+          "next_action_ref": "action://fae-180s/F180-05",
+          "source_revision": "9b2b097f146a9abaa2523806c31ad20e1d1aec86",
+          "evidence_required": [
+            "F180-01_complete",
+            "propagation_metrics",
+            "wilson_confidence"
+          ],
+          "authority_boundary": null,
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "evidence",
+              "detail": "Requires F180-01 evidence classification.",
+              "evidence_refs": [
+                "F180-01"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "F180-01=complete",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/9b2b097f146a9abaa2523806c31ad20e1d1aec86",
+          "schema_version": "ge.portfolio-entry.v1"
+        },
+        {
+          "work_id": "F180-06",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Quantify solo mining event frequency, payout variance and pool-pressure under active and normalized comparisons.",
+          "active_gate": "mining-economics",
+          "next_action_ref": "action://fae-180s/F180-06",
+          "source_revision": "9b2b097f146a9abaa2523806c31ad20e1d1aec86",
+          "evidence_required": [
+            "F180-02_complete",
+            "payout_variance_results"
+          ],
+          "authority_boundary": null,
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "evidence",
+              "detail": "Requires deterministic economics baseline.",
+              "evidence_refs": [
+                "F180-02"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "F180-02=complete",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/9b2b097f146a9abaa2523806c31ad20e1d1aec86",
+          "schema_version": "ge.portfolio-entry.v1"
+        },
+        {
+          "work_id": "F180-07",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Quantify decentralization sensitivity to latency, geography, bandwidth and miner size.",
+          "active_gate": "decentralization-sensitivity",
+          "next_action_ref": "action://fae-180s/F180-07",
+          "source_revision": "9b2b097f146a9abaa2523806c31ad20e1d1aec86",
+          "evidence_required": [
+            "F180-05_complete",
+            "F180-06_complete",
+            "sensitivity_results"
+          ],
+          "authority_boundary": null,
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "evidence",
+              "detail": "Requires propagation and mining-economics results.",
+              "evidence_refs": [
+                "F180-05",
+                "F180-06"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "F180-05=complete AND F180-06=complete",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/9b2b097f146a9abaa2523806c31ad20e1d1aec86",
+          "schema_version": "ge.portfolio-entry.v1"
+        },
+        {
+          "work_id": "F180-08",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Replay/model outage, partition, peer-starvation and recovery including the historical 208s case.",
+          "active_gate": "outage-recovery",
+          "next_action_ref": "action://fae-180s/F180-08",
+          "source_revision": "9b2b097f146a9abaa2523806c31ad20e1d1aec86",
+          "evidence_required": [
+            "F180-03_complete",
+            "F180-05_complete",
+            "recovery_results"
+          ],
+          "authority_boundary": null,
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "evidence",
+              "detail": "Requires DAA and propagation/stale results.",
+              "evidence_refs": [
+                "F180-03",
+                "F180-05"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "F180-03=complete AND F180-05=complete",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/9b2b097f146a9abaa2523806c31ad20e1d1aec86",
+          "schema_version": "ge.portfolio-entry.v1"
+        },
+        {
+          "work_id": "F180-09",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Admit external primary/public research and datasets with explicit comparability metadata.",
+          "active_gate": "external-evidence-review",
+          "next_action_ref": "action://fae-180s/F180-09",
+          "source_revision": "9b2b097f146a9abaa2523806c31ad20e1d1aec86",
+          "evidence_required": [
+            "F180-01_complete",
+            "external_source_ledger"
+          ],
+          "authority_boundary": null,
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "evidence",
+              "detail": "Requires F180-01 evidence-admission schema.",
+              "evidence_refs": [
+                "F180-01"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "F180-01=complete",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/9b2b097f146a9abaa2523806c31ad20e1d1aec86",
+          "schema_version": "ge.portfolio-entry.v1"
+        },
+        {
+          "work_id": "F180-10",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Synthesize 180/300/600 trade-offs without forcing a winner or changing authority.",
+          "active_gate": "comparative-synthesis",
+          "next_action_ref": "action://fae-180s/F180-10",
+          "source_revision": "9b2b097f146a9abaa2523806c31ad20e1d1aec86",
+          "evidence_required": [
+            "F180-02_complete",
+            "F180-04_complete",
+            "F180-05_complete",
+            "F180-06_complete",
+            "F180-07_complete",
+            "F180-08_complete",
+            "F180-09_complete"
+          ],
+          "authority_boundary": null,
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "evidence",
+              "detail": "Requires all software evidence surfaces.",
+              "evidence_refs": [
+                "F180-02",
+                "F180-04",
+                "F180-05",
+                "F180-06",
+                "F180-07",
+                "F180-08",
+                "F180-09"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "software-evidence-surfaces=complete",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/9b2b097f146a9abaa2523806c31ad20e1d1aec86",
+          "schema_version": "ge.portfolio-entry.v1"
+        },
+        {
+          "work_id": "F180-11",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Independently verify exact-source harness/results and append-only evidence ledger.",
+          "active_gate": "independent-verification",
+          "next_action_ref": "action://fae-180s/F180-11",
+          "source_revision": "9b2b097f146a9abaa2523806c31ad20e1d1aec86",
+          "evidence_required": [
+            "F180-10_complete",
+            "independent_verifier_pass"
+          ],
+          "authority_boundary": null,
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "evidence",
+              "detail": "Requires comparative synthesis.",
+              "evidence_refs": [
+                "F180-10"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "F180-10=complete",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/9b2b097f146a9abaa2523806c31ad20e1d1aec86",
+          "schema_version": "ge.portfolio-entry.v1"
+        },
+        {
+          "work_id": "F180-12",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Issue exactly one frozen terminal research verdict without activation authority.",
+          "active_gate": "terminal-verdict",
+          "next_action_ref": "action://fae-180s/F180-12",
+          "source_revision": "9b2b097f146a9abaa2523806c31ad20e1d1aec86",
+          "evidence_required": [
+            "F180-11_complete",
+            "F180-13_resolved"
+          ],
+          "authority_boundary": null,
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "evidence",
+              "detail": "Requires independent verification and explicit external-evidence status.",
+              "evidence_refs": [
+                "F180-11",
+                "F180-13"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "F180-11=complete AND F180-13=resolved",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/9b2b097f146a9abaa2523806c31ad20e1d1aec86",
+          "schema_version": "ge.portfolio-entry.v1"
+        },
+        {
+          "work_id": "F180-13",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Admit fresh WAN/physical/natural-event evidence or explicitly retain the missing-evidence boundary; never substitute Stability Soak V3.",
+          "active_gate": "wan-physical-natural-event-evidence",
+          "next_action_ref": "action://fae-180s/F180-13",
+          "source_revision": "9b2b097f146a9abaa2523806c31ad20e1d1aec86",
+          "evidence_required": [
+            "fresh_external_180_evidence"
+          ],
+          "authority_boundary": null,
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "external_dependency",
+              "detail": "Fresh directly comparable WAN/physical/natural-event evidence is not currently available; V3 is separate.",
+              "evidence_refs": [
+                "docs/FAE_CANONICAL_STATE.md#stability-soak-v3-operational-state"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "fresh-180-external-evidence-admitted",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/9b2b097f146a9abaa2523806c31ad20e1d1aec86",
+          "schema_version": "ge.portfolio-entry.v1"
+        }
+      ],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
