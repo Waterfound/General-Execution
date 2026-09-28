@@ -1,0 +1,98 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-visual-language-vl14-complete-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-visual-language-vl14-close-v1",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-vl14-verified-to-public-rebrand-authority",
+          "from_state": "verifying",
+          "event": "verification_passed",
+          "to_state": "human_gate",
+          "next_action_ref": "authority://fae-visual-language/authorize-public-rebrand-and-main-merge",
+          "effect": "stop_human_gate",
+          "required_evidence": [
+            "exact_candidate_all_checks_green",
+            "main_reconciled_zero_behind",
+            "authority_corrected_diff_scope",
+            "draft_integration_pr"
+          ],
+          "authority_mode": "human_required",
+          "authority_boundary": "Waterfound must explicitly authorize merge of the Direction D root product surface to production-bound main and public testnet/site rebrand deployment. This authority does not grant Explorer source writes, alter consensus/economics/protocol identity, or finalize the FAE logo/symbol.",
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-push",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-visual-language-art-direction",
+      "policy_digest": "sha256:7de5d4473074e80ee96c0e06433dd78f80dde0ba1dc639bc994d391dfb87d2c0",
+      "transition_event": "verification_passed"
+    },
+    "trigger": {
+      "source": "github-push",
+      "event_id": "fae-visual-language-vl14-complete-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:4d5237ee7abdde6419138e69136a9301e5218bea3f391a0249ef685c2ab33a0c",
+      "observation_digest": "sha256:ad09ba826c7df31a0ee2b86b71204993a62f46da48a9f2349e0b900163bf4a5e",
+      "admission_ref": "github://Waterfound/General-Execution/events/fae-visual-language-vl14-complete-001"
+    },
+    "observation": {
+      "portfolio_id": "fae-visual-language-art-direction",
+      "expected_generation": 9,
+      "expected_state_digest": "sha256:8f76ceb02b4b71a6249b64672bdb829eafc3ffdf43b96caa4b2e264ff9ae5f48",
+      "policy_digest": "sha256:7de5d4473074e80ee96c0e06433dd78f80dde0ba1dc639bc994d391dfb87d2c0",
+      "event": "verification_passed",
+      "evidence": [
+        {
+          "kind": "exact_candidate_all_checks_green",
+          "locator": "github://Waterfound/FAE-testnet/commit/2ffa8dbbd4ed9b32d5593e6462f7c3486e18603c",
+          "digest": "sha256:b9a7c64b7b50ae1c221cb92c4348bc5047848c3e28bdb3d28aa5e0d580717dec",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "main_reconciled_zero_behind",
+          "locator": "github://Waterfound/FAE-testnet/compare/main...colony/fae-visual-language-rebrand-001",
+          "digest": "sha256:472624cdc85f8fdd07d995fa5d8d432c9d875750d7d616c28ec7bf394bb699eb",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "authority_corrected_diff_scope",
+          "locator": "github://Waterfound/FAE-testnet/pull/265/files",
+          "digest": "sha256:150661fa58abda756a01a2b9ca5c58c309a67bedbcb9f776589bbef14a2662bd",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "draft_integration_pr",
+          "locator": "github://Waterfound/FAE-testnet/pull/265",
+          "digest": "sha256:2e59397a80aa28b678bae98dfc89c7af833098b8f3b110ef21cb3136d540808f",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "github://Waterfound/FAE-testnet/pull/265",
+      "observed_at": "2026-09-28T22:08:00Z",
+      "summary": "VL-14 closed fail-closed: the Direction D integration candidate is reconciled with current main, zero commits behind, and all exact-head integration/security checks pass. Explorer source and mining runtime were restored to frozen main-authority bytes; the admitted executable product diff is index.html only. Public rebrand, merge to production-bound main, and deployment remain Waterfound authority.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/2ffa8dbbd4ed9b32d5593e6462f7c3486e18603c",
+        "github://Waterfound/FAE-testnet/pull/265",
+        "github://Waterfound/FAE-testnet/actions/runs/36490342498",
+        "github://Waterfound/FAE-testnet/actions/runs/36490342511",
+        "github://Waterfound/FAE-testnet/actions/runs/36490342537",
+        "github://Waterfound/FAE-testnet/actions/runs/36490342468",
+        "github://Waterfound/FAE-testnet/actions/runs/36490342469"
+      ],
+      "uncertainties": [
+        "The isolated AppDeploy preview could not be redeployed after the final CSS-only miner correction because the free daily deployment-credit floor was reached. Exact-head source/CI/cross-lab/canonical checks govern integration; no production deployment was attempted."
+      ],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
