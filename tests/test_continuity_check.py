@@ -228,3 +228,28 @@ def test_authority_and_execution_side_effect_flags_are_always_false():
     report = inspect_continuity(snap(repository=repo(), durable=durable(admissible_next=("RDE-08",))))
     assert report.authority_created is False
     assert report.execution_triggered is False
+
+
+def test_satisfied_old_human_gate_does_not_block_resumption():
+    old_gate = GateEvidence(GateKind.HUMAN, "authority://old", "old authority request", "RDE-07", satisfied=True)
+    s = snap(repository=repo(), durable=durable(admissible_next=("RDE-08",)), gates=(old_gate,))
+    assert verdict(s) == DevelopmentVerdict.CHECKPOINTED_RESUMABLE.value
+
+
+def test_merged_pr_without_canonical_presence_is_not_done_canonical():
+    s = snap(repository=repo(pull_request_number=10, pull_request_state="closed", pull_request_merged=True, canonical_contains_workstream=False))
+    assert verdict(s) == DevelopmentVerdict.INSUFFICIENT_EVIDENCE.value
+
+
+def test_cancelled_provider_job_does_not_create_failure():
+    s = snap(
+        repository=repo(),
+        durable=durable(admissible_next=("RDE-08",)),
+        provider=ProviderEvidence("runner", ProviderState.CANCELLED, subject_revision="b" * 40),
+    )
+    assert verdict(s) == DevelopmentVerdict.CHECKPOINTED_RESUMABLE.value
+
+
+def test_conversation_memory_claim_without_operational_evidence_fails_closed():
+    s = snap(conversation=ConversationEvidence(ConversationAssessment.ACTIVE_OBSERVED, "2026-09-28T21:00:00Z"))
+    assert verdict(s) == DevelopmentVerdict.INSUFFICIENT_EVIDENCE.value
