@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:a87708743d723b27ceb15d3d41167eeb2c4bd86667328a24ea10e95c8be26cd6",
+  "event_id": "fae-asic-a3-r4-existing-afi-bootstrap-v2-001",
+  "event_report_digest": "sha256:5d9afd0d53e421ba50db9e0248c5f69a54ae64e93fd7df512593ac96674bc71f",
+  "operation": "bootstrap",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "c7f3835c60e93cf27a9beaf9a339e855442e35eb"
+}

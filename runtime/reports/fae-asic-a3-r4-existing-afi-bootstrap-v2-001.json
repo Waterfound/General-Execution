@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:a87708743d723b27ceb15d3d41167eeb2c4bd86667328a24ea10e95c8be26cd6",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "fae-asic-a3-r4-existing-afi-bootstrap-v2-001",
+    "human_required": false,
+    "operation": "bootstrap",
+    "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+    "post_generation": 0,
+    "post_state_digest": "sha256:7c560aeedc6c38bfd556081b98b98717aa04925ce6422e71628dd8fbf2f4af25",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:7c560aeedc6c38bfd556081b98b98717aa04925ce6422e71628dd8fbf2f4af25",
+    "requested_action_ref": "action://fae-asic/a3/r4/request-existing-afi-admission-authority",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:5d9afd0d53e421ba50db9e0248c5f69a54ae64e93fd7df512593ac96674bc71f",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
