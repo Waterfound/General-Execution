@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:356b5e7e70a322fabb73a66314a0d61e4df6d909b9b7ff37a50baad07e25750e",
+  "event_report": {
+    "checkpoint_digest": "sha256:81c1d68906157f4f63fa03fa2ae5c1b316a6e427f21c46de5d0dcebdd92dfef2",
+    "event_id": "fae-asic-a3-warning-clean-r3-rework-001",
+    "human_required": false,
+    "operation": "transition",
+    "portfolio_id": "fae-asic-a3-warning-clean-revalidation-v2",
+    "post_generation": 3,
+    "post_state_digest": "sha256:5c6c5e1f4fa1946d5618b1173b46e2e796b3d481f5fc0158696a86db40e4d684",
+    "pre_generation": 2,
+    "pre_state_digest": "sha256:97ad36da93e05022adc87a6163cb600a86f3daa306ee25e8f778dc9d19c20a3b",
+    "requested_action_ref": null,
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "committed"
+  },
+  "event_report_digest": "sha256:ee6127f27ba07b4871bbe74fa6db8c7374efa4b549b0d81e01b24028464e0eab",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
