@@ -1,0 +1,88 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-visual-language-vl11-complete-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-visual-language-vl11-close-v1",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-vl11-verified-to-vl12",
+          "from_state": "verifying",
+          "event": "verification_passed",
+          "to_state": "verifying",
+          "next_action_ref": "action://fae-visual-language/direction-d/VL-12",
+          "effect": "none",
+          "required_evidence": [
+            "explorer_surface_ci",
+            "explorer_public_qa",
+            "explorer_source_contract"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-push",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-visual-language-art-direction",
+      "policy_digest": "sha256:3aa24d154d0cb9e542677b2f912fc8e12006206f9264dc4074e47ca3ce46000d",
+      "transition_event": "verification_passed"
+    },
+    "trigger": {
+      "source": "github-push",
+      "event_id": "fae-visual-language-vl11-complete-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:554197b24b5614978c198a7e41efb6879c8f6a9642eb76fe52ee8520eb8ddf2f",
+      "observation_digest": "sha256:e3f8de82d8103dc130d620e9c0645f51ea39c8a9c1be65d1141109757f7d04c6",
+      "admission_ref": "github://Waterfound/General-Execution/events/fae-visual-language-vl11-complete-001"
+    },
+    "observation": {
+      "portfolio_id": "fae-visual-language-art-direction",
+      "expected_generation": 6,
+      "expected_state_digest": "sha256:2cb54f2bbe333ad8dc9854e7af107c6881f71aa93606524d367be20906ffb70c",
+      "policy_digest": "sha256:3aa24d154d0cb9e542677b2f912fc8e12006206f9264dc4074e47ca3ce46000d",
+      "event": "verification_passed",
+      "evidence": [
+        {
+          "kind": "explorer_surface_ci",
+          "locator": "github://Waterfound/FAE-testnet/actions/runs/36482104280",
+          "digest": "sha256:3d015078faad1b6f763406cd66dbbb895a5b503d4bb1bf015cebc746df0d1ead",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "explorer_public_qa",
+          "locator": "https://agent.tinyfish.ai/runs/28f68afb-e3aa-4237-a0f7-a68a2862ffa0",
+          "digest": "sha256:7db86cd0df16f7612eb265905f254faf5a207f8c1e6924784abea781bf618391",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "explorer_source_contract",
+          "locator": "github://Waterfound/FAE-testnet/commit/5a8f336500aa4293b0e7b716caa7ed94f7e094e0",
+          "digest": "sha256:29edfb46e22bbb36eb29b02c2164315fff4bf8103ecdbebe3a368fe5a5542aa5",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "github://Waterfound/FAE-testnet/commit/5a8f336500aa4293b0e7b716caa7ed94f7e094e0",
+      "observed_at": "2026-09-28T20:55:00Z",
+      "summary": "VL-11 closed: Direction D Explorer specialization passed CI and corrected public visual QA. Orange broadcast layer, white field, blue search/action treatment and Height/Issued/Target/Mempool ticker are present; legacy fixed metric cards are absent; read-only and validated-node boundaries remain explicit.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/5a8f336500aa4293b0e7b716caa7ed94f7e094e0",
+        "github://Waterfound/FAE-testnet/actions/runs/36482104280",
+        "https://fae-direction-d-vl08-qa-ii0d80.v2.appdeploy.ai/explorer/index.html",
+        "https://agent.tinyfish.ai/runs/28f68afb-e3aa-4237-a0f7-a68a2862ffa0"
+      ],
+      "uncertainties": [
+        "Explorer QA is visual/read-only with the isolated harness API intentionally disconnected; chain-query correctness remains governed by unchanged Explorer application/client logic and existing Explorer tests."
+      ],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
