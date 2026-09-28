@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:165ecd36cb548f8bff86bd6a4dbba959b7c081c05c4c61c22fa073dd462ef517",
+  "event_report": {
+    "checkpoint_digest": "sha256:8b3101a637ce89864ee66d12817d9d6714eb77696bf01d5e961759f865d8cef8",
+    "event_id": "fae-180s-ebtv-f180-06-complete-001",
+    "human_required": false,
+    "operation": "transition",
+    "portfolio_id": "fae-180s-economic-blocktime-validation",
+    "post_generation": 4,
+    "post_state_digest": "sha256:ef847396d6fed054c470470e2700139dcf067966d2251d380e92c102ec84c545",
+    "pre_generation": 3,
+    "pre_state_digest": "sha256:dca1f01ec513a1a78372968f378d7a1e6f1cb99ad1dc6dc2836a1ab76b7b2715",
+    "requested_action_ref": null,
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "committed"
+  },
+  "event_report_digest": "sha256:0987909ce8409efe308fa1b9ec4c4448b5a33c9e4dac28c0f198c86bf45cd8e1",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
