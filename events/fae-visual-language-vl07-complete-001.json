@@ -1,0 +1,85 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-visual-language-vl07-complete-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-visual-language-vl07-close-v1",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-vl07-verified-to-vl08",
+          "from_state": "verifying",
+          "event": "verification_passed",
+          "to_state": "verifying",
+          "next_action_ref": "action://fae-visual-language/direction-d/VL-08",
+          "effect": "none",
+          "required_evidence": [
+            "direction_d_grammar_frozen",
+            "main_reconciled",
+            "visual_contract_ci"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-push",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-visual-language-art-direction",
+      "policy_digest": "sha256:18e6d9927175dd91a66332e9c1ffa5b9a6baa4da21f823d3c0881263d17bc07a",
+      "transition_event": "verification_passed"
+    },
+    "trigger": {
+      "source": "github-push",
+      "event_id": "fae-visual-language-vl07-complete-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:369d50c8d2c3fa2d76a63b9e906d35ab6bee8aa640f28c8079505882ef9ff45e",
+      "observation_digest": "sha256:d2ff9f952bcab5be41272e5ca1e91648bdfce993fe406d0125e121249dcd29e9",
+      "admission_ref": "github://Waterfound/General-Execution/events/fae-visual-language-vl07-complete-001"
+    },
+    "observation": {
+      "portfolio_id": "fae-visual-language-art-direction",
+      "expected_generation": 2,
+      "expected_state_digest": "sha256:ed0347800ee59dfedbd84f9737aa3ffed2e1f8f204c3b85fb68e0b74fab96ec4",
+      "policy_digest": "sha256:18e6d9927175dd91a66332e9c1ffa5b9a6baa4da21f823d3c0881263d17bc07a",
+      "event": "verification_passed",
+      "evidence": [
+        {
+          "kind": "direction_d_grammar_frozen",
+          "locator": "github://Waterfound/FAE-testnet/commit/14f883ad79a929211ddb9698bb5564d3857f2ab4/design/direction-d-visual-grammar.md",
+          "digest": "sha256:090f207ce0d9ed646423561c5841bb375e5c1de1a428b7fa07470fc4d498818d",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "main_reconciled",
+          "locator": "github://Waterfound/FAE-testnet/commit/7350c7d8fe3b64b230a6610d38167a4f74cc2552",
+          "digest": "sha256:e351bfa0a55dda9800ad30186ed4d3c84e8849fac137b337cb9f351454004b3b",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "visual_contract_ci",
+          "locator": "github://Waterfound/FAE-testnet/actions/runs/36479016629",
+          "digest": "sha256:31ccf1d9f0fb57317607639195f248f437a399b761560a47db4924a9de4d8708",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "github://Waterfound/FAE-testnet/commit/14f883ad79a929211ddb9698bb5564d3857f2ab4",
+      "observed_at": "2026-09-28T20:25:10Z",
+      "summary": "VL-07 closed: Waterfound Direction D authority is bound in-repo, the visual grammar is frozen, the branch is reconciled with main d6c3ac8, and the repaired visual-language contract CI passed.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/14f883ad79a929211ddb9698bb5564d3857f2ab4",
+        "github://Waterfound/FAE-testnet/actions/runs/36479016629",
+        "github://Waterfound/General-Execution/commit/bb2eb435ca8db59835ef8de0153fcc0e73da31e0"
+      ],
+      "uncertainties": [],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
