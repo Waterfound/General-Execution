@@ -1,0 +1,70 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-mainnet-readiness-dependent-chain-di-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-mainnet-readiness-reconciliation-v1",
+      "revision": "3",
+      "rules": [
+        {
+          "rule_id": "01-diagnosis-required",
+          "from_state": "ready",
+          "event": "diagnosis_required",
+          "to_state": "di_required",
+          "next_action_ref": "action://fae-mainnet-readiness/durable-model-correction",
+          "effect": "request_di",
+          "required_evidence": [
+            "dependency_model_mismatch"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-push",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-mainnet-readiness-reconciliation",
+      "policy_digest": "sha256:8550622b3b173acc8df9a9b77834f13a30cae380297a6869cc66ecaa82a9a598",
+      "transition_event": "diagnosis_required"
+    },
+    "trigger": {
+      "source": "github-push",
+      "event_id": "fae-mainnet-readiness-dependent-chain-di-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:7ec41178ea592f3f339575a8aedc5165942861758d301d6b36b9c57798857049",
+      "observation_digest": "sha256:690f07b31624e4e978c870ff97bbd0f6ca134e64f915b7503531fd3bb6995774",
+      "admission_ref": "github://Waterfound/General-Execution/runtime/durable-asp-control/fae-mainnet-readiness-dependent-chain-di-001"
+    },
+    "observation": {
+      "portfolio_id": "fae-mainnet-readiness-reconciliation",
+      "expected_generation": 2,
+      "expected_state_digest": "sha256:b65a0ce8909e6bcea3f31d06bffec290625332ebd038ca4dda590a921d33ad6e",
+      "policy_digest": "sha256:8550622b3b173acc8df9a9b77834f13a30cae380297a6869cc66ecaa82a9a598",
+      "event": "diagnosis_required",
+      "evidence": [
+        {
+          "kind": "dependency_model_mismatch",
+          "locator": "design://fae-mainnet-readiness/asp-dependent-chain",
+          "digest": "sha256:7ec41178ea592f3f339575a8aedc5165942861758d301d6b36b9c57798857049",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "action://fae-mainnet-readiness/durable-model-correction",
+      "observed_at": "2026-09-28T15:50:00Z",
+      "summary": "Fail closed: strict MR dependency ordering cannot safely use rotating ASP wake semantics because replacement Secondary wake conditions depend on work not yet complete.",
+      "canonical_refs": [
+        "github://Waterfound/General-Execution/runtime/reports/fae-mainnet-readiness-mr07-verified-001.json",
+        "github://Waterfound/FAE-testnet/docs/FAE_MAINNET_READINESS_BUILD_COLONY_RUN.json"
+      ],
+      "uncertainties": [],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
