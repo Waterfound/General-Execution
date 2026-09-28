@@ -1,0 +1,72 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-rde-physical-autopilot-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "fae-representative-device-physical-autopilot",
+      "generation": 0,
+      "active": {
+        "work_id": "RPA-X1",
+        "role": "active",
+        "state": "waiting_external",
+        "objective": "Collect real provenance-bound Representative Device PHYSICAL_EVIDENCE across every required device class using the frozen Physical Autopilot without weakening FAE-RDE-ACCEPTANCE-V1-20260928.",
+        "active_gate": "representative-device-physical-runs",
+        "next_action_ref": "external://fae-rde/representative-device-physical-runs",
+        "source_revision": "b00bbebca81a8f1085f7e61beddca862d8b5dfaa",
+        "evidence_required": [
+          "real_physical_device_execution",
+          "pre_result_selection_lock",
+          "four_required_device_classes",
+          "full_frozen_workload_durations",
+          "genuine_lifecycle_transitions_where_required",
+          "provenance_bound_capture_bundles",
+          "deterministic_run_verifier_pass"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [
+          {
+            "kind": "external_dependency",
+            "detail": "Representative Device Evidence cannot advance until real preselected devices execute PHYSICAL_EVIDENCE under the frozen contract. Synthetic/rehearsal data, post-result device selection, and fabricated energy/lifecycle observations are inadmissible.",
+            "evidence_refs": [
+              "github://Waterfound/FAE-testnet/commit/b00bbebca81a8f1085f7e61beddca862d8b5dfaa/lab/representative-device-physical-autopilot/execution-kit.json",
+              "github://Waterfound/FAE-testnet/commit/b00bbebca81a8f1085f7e61beddca862d8b5dfaa/docs/FAE_REPRESENTATIVE_DEVICE_PHYSICAL_AUTOPILOT_CLOSURE.json"
+            ],
+            "schema_version": "ge.portfolio-blocker.v1"
+          }
+        ],
+        "wake_condition": {
+          "kind": "evidence_predicate_satisfied",
+          "value": "complete-four-class-provenance-bound-PHYSICAL_EVIDENCE-portfolio=available",
+          "schema_version": "ge.wake-condition.v1"
+        },
+        "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/b00bbebca81a8f1085f7e61beddca862d8b5dfaa/docs/FAE_REPRESENTATIVE_DEVICE_PHYSICAL_AUTOPILOT_CLOSURE.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "RPA-X4",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Independently verify and admit the complete four-class physical portfolio only after RPA-X1 produces admissible evidence.",
+        "active_gate": "final-physical-portfolio-admission",
+        "next_action_ref": "verify://fae-rde/final-physical-portfolio-admission",
+        "source_revision": "b00bbebca81a8f1085f7e61beddca862d8b5dfaa",
+        "evidence_required": [
+          "RPA-X1_complete",
+          "complete_required_class_coverage",
+          "deterministic_portfolio_verifier_pass"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/b00bbebca81a8f1085f7e61beddca862d8b5dfaa/lab/representative-device-physical-autopilot/execution-kit.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
