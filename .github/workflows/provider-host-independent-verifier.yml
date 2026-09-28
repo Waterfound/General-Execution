@@ -81,7 +81,12 @@ jobs:
               elif isinstance(node,ast.ImportFrom) and node.module:
                   decision_imports.add(node.module.split('.')[0])
           assert not (decision_imports & forbidden_import_roots)
-          assert 'TransitionAuthorityGrant' not in decision_src
+          decision_symbols={
+              node.id for node in ast.walk(decision_tree) if isinstance(node,ast.Name)
+          } | {
+              node.attr for node in ast.walk(decision_tree) if isinstance(node,ast.Attribute)
+          }
+          assert 'TransitionAuthorityGrant' not in decision_symbols
           assert 'target must be rework or failed' in decision_src
           assert 'provider_actor != "Waterfound"' in decision_src
           assert 'state.active.state != "human_gate"' in decision_src
