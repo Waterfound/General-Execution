@@ -1,0 +1,81 @@
+{
+  "schema_version": "ge.durable-terminal-completion.v1",
+  "status": "PASS_TERMINALLY_VERIFIED",
+  "completed_at": "2026-09-28T16:16:13Z",
+  "build_colony": {
+    "run_id": "bc2-1aff60eac9c1ce94",
+    "manifest_digest": "2bdcd69b73c9830e218b03270b2f2f657e8b35536bfd599a6e8e5894e7649846",
+    "closure_path": "no_iam_provider_snapshot"
+  },
+  "terminal_portfolio": {
+    "portfolio_id": "durable-terminal-closure",
+    "generation": 4,
+    "state": "complete",
+    "state_digest": "sha256:da4875fd9409b29239610719f9ed043840f7a0fdf4693c045cba7fd5a6b7a608",
+    "completion_event_id": "durable-terminal-no-iam-complete-001",
+    "completion_event_report_digest": "sha256:39947a0ab0bf2ce2ca01a0c9e3c56dda3b4194290336e1987ca071afb6a58273",
+    "human_required": false
+  },
+  "obsolete_iam_gate": {
+    "action_ref": "authority://durable/aws-readonly-oidc-observer",
+    "disposition": "superseded_without_execution",
+    "decision_event_id": "durable-terminal-no-iam-supersede-002",
+    "decision_receipt_digest": "sha256:eed75813219faaa3b8ab81cd40f2f8fd417e8ac34998f65affafde547ae50088",
+    "authority_grant_created": false,
+    "aws_iam_created": false
+  },
+  "provider_evidence": {
+    "generalized_provider": {
+      "workflow_run_id": 36442435398,
+      "status": "success",
+      "first_tick": "committed",
+      "cold_replay": "already_applied",
+      "first_event_report_digest": "sha256:ec64a4839330e7e1bc34021888582e56ef6609535da8a0d9e7a8353e19f96c09"
+    },
+    "fae_snapshot_provider": {
+      "workflow_run_id": 36445713247,
+      "status": "success",
+      "snapshot_source_commit": "9751c2a616207a9a809d2e9168fad6cc4dae4e61",
+      "first_tick": "committed",
+      "cold_replay": "already_applied",
+      "first_event_report_digest": "sha256:7497098a5ce550f4f72ea3d82fdd7b40a7d4b5e4fe41d5b4509dd1bb32272fb7",
+      "runtime_f2_executed": false,
+      "authority_created": false,
+      "next_human_gate": "authority://fae-asic/a3/r4/runtime-f2"
+    }
+  },
+  "integration": {
+    "pull_request": 8,
+    "authorized_head_sha": "780943f53ca167834fadc975cfb3e6905c933e73",
+    "merge_commit_sha": "f247bac35b3174e4826491609129f9a008942019",
+    "merge_commit_signature_verified": true,
+    "merged_at": "2026-09-28T16:15:08Z",
+    "postmerge_main_integration_gate": {
+      "workflow_run_id": 36449682884,
+      "conclusion": "success"
+    },
+    "postmerge_terminal_verification": {
+      "workflow_run_id": 36449682962,
+      "conclusion": "success",
+      "artifact_id": 10982856536,
+      "artifact_digest": "sha256:81476e3e7b835ff7de6d7102806a215935b6bb84b8e7eca28545ae3d555ba969"
+    }
+  },
+  "human_gate_delivery": {
+    "verified_mode": "current_chat_request_and_explicit_durable_response",
+    "human_decision_consumed": true,
+    "proactive_push_notification_verified": false,
+    "proactive_email_notification_verified": false
+  },
+  "forbidden_or_ungranted_actions": [
+    "F2 runtime",
+    "benchmark",
+    "attacker sweep",
+    "AFI creation",
+    "AWS IAM creation",
+    "release",
+    "consensus activation",
+    "mainnet action"
+  ],
+  "conclusion": "Durable Execution terminal closure is complete and post-merge verified on the no-IAM path. The separate FAE A3 R4 runtime-F2 human gate remains closed."
+}
