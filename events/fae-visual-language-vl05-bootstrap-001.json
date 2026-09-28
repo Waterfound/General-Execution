@@ -1,0 +1,281 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-visual-language-vl05-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "fae-visual-language-art-direction",
+      "generation": 0,
+      "active": {
+        "work_id": "VL-05-06-art-direction-gate",
+        "role": "active",
+        "state": "verifying",
+        "objective": "Verify the evidence-bound three-direction FAE art-direction package, then stop for Waterfound to select the high-order identity direction.",
+        "active_gate": "VL-05→VL-06",
+        "next_action_ref": "verify://fae-visual-language/VL-05-options",
+        "source_revision": "ddd8be8b85949074a7af9bc22606f03ced7a3506",
+        "evidence_required": [
+          "visual_contract_ci",
+          "isolated_preview_ready",
+          "browser_visual_qa",
+          "rendered_wallet_and_mining_concepts"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/ddd8be8b85949074a7af9bc22606f03ced7a3506",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "VL-07-newest-main-reconciliation",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "After art-direction selection, reconcile the isolated visual branch against newest main before any product-surface implementation.",
+        "active_gate": "post-selection-main-reconciliation",
+        "next_action_ref": "action://fae-visual-language/VL-07-reconcile-main",
+        "source_revision": "ddd8be8b85949074a7af9bc22606f03ced7a3506",
+        "evidence_required": [
+          "waterfound_direction_selection",
+          "newest_main_revision",
+          "no_shared_state_conflict"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/ddd8be8b85949074a7af9bc22606f03ced7a3506",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [
+        {
+          "work_id": "VL-08-brand-thesis-visual-grammar",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Freeze the selected FAE brand thesis, typography/color/motion hypotheses and visual grammar before componentization.",
+          "active_gate": "brand-thesis-grammar-freeze",
+          "next_action_ref": "action://fae-visual-language/VL-08",
+          "source_revision": "ddd8be8b85949074a7af9bc22606f03ced7a3506",
+          "evidence_required": [
+            "VL-07_complete",
+            "selected_direction"
+          ],
+          "authority_boundary": null,
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "authority",
+              "detail": "Requires Waterfound art-direction selection and newest-main reconciliation.",
+              "evidence_refs": [
+                "VL-06",
+                "VL-07"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "VL-07=complete AND Waterfound-direction-selection=admitted",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/ddd8be8b85949074a7af9bc22606f03ced7a3506",
+          "schema_version": "ge.portfolio-entry.v1"
+        },
+        {
+          "work_id": "VL-09-home-wallet-mining-slices",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Implement high-value Homepage, Wallet and Mining vertical slices under the selected grammar without changing protocol semantics.",
+          "active_gate": "product-vertical-slices",
+          "next_action_ref": "action://fae-visual-language/VL-09",
+          "source_revision": "ddd8be8b85949074a7af9bc22606f03ced7a3506",
+          "evidence_required": [
+            "VL-08_complete"
+          ],
+          "authority_boundary": null,
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "evidence",
+              "detail": "Requires frozen brand thesis and visual grammar.",
+              "evidence_refs": [
+                "VL-08"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "VL-08=complete",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/ddd8be8b85949074a7af9bc22606f03ced7a3506",
+          "schema_version": "ge.portfolio-entry.v1"
+        },
+        {
+          "work_id": "VL-10-explorer-specialization",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Apply the selected FAE visual language to Explorer while preserving neutral observation and dense-data legibility.",
+          "active_gate": "explorer-specialization",
+          "next_action_ref": "action://fae-visual-language/VL-10",
+          "source_revision": "ddd8be8b85949074a7af9bc22606f03ced7a3506",
+          "evidence_required": [
+            "VL-08_complete",
+            "VL-09_slice_language"
+          ],
+          "authority_boundary": null,
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "evidence",
+              "detail": "Requires frozen visual grammar and evidence from real product slices.",
+              "evidence_refs": [
+                "VL-08",
+                "VL-09"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "VL-08=complete AND VL-09=verified",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/ddd8be8b85949074a7af9bc22606f03ced7a3506",
+          "schema_version": "ge.portfolio-entry.v1"
+        },
+        {
+          "work_id": "VL-11-responsive-accessibility-browser-qa",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Run responsive, browser, keyboard, contrast, reduced-motion and state-clarity QA across selected product slices.",
+          "active_gate": "visual-product-qa",
+          "next_action_ref": "action://fae-visual-language/VL-11",
+          "source_revision": "ddd8be8b85949074a7af9bc22606f03ced7a3506",
+          "evidence_required": [
+            "VL-09_complete",
+            "VL-10_complete"
+          ],
+          "authority_boundary": null,
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "evidence",
+              "detail": "Requires implemented product slices and Explorer specialization.",
+              "evidence_refs": [
+                "VL-09",
+                "VL-10"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "VL-09=complete AND VL-10=complete",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/ddd8be8b85949074a7af9bc22606f03ced7a3506",
+          "schema_version": "ge.portfolio-entry.v1"
+        },
+        {
+          "work_id": "VL-12-reference-gallery-systemization",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Freeze approved reference examples and extract proven design primitives without prematurely creating a separate repository.",
+          "active_gate": "reference-gallery-systemization",
+          "next_action_ref": "action://fae-visual-language/VL-12",
+          "source_revision": "ddd8be8b85949074a7af9bc22606f03ced7a3506",
+          "evidence_required": [
+            "VL-11_complete"
+          ],
+          "authority_boundary": null,
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "evidence",
+              "detail": "Requires product-level visual QA.",
+              "evidence_refs": [
+                "VL-11"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "VL-11=complete",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/ddd8be8b85949074a7af9bc22606f03ced7a3506",
+          "schema_version": "ge.portfolio-entry.v1"
+        },
+        {
+          "work_id": "VL-13-canonical-integration-candidate",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Prepare a serialized non-consensus canonical integration candidate against newest main with combined verification.",
+          "active_gate": "canonical-integration-candidate",
+          "next_action_ref": "action://fae-visual-language/VL-13",
+          "source_revision": "ddd8be8b85949074a7af9bc22606f03ced7a3506",
+          "evidence_required": [
+            "VL-12_complete",
+            "newest_main_reconciled"
+          ],
+          "authority_boundary": null,
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "evidence",
+              "detail": "Requires systemization and newest-main reconciliation.",
+              "evidence_refs": [
+                "VL-12"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "VL-12=complete AND newest-main=reconciled",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/ddd8be8b85949074a7af9bc22606f03ced7a3506",
+          "schema_version": "ge.portfolio-entry.v1"
+        },
+        {
+          "work_id": "VL-14-public-testnet-deployment",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Deploy the verified non-consensus visual update to the public testnet/site only after canonical integration and deployment checks.",
+          "active_gate": "verified-public-deployment",
+          "next_action_ref": "action://fae-visual-language/VL-14",
+          "source_revision": "ddd8be8b85949074a7af9bc22606f03ced7a3506",
+          "evidence_required": [
+            "VL-13_complete",
+            "combined_verification_pass"
+          ],
+          "authority_boundary": null,
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "evidence",
+              "detail": "Requires canonical integration candidate and combined verification.",
+              "evidence_refs": [
+                "VL-13"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "VL-13=complete AND combined-verification=pass",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/ddd8be8b85949074a7af9bc22606f03ced7a3506",
+          "schema_version": "ge.portfolio-entry.v1"
+        }
+      ],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
