@@ -1,4 +1,5 @@
 name: Durable provider host verification
+# closure campaign verification v2
 
 on:
   push:
