@@ -1,0 +1,72 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-asic-a3-r4-control-plane-repair-authority-gate-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-asic-a3-r4-control-plane-repair-authority-gate",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-di-complete-stop-before-control-plane-repair",
+          "from_state": "di_required",
+          "event": "authority_required",
+          "to_state": "human_gate",
+          "next_action_ref": "authority://fae-asic/a3/r4/control-plane-repair",
+          "effect": "stop_human_gate",
+          "required_evidence": [
+            "diagnostic_intelligence_complete"
+          ],
+          "authority_mode": "human_required",
+          "authority_boundary": "Authorize repair of A3-R4 control-plane liveness, limited to the smallest admissible candidate repair and corresponding static validation, preserving DP6, the existing memory map, and apertures; do not create a new AFI, execute a new F2 runtime, change consensus or economics, release, or take mainnet action.",
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "diagnostic-intelligence",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+      "policy_digest": "sha256:99274c5eceeab1e346bf1daefcd6ca88448e637fd7d4eac234793069dad85ee3",
+      "transition_event": "authority_required"
+    },
+    "trigger": {
+      "source": "diagnostic-intelligence",
+      "event_id": "fae-asic-a3-r4-control-plane-repair-authority-gate-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:087866a15f07fc41709b2f7a4ce60c8f00729270ac1c465f2040837db29ee510",
+      "observation_digest": "sha256:3ffeee811b9eabce97663ec93b9dfc85069a27903c6d0cdd01cd24023b524832",
+      "admission_ref": "github://Waterfound/General-Execution/blob/runtime/durable-asp-control/runtime/diagnostics/fae-asic-a3-r4-control-runtime-di-001.json"
+    },
+    "observation": {
+      "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+      "expected_generation": 5,
+      "expected_state_digest": "sha256:c8349cc03c33a1380ecfbafc5ff1455b41088193fe3a1d41efe92ab30ab59307",
+      "policy_digest": "sha256:99274c5eceeab1e346bf1daefcd6ca88448e637fd7d4eac234793069dad85ee3",
+      "event": "authority_required",
+      "evidence": [
+        {
+          "kind": "diagnostic_intelligence_complete",
+          "locator": "github://Waterfound/General-Execution/blob/runtime/durable-asp-control/runtime/diagnostics/fae-asic-a3-r4-control-runtime-di-001.json",
+          "digest": "sha256:087866a15f07fc41709b2f7a4ce60c8f00729270ac1c465f2040837db29ee510",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "action://fae-asic/a3/r4/materialize-control-plane-repair-authority-gate",
+      "observed_at": "2026-09-28T23:38:00Z",
+      "summary": "Diagnostic Intelligence completed fail-closed: the first observable divergence is proven, root cause remains unproven, and the smallest admissible next frontier is a bounded control-plane liveness candidate repair plus static validation.",
+      "canonical_refs": [
+        "github://Waterfound/General-Execution/blob/runtime/durable-asp-control/runtime/diagnostics/fae-asic-a3-r4-control-runtime-di-001.json",
+        "github://Waterfound/General-Execution/commit/0a4aa5c62dc30f516881936b9a6d075d1d51adba/authority/fae-asic-a3-r4-control-plane-repair-authority-resume-001.json"
+      ],
+      "uncertainties": [
+        "The DI does not prove which internal R4 control element caused the OCL WRITE timeout; the repair remains a candidate until validation."
+      ],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
