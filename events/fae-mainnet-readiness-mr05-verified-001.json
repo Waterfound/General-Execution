@@ -1,0 +1,74 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-mainnet-readiness-mr05-verified-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-mainnet-readiness-mr05-v1",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-verification-pass",
+          "from_state": "verifying",
+          "event": "verification_passed",
+          "to_state": "complete",
+          "next_action_ref": "action://fae-mainnet-readiness/MR-05-complete",
+          "effect": "none",
+          "required_evidence": [
+            "verifier_pass"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-push",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-mainnet-readiness-mr05",
+      "policy_digest": "sha256:8e07488a4cd27a7fe37e111f187905b1eb79132bfdd6f1f0f7459a02ae0609c5",
+      "transition_event": "verification_passed"
+    },
+    "trigger": {
+      "source": "github-push",
+      "event_id": "fae-mainnet-readiness-mr05-verified-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:a9549183e2127a5ac310d3c532e7e315d5e7f7c9b20c596dd46c5652d701428b",
+      "observation_digest": "sha256:48c111b16ad809c5cbf6e5a0156cedfb9a2321c1d232b439ae05f5a50efae863",
+      "admission_ref": "github://Waterfound/General-Execution/runtime/durable-asp-control/fae-mainnet-readiness-mr05-verified-001"
+    },
+    "observation": {
+      "portfolio_id": "fae-mainnet-readiness-mr05",
+      "expected_generation": 0,
+      "expected_state_digest": "sha256:113722766f401ae963b02d704599dd2db2608d57be8f011cf8a0a1cb7192c197",
+      "policy_digest": "sha256:8e07488a4cd27a7fe37e111f187905b1eb79132bfdd6f1f0f7459a02ae0609c5",
+      "event": "verification_passed",
+      "evidence": [
+        {
+          "kind": "verifier_pass",
+          "locator": "github://Waterfound/FAE-testnet/commit/22604d2085361ee5eb24346b2e0aebac307f13c4",
+          "digest": "sha256:a9549183e2127a5ac310d3c532e7e315d5e7f7c9b20c596dd46c5652d701428b",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "github://Waterfound/FAE-testnet/commit/22604d2085361ee5eb24346b2e0aebac307f13c4",
+      "observed_at": "2026-09-28T15:55:30Z",
+      "summary": "MR-05 canonical living-registry reconciliation passed readiness, canonical-source, cross-Lab, recurring-assurance and CodeQL verification.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/22604d2085361ee5eb24346b2e0aebac307f13c4",
+        "github://Waterfound/FAE-testnet/actions/runs/36445957347",
+        "github://Waterfound/FAE-testnet/actions/runs/36445957092",
+        "github://Waterfound/FAE-testnet/actions/runs/36445957116",
+        "github://Waterfound/FAE-testnet/actions/runs/36445957201",
+        "github://Waterfound/FAE-testnet/actions/runs/36445957102"
+      ],
+      "uncertainties": [],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
