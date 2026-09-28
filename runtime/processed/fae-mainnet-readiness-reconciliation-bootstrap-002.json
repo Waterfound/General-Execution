@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:5eaafea9b43d1c9ebb95b208413951ddcba6adca015f41c12a0b09ac152218a1",
+  "event_id": "fae-mainnet-readiness-reconciliation-bootstrap-002",
+  "event_report_digest": "sha256:114ab13c1b4fe0de26c425b22704ade79f584d5370272cfbf6a794dd7d870e26",
+  "operation": "bootstrap",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "f5e3637375103d4ecc29ab00d5e64a93843ff0a8"
+}
