@@ -1,0 +1,39 @@
+{
+  "schema_version": "ge.provider-watch.v1",
+  "watch_id": "generalized-github-provider-pilot",
+  "provider": "github-actions",
+  "resource_id": "Waterfound/General-Execution/durable-provider-host-verification",
+  "matched_state": "in_progress",
+  "portfolio_id": "durable-generalized-provider-pilot",
+  "transition_event": "authority_required",
+  "evidence_kind": "github_provider_observed",
+  "action_ref": "github-actions://Waterfound/General-Execution/durable-provider-host-verification/in-progress",
+  "summary": "A real GitHub Actions provider run was independently observed through the provider host; stop at a human gate to prove provider-neutral unattended wake semantics.",
+  "canonical_refs": [
+    "github://Waterfound/General-Execution",
+    "provider-watch://generalized-github-provider-pilot"
+  ],
+  "uncertainties": [],
+  "policy": {
+    "policy_id": "durable-generalized-github-provider-pilot",
+    "revision": "1",
+    "rules": [
+      {
+        "rule_id": "01-observed-stop",
+        "from_state": "running",
+        "event": "authority_required",
+        "to_state": "human_gate",
+        "next_action_ref": "authority://durable/generalized-provider-pilot/acknowledge",
+        "effect": "stop_human_gate",
+        "required_evidence": [
+          "github_provider_observed"
+        ],
+        "authority_mode": "human_required",
+        "authority_boundary": "Acknowledge the generalized provider pilot only; this gate grants no production, release, spending, credential, or external provider authority.",
+        "schema_version": "ge.transition-rule.v1"
+      }
+    ],
+    "default_disposition": "stop",
+    "schema_version": "ge.transition-policy.v1"
+  }
+}
