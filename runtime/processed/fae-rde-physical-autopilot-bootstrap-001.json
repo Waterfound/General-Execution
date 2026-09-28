@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:81aeba377b9e6249f5c4a45cf3ed90c0f1827669a4034382051a49362e4f8a1a",
+  "event_id": "fae-rde-physical-autopilot-bootstrap-001",
+  "event_report_digest": "sha256:1dd5a08f2d326bd4547804b27a72ac35d19c63e0ab1b011005d054192b1f122e",
+  "operation": "bootstrap",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "5560dd1d9e765a17a50c0c5202eb44a9958fef70"
+}

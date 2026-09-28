@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:81aeba377b9e6249f5c4a45cf3ed90c0f1827669a4034382051a49362e4f8a1a",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "fae-rde-physical-autopilot-bootstrap-001",
+    "human_required": false,
+    "operation": "bootstrap",
+    "portfolio_id": "fae-representative-device-physical-autopilot",
+    "post_generation": 0,
+    "post_state_digest": "sha256:671add42351b3ed34a3e35929432831d8d4ba5beae78427a21fc9764a67c4f8a",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:671add42351b3ed34a3e35929432831d8d4ba5beae78427a21fc9764a67c4f8a",
+    "requested_action_ref": "external://fae-rde/representative-device-physical-runs",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:1dd5a08f2d326bd4547804b27a72ac35d19c63e0ab1b011005d054192b1f122e",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
