@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:19054bf41d35f8ca9843a01365ff8b2d2d3beee96bf08b2654477f08bff4ef6f",
+  "event_id": "fae-mainnet-readiness-mr06-bootstrap-001",
+  "event_report_digest": "sha256:e00592c06198e1fa2f643ff9bf4febec2443347694649e89faee614d8d922804",
+  "operation": "bootstrap",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "5b5f35d99de22776b9303b98efe8775a4de5b5bc"
+}
