@@ -1,0 +1,150 @@
+name: Durable terminal verification
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  terminal-verification:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install and full regression
+        run: |
+          python -m pip install -e '.[dev]' --disable-pip-version-check
+          python -m compileall -q src scripts
+          python -m pytest -q
+
+      - name: Fetch immutable live runtime evidence
+        run: |
+          git fetch origin runtime/durable-asp-control
+          git show origin/runtime/durable-asp-control:runtime/provider-host/generalized-pilot/first-runtime-report.json > /tmp/generalized-first.json
+          git show origin/runtime/durable-asp-control:runtime/provider-host/generalized-pilot/replay-runtime-report.json > /tmp/generalized-replay.json
+          git show origin/runtime/durable-asp-control:runtime/provider-host/fae-snapshot-pilot/first-runtime-report.json > /tmp/fae-first.json
+          git show origin/runtime/durable-asp-control:runtime/provider-host/fae-snapshot-pilot/replay-runtime-report.json > /tmp/fae-replay.json
+          git show origin/runtime/durable-asp-control:runtime/provider-host/processed-snapshots/9751c2a616207a9a809d2e9168fad6cc4dae4e61.json > /tmp/fae-snapshot-result.json
+          git show origin/runtime/durable-asp-control:provider-inbox/fae-a3-r4-afi-available-001.json > /tmp/fae-provider-snapshot.json
+          git show origin/runtime/durable-asp-control:runtime/state.sqlite.b64 | base64 --decode > /tmp/runtime.db
+
+      - name: Verify live generalized and FAE provider pilots
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib,json,os
+          from general_execution.portfolio_persistence import (
+              SqlitePortfolioHeadStore,
+              recover_portfolio_after_restart,
+          )
+
+          def load(path):
+              with open(path) as f:
+                  return json.load(f)
+
+          gf=load('/tmp/generalized-first.json')['event_report']
+          gr=load('/tmp/generalized-replay.json')['event_report']
+          ff=load('/tmp/fae-first.json')['event_report']
+          fr=load('/tmp/fae-replay.json')['event_report']
+          fs=load('/tmp/fae-snapshot-result.json')
+          snap=load('/tmp/fae-provider-snapshot.json')
+
+          assert gf['status']=='committed'
+          assert gf['human_required'] is True
+          assert gf['requested_action_ref']=='authority://durable/generalized-provider-pilot/acknowledge'
+          assert gr['status']=='already_applied'
+          assert gr['post_generation']==gf['post_generation']
+          assert gr['post_state_digest']==gf['post_state_digest']
+
+          assert ff['status']=='committed'
+          assert ff['pre_generation']==2 and ff['post_generation']==3
+          assert ff['human_required'] is True
+          assert ff['requested_action_ref']=='authority://fae-asic/a3/r4/runtime-f2'
+          assert fr['status']=='already_applied'
+          assert fr['post_generation']==ff['post_generation']
+          assert fr['post_state_digest']==ff['post_state_digest']
+
+          assert fs['status']=='PASS_MISSED_EVENT_RECOVERED_TO_HUMAN_GATE'
+          assert fs['runtime_f2_executed'] is False
+          assert fs['authority_created'] is False
+
+          selected={
+              'afi_id':'afi-0bd37117433ff02d7',
+              'agfi':'agfi-01ca0856fe3a85305',
+              'state':'available',
+              'update_time':'2026-09-28T14:09:35+00:00',
+              'candidate':'C6-2LANE-LOCAL200-DIRECTSPLIT-CTRL-PC-R4',
+              'git_commit':'a208b245da98052b60b9d47cd676f7c0a23e74a3',
+              'developer_cl_sha256':'cb369bca24dbe0c17e015adf5668d2d4117c77d31896c3a3b1faedab09e2f7a5',
+          }
+          raw=json.dumps(selected,sort_keys=True,separators=(',',':')).encode()
+          assert snap['metadata_digest']=='sha256:'+hashlib.sha256(raw).hexdigest()
+
+          store=SqlitePortfolioHeadStore('/tmp/runtime.db')
+          fae,fae_cp,_=recover_portfolio_after_restart(
+              store,'fae-asic-a3-r4-existing-afi-admission'
+          )
+          assert fae.generation==3
+          assert fae.active.state=='human_gate'
+          assert fae.active.next_action_ref=='authority://fae-asic/a3/r4/runtime-f2'
+          assert fae_cp is not None and fae_cp.authority_stop
+
+          closure,closure_cp,_=recover_portfolio_after_restart(
+              store,'durable-terminal-closure'
+          )
+          event=os.environ['GITHUB_EVENT_NAME']
+          if event=='pull_request':
+              assert closure.active.state in {'human_gate','rework','complete'}
+          else:
+              assert closure.active.state=='complete', (
+                  closure.generation,closure.active.state,closure.active.next_action_ref
+              )
+          if closure.active.state=='human_gate':
+              assert closure.active.next_action_ref=='authority://durable/aws-readonly-oidc-observer'
+              assert closure_cp is not None and closure_cp.authority_stop
+
+          report={
+              'schema_version':'ge.durable-terminal-verification.v1',
+              'status':'PASS',
+              'event':event,
+              'source_revision':os.environ['GITHUB_SHA'],
+              'generalized_provider_pilot':'PASS',
+              'fae_provider_missed_event_pilot':'PASS',
+              'fae_runtime_f2_executed':False,
+              'fae_expected_human_gate':fae.active.next_action_ref,
+              'terminal_closure_generation':closure.generation,
+              'terminal_closure_state':closure.active.state,
+              'terminal_closure_action':closure.active.next_action_ref,
+          }
+          with open('/tmp/terminal-verification-report.json','w') as f:
+              json.dump(report,f,sort_keys=True,indent=2)
+              f.write('\n')
+          print(json.dumps(report,sort_keys=True))
+          PY
+
+      - name: Verify narrowed architecture
+        shell: bash
+        run: |
+          test ! -e .github/workflows/aws-fae-provider-observer.yml
+          test ! -e infra/aws/durable-provider-observer
+          python -m pytest tests/test_provider_host.py tests/test_human_gate_decision.py -q
+
+      - name: Upload terminal verifier evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: durable-terminal-verification-${{ github.run_id }}
+          path: /tmp/terminal-verification-report.json
+          if-no-files-found: error
+          retention-days: 30
