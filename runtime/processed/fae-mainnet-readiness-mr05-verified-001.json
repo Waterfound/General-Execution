@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:3c5a54955c08656bc6f51e32e27a463cfa3042bfacd845fd61ea65de633673f8",
+  "event_id": "fae-mainnet-readiness-mr05-verified-001",
+  "event_report_digest": "sha256:fe5e864734605ba55a6ffe2ec9da0f0f67bb1782b195fc5f8dcc5cec5e57cab5",
+  "operation": "transition",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "baa41a7343f03383101da3fdae83c8b086ab6cfc"
+}
