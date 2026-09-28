@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:6425860190e58799ee222a440895ebd59d05e6fc880436b302260ff46a7ac822",
+  "event_report": {
+    "checkpoint_digest": "sha256:b21fe5a1134d73bb4eeb25fd243b6d6c3052f567050196bd1c2c205c00e94eff",
+    "event_id": "fae-visual-language-vl12-complete-001",
+    "human_required": false,
+    "operation": "transition",
+    "portfolio_id": "fae-visual-language-art-direction",
+    "post_generation": 8,
+    "post_state_digest": "sha256:44a9e52bc14c6bda501fde9f499b42b674ba3fa15487abc7b6109f17c3f18e5c",
+    "pre_generation": 7,
+    "pre_state_digest": "sha256:44f720501b594eb63ecae9cb29b48c5075a5a8c7e93e8fccf3df13aadeec639f",
+    "requested_action_ref": null,
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "committed"
+  },
+  "event_report_digest": "sha256:1f1300ab533c684b30c3f89eda6f88362a7668a57f345ba803431409beaabc1e",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
