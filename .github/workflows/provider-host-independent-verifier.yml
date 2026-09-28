@@ -9,6 +9,7 @@ on:
       - scripts/run_provider_host.py
       - provider-contracts/**
       - .github/workflows/durable-provider-host.yml
+      - .github/workflows/generalized-github-provider-pilot.yml
       - .github/workflows/provider-host-independent-verifier.yml
   pull_request:
     paths:
@@ -16,6 +17,7 @@ on:
       - scripts/run_provider_host.py
       - provider-contracts/**
       - .github/workflows/durable-provider-host.yml
+      - .github/workflows/generalized-github-provider-pilot.yml
       - .github/workflows/provider-host-independent-verifier.yml
 
 permissions:
@@ -59,6 +61,9 @@ jobs:
           assert rule['effect']=='stop_human_gate'
           assert rule['to_state']=='human_gate'
           assert rule['next_action_ref']=='authority://fae-asic/a3/r4/runtime-f2'
+          gh=json.loads(pathlib.Path('provider-contracts/generalized-github-push.json').read_text())
+          assert gh['provider']=='github-actions-push'
+          assert gh['policy']['rules'][0]['authority_mode']=='human_required'
           PY
       - name: Reproduce provider-host adversarial bank
         run: python -m pytest tests/test_provider_host.py -q
