@@ -20,16 +20,21 @@
     "CC-12",
     "CC-13",
     "CC-14",
-    "CC-15"
+    "CC-15",
+    "CC-16",
+    "CC-17",
+    "CC-18"
   ],
-  "active_frontier": "CC-16",
-  "admissible_next": [
-    "CC-16"
-  ],
-  "terminal_state": "RUNNING",
-  "terminal_verdict": null,
+  "active_frontier": null,
+  "admissible_next": [],
+  "terminal_state": "CLOSED",
+  "terminal_verdict": "CONTINUITY_CHECK_V1_READY",
   "genuine_external_or_human_gates": [],
   "authority_created": false,
   "execution_triggered_by_continuity_check": false,
-  "continuation_rule": "Continue automatically across software/documentation-only frontiers while the existing Waterfound authority envelope remains sufficient; stop only at a genuine external/human/authority gate."
+  "continuation_rule": "Closed. Reopen only an affected Continuity Check frontier when executable truth, schema, evidence semantics, or documentation changes.",
+  "canonical_integration": {
+    "general_execution_main": "5b36483f71042c5faa105f9723d1d9cabb701143",
+    "systems_main": "65f50f16e010b4dcb6eca74e8f0e7c51eb2a12c6"
+  }
 }

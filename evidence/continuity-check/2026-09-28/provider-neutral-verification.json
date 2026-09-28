@@ -46,10 +46,31 @@
     }
   },
   "github_actions": {
-    "runs_observed_for_candidate": false,
-    "required_for_verdict": false,
-    "interpretation": "Absence of a GitHub Actions run is infrastructure evidence only and is not treated as development failure."
+    "runs_observed_for_candidate": true,
+    "required_for_verdict": true,
+    "interpretation": "Repository-required gates were observed and passed. Provider status remains a separate evidence dimension; isolated provider failure would not itself imply development failure."
   },
   "verification_mode": "PROVIDER_NEUTRAL_FOCUSED_LOCAL_REGRESSION_PLUS_CANONICAL_GITHUB_EVIDENCE",
-  "verdict": "PASS"
+  "verdict": "PASS",
+  "canonical_verification": {
+    "general_execution_pr": 9,
+    "general_execution_main": "5b36483f71042c5faa105f9723d1d9cabb701143",
+    "main_integration_gate": {
+      "run_id": 36489399179,
+      "conclusion": "success",
+      "full_regression": "success",
+      "authority_boundary_audit": "success"
+    },
+    "durable_terminal_verification": {
+      "run_id": 36489399124,
+      "conclusion": "success",
+      "full_regression": "success",
+      "live_runtime_evidence": "success",
+      "provider_pilots": "success",
+      "narrowed_architecture": "success"
+    },
+    "systems_pr": 2,
+    "systems_main": "65f50f16e010b4dcb6eca74e8f0e7c51eb2a12c6",
+    "documentation_delta_verification": "PASS"
+  }
 }
