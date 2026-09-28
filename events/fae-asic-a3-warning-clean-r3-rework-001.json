@@ -1,0 +1,72 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-asic-a3-warning-clean-r3-rework-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-asic-a3-warning-clean-r3-rework",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-provider-warning-clean-failed",
+          "from_state": "running",
+          "event": "verification_failed",
+          "to_state": "rework",
+          "next_action_ref": "github://Waterfound/FAE-testnet/commit/84b342575097df5b2d5b3625d78c766dc5d57979",
+          "effect": "none",
+          "required_evidence": [
+            "a3_warning_clean_provider_r3_fail_closed"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "aws-ec2",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-asic-a3-warning-clean-revalidation-v2",
+      "policy_digest": "sha256:5f201dedade2c276d19ca677eb2d172df9db9cd0915fb101f456a2d08c7c6f50",
+      "transition_event": "verification_failed"
+    },
+    "trigger": {
+      "source": "aws-ec2",
+      "event_id": "fae-asic-a3-warning-clean-r3-rework-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:487ad24825d68fd67865c0d52edca2be431b87e57cd3ddd3965ef1dde91c4a4a",
+      "observation_digest": "sha256:3d3f607e3eb820d718b7793e3230dfd510bd7645a08dc981f5d7ecb23e6d1f32",
+      "admission_ref": "aws://us-east-1/i-0067a1fda786da4b1/a3-warning-clean-revalidate"
+    },
+    "observation": {
+      "portfolio_id": "fae-asic-a3-warning-clean-revalidation-v2",
+      "expected_generation": 2,
+      "expected_state_digest": "sha256:97ad36da93e05022adc87a6163cb600a86f3daa306ee25e8f778dc9d19c20a3b",
+      "policy_digest": "sha256:5f201dedade2c276d19ca677eb2d172df9db9cd0915fb101f456a2d08c7c6f50",
+      "event": "verification_failed",
+      "evidence": [
+        {
+          "kind": "a3_warning_clean_provider_r3_fail_closed",
+          "locator": "github://Waterfound/FAE-testnet/blob/lab/asic-a3-axilite-warning-cleanup-20260927/labs/asic-f2-pre-go/runtime/F2_ATTACKER_SWEEP_A3_WARNING_CLEAN_R3_RESULT.json",
+          "digest": "sha256:487ad24825d68fd67865c0d52edca2be431b87e57cd3ddd3965ef1dde91c4a4a",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "aws://us-east-1/i-0067a1fda786da4b1/a3-warning-clean-revalidate",
+      "observed_at": "2026-09-27T23:57:04Z",
+      "summary": "A3 warning-clean R3 preserved validate_bd_design PASS but failed the warning-clean objective because both BD 41-237 MAX_BURST_LENGTH mismatches persisted; no physical implementation or AFI was launched.",
+      "canonical_refs": [
+        "s3://fae-asic-lab-203842200752-20260922/evidence/i-0067a1fda786da4b1/a3-warning-clean-revalidate/",
+        "github://Waterfound/FAE-testnet/commit/52f51f60b19e807c689fcf319ef83656ca4628a8"
+      ],
+      "uncertainties": [
+        "Direct AXI4-Lite interface-pin metadata patch has not yet been provider-revalidated."
+      ],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
