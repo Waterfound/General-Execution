@@ -205,4 +205,5 @@ def test_snapshot_payload_contains_no_provider_metadata_or_credentials(tmp_path)
     assert "password" not in encoded.lower()
     assert "secret" not in encoded.lower()
     assert "credential" not in encoded.lower()
-    assert snapshot().digest in encoded\n    assert snapshot().metadata_digest not in encoded
+    assert snapshot().digest in encoded
+    assert snapshot().metadata_digest not in encoded
