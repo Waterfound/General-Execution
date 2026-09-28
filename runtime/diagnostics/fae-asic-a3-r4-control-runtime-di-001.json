@@ -1,0 +1,194 @@
+{
+  "schema": "ge.diagnostic-intelligence-result.v1",
+  "report_id": "fae-asic-a3-r4-control-runtime-di-001",
+  "recorded_at": "2026-09-28T23:00:00Z",
+  "diagnostic_intelligence": {
+    "repository": "Waterfound/Diagnostic-Intelligence-DI",
+    "release": "0.0.8",
+    "core_contract": "evidence-first-read-only",
+    "memory_rule": "memory-suggests-evidence-decides",
+    "observable_divergence_is_root_cause_proof": false,
+    "cause_proven": false,
+    "automatic_repair_authorized": false
+  },
+  "target": {
+    "workstream": "FAE — ASICs / A3-R4 → F2",
+    "repository": "Waterfound/FAE-testnet",
+    "afi_id": "afi-0bd37117433ff02d7",
+    "agfi_id": "agfi-01ca0856fe3a85305",
+    "afi_source_revision": "a208b245da98052b60b9d47cd676f7c0a23e74a3",
+    "runtime_runner_revision": "fc5f476196a8b31e45c7f216b55401761525f932",
+    "f2_instance_id": "i-0b622272546426171",
+    "region": "us-east-1"
+  },
+  "runtime_state_before_di": {
+    "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+    "state": "di_required",
+    "generation": 5,
+    "state_digest": "sha256:c8349cc03c33a1380ecfbafc5ff1455b41088193fe3a1d41efe92ab30ab59307",
+    "frontier": "action://fae-asic/a3/r4/diagnose-control-plane-runtime-failure"
+  },
+  "evidence": {
+    "canonical": [
+      "github://Waterfound/General-Execution/runtime/durable-asp-control/events/fae-asic-a3-r4-f2-runtime-fail-di-001.json",
+      "github://Waterfound/General-Execution/runtime/durable-asp-control/provider-inbox/fae-a3-r4-f2-runtime-fail-001.json",
+      "s3://fae-asic-lab-203842200752-20260922/runtime/i-0b622272546426171/f2-a3-r4-duallane/runtime.log",
+      "s3://fae-asic-lab-203842200752-20260922/runtime/i-0b622272546426171/f2-a3-r4-duallane/final_fpga_metrics.txt",
+      "github://Waterfound/FAE-testnet/fc5f476196a8b31e45c7f216b55401761525f932/labs/asic-f2-pre-go/runtime/run_f2_a3_r4_duallane.c",
+      "github://Waterfound/FAE-testnet/a208b245da98052b60b9d47cd676f7c0a23e74a3/labs/asic-f2-pre-go/hdk/integrate_fae_f2_2lane_200mhz_a3_directsplit.tcl",
+      "github://Waterfound/FAE-testnet/lab/asic-a3-r4-physical-20260927/labs/asic-f2-pre-go/runtime/F2_RUNTIME_PARITY_PCIS_R6_RESULT.json"
+    ],
+    "provider_facts": {
+      "afi_load": "PASS",
+      "ddr_hbm_calibration": "PASS",
+      "expected_shell_pci_identity": "PASS",
+      "lane0_first_nonce": 1200,
+      "runner_rc": -801,
+      "process_exit_code": 223,
+      "ocl_slave_timeout": 1,
+      "ocl_slave_timeout_addr_encoded": "0x12",
+      "ocl_slave_timeout_addr_aligned": "0x10",
+      "ocl_transaction_type": "WRITE",
+      "dma_pcis_timeout": 0,
+      "pcim_axi_protocol_error": 0,
+      "lane0_prestart_ctrl": "0x00000000",
+      "parity_completed": false
+    }
+  },
+  "classification": {
+    "symptom": {
+      "statement": "A3-R4 real F2 execution failed on lane0 before any parity vector completed; runner reported rc=-801 and process exit code 223.",
+      "confidence": "PROVEN"
+    },
+    "immediate_failure_mechanism": {
+      "statement": "The runner's wait_done() exceeded its 300 s bound without observing AP_DONE on lane0, producing -1001 which the caller maps to 200 + (-1001) = -801.",
+      "confidence": "PROVEN",
+      "secondary_note": "This is not the earliest observable divergence."
+    },
+    "first_observable_divergence": {
+      "statement": "Before useful compute could be established, the AWS shell recorded exactly one OCL slave WRITE timeout at encoded address 0x12. AWS timeout encoding makes the aligned transaction address 0x10, which is lane0 INPUT_R and is the first low-word pointer write issued by poke_ptr().",
+      "checkpoint": "control/lane0/input_r_write",
+      "boundary": "OCL -> fae_ctrl_split -> fae_cc_ctrl0 -> fae_pc_ctrl0 -> fae_dp6_hls_0/s_axi_control",
+      "confidence": "PROVEN",
+      "evidence_status": "observed-divergence-not-root-cause-proof"
+    },
+    "proven_cause": null,
+    "cause_proven": false,
+    "cause_proven_explanation": "The evidence proves a non-responsive lane0 OCL control write at the control-plane boundary, but does not prove which internal element caused the non-response. The frozen DI contract forbids promoting first observable divergence to root-cause proof.",
+    "plausible_unproven_causes": [
+      {
+        "hypothesis": "R4 control-chain liveness defect involving the added AXI4 -> AXI4-Lite protocol-converter stage, its interaction with the control clock converter, or write-response propagation.",
+        "evidence_for": [
+          "The failing transaction is inside the R4 control aperture.",
+          "R4 specifically added fae_pc_ctrl0/fae_pc_ctrl1 after the control CDC.",
+          "Static validate_bd_design and timing closure do not prove runtime transaction liveness."
+        ],
+        "evidence_status": "PLAUSIBLE_UNPROVEN"
+      },
+      {
+        "hypothesis": "Local 200 MHz control-domain clock/reset was not live/deasserted as expected at runtime.",
+        "evidence_for": [
+          "fae_cc_ctrl0 M_AXI, fae_pc_ctrl0 and the HLS control slave depend on the local 200 MHz domain/reset.",
+          "Host PCIS DDR read/write success does not exercise this downstream local control-domain liveness."
+        ],
+        "evidence_status": "PLAUSIBLE_UNPROVEN"
+      },
+      {
+        "hypothesis": "Control SmartConnect/CDC write-channel or B-response deadlock/misconfiguration.",
+        "evidence_for": [
+          "AWS reports a WRITE timeout, but the shell metric alone does not identify whether AW, W or B stalled."
+        ],
+        "evidence_status": "PLAUSIBLE_UNPROVEN"
+      }
+    ],
+    "ruled_out_hypotheses": [
+      {
+        "hypothesis": "AFI failed to load or wrong shell/PCI identity.",
+        "status": "RULED_OUT_FOR_THIS_FAILURE",
+        "basis": "AFI loaded/ok and expected 1d0f:f010 shell/PCI identity was observed."
+      },
+      {
+        "hypothesis": "DDR/HBM calibration failure.",
+        "status": "RULED_OUT_FOR_THIS_FAILURE",
+        "basis": "Calibration reached 0x00000003."
+      },
+      {
+        "hypothesis": "PCIS/DMA transport timeout as the initiating failure.",
+        "status": "RULED_OUT_FOR_THIS_FAILURE",
+        "basis": "dma_pcis_timeout=0 and the runner successfully completed input write/readback and output clear before the lane0 wait."
+      },
+      {
+        "hypothesis": "PCIM AXI protocol error as the initiating failure.",
+        "status": "RULED_OUT_FOR_THIS_FAILURE",
+        "basis": "pcim_axi_protocol_error=0."
+      },
+      {
+        "hypothesis": "Semantic parity mismatch in DP6 output.",
+        "status": "NOT_REACHED",
+        "basis": "No parity vector completed and no output comparison became admissible."
+      },
+      {
+        "hypothesis": "Benchmark, attacker sweep or sustained/HFB failure.",
+        "status": "NOT_REACHED",
+        "basis": "These frontiers were never admissible after parity failed."
+      }
+    ]
+  },
+  "repair_frontier": {
+    "smallest_admissible_candidate_repair": "action://fae-asic/a3/r4/repair-control-plane-liveness",
+    "scope": [
+      "control path only",
+      "preserve frozen DP6 HLS semantics",
+      "preserve DDR/HBM direct-split memory map",
+      "preserve lane control apertures 0x0000 and 0x1000 unless evidence proves otherwise",
+      "prove clean runtime write-response liveness before parity"
+    ],
+    "recommended_first_patch_shape": "Simplify or correct the R4 control CDC/protocol-conversion path so the HLS s_axi_control interface receives a runtime-live AXI4-Lite transaction path; treat native AXI4-Lite CDC without the extra post-CDC protocol-converter stage as a candidate, not as a proven fix.",
+    "runner_hardening": "Add a clean-load OCL control-liveness preflight and fail immediately on any shell timeout instead of continuing into the 300 s AP_DONE poll.",
+    "automatic_repair_authorized": false,
+    "executable_under_current_di_authority": false
+  },
+  "verification_after_repair": {
+    "new_f2_runtime_required": true,
+    "reason": "Static validation and timing closure cannot prove runtime OCL write-response liveness or parity/correctness.",
+    "existing_afi_sufficient_if_only_runner_changes": true,
+    "existing_afi_sufficient_if_hardware_control_topology_changes": false,
+    "new_afi_creation_currently_forbidden": true,
+    "implication": "If the repair changes the FPGA control topology, runtime proof cannot be completed under the current no-new-AFI constraint."
+  },
+  "authority": {
+    "additional_read_only_di_authority_required": false,
+    "repair_execution_authority_required": true,
+    "reason_repair": "Diagnostic Intelligence is read-only and freezes automatic_repair_authorized=false.",
+    "additional_f2_runtime_authority_required": true,
+    "reason_f2": "The persisted authority boundary authorized one bounded F2 parity execution; that execution has been consumed.",
+    "new_afi_authority_required_if_hardware_changes": true,
+    "new_afi_authority_currently_granted": false
+  },
+  "downstream_gates": {
+    "parity_correctness": "BLOCKED",
+    "benchmark": "BLOCKED",
+    "attacker_sweep": "BLOCKED",
+    "sustained_hfb": "BLOCKED",
+    "release": "BLOCKED",
+    "consensus_activation": "BLOCKED",
+    "mainnet": "BLOCKED"
+  },
+  "resume_contract": {
+    "disposition": "DI_COMPLETE_FAIL_CLOSED",
+    "exact_next_frontier": "authority://fae-asic/a3/r4/control-plane-repair",
+    "on_repair_authority": "action://fae-asic/a3/r4/repair-control-plane-liveness",
+    "after_static_repair": "STOP_BEFORE_ANY_NEW_AFI_OR_F2_RUNTIME_UNLESS_SEPARATELY_AUTHORIZED",
+    "parity_must_pass_before": [
+      "benchmark",
+      "attacker_sweep",
+      "sustained_hfb"
+    ],
+    "no_new_afi": true,
+    "no_consensus_change": true,
+    "no_economics_change": true,
+    "no_release_change": true,
+    "no_activation_height_change": true,
+    "no_mainnet_authority_change": true
+  }
+}
