@@ -1,0 +1,117 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "durable-terminal-closure-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "durable-terminal-closure",
+      "generation": 0,
+      "active": {
+        "work_id": "DURABLE-PROVIDER-HOST-ACTIVATION",
+        "role": "active",
+        "state": "ready",
+        "objective": "Implement and live-verify the minimal bounded provider host that turns authenticated external provider state changes into exact Durable Execution observations and dispatches only preauthorized actions without chat control.",
+        "active_gate": "PROVIDER-HOST-ACTIVATION",
+        "next_action_ref": "action://durable/provider-host-activation",
+        "source_revision": "6c593797d23706df686ae32c4dfb8482ece02f37",
+        "evidence_required": [
+          "provider_host_verified",
+          "provider_host_live_trigger_verified"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "build-colony://bc2-1aff60eac9c1ce94/provider-host-activation",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "DURABLE-FAE-UNATTENDED-PROVIDER-PILOT",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Use the admitted A3 R4 AFI as the real AWS provider wake pilot; observe state and reach the next human gate without chat-constructed observations and without launching F2 runtime.",
+        "active_gate": "FAE-UNATTENDED-PROVIDER-PILOT",
+        "next_action_ref": "action://durable/fae-unattended-provider-pilot",
+        "source_revision": "6c593797d23706df686ae32c4dfb8482ece02f37",
+        "evidence_required": [
+          "fae_provider_wake_verified"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "build-colony://bc2-1aff60eac9c1ce94/fae-unattended-provider-pilot",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [
+        {
+          "work_id": "DURABLE-GENERALIZED-PROVIDER-PILOT",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Prove the same provider-host contract on a non-FAE provider workflow so the host is not ASIC/AWS-specific.",
+          "active_gate": "GENERALIZED-PROVIDER-PILOT",
+          "next_action_ref": "action://durable/generalized-provider-pilot",
+          "source_revision": "6c593797d23706df686ae32c4dfb8482ece02f37",
+          "evidence_required": [
+            "generalized_provider_pilot_verified"
+          ],
+          "authority_boundary": null,
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "external_dependency",
+              "detail": "Provider-host activation must be independently verified before the generalized pilot is reachable.",
+              "evidence_refs": [
+                "build-colony://bc2-1aff60eac9c1ce94/provider-host-activation"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "event_received",
+            "value": "provider-host-activation-complete",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "build-colony://bc2-1aff60eac9c1ce94/generalized-provider-pilot",
+          "schema_version": "ge.portfolio-entry.v1"
+        },
+        {
+          "work_id": "DURABLE-TERMINAL-VERIFICATION-INTEGRATION",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Run terminal crash/replay/stale/provider-failure/human-stop tests, prove notification delivery, integrate only GREEN changes through main-integration-gate, and freeze the final completion record.",
+          "active_gate": "TERMINAL-VERIFICATION-INTEGRATION",
+          "next_action_ref": "action://durable/terminal-verification-integration",
+          "source_revision": "6c593797d23706df686ae32c4dfb8482ece02f37",
+          "evidence_required": [
+            "terminal_verification_pass",
+            "main_integration_gate_pass",
+            "human_notification_verified"
+          ],
+          "authority_boundary": null,
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "external_dependency",
+              "detail": "Both real FAE provider wake and generalized provider pilot must be independently verified before terminal integration.",
+              "evidence_refs": [
+                "build-colony://bc2-1aff60eac9c1ce94/fae-unattended-provider-pilot",
+                "build-colony://bc2-1aff60eac9c1ce94/generalized-provider-pilot"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "fae_provider_wake_verified && generalized_provider_pilot_verified",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "build-colony://bc2-1aff60eac9c1ce94/terminal-verification-integration",
+          "schema_version": "ge.portfolio-entry.v1"
+        }
+      ],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
