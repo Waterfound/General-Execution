@@ -10,6 +10,8 @@ on:
       - provider-contracts/**
       - .github/workflows/durable-provider-host.yml
       - .github/workflows/generalized-github-provider-pilot.yml
+      - .github/workflows/aws-fae-provider-observer.yml
+      - infra/aws/durable-provider-observer/**
       - .github/workflows/provider-host-independent-verifier.yml
   pull_request:
     paths:
@@ -18,6 +20,8 @@ on:
       - provider-contracts/**
       - .github/workflows/durable-provider-host.yml
       - .github/workflows/generalized-github-provider-pilot.yml
+      - .github/workflows/aws-fae-provider-observer.yml
+      - infra/aws/durable-provider-observer/**
       - .github/workflows/provider-host-independent-verifier.yml
 
 permissions:
@@ -64,6 +68,23 @@ jobs:
           gh=json.loads(pathlib.Path('provider-contracts/generalized-github-push.json').read_text())
           assert gh['provider']=='github-actions-push'
           assert gh['policy']['rules'][0]['authority_mode']=='human_required'
+          trust=json.loads(pathlib.Path('infra/aws/durable-provider-observer/trust-policy.json').read_text())
+          perm=json.loads(pathlib.Path('infra/aws/durable-provider-observer/permissions-policy.json').read_text())
+          stmt=perm['Statement']
+          assert len(stmt)==1
+          assert stmt[0]['Effect']=='Allow'
+          assert stmt[0]['Action']==['ec2:DescribeFpgaImages']
+          assert stmt[0]['Resource']=='*'
+          t=trust['Statement']
+          assert len(t)==1
+          assert t[0]['Action']=='sts:AssumeRoleWithWebIdentity'
+          assert t[0]['Principal']['Federated']=='arn:aws:iam::203842200752:oidc-provider/token.actions.githubusercontent.com'
+          subs=t[0]['Condition']['StringLike']['token.actions.githubusercontent.com:sub']
+          assert sorted(subs)==sorted([
+              'repo:Waterfound/General-Execution:ref:refs/heads/main',
+              'repo:Waterfound/General-Execution:ref:refs/heads/provider/aws-fae-observer',
+          ])
+          assert t[0]['Condition']['StringEquals']['token.actions.githubusercontent.com:aud']=='sts.amazonaws.com'
           PY
       - name: Reproduce provider-host adversarial bank
         run: python -m pytest tests/test_provider_host.py -q
