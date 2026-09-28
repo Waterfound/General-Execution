@@ -1,0 +1,87 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "durable-terminal-fae-observer-iam-gate-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "durable-terminal-fae-observer-iam-gate",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-aws-readonly-observer-authority",
+          "from_state": "ready",
+          "event": "authority_required",
+          "to_state": "human_gate",
+          "next_action_ref": "authority://durable/aws-readonly-oidc-observer",
+          "effect": "stop_human_gate",
+          "required_evidence": [
+            "afi_available",
+            "aws_oidc_missing",
+            "observer_policy_verified"
+          ],
+          "authority_mode": "human_required",
+          "authority_boundary": "Authorize creation, only if absent, of the GitHub Actions OIDC provider token.actions.githubusercontent.com and IAM role DurableExecution-AWS-Observer, trusted only for Waterfound/General-Execution main and provider/aws-fae-observer, with effective permission limited to ec2:DescribeFpgaImages; authorize one live read-only FAE AFI observer pilot. Do not authorize F2 runtime, benchmark, attacker sweep, AFI creation, broader IAM permissions, release, consensus activation, or mainnet.",
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "durable-terminal-preflight",
+      "event_kind": "aws-readonly-observer-preflight",
+      "portfolio_id": "durable-terminal-closure",
+      "policy_digest": "sha256:b207bcf34087b935d692a678282c3353d2de1f933b6df9ef7d80a212c9dcf970",
+      "transition_event": "authority_required"
+    },
+    "trigger": {
+      "source": "durable-terminal-preflight",
+      "event_id": "durable-terminal-fae-observer-iam-gate-001",
+      "event_kind": "aws-readonly-observer-preflight",
+      "payload_digest": "sha256:84cb91865f73f81a343efafb862bb57ad068fce5db51b69e42d0c367950f0a14",
+      "observation_digest": "sha256:ba4a55efdfa7abce14ad1b9e0a0ee487791e179bf520f7925314e632104cb508",
+      "admission_ref": "build-colony://bc2-1aff60eac9c1ce94/fae-unattended-provider-pilot"
+    },
+    "observation": {
+      "portfolio_id": "durable-terminal-closure",
+      "expected_generation": 1,
+      "expected_state_digest": "sha256:e9f864db0fc27b0d4174c662f9b37d4276721d419f51f57e812abd67a07853af",
+      "policy_digest": "sha256:b207bcf34087b935d692a678282c3353d2de1f933b6df9ef7d80a212c9dcf970",
+      "event": "authority_required",
+      "evidence": [
+        {
+          "kind": "afi_available",
+          "locator": "aws://us-east-1/afi-0bd37117433ff02d7",
+          "digest": "sha256:3d004b5ff04c682cc9331e90f95df38a0ced447852777346dac55dc32abdfcf9",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "aws_oidc_missing",
+          "locator": "aws-iam://203842200752/openid-connect-providers",
+          "digest": "sha256:7225b5e6562a3d99300e47ea7f9e59d920fc1c1ba79f4086970b33d489ca9583",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "observer_policy_verified",
+          "locator": "github://Waterfound/General-Execution/commit/d3be76a6f44b531c92834c9ccad28133ed418b60",
+          "digest": "sha256:faf6d845a8a9a16ddb9b949fcb4db8cfbdbac9a06118c4cd41e23dc6ed0698f5",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "build-colony://bc2-1aff60eac9c1ce94/fae-unattended-provider-pilot",
+      "observed_at": "2026-09-28T15:36:30Z",
+      "summary": "The A3 R4 AFI is available and exactly bound to the admitted candidate. Provider Host and its scheduled AWS observer passed full and independent verification, but the AWS account has no GitHub Actions OIDC provider, so live unattended AWS observation requires a minimal read-only IAM authority gate.",
+      "canonical_refs": [
+        "aws://us-east-1/afi-0bd37117433ff02d7",
+        "github-actions://Waterfound/General-Execution/runs/36444677709",
+        "github-actions://Waterfound/General-Execution/runs/36444685954",
+        "github://Waterfound/General-Execution/commit/d3be76a6f44b531c92834c9ccad28133ed418b60",
+        "build-colony://bc2-1aff60eac9c1ce94/fae-unattended-provider-pilot"
+      ],
+      "uncertainties": [],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
