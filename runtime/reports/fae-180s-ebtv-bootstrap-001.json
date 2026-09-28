@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:9e80d123208fd36dffc5c2b3294b956239bcd73233c637caffe1f442b84f4869",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "fae-180s-ebtv-bootstrap-001",
+    "human_required": false,
+    "operation": "bootstrap",
+    "portfolio_id": "fae-180s-economic-blocktime-validation",
+    "post_generation": 0,
+    "post_state_digest": "sha256:e20c2ad313fa2a115f08104d013bd26c65521de88bb5b2a48bfadc0961b8e70a",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:e20c2ad313fa2a115f08104d013bd26c65521de88bb5b2a48bfadc0961b8e70a",
+    "requested_action_ref": "action://fae-180s/F180-01",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:cd55761f1e6ec14471e01c7cd797561486453a3708cafdbde9defc3d8af62560",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
