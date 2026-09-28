@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:ce065aa17ed420dc86fc4053e1ac97bd10e690f3a0ebe5db68145c2b0e4a21a3",
+  "event_id": "fae-visual-language-vl14-complete-001",
+  "event_report_digest": "sha256:df43e4ce80c79d97a870626bb9d7d600361019da252fb71b1418377c018797aa",
+  "operation": "transition",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "95f1a6be45e20ee1f1aa9135acd9a9136f777d00"
+}
