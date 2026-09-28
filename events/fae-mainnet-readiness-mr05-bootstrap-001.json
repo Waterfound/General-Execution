@@ -1,0 +1,56 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-mainnet-readiness-mr05-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "fae-mainnet-readiness-mr05",
+      "generation": 0,
+      "active": {
+        "work_id": "MR-05",
+        "role": "active",
+        "state": "verifying",
+        "objective": "Verify the serialized reconciliation of docs/FAE_CANONICAL_STATE.md against the evidence-bound readiness ledger.",
+        "active_gate": "canonical-registry-verification",
+        "next_action_ref": "action://fae-mainnet-readiness/MR-05",
+        "source_revision": "22604d2085361ee5eb24346b2e0aebac307f13c4",
+        "evidence_required": [
+          "readiness_verifier_success",
+          "canonical_source_success",
+          "cross_lab_success",
+          "recurring_assurance_success",
+          "codeql_success"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/22604d2085361ee5eb24346b2e0aebac307f13c4",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "MR-06-PREP",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Prepare read-only newest-main and active Research 180s serialization evidence without mutating shared state.",
+        "active_gate": "newest-main-crosscheck-prep",
+        "next_action_ref": "action://fae-mainnet-readiness/MR-06-PREP",
+        "source_revision": "5d75f4781caa7b8d2c9bc5df35f7c8bbf1e813a7",
+        "evidence_required": [
+          "current_main",
+          "research_head",
+          "candidate_compare"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/5d75f4781caa7b8d2c9bc5df35f7c8bbf1e813a7",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
