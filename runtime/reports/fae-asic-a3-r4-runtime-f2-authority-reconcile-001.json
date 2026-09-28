@@ -1,0 +1,41 @@
+{
+  "authority_grant_digest": "sha256:540703498133c40ff8c44f6100db50eb36ffe948bdf093e4c3e14efd3925e8b0",
+  "authority_receipt": {
+    "approved_action_ref": "authority://fae-asic/a3/r4/runtime-f2",
+    "approved_at": "2026-09-28T22:31:00Z",
+    "authority_boundary": "Authorize one bounded F2 runtime parity execution using admitted AFI afi-0bd37117433ff02d7 only; do not benchmark, run attacker sweep, release, activate consensus, or take mainnet action unless separately authorized.",
+    "authority_ref": "github://Waterfound/General-Execution/commit/950d586911b821df6f3e0721cc688eb9f9cd7f92/authority/fae-asic-a3-r4-runtime-f2-authority-reconcile-001.json",
+    "event_id": "fae-asic-a3-r4-runtime-f2-authority-reconcile-001",
+    "expected_generation": 3,
+    "expected_state_digest": "sha256:6833c4b952da110def07a8de630042e8fdc522cb7cf6ae9a39eaf5a62bdf6298",
+    "policy_digest": "sha256:977ac76f60a98470782577b95b824e7a32d88a3246f6f6cd107a119b9fd655ee",
+    "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+    "provider_actor": "Waterfound",
+    "rule_digest": "sha256:10aa70dbe489086c420dcb8006ff7b3cc06af2302d7f6560ebac2e2af832ea3c",
+    "schema_version": "ge.human-authority-receipt.v1"
+  },
+  "authority_receipt_digest": "sha256:cfb4fbb6c4455ac6c3fd1180c6c42cf566b8433a6afecefae4b25cd1de9dc66e",
+  "authority_ref": "github://Waterfound/General-Execution/commit/950d586911b821df6f3e0721cc688eb9f9cd7f92/authority/fae-asic-a3-r4-runtime-f2-authority-reconcile-001.json",
+  "database_sha256": "sha256:0a8f12db9caa3e93f5b098a025c776c545aa43203d88aac501ffedd74aa22048",
+  "event_id": "fae-asic-a3-r4-runtime-f2-authority-reconcile-001",
+  "execution_report_digest": "sha256:f834845e473eb30314683ceaf1e5cb91b91a896b41f5c7a6411c6bb2fd10fdf4",
+  "observation_digest": "sha256:6a32ea4109b280c87f2e3050cbec004d5ef5703f7b97b39b04517b0dd9e78a78",
+  "provider_actor": "Waterfound",
+  "schema_version": "ge.human-authority-execution.v1",
+  "tick": {
+    "checkpoint_digest": "sha256:a69e70fe1e71efd89203fa7d20ed0ef4c96b2f53954da825376b69871a03f83e",
+    "disposition": "committed",
+    "human_required": false,
+    "observation_digest": "sha256:6a32ea4109b280c87f2e3050cbec004d5ef5703f7b97b39b04517b0dd9e78a78",
+    "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+    "post_generation": 4,
+    "post_state_digest": "sha256:3fc63e70334235346444310c26527abb70cd31ad212c956d4761adc93946d3e1",
+    "pre_generation": 3,
+    "pre_state_digest": "sha256:6833c4b952da110def07a8de630042e8fdc522cb7cf6ae9a39eaf5a62bdf6298",
+    "recovery_report_digest": "sha256:a8b421c0ac80ad7c56bc32a2883ac150bda42ba5827ee66f58e528bde6330ee5",
+    "requested_action_ref": null,
+    "requested_work_id": null,
+    "schema_version": "ge.resume-tick-result.v1",
+    "transition_result_digest": "sha256:9923971e92aacd2e8da91a0692c41eece84f15110b862aa0437acb884af38e05"
+  }
+}

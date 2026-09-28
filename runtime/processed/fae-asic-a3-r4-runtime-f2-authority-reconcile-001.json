@@ -1,0 +1,12 @@
+{
+  "authority_grant_digest": "sha256:540703498133c40ff8c44f6100db50eb36ffe948bdf093e4c3e14efd3925e8b0",
+  "authority_receipt_digest": "sha256:cfb4fbb6c4455ac6c3fd1180c6c42cf566b8433a6afecefae4b25cd1de9dc66e",
+  "authority_ref": "github://Waterfound/General-Execution/commit/950d586911b821df6f3e0721cc688eb9f9cd7f92/authority/fae-asic-a3-r4-runtime-f2-authority-reconcile-001.json",
+  "database_sha256": "sha256:0a8f12db9caa3e93f5b098a025c776c545aa43203d88aac501ffedd74aa22048",
+  "event_id": "fae-asic-a3-r4-runtime-f2-authority-reconcile-001",
+  "execution_report_digest": "sha256:f834845e473eb30314683ceaf1e5cb91b91a896b41f5c7a6411c6bb2fd10fdf4",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+  "schema_version": "ge.human-authority-processed-event.v1",
+  "trigger_commit": "950d586911b821df6f3e0721cc688eb9f9cd7f92"
+}
