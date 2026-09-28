@@ -1,0 +1,72 @@
+{
+  "body": {
+    "contract": {
+      "event_kind": "generalized-github-push:push_observed",
+      "policy_digest": "sha256:4b4787c5c65316d1376fdffb872bf0b33341c79050c933e18d48917ff4678e83",
+      "portfolio_id": "durable-github-provider-pilot",
+      "source": "provider-host:github-actions-push",
+      "transition_event": "authority_required"
+    },
+    "observation": {
+      "action_ref": "github://Waterfound/General-Execution/refs/heads/pilot/durable-github-provider",
+      "authority_grant": null,
+      "canonical_refs": [
+        "github-actions://Waterfound/General-Execution/runs/36442435398",
+        "github://Waterfound/General-Execution/commit/54916819801d537732f9357a74d94baa0a8846b7",
+        "github://Waterfound/General-Execution/provider-contracts/generalized-github-push.json",
+        "github://Waterfound/General-Execution/refs/heads/pilot/durable-github-provider"
+      ],
+      "event": "authority_required",
+      "evidence": [
+        {
+          "digest": "sha256:83d6bcea7651e95733f0015970ba57729ba757fca38012857da0464028482e7e",
+          "kind": "github_provider_push_observed",
+          "locator": "github-actions://Waterfound/General-Execution/runs/36442435398",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "expected_generation": 0,
+      "expected_state_digest": "sha256:4bb223805ef373653ea3bf72131122e2827103091deb54adb9177e9df4c74399",
+      "observed_at": "2026-09-28T12:17:20-03:00",
+      "policy_digest": "sha256:4b4787c5c65316d1376fdffb872bf0b33341c79050c933e18d48917ff4678e83",
+      "portfolio_id": "durable-github-provider-pilot",
+      "schema_version": "ge.resume-tick-observation.v1",
+      "summary": "Provider watch generalized-github-push observed github://Waterfound/General-Execution/refs/heads/pilot/durable-github-provider state=push_observed.",
+      "uncertainties": [],
+      "wake_admission": null
+    },
+    "policy": {
+      "default_disposition": "stop",
+      "policy_id": "durable-generalized-github-provider-pilot",
+      "revision": "1",
+      "rules": [
+        {
+          "authority_boundary": "Acknowledge the generalized provider pilot human stop only. This gate grants no repository merge, deployment, provider credential, spending, release, or production authority.",
+          "authority_mode": "human_required",
+          "effect": "stop_human_gate",
+          "event": "authority_required",
+          "from_state": "ready",
+          "next_action_ref": "authority://durable/generalized-provider-pilot/acknowledge",
+          "required_evidence": [
+            "github_provider_push_observed"
+          ],
+          "rule_id": "01-provider-push-human-stop",
+          "schema_version": "ge.transition-rule.v1",
+          "to_state": "human_gate"
+        }
+      ],
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "trigger": {
+      "admission_ref": "github-actions://Waterfound/General-Execution/runs/36442435398",
+      "event_id": "geph-9c23b5b2033670e539b39864",
+      "event_kind": "generalized-github-push:push_observed",
+      "observation_digest": "sha256:abf29ccfe46c8f7ed02b92ffe7696b7488f93110edce2aa30a0f2b22db7479b8",
+      "payload_digest": "sha256:de5145ce1b802746730f1617763f4827bfdbf31ed5337d1c429c21eef2441443",
+      "source": "provider-host:github-actions-push"
+    }
+  },
+  "event_id": "geph-9c23b5b2033670e539b39864",
+  "operation": "transition",
+  "schema_version": "ge.persistent-runtime-event.v1"
+}

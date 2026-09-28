@@ -1,0 +1,21 @@
+{
+  "authority_created": false,
+  "contract_path": "provider-contracts/generalized-github-push.json",
+  "event_path": "/tmp/provider-event.json",
+  "portfolio_checkpoint_digest": null,
+  "provider_command_executed": false,
+  "provider_input_path": "/tmp/provider-input.json",
+  "recovery_report_digest": "sha256:d9f0f8ae8ac9b3220592249ad146b524f800ff02fa92cdd0e77bdd6f43795555",
+  "result": {
+    "contract_digest": "sha256:3aa5fcfe847b803c4533e8649a7124e43f90c1c37e5e11185aa2ed7b3e0978b4",
+    "event_digest": "sha256:f1f1bd5d82cf166049c2d06b85ed206c54c3303ce4020a230445c5268d57c1b6",
+    "event_id": "geph-9c23b5b2033670e539b39864",
+    "portfolio_generation": 0,
+    "portfolio_id": "durable-github-provider-pilot",
+    "portfolio_state_digest": "sha256:4bb223805ef373653ea3bf72131122e2827103091deb54adb9177e9df4c74399",
+    "provider_input_digest": "sha256:de5145ce1b802746730f1617763f4827bfdbf31ed5337d1c429c21eef2441443",
+    "schema_version": "ge.provider-host-result.v1",
+    "status": "event_ready"
+  },
+  "schema_version": "ge.provider-host-execution.v1"
+}

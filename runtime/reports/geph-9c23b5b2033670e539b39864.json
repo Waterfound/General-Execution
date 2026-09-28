@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:3c30d855db730cbc71322e3f766ef5110f3ffe1013390b04a729f0b8410c474d",
+  "event_report": {
+    "checkpoint_digest": "sha256:d442bdfb1fccb8f360dae8538000914901444bd0f9d4e3c5e0c5a3c7bf50d030",
+    "event_id": "geph-9c23b5b2033670e539b39864",
+    "human_required": true,
+    "operation": "transition",
+    "portfolio_id": "durable-github-provider-pilot",
+    "post_generation": 1,
+    "post_state_digest": "sha256:a190f056f71ab4eb6a641d29b0b95476cf5919b12e3e4aa064fb9b9534ac2d89",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:4bb223805ef373653ea3bf72131122e2827103091deb54adb9177e9df4c74399",
+    "requested_action_ref": "authority://durable/generalized-provider-pilot/acknowledge",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "committed"
+  },
+  "event_report_digest": "sha256:ec64a4839330e7e1bc34021888582e56ef6609535da8a0d9e7a8353e19f96c09",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}

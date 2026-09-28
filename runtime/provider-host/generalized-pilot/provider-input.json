@@ -1,0 +1,20 @@
+{
+  "bindings": {
+    "marker": "durable-generalization-v1",
+    "ref": "refs/heads/pilot/durable-github-provider",
+    "repository": "Waterfound/General-Execution"
+  },
+  "canonical_refs": [
+    "github-actions://Waterfound/General-Execution/runs/36442435398",
+    "github://Waterfound/General-Execution/commit/54916819801d537732f9357a74d94baa0a8846b7"
+  ],
+  "evidence_digest": "sha256:83d6bcea7651e95733f0015970ba57729ba757fca38012857da0464028482e7e",
+  "evidence_locator": "github-actions://Waterfound/General-Execution/runs/36442435398",
+  "observed_at": "2026-09-28T12:17:20-03:00",
+  "observed_state": "push_observed",
+  "provider": "github-actions-push",
+  "provider_event_id": "36442435398:1:54916819801d537732f9357a74d94baa0a8846b7",
+  "schema_version": "ge.provider-input.v1",
+  "subject_ref": "github://Waterfound/General-Execution/refs/heads/pilot/durable-github-provider",
+  "watch_id": "generalized-github-push"
+}
