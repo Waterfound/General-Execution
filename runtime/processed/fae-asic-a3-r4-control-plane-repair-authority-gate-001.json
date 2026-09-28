@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:2f6c6292bfdec9aed0a9967d38708369187368092cb1975b3ce4a4c95bb55c3b",
+  "event_id": "fae-asic-a3-r4-control-plane-repair-authority-gate-001",
+  "event_report_digest": "sha256:051fbcf719570be4d4c100865baa3d8591d86211e3e250302694dbe24e48c689",
+  "operation": "transition",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "2d6344339f1cef8801518f6fd0de52d54d6359f2"
+}

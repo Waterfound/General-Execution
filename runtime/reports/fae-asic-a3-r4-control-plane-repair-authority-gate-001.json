@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:2f6c6292bfdec9aed0a9967d38708369187368092cb1975b3ce4a4c95bb55c3b",
+  "event_report": {
+    "checkpoint_digest": "sha256:85764ce15ed807b6fc2845e03d8c12c2125d8ed7d1e8b88cc3eacd82b8d79f10",
+    "event_id": "fae-asic-a3-r4-control-plane-repair-authority-gate-001",
+    "human_required": true,
+    "operation": "transition",
+    "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+    "post_generation": 6,
+    "post_state_digest": "sha256:a37c5b293e0a4020522cd6162c143d4a5096cb2458985e66a7caa7455191a11b",
+    "pre_generation": 5,
+    "pre_state_digest": "sha256:c8349cc03c33a1380ecfbafc5ff1455b41088193fe3a1d41efe92ab30ab59307",
+    "requested_action_ref": "authority://fae-asic/a3/r4/control-plane-repair",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "committed"
+  },
+  "event_report_digest": "sha256:051fbcf719570be4d4c100865baa3d8591d86211e3e250302694dbe24e48c689",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
