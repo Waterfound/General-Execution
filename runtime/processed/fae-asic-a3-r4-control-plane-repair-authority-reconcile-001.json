@@ -1,0 +1,12 @@
+{
+  "authority_grant_digest": "sha256:cb4698b64cbe8b0e0abe38b2a4b33e7f180ae1c593c40242420bbe7c8f3d2bba",
+  "authority_receipt_digest": "sha256:9e32d66b8482c57a04c7c23c826ca0501b6980a36b06e46752d0edef5a10095d",
+  "authority_ref": "github://Waterfound/General-Execution/commit/54e69377a92749293a0fe28b9e4bab6dce897578/authority/fae-asic-a3-r4-control-plane-repair-authority-reconcile-001.json",
+  "database_sha256": "sha256:5e89dd49794827b89fd5ecca72582d39753d66bea7819a1b32f238ad64647fff",
+  "event_id": "fae-asic-a3-r4-control-plane-repair-authority-reconcile-001",
+  "execution_report_digest": "sha256:ca0890fd08eca403344a679fa159681d0936893f046bb3bab71cd0d55b2901e5",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+  "schema_version": "ge.human-authority-processed-event.v1",
+  "trigger_commit": "54e69377a92749293a0fe28b9e4bab6dce897578"
+}
