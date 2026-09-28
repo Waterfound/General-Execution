@@ -1,0 +1,95 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-visual-language-vl12-complete-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-visual-language-vl12-close-v1",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-vl12-verified-to-vl13",
+          "from_state": "verifying",
+          "event": "verification_passed",
+          "to_state": "verifying",
+          "next_action_ref": "action://fae-visual-language/direction-d/VL-13",
+          "effect": "none",
+          "required_evidence": [
+            "cross_product_ci",
+            "browser_qa_matrix",
+            "contrast_accessibility_contract",
+            "mobile_qa_snapshots"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-push",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-visual-language-art-direction",
+      "policy_digest": "sha256:1e7bc772ea37bf445eda1034760939953c9307b54b9bdf57dad5f01e9bd4263d",
+      "transition_event": "verification_passed"
+    },
+    "trigger": {
+      "source": "github-push",
+      "event_id": "fae-visual-language-vl12-complete-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:e8d184f60a1548ce42d1831cf69c856d7759845a535d8b181d2b542c4decf8c9",
+      "observation_digest": "sha256:0b1c45717d62ac9492c19b7fac325e18e4edcc45be08877d681456a9fcb36470",
+      "admission_ref": "github://Waterfound/General-Execution/events/fae-visual-language-vl12-complete-001"
+    },
+    "observation": {
+      "portfolio_id": "fae-visual-language-art-direction",
+      "expected_generation": 7,
+      "expected_state_digest": "sha256:44f720501b594eb63ecae9cb29b48c5075a5a8c7e93e8fccf3df13aadeec639f",
+      "policy_digest": "sha256:1e7bc772ea37bf445eda1034760939953c9307b54b9bdf57dad5f01e9bd4263d",
+      "event": "verification_passed",
+      "evidence": [
+        {
+          "kind": "cross_product_ci",
+          "locator": "github://Waterfound/FAE-testnet/actions/runs/36482881105",
+          "digest": "sha256:6807f60cd9de2a8345382857727f9e357fd9475a8c667324cd12da554586b57f",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "browser_qa_matrix",
+          "locator": "github://Waterfound/FAE-testnet/docs/FAE_VISUAL_LANGUAGE_VL12_QA.md",
+          "digest": "sha256:fd64d9703948b7cf7508db5019ba970fecab3c6130d4dd0314449fbf4b3fde64",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "contrast_accessibility_contract",
+          "locator": "github://Waterfound/FAE-testnet/commit/06317faa820b0badd17bddb1f6273c7cf01eca80/tests/visual-language-contract.mjs",
+          "digest": "sha256:d594cfd3b85f3658eeece4f25d169df7b0d4fedbafe495642f51c22857662c01",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "mobile_qa_snapshots",
+          "locator": "appdeploy://fae-direction-d-vl08-qa-ii0d80/qa",
+          "digest": "sha256:2552510d65de14eab78d9d217c5e9c8ac7f96b09c105cb19c8e7879546568e21",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "github://Waterfound/FAE-testnet/commit/06317faa820b0badd17bddb1f6273c7cf01eca80",
+      "observed_at": "2026-09-28T21:00:00Z",
+      "summary": "VL-12 closed: cross-product Direction D QA passed deterministic CI and browser evidence across Homepage, Wallet, Mining and Explorer. Contrast floors, focus-visible, reduced motion, responsive breakpoints, status semantics and mining honesty are source-bound; isolated QA has zero frontend/network errors with web/mobile snapshots.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/06317faa820b0badd17bddb1f6273c7cf01eca80",
+        "github://Waterfound/FAE-testnet/actions/runs/36482881105",
+        "github://Waterfound/FAE-testnet/docs/FAE_VISUAL_LANGUAGE_VL12_QA.md",
+        "https://fae-direction-d-vl08-qa-ii0d80.v2.appdeploy.ai/"
+      ],
+      "uncertainties": [
+        "Vercel branch previews remain protected from unauthenticated browser QA; isolated AppDeploy QA is used for public visual inspection while GitHub CI and Vercel build status provide source/build evidence."
+      ],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
