@@ -1,0 +1,112 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-180s-ebtv-f180-03-complete-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-180s-ebtv-f180-03-complete",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-complete-active",
+          "from_state": "ready",
+          "event": "verification_passed",
+          "to_state": "complete",
+          "next_action_ref": "action://fae-180s/F180-06",
+          "effect": "promote_secondary",
+          "required_evidence": [
+            "frontier_result",
+            "verifier_pass"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        },
+        {
+          "rule_id": "02-wake-passive",
+          "from_state": "passive",
+          "event": "wake_satisfied",
+          "to_state": "ready",
+          "next_action_ref": "action://fae-180s/F180-04",
+          "effect": "wake_passive",
+          "required_evidence": [
+            "wake_condition_satisfied"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "build-colony-fae-180s",
+      "event_kind": "frontier-verification",
+      "portfolio_id": "fae-180s-economic-blocktime-validation",
+      "policy_digest": "sha256:255ee9eb2a03ae6a563b910755ca1b8a365dd4bb83e0b5ff11462d2020a6c5cd",
+      "transition_event": "verification_passed"
+    },
+    "trigger": {
+      "source": "build-colony-fae-180s",
+      "event_id": "fae-180s-ebtv-f180-03-complete-001",
+      "event_kind": "frontier-verification",
+      "payload_digest": "sha256:a81a9cae1afa7f5bb4c24f9a20bf99402fa0d84def541224af83f5a5afd78dd2",
+      "observation_digest": "sha256:cf9638588c5b2ecb287488c021e3b26ec4fcbd198112937e2f4d67f5d3cd55f2",
+      "admission_ref": "build-colony://bc-fae-180s-ebtv-20260928-001/F180-03"
+    },
+    "observation": {
+      "portfolio_id": "fae-180s-economic-blocktime-validation",
+      "expected_generation": 2,
+      "expected_state_digest": "sha256:caf0984c9a6ac8ee1cbe80cfe21106bac391b6ce002515b09b8a5705f0fffd80",
+      "policy_digest": "sha256:255ee9eb2a03ae6a563b910755ca1b8a365dd4bb83e0b5ff11462d2020a6c5cd",
+      "event": "verification_passed",
+      "evidence": [
+        {
+          "kind": "frontier_result",
+          "locator": "github://Waterfound/FAE-testnet/commit/89b0cb803c17f3cf6ffee45b8a7e25ea13e144d6",
+          "digest": "sha256:dce38d6c591821227fe6fefb29099ee6b8af324fc81322706f2296e6597c5d65",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "verifier_pass",
+          "locator": "github-actions://Waterfound/FAE-testnet/runs/36445566934",
+          "digest": "sha256:707d3103140be40ad49d19ae443d35eb250aeaca7cceff036c3be7af56ab0a94",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "build-colony://bc-fae-180s-ebtv-20260928-001/F180-03",
+      "observed_at": "2026-09-28T16:05:00Z",
+      "summary": "F180-03 completed with WARN: exact active-v4 180s DAA shocks converged, while integer-bit quantization and stochastic retarget noise remain explicit risks.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/89b0cb803c17f3cf6ffee45b8a7e25ea13e144d6",
+        "github-actions://Waterfound/FAE-testnet/runs/36445566934"
+      ],
+      "uncertainties": [
+        "Timestamp exploitability was separated to F180-04; fresh WAN evidence is not provided by this simulation."
+      ],
+      "wake_admission": {
+        "portfolio_id": "fae-180s-economic-blocktime-validation",
+        "portfolio_generation": 2,
+        "portfolio_state_digest": "sha256:caf0984c9a6ac8ee1cbe80cfe21106bac391b6ce002515b09b8a5705f0fffd80",
+        "work_id": "F180-04",
+        "wake_condition_digest": "sha256:cbb3b8803a2f3f1bd61415fbd3b00a3a9b37b216f69debf162563cd3bb75f057",
+        "policy_digest": "sha256:255ee9eb2a03ae6a563b910755ca1b8a365dd4bb83e0b5ff11462d2020a6c5cd",
+        "rule_digest": "sha256:2f0eee3465a96411de484aa2a2f9a74c038712076c31d6c4cacdcf76fac9d4b7",
+        "evidence": [
+          {
+            "kind": "wake_condition_satisfied",
+            "locator": "github://Waterfound/FAE-testnet/commit/89b0cb803c17f3cf6ffee45b8a7e25ea13e144d6",
+            "digest": "sha256:cb2b2f5ea35e1a2af5396bb3104a5ae915b05c4a9c5c0c53ea52bc55a35d3641",
+            "schema_version": "ge.checkpoint-evidence.v1"
+          }
+        ],
+        "next_action_ref": "action://fae-180s/F180-04",
+        "authority_grant": null,
+        "schema_version": "ge.passive-wake-admission.v1"
+      },
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
