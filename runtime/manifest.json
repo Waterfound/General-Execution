@@ -1,10 +1,10 @@
 {
   "authority_created": false,
-  "database_sha256": "sha256:3a312389caf46efc53d21c6cd9144b32d7e78e6a0489470369f95f079f9305b4",
-  "last_event_id": "durable-terminal-closure-bootstrap-001",
-  "last_event_report_digest": "sha256:cb695a62a463cd67de2c001639874e7eb5c8a2b8fd5342134c3ae97929194b9b",
+  "database_sha256": "sha256:352ac07e8260e31b53cba98a6ee06be1488e39a50833a448c35fb313adff9a07",
+  "last_event_id": "durable-generalized-github-provider-pilot-bootstrap-001",
+  "last_event_report_digest": "sha256:d07fea16cdae6044ad4f2b975bbb0c6bffd0e029b8efe68f53f5bc6be5bf7ad3",
   "last_operation": "bootstrap",
-  "last_trigger_commit": "1d58c1fd6e788e3be91abbdd0e1764edfc288fdb",
+  "last_trigger_commit": "8aa43ecf97599e4aa522299a42bdf430882d28e1",
   "persistent_provider_trigger_enabled": true,
   "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
   "schema_version": "ge.persistent-runtime-manifest.v1"
