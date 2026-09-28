@@ -149,3 +149,18 @@ Only after that gate should the linear v0.0.10–v0.0.13 chain be fast-forwarded
 ## Status
 
 **v0.0.13 is a stacked candidate with real external full-regression evidence. Final exact-SHA rerun is the remaining promotion gate.**
+
+
+## Continuity Check
+
+Continuity Check V1 is a **thin read-only protocol/tool inside General Execution / Durable Execution**, not a separate system. It reconstructs development continuity from bound persistent evidence and keeps conversation appearance separate from operational state.
+
+Core invariants:
+
+- `conversation interruption != development interruption`;
+- `conversation still open != development progressing`;
+- evidence before status; memory suggests, evidence decides;
+- provider/runner failure is infrastructure evidence and does not automatically become development failure;
+- the tool may recommend Durable Execution, Human Authority Bridge, Diagnostic Intelligence or Total Systems Steward actions, but it never performs those actions or creates authority.
+
+The frozen V1 semantics, schema, CLI and acceptance contract are documented in [`docs/continuity-check.md`](docs/continuity-check.md). Machine-readable output is defined by [`schemas/continuity-check-v1.schema.json`](schemas/continuity-check-v1.schema.json).
