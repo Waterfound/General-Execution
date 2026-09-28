@@ -1,0 +1,57 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-mainnet-readiness-mr09-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "fae-mainnet-readiness-mr09",
+      "generation": 0,
+      "active": {
+        "work_id": "MR-09",
+        "role": "active",
+        "state": "verifying",
+        "objective": "Verify and admit the exact MR-09 canonical-state reconciliation closure commit. The only permitted terminal meaning is CANONICAL_STATE_RECONCILED, explicitly not MAINNET_READY.",
+        "active_gate": "exact-closure-candidate-verification",
+        "next_action_ref": "action://fae-mainnet-readiness/MR-09",
+        "source_revision": "d648184ad221f1a08664c73fe3e6530ac4404cab",
+        "evidence_required": [
+          "readiness_verifier_success",
+          "canonical_source_success",
+          "cross_lab_success",
+          "recurring_assurance_success",
+          "codeql_success",
+          "fresh_main_and_research_serialization_check",
+          "mainnet_ready_false",
+          "mainnet_authority_false"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/d648184ad221f1a08664c73fe3e6530ac4404cab",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "MR-09-ARCHIVE",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Preserve the accepted reconciliation receipt after MR-09 closes; no protocol or merge authority is created.",
+        "active_gate": "closure-receipt-preservation",
+        "next_action_ref": "action://fae-mainnet-readiness/MR-09-ARCHIVE",
+        "source_revision": "d648184ad221f1a08664c73fe3e6530ac4404cab",
+        "evidence_required": [
+          "MR-09_complete"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/d648184ad221f1a08664c73fe3e6530ac4404cab",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
