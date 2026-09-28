@@ -10,6 +10,7 @@ on:
       - provider-contracts/**
       - tests/test_provider_host.py
       - .github/workflows/provider-host-verification.yml
+      - .github/workflows/durable-provider-host.yml
   pull_request:
     paths:
       - src/general_execution/provider_host.py
@@ -17,6 +18,7 @@ on:
       - provider-contracts/**
       - tests/test_provider_host.py
       - .github/workflows/provider-host-verification.yml
+      - .github/workflows/durable-provider-host.yml
 
 permissions:
   contents: read
