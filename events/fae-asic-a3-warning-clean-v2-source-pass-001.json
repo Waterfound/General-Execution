@@ -1,0 +1,72 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-asic-a3-warning-clean-v2-source-pass-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-asic-a3-warning-clean-v2-source-pass",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-source-metadata-v2-pass",
+          "from_state": "rework",
+          "event": "verification_passed",
+          "to_state": "verifying",
+          "next_action_ref": "action://fae-asic/a3/warning-clean-v2-provider-revalidation",
+          "effect": "none",
+          "required_evidence": [
+            "a3_warning_clean_v2_source_validation"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-actions",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-asic-a3-warning-clean-revalidation-v2",
+      "policy_digest": "sha256:36337766cb878af7e3fe7ce15c237ad4fa35bb2c8ab9b4382688ff792f9d467b",
+      "transition_event": "verification_passed"
+    },
+    "trigger": {
+      "source": "github-actions",
+      "event_id": "fae-asic-a3-warning-clean-v2-source-pass-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:3dcf2c4a4eaff8d6f8642a008740ae9145eecce57b8b620c9d453d69a10a0aed",
+      "observation_digest": "sha256:b34ac5631d874c6c9ddcf6956bc520bbf3ee1a97b5cb57aecc214cfb907621de",
+      "admission_ref": "github-actions://Waterfound/FAE-testnet/runs/36360623493"
+    },
+    "observation": {
+      "portfolio_id": "fae-asic-a3-warning-clean-revalidation-v2",
+      "expected_generation": 3,
+      "expected_state_digest": "sha256:5c6c5e1f4fa1946d5618b1173b46e2e796b3d481f5fc0158696a86db40e4d684",
+      "policy_digest": "sha256:36337766cb878af7e3fe7ce15c237ad4fa35bb2c8ab9b4382688ff792f9d467b",
+      "event": "verification_passed",
+      "evidence": [
+        {
+          "kind": "a3_warning_clean_v2_source_validation",
+          "locator": "github-actions://Waterfound/FAE-testnet/runs/36360623493",
+          "digest": "sha256:3dcf2c4a4eaff8d6f8642a008740ae9145eecce57b8b620c9d453d69a10a0aed",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "github-actions://Waterfound/FAE-testnet/runs/36360623493",
+      "observed_at": "2026-09-28T00:00:00Z",
+      "summary": "A3 warning-clean v2 source verifier passed after binding AXI4-Lite protocol and MAX_BURST_LENGTH=1 directly on both control CDC interface pins; provider revalidation is still required.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/84b342575097df5b2d5b3625d78c766dc5d57979",
+        "github://Waterfound/FAE-testnet/commit/52f51f60b19e807c689fcf319ef83656ca4628a8"
+      ],
+      "uncertainties": [
+        "The direct interface metadata patch has not yet been verified in AWS/Vivado provider execution."
+      ],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
