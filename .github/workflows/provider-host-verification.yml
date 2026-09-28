@@ -12,6 +12,8 @@ on:
       - .github/workflows/provider-host-verification.yml
       - .github/workflows/durable-provider-host.yml
       - .github/workflows/generalized-github-provider-pilot.yml
+      - .github/workflows/aws-fae-provider-observer.yml
+      - infra/aws/durable-provider-observer/**
   pull_request:
     paths:
       - src/general_execution/provider_host.py
@@ -21,6 +23,8 @@ on:
       - .github/workflows/provider-host-verification.yml
       - .github/workflows/durable-provider-host.yml
       - .github/workflows/generalized-github-provider-pilot.yml
+      - .github/workflows/aws-fae-provider-observer.yml
+      - infra/aws/durable-provider-observer/**
 
 permissions:
   contents: read
