@@ -6,6 +6,10 @@ on:
       - feature/durable-provider-host-terminal-20260928
     paths:
       - src/general_execution/provider_host.py
+      - src/general_execution/human_gate_decision.py
+      - scripts/run_human_gate_decision.py
+      - tests/test_human_gate_decision.py
+      - .github/workflows/durable-human-gate-decision.yml
       - scripts/run_provider_host.py
       - provider-contracts/**
       - .github/workflows/durable-provider-host.yml
@@ -14,6 +18,10 @@ on:
   pull_request:
     paths:
       - src/general_execution/provider_host.py
+      - src/general_execution/human_gate_decision.py
+      - scripts/run_human_gate_decision.py
+      - tests/test_human_gate_decision.py
+      - .github/workflows/durable-human-gate-decision.yml
       - scripts/run_provider_host.py
       - provider-contracts/**
       - .github/workflows/durable-provider-host.yml
@@ -64,6 +72,19 @@ jobs:
           gh=json.loads(pathlib.Path('provider-contracts/generalized-github-push.json').read_text())
           assert gh['provider']=='github-actions-push'
           assert gh['policy']['rules'][0]['authority_mode']=='human_required'
+          decision_src=pathlib.Path('src/general_execution/human_gate_decision.py').read_text()
+          decision_tree=ast.parse(decision_src)
+          decision_imports=set()
+          for node in ast.walk(decision_tree):
+              if isinstance(node,ast.Import):
+                  decision_imports.update(alias.name.split('.')[0] for alias in node.names)
+              elif isinstance(node,ast.ImportFrom) and node.module:
+                  decision_imports.add(node.module.split('.')[0])
+          assert not (decision_imports & forbidden_import_roots)
+          assert 'TransitionAuthorityGrant' not in decision_src
+          assert 'target must be rework or failed' in decision_src
+          assert 'provider_actor != "Waterfound"' in decision_src
+          assert 'state.active.state != "human_gate"' in decision_src
           PY
-      - name: Reproduce provider-host adversarial bank
-        run: python -m pytest tests/test_provider_host.py -q
+      - name: Reproduce provider-host and human-decision adversarial banks
+        run: python -m pytest tests/test_provider_host.py tests/test_human_gate_decision.py -q
