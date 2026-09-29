@@ -1,0 +1,158 @@
+{
+  "schema_version": "ge.fae-wallet-persistent-vault-closeout.v1",
+  "evidence_observed_through_utc": "2026-09-29T02:53:41Z",
+  "workstream": "FAE — Wallet Onboarding & Persistent Vault",
+  "build_colony": {
+    "run_id": "BC-FAE-WV-20260928-001",
+    "source_repository": "Waterfound/Build-Colony",
+    "source_revision": "17979869a85c9f5adf2cef2ceb589a07fcef6239",
+    "execution_rule": "Parallelize independence. Serialize shared state.",
+    "graph": "WV-00..WV-18"
+  },
+  "fae_candidate": {
+    "repository": "Waterfound/FAE-testnet",
+    "branch": "build-colony/wallet-persistent-vault-20260928",
+    "revision": "424b667df2ca6c85efdcca355b597744bf754760",
+    "pull_request": 266,
+    "pull_request_state": "draft",
+    "base_branch": "colony/fae-visual-language-rebrand-001",
+    "direction_d_base_revision": "2ffa8dbbd4ed9b32d5593e6462f7c3486e18603c",
+    "canonical_main_at_planning": "b00bbebca81a8f1085f7e61beddca862d8b5dfaa"
+  },
+  "durable_execution": {
+    "repository": "Waterfound/General-Execution",
+    "runtime_branch": "runtime/durable-asp-control",
+    "runtime_base_observed": "fff301db0a78399bf707861c7fc7a154716a7646",
+    "evidence_branch": "evidence/fae-wallet-persistent-vault-20260928",
+    "runtime_shared_state_mutated_for_this_workstream": false,
+    "reason": "The active durable runtime shared state is concurrently servicing the FAE ASIC A3-R4 control-plane workstream. This wallet closeout records immutable external execution evidence on an isolated branch instead of racing runtime state.",
+    "executor_truth": {
+      "software_verification_executor": "GitHub Actions in Waterfound/FAE-testnet",
+      "general_execution_vercel_runner_used_for_fae_candidate": false,
+      "explanation": "General Execution v0.0.13 Vercel Sandbox conformance is protocol-fixed to the General-Execution repository and an exact General-Execution SHA; repurposing it as an arbitrary FAE repository executor would change its authority contract."
+    }
+  },
+  "implementation": {
+    "vault": "IndexedDB + WebCrypto AES-256-GCM wrapping key stored as non-extractable CryptoKey",
+    "new_private_jwk_in_localstorage": false,
+    "new_wallet_staged_until_full_24_word_reentry": true,
+    "recovery_wallet_primary_seed_flow": true,
+    "optional_passphrase_plaintext_persisted": false,
+    "multi_wallet": true,
+    "active_wallet_persisted": true,
+    "active_derived_address_persisted": true,
+    "explicit_remove": true,
+    "duplicate_wallet_dedup_by_public_fingerprint": true,
+    "legacy_v3_fail_closed_migration": true,
+    "watch_only_separate": true,
+    "mining_switch_fail_closed": true,
+    "wallet_transaction_ux_preserved": true,
+    "direction_d_reconciled": true,
+    "consensus_changed": false,
+    "economics_changed": false,
+    "address_format_changed": false,
+    "transaction_semantics_changed": false,
+    "custody_created": false
+  },
+  "frontiers": {
+    "WV-00": "PASS — current wallet architecture reconstructed",
+    "WV-01": "PASS — browser threat model and security ceiling frozen",
+    "WV-02": "PASS — canonical onboarding state machine implemented",
+    "WV-03": "PASS — multi-wallet vault data model implemented",
+    "WV-04": "PASS — public-information wallet fingerprint implemented",
+    "WV-05": "PASS — hardened browser-local storage architecture implemented",
+    "WV-06": "PASS — legacy V3/single-wallet migration fail-closed",
+    "WV-07": "PASS — staged New Wallet backup-confirmation",
+    "WV-08": "PASS — Recovery Wallet consolidation",
+    "WV-09": "PASS — Add/Switch/Remove multi-wallet lifecycle",
+    "WV-10": "PASS — active wallet/address persistence",
+    "WV-11": "PASS — mining interaction boundary preserved",
+    "WV-12": "PASS — Wallet Transaction UX regression bank",
+    "WV-13": "PASS — corruption and recovery fail-closed",
+    "WV-14": "PASS — Chromium/WebKit browser-level compatibility and restart persistence",
+    "WV-15": "PASS — adversarial/tamper/lost-wrapping-key campaign",
+    "WV-16": "PASS — Direction D wallet-state reconciliation",
+    "WV-17": "PASS — candidate/canonical-state reconciliation; no public promotion",
+    "WV-18": "PASS — technical closeout at authority ceiling"
+  },
+  "verification": [
+    {
+      "name": "Wallet Persistent Vault candidate",
+      "run_id": 36514550673,
+      "run_number": 17,
+      "conclusion": "success",
+      "details": "deterministic job GREEN; browser job 10/10 GREEN"
+    },
+    {
+      "name": "cross-lab-integration-gate",
+      "run_id": 36514550698,
+      "run_number": 245,
+      "conclusion": "success"
+    },
+    {
+      "name": "verify-canonical-source",
+      "run_id": 36514550686,
+      "run_number": 787,
+      "conclusion": "success"
+    },
+    {
+      "name": "Visual Language Lab",
+      "run_id": 36514550652,
+      "run_number": 28,
+      "conclusion": "success"
+    },
+    {
+      "name": "public-code-security-recurring-assurance",
+      "run_id": 36514550646,
+      "run_number": 180,
+      "conclusion": "success"
+    },
+    {
+      "name": "codeql-security",
+      "run_id": 36514550691,
+      "run_number": 269,
+      "conclusion": "success"
+    }
+  ],
+  "browser_evidence": {
+    "tests_passed": 10,
+    "tests_total": 10,
+    "chromium_persistent_profile_restart": true,
+    "webkit_persistent_profile_restart": true,
+    "desktop_mouse_wtx": true,
+    "tablet_touch_wtx": true,
+    "mobile_touch_wtx": true,
+    "unconfirmed_wallet_not_admitted": true,
+    "wrong_full_phrase_confirmation_fail_closed": true,
+    "multi_wallet_switch_remove": true,
+    "mining_switch_blocked": true,
+    "legacy_v3_migration": true,
+    "authenticated_payload_tamper_fail_closed": true,
+    "missing_or_different_wrapping_key_fail_closed": true
+  },
+  "security_ceiling": [
+    "The encrypted browser vault hardens secret material at rest but does not protect an unlocked origin against XSS or malicious same-origin script.",
+    "A fully compromised browser profile, device, or operating system remains outside the protection ceiling.",
+    "Browser storage can be cleared or evicted according to browser/device policy; persistent-storage requests are best-effort.",
+    "Playwright WebKit is engine-class browser evidence, not physical iPadOS Safari evidence."
+  ],
+  "external_or_human_gates": {
+    "physical_ipados_safari_smoke": "not collected; optional external-device strengthening evidence, not used to claim physical-device validation",
+    "vercel_preview": "blocked by account build-rate-limit on the two Vercel status contexts; no production deployment was authorized or attempted",
+    "direction_d_integration": "PR #266 remains draft against the selected Direction D candidate",
+    "visual_language_final_promotion": "PR #265/public rebrand remains under the pre-existing human authority gate",
+    "mainnet": false
+  },
+  "authority": {
+    "backend_custody_authorized": false,
+    "server_seed_storage_authorized": false,
+    "consensus_change_authorized": false,
+    "economics_change_authorized": false,
+    "address_format_change_authorized": false,
+    "transaction_semantics_change_authorized": false,
+    "mainnet_activation_authorized": false,
+    "production_rebrand_authorized": false
+  },
+  "terminal_state": "FAE_WALLET_PERSISTENT_VAULT_READY",
+  "terminal_scope": "software-only technical candidate at the existing authority ceiling; not merged, publicly deployed, or promoted to mainnet"
+}
