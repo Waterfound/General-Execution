@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:3dc15970f8c3698885c3c8cbdebb4bee1800b4115942ddda3016e7baa4a35c1f",
+  "event_report": {
+    "checkpoint_digest": "sha256:056a6302ab87791f58e83516a83511188ab22ed3f11050c8d6925a565bd1f70d",
+    "event_id": "fae-asic-a3-r4-control-repair-r3t1-physical-pass-001",
+    "human_required": false,
+    "operation": "transition",
+    "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+    "post_generation": 15,
+    "post_state_digest": "sha256:bd22b8aa34e34efe65f66f1e8e92b38ac1a1fc4b84c28e6f8c598924da16f7a0",
+    "pre_generation": 14,
+    "pre_state_digest": "sha256:5daf95cfa63abaafb0d5de5fa274e911b05200083737fde5b2e0eceb0023fb51",
+    "requested_action_ref": null,
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "committed"
+  },
+  "event_report_digest": "sha256:96618e9a5aa2c6fcc208e92440528d19086e89e413dfeb77554cd8321a2c70d1",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
