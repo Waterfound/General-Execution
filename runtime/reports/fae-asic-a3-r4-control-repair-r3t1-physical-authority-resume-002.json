@@ -1,0 +1,41 @@
+{
+  "authority_grant_digest": "sha256:9dad849b6675e502063e95b14c9c0fc61470088187c17a6d403f8d822a973f4c",
+  "authority_receipt": {
+    "approved_action_ref": "authority://fae-asic/a3/r4/control-repair-r3t1-physical-implementation",
+    "approved_at": "2026-09-29T18:38:00Z",
+    "authority_boundary": "Authorize one physical implementation build of the statically validated A3-R4 R3-T1 candidate at requested local 166.667 MHz, preserving frozen DP6, the existing memory map, and control apertures 0x0000 and 0x1000; fail closed on timing; do not create an AFI, execute F2 runtime, benchmark, attacker sweep, sustained/HFB, change consensus or economics, release, activation height, or take mainnet action.",
+    "authority_ref": "github://Waterfound/General-Execution/commit/bcac6427321c1f13391ec88313ad5648da7816c5/authority/fae-asic-a3-r4-control-repair-r3t1-physical-authority-resume-002.json",
+    "event_id": "fae-asic-a3-r4-control-repair-r3t1-physical-authority-resume-002",
+    "expected_generation": 12,
+    "expected_state_digest": "sha256:2ca8708613148a62061ece1c9b0cdfc01d87759f385293569a401e12857f53a5",
+    "policy_digest": "sha256:6343f43aef8a3135f8bcbc5aeb1a41d297162d9f116a43ba23ae96812b9bb1a5",
+    "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+    "provider_actor": "Waterfound",
+    "rule_digest": "sha256:253945bcecafa316f984abc7f8fdca442f6a66a0c3dd6045ef2e40c51f171748",
+    "schema_version": "ge.human-authority-receipt.v1"
+  },
+  "authority_receipt_digest": "sha256:08ec15112ce3ed4839225fd2f1401a9f131ae835bb3dc24a3446c1eb3b259483",
+  "authority_ref": "github://Waterfound/General-Execution/commit/bcac6427321c1f13391ec88313ad5648da7816c5/authority/fae-asic-a3-r4-control-repair-r3t1-physical-authority-resume-002.json",
+  "database_sha256": "sha256:7485a68ad90bddcdb30fd47a480a1afb07f41fb3caa48c3e11b1bd9017f5380c",
+  "event_id": "fae-asic-a3-r4-control-repair-r3t1-physical-authority-resume-002",
+  "execution_report_digest": "sha256:efffc18ff245dbb44309f9cde29fdff1ea20bf3ced390051281d46d2adfa6c78",
+  "observation_digest": "sha256:14fd9799bf79b541f0e7e5905ec3a465ec5949834b2fbee4d9754a4215bba5ff",
+  "provider_actor": "Waterfound",
+  "schema_version": "ge.human-authority-execution.v1",
+  "tick": {
+    "checkpoint_digest": "sha256:105f1b138ad3944c643ccc6673e2da42e17e1858c78bee3478cff916c10c69f0",
+    "disposition": "committed",
+    "human_required": false,
+    "observation_digest": "sha256:14fd9799bf79b541f0e7e5905ec3a465ec5949834b2fbee4d9754a4215bba5ff",
+    "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+    "post_generation": 13,
+    "post_state_digest": "sha256:73dd833d1beef4cbea5986f0d76f8a089f6c1f81c0d9dd96fe75ed1796dc48d2",
+    "pre_generation": 12,
+    "pre_state_digest": "sha256:2ca8708613148a62061ece1c9b0cdfc01d87759f385293569a401e12857f53a5",
+    "recovery_report_digest": "sha256:8171d80ef704afa0a696b36b8506eb191f6543011c936259074cca2176427e10",
+    "requested_action_ref": null,
+    "requested_work_id": null,
+    "schema_version": "ge.resume-tick-result.v1",
+    "transition_result_digest": "sha256:cbc7037632c0ac00afdeaa6513bb5b6f715fab45976fedce77a8e6a5440027e6"
+  }
+}

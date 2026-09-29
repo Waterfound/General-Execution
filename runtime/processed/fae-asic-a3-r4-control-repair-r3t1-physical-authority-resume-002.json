@@ -1,0 +1,12 @@
+{
+  "authority_grant_digest": "sha256:9dad849b6675e502063e95b14c9c0fc61470088187c17a6d403f8d822a973f4c",
+  "authority_receipt_digest": "sha256:08ec15112ce3ed4839225fd2f1401a9f131ae835bb3dc24a3446c1eb3b259483",
+  "authority_ref": "github://Waterfound/General-Execution/commit/bcac6427321c1f13391ec88313ad5648da7816c5/authority/fae-asic-a3-r4-control-repair-r3t1-physical-authority-resume-002.json",
+  "database_sha256": "sha256:7485a68ad90bddcdb30fd47a480a1afb07f41fb3caa48c3e11b1bd9017f5380c",
+  "event_id": "fae-asic-a3-r4-control-repair-r3t1-physical-authority-resume-002",
+  "execution_report_digest": "sha256:efffc18ff245dbb44309f9cde29fdff1ea20bf3ced390051281d46d2adfa6c78",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+  "schema_version": "ge.human-authority-processed-event.v1",
+  "trigger_commit": "bcac6427321c1f13391ec88313ad5648da7816c5"
+}
