@@ -1,0 +1,207 @@
+name: Durable workstream result reconciliation
+
+on:
+  schedule:
+    - cron: "41 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: durable-asp-persistent-runtime
+  cancel-in-progress: false
+
+env:
+  RUNTIME_BRANCH: runtime/durable-asp-control
+  PERSISTENT_RUNTIME_REVISION: a27a558d4ed0e28d96c3fec408212353d0077060
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout exact reconciler revision
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.sha }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Verify handoff adapter before observation
+        run: |
+          python -m pip install -e '.[dev]' --disable-pip-version-check
+          python -m compileall -q src scripts
+          python -m pytest tests/test_workstream_result_handoff.py -q
+
+      - name: Restore exact runtime head and pinned runtime source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin "$RUNTIME_BRANCH"
+          start="$(git rev-parse "origin/$RUNTIME_BRANCH")"
+          echo "$start" > /tmp/runtime-start.txt
+          git worktree add --detach /tmp/runtime-tree "$start"
+          git worktree add --detach /tmp/runtime-src "$PERSISTENT_RUNTIME_REVISION"
+          base64 --decode /tmp/runtime-tree/runtime/state.sqlite.b64 > /tmp/durable-runtime.db
+
+      - name: Observe enabled public GitHub workstream result watches
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/workstream-results
+          python - <<'PY'
+          import json, os, pathlib, urllib.parse, urllib.request
+
+          root=pathlib.Path(".")
+          rows=[]
+          token=os.environ.get("GH_TOKEN","")
+          for watch_path in sorted(root.glob("provider-result-watches/*.json")):
+              watch=json.loads(watch_path.read_text())
+              if not watch.get("enabled", False):
+                  continue
+              repo=watch["source_repository"]
+              ref=watch["source_ref"]
+              path=watch["result_path"]
+              query=urllib.parse.urlencode({"sha":ref,"path":path,"per_page":1})
+              req=urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}/commits?{query}",
+                  headers={
+                      "Accept":"application/vnd.github+json",
+                      **({"Authorization":f"Bearer {token}"} if token else {}),
+                      "X-GitHub-Api-Version":"2022-11-28",
+                  },
+              )
+              with urllib.request.urlopen(req, timeout=20) as response:
+                  commits=json.load(response)
+              if len(commits) != 1:
+                  raise RuntimeError(f"no unique result commit for {watch_path}")
+              item=commits[0]
+              sha=item["sha"]
+              observed_at=(
+                  item.get("commit",{}).get("committer",{}).get("date")
+                  or item.get("commit",{}).get("author",{}).get("date")
+              )
+              if not observed_at:
+                  raise RuntimeError(f"missing observed_at for {watch_path}")
+              raw_url=(
+                  "https://raw.githubusercontent.com/"
+                  + repo + "/" + sha + "/"
+                  + urllib.parse.quote(path, safe="/")
+              )
+              raw_req=urllib.request.Request(
+                  raw_url,
+                  headers=({"Authorization":f"Bearer {token}"} if token else {}),
+              )
+              with urllib.request.urlopen(raw_req, timeout=20) as response:
+                  raw=response.read()
+              out=pathlib.Path("/tmp/workstream-results")/(watch["watch_id"]+".json")
+              out.write_bytes(raw)
+              rows.append({
+                  "watch_path":str(watch_path),
+                  "result_path":str(out),
+                  "source_commit":sha,
+                  "observed_at":observed_at,
+              })
+          pathlib.Path("/tmp/workstream-observations.json").write_text(
+              json.dumps(rows,sort_keys=True,indent=2)+"\n"
+          )
+          print(json.dumps({"enabled_watch_count":len(rows)},sort_keys=True))
+          PY
+
+      - name: Reconcile results serially through canonical persistent runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/handoffs /tmp/runtime-tree/runtime/workstream-result-handoff/{processed,reports,events,provider-inputs}
+          count="$(python -c 'import json; print(len(json.load(open("/tmp/workstream-observations.json"))))')"
+          test "$count" -ge 0
+          for i in $(seq 0 $((count-1)) 2>/dev/null || true); do
+            readarray -t fields < <(python - "$i" <<'PY'
+          import json,sys
+          item=json.load(open("/tmp/workstream-observations.json"))[int(sys.argv[1])]
+          for key in ("watch_path","result_path","source_commit","observed_at"):
+              print(item[key])
+          PY
+            )
+            watch="${fields[0]}"
+            result="${fields[1]}"
+            source_commit="${fields[2]}"
+            observed_at="${fields[3]}"
+            prefix="/tmp/handoffs/$i"
+
+            PYTHONPATH=src python scripts/run_workstream_result_handoff.py               --watch "$watch"               --result "$result"               --source-commit "$source_commit"               --observed-at "$observed_at"               --database /tmp/durable-runtime.db               --event-out "$prefix-event.json"               --provider-input-out "$prefix-provider-input.json"               --report "$prefix-handoff-report.json"
+
+            handoff_id="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["handoff"]["handoff_id"])' "$prefix-handoff-report.json")"
+            marker="/tmp/runtime-tree/runtime/workstream-result-handoff/processed/$handoff_id.json"
+            if test -f "$marker"; then
+              echo "already reconciled: $handoff_id"
+              continue
+            fi
+
+            digest="$(PYTHONPATH=/tmp/runtime-src/src:/tmp/runtime-src/scripts python /tmp/runtime-src/scripts/run_persistent_runtime_event.py --event "$prefix-event.json" --print-trigger-digest)"
+            test "$digest" != "NONE"
+            PYTHONPATH=/tmp/runtime-src/src:/tmp/runtime-src/scripts python /tmp/runtime-src/scripts/run_persistent_runtime_event.py               --event "$prefix-event.json"               --database /tmp/durable-runtime.db               --report "$prefix-runtime-report.json"               --authenticated-trigger-digest "$digest"
+
+            event_id="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["event_id"])' "$prefix-event.json")"
+            cp "$prefix-event.json" "/tmp/runtime-tree/runtime/workstream-result-handoff/events/$event_id.json"
+            cp "$prefix-provider-input.json" "/tmp/runtime-tree/runtime/workstream-result-handoff/provider-inputs/$handoff_id.json"
+            cp "$prefix-handoff-report.json" "/tmp/runtime-tree/runtime/workstream-result-handoff/reports/$handoff_id-handoff.json"
+            cp "$prefix-runtime-report.json" "/tmp/runtime-tree/runtime/workstream-result-handoff/reports/$handoff_id-runtime.json"
+            python - "$prefix-handoff-report.json" "$prefix-runtime-report.json" "$marker" <<'PY'
+          import json,pathlib,sys
+          handoff=json.load(open(sys.argv[1]))["handoff"]
+          runtime=json.load(open(sys.argv[2]))["event_report"]
+          marker={
+              "schema_version":"ge.workstream-result-handoff-processed.v1",
+              "handoff_id":handoff["handoff_id"],
+              "transition_class":handoff["transition_class"],
+              "source_repository":handoff["source_repository"],
+              "source_ref":handoff["source_ref"],
+              "source_commit":handoff["source_commit"],
+              "result_path":handoff["result_path"],
+              "content_digest":handoff["content_digest"],
+              "runtime_event_id":runtime["event_id"],
+              "runtime_status":runtime["status"],
+              "post_generation":runtime["post_generation"],
+              "post_state_digest":runtime["post_state_digest"],
+              "authority_created":False,
+          }
+          pathlib.Path(sys.argv[3]).write_text(json.dumps(marker,sort_keys=True,indent=2)+"\n")
+          PY
+          done
+
+      - name: Persist reconciled state with runtime-head CAS
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /tmp/runtime-tree
+          base64 -w 0 /tmp/durable-runtime.db > runtime/state.sqlite.b64
+          printf '\n' >> runtime/state.sqlite.b64
+          git add runtime/
+          if git diff --cached --quiet; then
+            echo "no new workstream result handoffs"
+            exit 0
+          fi
+          git fetch origin "$RUNTIME_BRANCH"
+          test "$(git rev-parse "origin/$RUNTIME_BRANCH")" = "$(cat /tmp/runtime-start.txt)"
+          git config user.name "durable-workstream-reconciler"
+          git config user.email "durable-workstream-reconciler@users.noreply.github.com"
+          git commit -m "runtime: reconcile workstream provider results [skip ci]"
+          git push origin "HEAD:refs/heads/$RUNTIME_BRANCH"
+
+      - name: Upload reconciliation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: durable-workstream-result-reconciliation-${{ github.run_id }}
+          path: |
+            /tmp/workstream-observations.json
+            /tmp/handoffs/
+          if-no-files-found: warn
+          retention-days: 30
