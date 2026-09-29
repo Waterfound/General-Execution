@@ -100,6 +100,8 @@ class WorkstreamResultWatch:
     result_schema_field: str
     expected_result_schema: str
     observed_state_field: str
+    source_revision_field: str
+    expected_source_revision: str
     outcomes: tuple[ResultOutcome, ...]
     enabled: bool
     schema_version: str = WATCH_SCHEMA
@@ -115,12 +117,18 @@ class WorkstreamResultWatch:
             "result_schema_field",
             "expected_result_schema",
             "observed_state_field",
+            "source_revision_field",
+            "expected_source_revision",
         ):
             _nonempty(name, getattr(self, name))
         if not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", self.source_repository):
             raise WorkstreamResultHandoffError("source_repository must be owner/repository")
         if self.result_path.startswith("/") or ".." in self.result_path.split("/"):
             raise WorkstreamResultHandoffError("result_path must be repository-relative")
+        if not re.fullmatch(r"[0-9a-f]{40}", self.expected_source_revision):
+            raise WorkstreamResultHandoffError(
+                "expected_source_revision must be exact 40-hex SHA"
+            )
         if type(self.enabled) is not bool:
             raise WorkstreamResultHandoffError("enabled must be boolean")
         if not self.outcomes:
@@ -183,6 +191,8 @@ def workstream_result_watch_from_dict(data: Any) -> WorkstreamResultWatch:
             "result_schema_field",
             "expected_result_schema",
             "observed_state_field",
+            "source_revision_field",
+            "expected_source_revision",
             "outcomes",
             "enabled",
             "schema_version",
@@ -212,6 +222,8 @@ def workstream_result_watch_from_dict(data: Any) -> WorkstreamResultWatch:
         result_schema_field=obj["result_schema_field"],
         expected_result_schema=obj["expected_result_schema"],
         observed_state_field=obj["observed_state_field"],
+        source_revision_field=obj["source_revision_field"],
+        expected_source_revision=obj["expected_source_revision"],
         outcomes=tuple(outcomes),
         enabled=obj["enabled"],
         schema_version=obj["schema_version"],
@@ -226,6 +238,12 @@ def select_result_outcome(
         raise WorkstreamResultHandoffError(
             f"result schema mismatch: expected={watch.expected_result_schema!r} "
             f"observed={schema!r}"
+        )
+    result_revision = _lookup(payload, watch.source_revision_field)
+    if result_revision != watch.expected_source_revision:
+        raise WorkstreamResultHandoffError(
+            f"result source revision mismatch: expected={watch.expected_source_revision!r} "
+            f"observed={result_revision!r}"
         )
     observed_state = _lookup(payload, watch.observed_state_field)
     if not isinstance(observed_state, str) or not observed_state:
@@ -260,6 +278,7 @@ def _expected_bindings(watch: WorkstreamResultWatch) -> tuple[tuple[str, str], .
         "ref": watch.source_ref,
         "result_path": watch.result_path,
         "result_schema": watch.expected_result_schema,
+        "source_revision": watch.expected_source_revision,
     }.items()))
 
 
