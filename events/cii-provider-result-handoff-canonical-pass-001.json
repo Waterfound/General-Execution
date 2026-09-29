@@ -1,0 +1,119 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "cii-provider-result-handoff-canonical-pass-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "cii-provider-result-handoff-closeout",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-canonical-verification-pass",
+          "from_state": "verifying",
+          "event": "verification_passed",
+          "to_state": "complete",
+          "next_action_ref": "action://cii/provider-result-handoff/archive",
+          "effect": "none",
+          "required_evidence": [
+            "authority_semantics_preserved",
+            "fae_r1_historical_replay_success",
+            "independent_verifier_success",
+            "main_integration_gate_success",
+            "no_fae_workload_executed",
+            "provider_host_verification_success",
+            "terminal_verification_success"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-actions+cii",
+      "event_kind": "durable-transition",
+      "portfolio_id": "cii-provider-result-handoff-001",
+      "policy_digest": "sha256:6350b1bd36d9cbaf0fcf1d7c96dd7f11fdc1629e4156172d45127efced981224",
+      "transition_event": "verification_passed"
+    },
+    "trigger": {
+      "source": "github-actions+cii",
+      "event_id": "cii-provider-result-handoff-canonical-pass-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:b5e0942029c637b3425b77b7fbd1e19ea17d2290f59ba792bef181ac3a3d4191",
+      "observation_digest": "sha256:4853781f310bafebdba0ac2603def547ddb10718d4ea0d9853f66b536dce437c",
+      "admission_ref": "github://Waterfound/General-Execution/commit/09d5052164bd5f8f286fde5b72f69c23dad91ec4"
+    },
+    "observation": {
+      "portfolio_id": "cii-provider-result-handoff-001",
+      "expected_generation": 0,
+      "expected_state_digest": "sha256:0b47db1209ada588397f07f9897ec7871c76785ba9e1ca6e41ea846324f6864f",
+      "policy_digest": "sha256:6350b1bd36d9cbaf0fcf1d7c96dd7f11fdc1629e4156172d45127efced981224",
+      "event": "verification_passed",
+      "evidence": [
+        {
+          "kind": "authority_semantics_preserved",
+          "locator": "github://Waterfound/General-Execution/actions/runs/36524959443",
+          "digest": "sha256:567579b353c5953b80c615319794de46e238c7f415e8ccd0e43bf0c98395211c",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "fae_r1_historical_replay_success",
+          "locator": "github://Waterfound/General-Execution/actions/runs/36524959443",
+          "digest": "sha256:2f06981d03d7f535cac8e68debd3b7b5002db3900179ad298fe57c59cb44c790",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "independent_verifier_success",
+          "locator": "github://Waterfound/General-Execution/actions/runs/36524959442",
+          "digest": "sha256:bd300c98701841f9e0ef2abdfa163abd973c360f9d98c91c17d62f9f259cb2c4",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "main_integration_gate_success",
+          "locator": "github://Waterfound/General-Execution/actions/runs/36525071263",
+          "digest": "sha256:573a5b0b57212a7234a91494bdd2af67025e52d7cf6dacdb0e05f0e0703c3951",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "no_fae_workload_executed",
+          "locator": "github://Waterfound/General-Execution/commit/09d5052164bd5f8f286fde5b72f69c23dad91ec4/provider-result-watches/fae-a3-r4-control-repair-r1-replay.json",
+          "digest": "sha256:7eeeeb3b76adf1d735186d484671a52501874728577237eb2d3adfee2dbd1345",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "provider_host_verification_success",
+          "locator": "github://Waterfound/General-Execution/actions/runs/36524959434",
+          "digest": "sha256:2d46bf8af36ae47ed274e26d4ca5f2c28efe10cdbb389996dd9d611bbccbd9f8",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "terminal_verification_success",
+          "locator": "github://Waterfound/General-Execution/actions/runs/36525071333",
+          "digest": "sha256:c18d201919ab9dd56f10e8abe41a44ad74da3a1d3c3b969a78100ef304ff0359",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "action://cii/provider-result-handoff/admit-canonical-verification",
+      "observed_at": "2026-09-29T05:15:00Z",
+      "summary": "Canonical post-merge verification passed for the provider/workstream result handoff hardening: main integration, Provider Host, independent verification, terminal verification, FAE R1 historical replay, and authority-boundary audit are green. The historical FAE watch remains disabled and no FAE ASIC workload was executed by this CII round.",
+      "canonical_refs": [
+        "github://Waterfound/General-Execution/commit/09d5052164bd5f8f286fde5b72f69c23dad91ec4",
+        "github://Waterfound/General-Execution/pull/11",
+        "github://Waterfound/General-Execution/actions/runs/36524959443",
+        "github://Waterfound/General-Execution/actions/runs/36525071263",
+        "github://Waterfound/General-Execution/actions/runs/36525071333",
+        "github://Waterfound/FAE-testnet/commit/6181e3d015c40d5075269b3d5fb43fb6442e2901/labs/asic-f2-pre-go/runtime/F2_A3_R4_CONTROL_REPAIR_R1_PROVIDER_RESULT.json"
+      ],
+      "uncertainties": [
+        "Provider-only evidence that never reaches a registered workstream source still requires a provider-specific observer or adapter.",
+        "The no-credential scheduled reconciler currently observes registered public GitHub result sources; a private source requires an explicitly authorized read mechanism."
+      ],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
