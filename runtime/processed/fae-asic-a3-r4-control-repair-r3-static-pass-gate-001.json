@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:a8b5e6ef8a34aee85396f309e636a4d45b4f63d46051a9b69c39a7dd62deb297",
+  "event_id": "fae-asic-a3-r4-control-repair-r3-static-pass-gate-001",
+  "event_report_digest": "sha256:f3df839c43d6a4fe3a024ab6a04c206ea1b94633d90f0af6bfe6137221b15364",
+  "operation": "transition",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "6c268889035d0c656a969e627e5fe361434184a1"
+}
