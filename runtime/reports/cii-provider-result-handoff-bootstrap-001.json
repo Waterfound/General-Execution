@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:8871bcc0e1e22c9660891de34b4628acd8402adbe9a185e9eae2f0fd29b8accc",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "cii-provider-result-handoff-bootstrap-001",
+    "human_required": false,
+    "operation": "bootstrap",
+    "portfolio_id": "cii-provider-result-handoff-001",
+    "post_generation": 0,
+    "post_state_digest": "sha256:0b47db1209ada588397f07f9897ec7871c76785ba9e1ca6e41ea846324f6864f",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:0b47db1209ada588397f07f9897ec7871c76785ba9e1ca6e41ea846324f6864f",
+    "requested_action_ref": "action://cii/provider-result-handoff/verify-canonical-merge",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:630ea77ff67dbc4b6bbe9fb7232c4dc7edfd9bafbcc7c05421b5779f9e973441",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
