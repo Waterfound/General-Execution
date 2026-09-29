@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:3d465ccc86bff520f30f6d3028a5b78833b513878b4e40a92082b143a192ab47",
+  "event_report": {
+    "checkpoint_digest": "sha256:41b1132618b68de7360a451de3920654274b7b9ebba080aa515985c5141c7427",
+    "event_id": "fae-asic-a3-r4-control-repair-r3-physical-fail-gate-001",
+    "human_required": true,
+    "operation": "transition",
+    "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+    "post_generation": 10,
+    "post_state_digest": "sha256:d0d0aff3965b21d887b1fe958b6161e5ea00e8872a1d17530f717ea931cecadd",
+    "pre_generation": 9,
+    "pre_state_digest": "sha256:7308d2760061ef8f52c0c0ae5e72b73903292fa7c43ebb77ae51ee33bb2f5fc2",
+    "requested_action_ref": "authority://fae-asic/a3/r4/control-repair-r3-timing-refinement",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "committed"
+  },
+  "event_report_digest": "sha256:261ccb2c19988cb96589c08e46ced56987d365044eac76254036fe565870b450",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
