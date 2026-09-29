@@ -1,0 +1,74 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-asic-a3-r4-control-repair-r3-physical-fail-gate-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-asic-a3-r4-control-repair-r3-physical-fail-gate",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-physical-timing-fail-requires-new-authority",
+          "from_state": "running",
+          "event": "verification_failed",
+          "to_state": "human_gate",
+          "next_action_ref": "authority://fae-asic/a3/r4/control-repair-r3-timing-refinement",
+          "effect": "stop_human_gate",
+          "required_evidence": [
+            "a3_r4_control_repair_r3_physical_fail_closed"
+          ],
+          "authority_mode": "human_required",
+          "authority_boundary": "Authorize bounded timing diagnosis/refinement and static validation after the A3-R4 R3 physical timing failure, preserving frozen DP6, the existing memory map, and control apertures 0x0000 and 0x1000; do not authorize another physical implementation build, AFI creation, F2 runtime, benchmark, attacker sweep, sustained/HFB, consensus or economics changes, release, activation height, or mainnet action.",
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "aws-ec2+s3+build-colony",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+      "policy_digest": "sha256:48c52901ac2c61cf4e2617d435e68fa601e4776f107cdad11a7dfd8c5db0aeab",
+      "transition_event": "verification_failed"
+    },
+    "trigger": {
+      "source": "aws-ec2+s3+build-colony",
+      "event_id": "fae-asic-a3-r4-control-repair-r3-physical-fail-gate-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:031b93083bc90c37d52a16d462dc6e7f31a577447d234239c798bfa76a60b637",
+      "observation_digest": "sha256:49be4a8b2a3bb357f8a8b97c3c3706f64ada5fad7ffb6be3699f8033eb56222b",
+      "admission_ref": "github://Waterfound/FAE-testnet/commit/488d5042292c34cde61e2fcf8a6d1d41cd191b1b/labs/asic-f2-pre-go/runtime/F2_A3_R4_CONTROL_REPAIR_R3_PHYSICAL_PROVIDER_RESULT.json"
+    },
+    "observation": {
+      "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+      "expected_generation": 9,
+      "expected_state_digest": "sha256:7308d2760061ef8f52c0c0ae5e72b73903292fa7c43ebb77ae51ee33bb2f5fc2",
+      "policy_digest": "sha256:48c52901ac2c61cf4e2617d435e68fa601e4776f107cdad11a7dfd8c5db0aeab",
+      "event": "verification_failed",
+      "evidence": [
+        {
+          "kind": "a3_r4_control_repair_r3_physical_fail_closed",
+          "locator": "github://Waterfound/FAE-testnet/commit/488d5042292c34cde61e2fcf8a6d1d41cd191b1b/labs/asic-f2-pre-go/runtime/F2_A3_R4_CONTROL_REPAIR_R3_PHYSICAL_PROVIDER_RESULT.json",
+          "digest": "sha256:031b93083bc90c37d52a16d462dc6e7f31a577447d234239c798bfa76a60b637",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "action://fae-asic/a3/r4/admit-control-repair-r3-physical-fail",
+      "observed_at": "2026-09-29T11:21:25Z",
+      "summary": "The authorized single A3-R4 R3 physical implementation completed routing with 646203/646203 routable nets and zero routing errors, but failed the fail-closed timing invariant at WNS=-0.842799 ns, TNS=-1542.238647 ns, WHS=0.006822 ns, THS=0. The produced Developer_CL is evidence only and inadmissible for AFI creation.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/488d5042292c34cde61e2fcf8a6d1d41cd191b1b/labs/asic-f2-pre-go/runtime/F2_A3_R4_CONTROL_REPAIR_R3_PHYSICAL_PROVIDER_RESULT.json",
+        "s3://fae-asic-lab-203842200752-20260922/evidence/i-02d25f0ae0583a844/f2-a3-r4-controlrepair-r3-physical/",
+        "github://Waterfound/General-Execution/commit/97302ecc83760d78753cb9f99e5f39ad83216559/authority/fae-asic-a3-r4-control-repair-r3-physical-authority-resume-001.json"
+      ],
+      "uncertainties": [
+        "The physical timing failure does not prove a unique root cause.",
+        "The R3 runtime liveness hypothesis remains untested because no new AFI or F2 runtime is authorized."
+      ],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
