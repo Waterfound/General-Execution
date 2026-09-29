@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:84c0c160339db4aa63730b914cda1494e0343140f3785c811d608ff5e12f5db7",
+  "event_report": {
+    "checkpoint_digest": "sha256:647fa2d023d4100b18586938c442adb8435d76dfdc81975fffc7b3ed62537b95",
+    "event_id": "fae-asic-a3-r4-control-repair-r3t1-physical-started-001",
+    "human_required": false,
+    "operation": "transition",
+    "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+    "post_generation": 14,
+    "post_state_digest": "sha256:5daf95cfa63abaafb0d5de5fa274e911b05200083737fde5b2e0eceb0023fb51",
+    "pre_generation": 13,
+    "pre_state_digest": "sha256:73dd833d1beef4cbea5986f0d76f8a089f6c1f81c0d9dd96fe75ed1796dc48d2",
+    "requested_action_ref": null,
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "committed"
+  },
+  "event_report_digest": "sha256:7afdb0cda1ec49ed44913f8f91e7d8ede619582d759bde170b5b6f9f00b75531",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}

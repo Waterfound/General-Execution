@@ -1,10 +1,10 @@
 {
   "authority_created": false,
-  "database_sha256": "sha256:7485a68ad90bddcdb30fd47a480a1afb07f41fb3caa48c3e11b1bd9017f5380c",
-  "last_event_id": "fae-asic-a3-r4-control-repair-r3t1-physical-authority-resume-002",
-  "last_event_report_digest": "sha256:efffc18ff245dbb44309f9cde29fdff1ea20bf3ced390051281d46d2adfa6c78",
-  "last_operation": "human_authority",
-  "last_trigger_commit": "bcac6427321c1f13391ec88313ad5648da7816c5",
+  "database_sha256": "sha256:84c0c160339db4aa63730b914cda1494e0343140f3785c811d608ff5e12f5db7",
+  "last_event_id": "fae-asic-a3-r4-control-repair-r3t1-physical-started-001",
+  "last_event_report_digest": "sha256:7afdb0cda1ec49ed44913f8f91e7d8ede619582d759bde170b5b6f9f00b75531",
+  "last_operation": "transition",
+  "last_trigger_commit": "d2ab1c7ed5ac43d9e2b1cb470c0faefa0cc6ef37",
   "persistent_provider_trigger_enabled": true,
   "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
   "schema_version": "ge.persistent-runtime-manifest.v1"
