@@ -1,0 +1,124 @@
+{
+  "schema_version": "ge.fae-wallet-persistent-vault-dplus-reconciliation.v1",
+  "workstream": "FAE — Wallet Onboarding & Persistent Vault",
+  "terminal_state": "FAE_WALLET_PERSISTENT_VAULT_READY",
+  "fae_candidate": {
+    "repository": "Waterfound/FAE-testnet",
+    "pull_request": 266,
+    "branch": "build-colony/wallet-persistent-vault-20260928",
+    "head_sha": "6e202d285316a89e733ee301fe5429bad5e8a38e",
+    "base_branch": "design/fae-direction-d-plus-approval",
+    "base_sha": "6719a825b6e12a38824af3edfd03851b5d62eb1c",
+    "draft": true,
+    "mergeable": true,
+    "merged": false
+  },
+  "reconstruction": {
+    "canonical_main": "b00bbebca81a8f1085f7e61beddca862d8b5dfaa",
+    "previous_green_wallet_sha": "424b667df2ca6c85efdcca355b597744bf754760",
+    "main_drift_since_previous_closeout": false,
+    "functional_wallet_source_drift_since_previous_closeout": false,
+    "direction_d_plus_authority_drift": true,
+    "functional_delta_from_previous_green_wallet_sha": [
+      "none"
+    ],
+    "reconciliation_delta": [
+      "design/README.md",
+      "design/direction-d-visual-grammar.md",
+      "design/direction-d-plus-approval-candidate.json",
+      "docs/wallet-persistent-vault/DIRECTION_D_PLUS_RECONCILIATION.md"
+    ]
+  },
+  "direction_d_plus": {
+    "authority_source": "design/fae-direction-d-plus-approval@6719a825b6e12a38824af3edfd03851b5d62eb1c",
+    "authority_artifacts_carried_into_wallet_candidate": true,
+    "newer_product_index_present_on_dplus_branch": false,
+    "absent_product_shell_refinements": [
+      "product-first opening without current marketing hero",
+      "Block Height ticker label",
+      "compact upper-right Wallet/Mining controls",
+      "Mining Overview",
+      "Devices telemetry presentation",
+      "Mobile Preview",
+      "GitHub/GitBook footer entry points"
+    ],
+    "wallet_scope_decision": "Do not manufacture absent D+ product implementation inside the technically closed Wallet workstream; preserve Wallet semantics and serialize the actual D+ product integration through Visual Language."
+  },
+  "exact_sha_gates": [
+    {
+      "name": "Wallet Persistent Vault candidate",
+      "run_id": 36608573060,
+      "run_number": 22,
+      "conclusion": "success",
+      "notes": "deterministic GREEN; browser GREEN"
+    },
+    {
+      "name": "cross-lab-integration-gate",
+      "run_id": 36608573224,
+      "run_number": 249,
+      "conclusion": "success"
+    },
+    {
+      "name": "verify-canonical-source",
+      "run_id": 36608573315,
+      "run_number": 791,
+      "conclusion": "success"
+    },
+    {
+      "name": "Visual Language Lab",
+      "run_id": 36608573313,
+      "run_number": 32,
+      "conclusion": "success"
+    },
+    {
+      "name": "public-code-security-recurring-assurance",
+      "run_id": 36608573031,
+      "run_number": 184,
+      "conclusion": "success"
+    },
+    {
+      "name": "codeql-security",
+      "run_id": 36608573211,
+      "run_number": 274,
+      "conclusion": "success"
+    }
+  ],
+  "provider_status_contexts": [
+    {
+      "context": "Vercel – fairyelf-fae-testnet",
+      "state": "success"
+    },
+    {
+      "context": "Vercel – fae-independent-audit-api",
+      "state": "success"
+    }
+  ],
+  "preserved_invariants": [
+    "non-custody",
+    "seed/private keys never sent to backend",
+    "no plaintext passphrase persistence",
+    "no new private JWK plaintext persistence in localStorage",
+    "multi-wallet semantics",
+    "active Wallet persistence",
+    "active derived-address persistence",
+    "Wallet identity distinct from derived-address identity",
+    "seed not required again for normal use",
+    "Wallet Transaction UX/TXID/history preserved",
+    "mining reward-address switching remains blocked while mining",
+    "no consensus/economics/address-format/derivation-rule/transaction-semantics changes"
+  ],
+  "durable_execution": {
+    "shared_runtime_branch_mutated": false,
+    "shared_runtime_branch": "runtime/durable-asp-control",
+    "reason": "No new execution authority is required and the active runtime shared state serves other workstreams. Evidence is persisted on the isolated Wallet evidence branch to avoid racing shared state.",
+    "evidence_before_status": true,
+    "parallelize_independence_serialize_shared_state": true,
+    "close_before_expand": true
+  },
+  "next_gate": {
+    "type": "CROSS_WORKSTREAM_AUTHORITY_OR_ADMISSION_GATE",
+    "description": "Admit or implement the actual Direction D+ product shell in the Visual Language workstream, then replay the Wallet regression bank on the exact combined candidate before any main/public integration.",
+    "additional_wallet_feature_work_required_now": false,
+    "physical_ipados_required_for_wallet_terminal": false
+  }
+}
