@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:39b222da993f07a9cadba413ded16264b69dfd9e4d31f5028c6837db069ba3bb",
+  "event_report": {
+    "checkpoint_digest": "sha256:319d8229def2a946b8e848aeeb9cb0845282fa4be2fc70ebbec5f01c90e2e4d5",
+    "event_id": "fae-dp6-robust-premise-hold-gate-001",
+    "human_required": true,
+    "operation": "transition",
+    "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+    "post_generation": 16,
+    "post_state_digest": "sha256:69875774af834b19ee614ab3455ebc8646b454d7eaa8c5f125eda5b12fc78ee6",
+    "pre_generation": 15,
+    "pre_state_digest": "sha256:bd22b8aa34e34efe65f66f1e8e92b38ac1a1fc4b84c28e6f8c598924da16f7a0",
+    "requested_action_ref": "hold://fae-dp6/robust-premise/strong-heuristic-only",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "committed"
+  },
+  "event_report_digest": "sha256:126be87d757b8c665a08e10bf507c1fc9c1ceedac43d42b0a3df1f88918baeba",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}

@@ -1,10 +1,10 @@
 {
   "authority_created": false,
-  "database_sha256": "sha256:3dc15970f8c3698885c3c8cbdebb4bee1800b4115942ddda3016e7baa4a35c1f",
-  "last_event_id": "fae-asic-a3-r4-control-repair-r3t1-physical-pass-001",
-  "last_event_report_digest": "sha256:96618e9a5aa2c6fcc208e92440528d19086e89e413dfeb77554cd8321a2c70d1",
+  "database_sha256": "sha256:39b222da993f07a9cadba413ded16264b69dfd9e4d31f5028c6837db069ba3bb",
+  "last_event_id": "fae-dp6-robust-premise-hold-gate-001",
+  "last_event_report_digest": "sha256:126be87d757b8c665a08e10bf507c1fc9c1ceedac43d42b0a3df1f88918baeba",
   "last_operation": "transition",
-  "last_trigger_commit": "9f4c73b6fe4441338898c660a780d2c9b31fbe92",
+  "last_trigger_commit": "0e22b22eeb1b4f4ef8d9d53f2b1a895b9d28ad2a",
   "persistent_provider_trigger_enabled": true,
   "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
   "schema_version": "ge.persistent-runtime-manifest.v1"

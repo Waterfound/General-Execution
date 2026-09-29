@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:39b222da993f07a9cadba413ded16264b69dfd9e4d31f5028c6837db069ba3bb",
+  "event_id": "fae-dp6-robust-premise-hold-gate-001",
+  "event_report_digest": "sha256:126be87d757b8c665a08e10bf507c1fc9c1ceedac43d42b0a3df1f88918baeba",
+  "operation": "transition",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "0e22b22eeb1b4f4ef8d9d53f2b1a895b9d28ad2a"
+}
