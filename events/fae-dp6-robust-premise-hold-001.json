@@ -1,0 +1,75 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-dp6-robust-premise-hold-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-dp6-robust-premise-hold",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-park-r3t1-on-strong-heuristic-only",
+          "from_state": "verifying",
+          "event": "external_blocker",
+          "to_state": "passive",
+          "next_action_ref": "hold://fae-dp6/robust-premise/strong-heuristic-only",
+          "effect": "park_active",
+          "required_evidence": [
+            "fae_dp6_robust_premise_review_hold"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "fae-program-review",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+      "policy_digest": "sha256:c0c9f8c959dbc53d4d08f2b7e0d4f93cc19634bb70724e9f597fee9abbfa6523",
+      "transition_event": "external_blocker"
+    },
+    "trigger": {
+      "source": "fae-program-review",
+      "event_id": "fae-dp6-robust-premise-hold-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:c85eedd51249d7a5925ab0df8fdd1c180220b005f9eaf0efdf55cce692188fb5",
+      "observation_digest": "sha256:20a1f4bc72e57d06df7f220638f9855c2384e95f3d6ad2fb2c4c46a2ab6ed857",
+      "admission_ref": "github://Waterfound/FAE-testnet/commit/002748748268cda1fb4ad8ff401880536f6b3c12/labs/asic-f2-pre-go/runtime/FAE_DP6_ROBUST_PREMISE_REVIEW_HOLD.json"
+    },
+    "observation": {
+      "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+      "expected_generation": 15,
+      "expected_state_digest": "sha256:bd22b8aa34e34efe65f66f1e8e92b38ac1a1fc4b84c28e6f8c598924da16f7a0",
+      "policy_digest": "sha256:c0c9f8c959dbc53d4d08f2b7e0d4f93cc19634bb70724e9f597fee9abbfa6523",
+      "event": "external_blocker",
+      "evidence": [
+        {
+          "kind": "fae_dp6_robust_premise_review_hold",
+          "locator": "github://Waterfound/FAE-testnet/commit/002748748268cda1fb4ad8ff401880536f6b3c12/labs/asic-f2-pre-go/runtime/FAE_DP6_ROBUST_PREMISE_REVIEW_HOLD.json",
+          "digest": "sha256:c85eedd51249d7a5925ab0df8fdd1c180220b005f9eaf0efdf55cce692188fb5",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "hold://fae-dp6/robust-premise/strong-heuristic-only",
+      "observed_at": "2026-09-29T22:15:00Z",
+      "summary": "FAE_DP6_ROBUST_PREMISE_REVIEW classifies the current DP6 premise as STRONG_HEURISTIC_ONLY. R3-T1 has physically routed and closed timing, but the economically central specialized-hardware advantage claim is not yet robustly proven. The ASIC physical workstream is therefore explicitly parked on HOLD. No new physical build, AFI, F2 runtime, benchmark, attacker sweep, sustained/HFB, consensus/economics change, release, activation-height, or mainnet action is admissible under this disposition.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/002748748268cda1fb4ad8ff401880536f6b3c12/labs/asic-f2-pre-go/runtime/FAE_DP6_ROBUST_PREMISE_REVIEW_HOLD.json",
+        "github://Waterfound/FAE-testnet/commit/69770a057df19628bf912fc8ad055a8f19ddf2cd/labs/asic-f2-pre-go/runtime/F2_A3_R4_CONTROL_REPAIR_R3T1_PHYSICAL_PROVIDER_RESULT.json",
+        "github://Waterfound/General-Execution/blob/runtime/durable-asp-control/runtime/reports/fae-asic-a3-r4-control-repair-r3t1-physical-pass-001.json"
+      ],
+      "uncertainties": [
+        "The specialized-hardware economic advantage bound remains unproven.",
+        "HOLD is a program disposition, not a claim that DP6 is technically invalid.",
+        "A later analytical review may change the premise classification; expensive physical work still requires fresh authority."
+      ],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
