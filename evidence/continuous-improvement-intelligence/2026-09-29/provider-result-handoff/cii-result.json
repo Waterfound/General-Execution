@@ -1,0 +1,176 @@
+{
+  "schema_version": "ge.cii-result.v1",
+  "cii_id": "cii-provider-result-handoff-001",
+  "recorded_date": "2026-09-29",
+  "subject": "Durable Execution — Provider Result Handoff & Missed-Event Recovery",
+  "exact_acceptance_verdict": "CII_PROVIDER_RESULT_HANDOFF_HARDENING_CANONICAL_PASS",
+  "diagnosis": {
+    "structural_durable_core_failure": false,
+    "systemic_cause_status": "PROVEN",
+    "systemic_cause": "CROSS_REPOSITORY_WORKSTREAM_RESULT_INGESTION_GAP",
+    "statement": "The canonical Provider Host and persistent runtime correctly materialize, bind, deduplicate, and consume transitions once a ProviderInput/event exists. The R1 interruption occurred earlier: valid result evidence persisted in Waterfound/FAE-testnet had no autonomous registered adapter/observer that transformed the workstream-owned result into General-Execution ProviderInput/event materialization.",
+    "first_observable_systemic_divergence": "FAE R1 provider result persisted at commit 6181e3d015c40d5075269b3d5fb43fb6442e2901 while the durable manifest remained bound to the prior authority-reconciliation event at generation 7.",
+    "root_cause_scope": "orchestration handoff only; no claim is made about the ASIC technical root cause"
+  },
+  "contributing_factors": [
+    "Provider Host activation was ingress-driven from General-Execution/provider input rather than cross-repository result discovery.",
+    "No generic Build Colony/workstream completion-result adapter was registered for the FAE R1 result path.",
+    "Continuity Check is intentionally read-only and could identify CHECKPOINTED_RESUMABLE without emitting an execution transition.",
+    "The earlier FAE missed-event pilot proved recovery only after evidence had been materialized into General Execution.",
+    "A terminal verifier also contained a stale live-state assertion; this was verifier drift, not the cause of the R1 handoff silence."
+  ],
+  "implementation": {
+    "repository": "Waterfound/General-Execution",
+    "build_colony_branch": "colony/durable-provider-result-handoff-001",
+    "pull_request": 11,
+    "implementation_merge": "09d5052164bd5f8f286fde5b72f69c23dad91ec4",
+    "hardening": [
+      "Deterministic workstream-result -> ProviderInput adapter with exact repository/ref/path/schema/source-revision binding.",
+      "Explicit completion classes including NEXT_FRONTIER_DISPATCHED, wait/gate classes, DI_REQUIRED, FAILED, DONE_TECHNICAL and DONE_CANONICAL.",
+      "Existing-authority continuation requires authority evidence already present in durable state and never creates a new authority grant.",
+      "Scheduled registered-source reconciliation reuses the existing Provider Host and persistent runtime rather than creating a new orchestration brain.",
+      "Stable evidence handoff identity, state-bound runtime event identity, processed marker deduplication and runtime-head CAS.",
+      "Historical FAE R1 replay watch remains disabled for live reconciliation."
+    ]
+  },
+  "before_behavior": {
+    "condition": "workstream evidence persisted + admissible next + existing authority",
+    "possible_outcome": "No ProviderInput/event materialized; durable state could remain silent until a new human/chat stimulus caused reconciliation."
+  },
+  "after_behavior": {
+    "scope": "registered enabled GitHub workstream-result watches supported by the reconciler",
+    "condition": "valid bound result + explicit disposition contract + admissible policy transition + required existing authority present",
+    "outcome": "A deterministic ProviderInput and state-bound persistent-runtime transition are materialized; the result converges to an explicit transition class instead of silent persistence.",
+    "retry_semantics": "If evidence discovery occurs but remote runtime commit does not complete, no processed marker is committed and a subsequent reconciliation retries deterministically. Duplicate delivery is idempotent; concurrent runtime movement is protected by runtime-head CAS."
+  },
+  "fae_asic_replay": {
+    "source_result": "github://Waterfound/FAE-testnet/commit/6181e3d015c40d5075269b3d5fb43fb6442e2901/labs/asic-f2-pre-go/runtime/F2_A3_R4_CONTROL_REPAIR_R1_PROVIDER_RESULT.json",
+    "source_candidate_revision": "895c26daa6327c9171e30344a788feff0456b010",
+    "disposition": "REFINE_WITHIN_EXISTING_REPAIR_AUTHORITY",
+    "expected_transition_class": "NEXT_FRONTIER_DISPATCHED",
+    "next_action_ref": "action://fae-asic/a3/r4/repair-control-plane-liveness",
+    "live_watch_enabled": false,
+    "fae_workload_executed_by_cii": false
+  },
+  "regression_and_adversarial_evidence": [
+    {
+      "case": "FAE R1 historical replay",
+      "result": "PASS",
+      "run": 36524959443
+    },
+    {
+      "case": "duplicate evidence / deterministic handoff identity",
+      "result": "PASS",
+      "run": 36524959443
+    },
+    {
+      "case": "runtime generation change rebinds event identity",
+      "result": "PASS",
+      "run": 36524959443
+    },
+    {
+      "case": "result commit change changes handoff identity",
+      "result": "PASS",
+      "run": 36524959443
+    },
+    {
+      "case": "missing existing authority",
+      "result": "FAIL_CLOSED_PASS",
+      "run": 36524959443
+    },
+    {
+      "case": "stale candidate/source revision",
+      "result": "FAIL_CLOSED_PASS",
+      "run": 36524959443
+    },
+    {
+      "case": "unknown result disposition",
+      "result": "FAIL_CLOSED_PASS",
+      "run": 36524959443
+    },
+    {
+      "case": "contract source-binding substitution",
+      "result": "FAIL_CLOSED_PASS",
+      "run": 36524959443
+    },
+    {
+      "case": "persistent-runtime end-to-end consumption without human prompt",
+      "result": "PASS",
+      "run": 36524959443
+    },
+    {
+      "case": "persistent-runtime duplicate delivery",
+      "result": "ALREADY_APPLIED_PASS",
+      "run": 36524959443
+    },
+    {
+      "case": "full repository regression",
+      "result": "PASS",
+      "run": 36524959443
+    },
+    {
+      "case": "Provider Host independent verification",
+      "result": "PASS",
+      "run": 36524959442
+    },
+    {
+      "case": "post-merge main integration",
+      "result": "PASS",
+      "run": 36525071263
+    },
+    {
+      "case": "post-merge terminal verification",
+      "result": "PASS",
+      "run": 36525071333
+    }
+  ],
+  "durable_execution_closeout": {
+    "runtime_branch": "runtime/durable-asp-control",
+    "bootstrap_event": "cii-provider-result-handoff-bootstrap-001",
+    "closeout_event": "cii-provider-result-handoff-canonical-pass-001",
+    "runtime_commit": "9155c365130e944bcbc296afde50824ce43026c8",
+    "transition_status": "committed",
+    "pre_generation": 0,
+    "post_generation": 1,
+    "post_state_digest": "sha256:30d837cf9bb6481b1447cf203018dd677718bca7482361d7e1f75c1f5f12df12",
+    "checkpoint_digest": "sha256:a0c4e58b00cb41f10f60edf33b405c6bcd792d14fcbd9f9a2c385e52f2893ed2",
+    "human_required": false,
+    "requested_action_ref": null
+  },
+  "invariants": {
+    "evidence_first": true,
+    "fail_closed": true,
+    "authority_semantics_changed": false,
+    "conversation_interruption_equals_development_interruption": false,
+    "shared_state_serialized": true,
+    "new_meta_system_created": false,
+    "fae_asic_repair_executed": false,
+    "new_afi_created": false,
+    "new_f2_executed": false
+  },
+  "residual_risks": [
+    "Evidence that exists only in an unregistered provider or workstream source cannot be discovered until an adapter/watch is registered.",
+    "The no-credential GitHub reconciler currently targets registered public GitHub result sources; private sources require explicitly authorized read access.",
+    "Provider-only storage still needs the appropriate provider-specific observer before it can enter this generic handoff path.",
+    "Polling recovery is bounded by the reconciliation cadence rather than instantaneous webhook delivery."
+  ],
+  "ownership": {
+    "belongs_to_general_execution": [
+      "workstream-result ingestion adapter",
+      "registered result-watch contracts",
+      "missed-event polling/reconciliation",
+      "deduplication/idempotency",
+      "runtime-head CAS and replay semantics",
+      "explicit completion transition classification"
+    ],
+    "does_not_belong_to_cii_executor": [
+      "FAE ASIC candidate repair",
+      "AFI creation",
+      "F2 runtime",
+      "benchmark",
+      "attacker sweep",
+      "sustained/HFB",
+      "consensus/economics/release/mainnet"
+    ]
+  }
+}
