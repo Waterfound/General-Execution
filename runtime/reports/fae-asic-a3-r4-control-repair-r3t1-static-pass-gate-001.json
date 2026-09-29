@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:224d5215a57b92d35f8522241b0ede717b890837ecc55bba4a20084719042677",
+  "event_report": {
+    "checkpoint_digest": "sha256:945bbf13fd2329d5c769121c2f3bf3475bc6b70b257e0278a5c4cb20f520d2a1",
+    "event_id": "fae-asic-a3-r4-control-repair-r3t1-static-pass-gate-001",
+    "human_required": true,
+    "operation": "transition",
+    "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+    "post_generation": 12,
+    "post_state_digest": "sha256:2ca8708613148a62061ece1c9b0cdfc01d87759f385293569a401e12857f53a5",
+    "pre_generation": 11,
+    "pre_state_digest": "sha256:93bd2afe5a3c9993d0e494e62505190f03bca30cd37f6838248f5cbb8776c332",
+    "requested_action_ref": "authority://fae-asic/a3/r4/control-repair-r3t1-physical-implementation",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "committed"
+  },
+  "event_report_digest": "sha256:821da72294179f4cac73b49d8cdfe2d7e05bd0b929bdc605f86489ad89599e6d",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
