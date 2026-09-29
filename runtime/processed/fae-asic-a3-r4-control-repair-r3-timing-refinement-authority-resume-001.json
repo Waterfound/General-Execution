@@ -1,0 +1,12 @@
+{
+  "authority_grant_digest": "sha256:94350cfea5e30ad00a0a6fa12aadab75845af4cb5cc9db77496514ef95cdcc68",
+  "authority_receipt_digest": "sha256:81d0aef4297e611b8158e9c6fca644db10ca1e50256e11fc8dde88e8f5fe70cd",
+  "authority_ref": "github://Waterfound/General-Execution/commit/ec8a7150279aba24a7733aa3350d6e4dbdedc590/authority/fae-asic-a3-r4-control-repair-r3-timing-refinement-authority-resume-001.json",
+  "database_sha256": "sha256:f6290f3b476f3d8363957c3473d198de1b23bbf964f5e73c0e8a2b822717c957",
+  "event_id": "fae-asic-a3-r4-control-repair-r3-timing-refinement-authority-resume-001",
+  "execution_report_digest": "sha256:a9189d538a2c4f29ef6931c3c80857c90570aeb6045ede19d9bf7a1afab71023",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+  "schema_version": "ge.human-authority-processed-event.v1",
+  "trigger_commit": "ec8a7150279aba24a7733aa3350d6e4dbdedc590"
+}
