@@ -1,0 +1,56 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "cii-provider-result-handoff-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "cii-provider-result-handoff-001",
+      "generation": 0,
+      "active": {
+        "work_id": "CII-PRH-01",
+        "role": "active",
+        "state": "verifying",
+        "objective": "Verify and canonically close the evidence-bound Durable Execution provider/workstream result handoff hardening without executing any FAE ASIC workload.",
+        "active_gate": "post-merge-canonical-verification",
+        "next_action_ref": "action://cii/provider-result-handoff/verify-canonical-merge",
+        "source_revision": "09d5052164bd5f8f286fde5b72f69c23dad91ec4",
+        "evidence_required": [
+          "main_integration_gate_success",
+          "provider_host_verification_success",
+          "independent_verifier_success",
+          "terminal_verification_success",
+          "fae_r1_historical_replay_success",
+          "authority_semantics_preserved",
+          "no_fae_workload_executed"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/General-Execution/commit/09d5052164bd5f8f286fde5b72f69c23dad91ec4",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "CII-PRH-ARCHIVE",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Preserve the canonical CII result and regression evidence after technical close; no workload or authority is created.",
+        "active_gate": "cii-result-preservation",
+        "next_action_ref": "action://cii/provider-result-handoff/archive",
+        "source_revision": "09d5052164bd5f8f286fde5b72f69c23dad91ec4",
+        "evidence_required": [
+          "CII_PROVIDER_RESULT_HANDOFF_HARDENING_CANONICAL_PASS"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/General-Execution/commit/09d5052164bd5f8f286fde5b72f69c23dad91ec4",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
