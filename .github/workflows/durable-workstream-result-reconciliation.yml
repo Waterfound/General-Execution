@@ -1,6 +1,13 @@
 name: Durable workstream result reconciliation
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - "provider-result-watches/**"
+      - "provider-contracts/**"
+      - ".github/workflows/durable-workstream-result-reconciliation.yml"
   schedule:
     - cron: "41 * * * *"
   workflow_dispatch:
@@ -30,6 +37,9 @@ jobs:
           esac
           case "$GITHUB_EVENT_NAME" in
             schedule|workflow_dispatch) ;;
+            push)
+              test "$GITHUB_REF_NAME" = "main"
+              ;;
             *) echo "unsupported reconciler trigger: $GITHUB_EVENT_NAME" >&2; exit 1 ;;
           esac
 
