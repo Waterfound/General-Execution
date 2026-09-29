@@ -1,0 +1,40 @@
+{
+  "watch_id": "fae-a3-r4-control-repair-result",
+  "provider": "github-workstream-result",
+  "subject_ref": "github://Waterfound/FAE-testnet/labs/asic-f2-pre-go/runtime/F2_A3_R4_CONTROL_REPAIR_R1_PROVIDER_RESULT.json",
+  "satisfied_state": "REFINE_WITHIN_EXISTING_REPAIR_AUTHORITY",
+  "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+  "transition_event": "verification_failed",
+  "evidence_kind": "a3_r4_control_repair_static_result",
+  "contract_ref": "github://Waterfound/General-Execution/provider-contracts/fae-a3-r4-control-repair-r1-replay.json",
+  "required_bindings": {
+    "repository": "Waterfound/FAE-testnet",
+    "ref": "colony/fae-asic-a3-r4-control-repair-001",
+    "result_path": "labs/asic-f2-pre-go/runtime/F2_A3_R4_CONTROL_REPAIR_R1_PROVIDER_RESULT.json",
+    "result_schema": "fae.asic.a3_r4.control_repair.provider_static.v1",
+    "source_revision": "895c26daa6327c9171e30344a788feff0456b010"
+  },
+  "policy": {
+    "policy_id": "fae-a3-r4-control-repair-result-replay",
+    "revision": "1",
+    "rules": [
+      {
+        "rule_id": "01-refine-within-existing-authority",
+        "from_state": "rework",
+        "event": "verification_failed",
+        "to_state": "rework",
+        "next_action_ref": "action://fae-asic/a3/r4/repair-control-plane-liveness",
+        "effect": "none",
+        "required_evidence": [
+          "a3_r4_control_repair_static_result"
+        ],
+        "authority_mode": "none",
+        "authority_boundary": null,
+        "schema_version": "ge.transition-rule.v1"
+      }
+    ],
+    "default_disposition": "stop",
+    "schema_version": "ge.transition-policy.v1"
+  },
+  "schema_version": "ge.provider-watch-contract.v1"
+}
