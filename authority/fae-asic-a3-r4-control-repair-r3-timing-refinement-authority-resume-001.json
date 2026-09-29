@@ -1,0 +1,58 @@
+{
+  "schema_version": "ge.human-authority-event.v1",
+  "event_id": "fae-asic-a3-r4-control-repair-r3-timing-refinement-authority-resume-001",
+  "approved_action_ref": "authority://fae-asic/a3/r4/control-repair-r3-timing-refinement",
+  "approved_at": "2026-09-29T17:51:00Z",
+  "policy": {
+    "policy_id": "fae-asic-a3-r4-control-repair-r3-timing-refinement-authority-resume",
+    "revision": "1",
+    "rules": [
+      {
+        "rule_id": "01-authorized-r3-timing-refinement",
+        "from_state": "human_gate",
+        "event": "verification_passed",
+        "to_state": "rework",
+        "next_action_ref": "action://fae-asic/a3/r4/control-repair-r3-timing-refinement",
+        "effect": "none",
+        "required_evidence": [
+          "human_authority_recorded"
+        ],
+        "authority_mode": "preauthorized_required",
+        "authority_boundary": "Authorize bounded timing diagnosis/refinement and static validation after the A3-R4 R3 physical timing failure, preserving frozen DP6, the existing memory map, and control apertures 0x0000 and 0x1000; do not authorize another physical implementation build, AFI creation, F2 runtime, benchmark, attacker sweep, sustained/HFB, consensus or economics changes, release, activation height, or mainnet action.",
+        "schema_version": "ge.transition-rule.v1"
+      }
+    ],
+    "default_disposition": "stop",
+    "schema_version": "ge.transition-policy.v1"
+  },
+  "observation": {
+    "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+    "expected_generation": 10,
+    "expected_state_digest": "sha256:d0d0aff3965b21d887b1fe958b6161e5ea00e8872a1d17530f717ea931cecadd",
+    "policy_digest": "sha256:35f9c3127ae54ee2accd9ab020d9e27faea201a6896e9360a1729e9a6c07bbff",
+    "event": "verification_passed",
+    "evidence": [
+      {
+        "kind": "human_authority_recorded",
+        "locator": "runtime://fae-asic-a3-r4-existing-afi-admission/explicit-user-authorization-r3-timing-refinement",
+        "digest": "sha256:9f72a99002c56c1c5460ec9c1c29a1948a6eac94f34942123304cb0080e1c3f7",
+        "schema_version": "ge.checkpoint-evidence.v1"
+      }
+    ],
+    "action_ref": "runtime://fae-asic-a3-r4-existing-afi-admission/resume-r3-timing-refinement",
+    "observed_at": "2026-09-29T17:51:00Z",
+    "summary": "Explicit human authorization admits bounded timing diagnosis/refinement and source/static validation after the R3 physical timing failure, preserving frozen DP6, the existing memory map, and control apertures 0x0000 and 0x1000; all physical/AFI/F2/benchmark/attacker/sustained/release/mainnet actions remain forbidden.",
+    "canonical_refs": [
+      "github://Waterfound/General-Execution/blob/runtime/durable-asp-control/events/fae-asic-a3-r4-control-repair-r3-physical-fail-gate-001.json",
+      "github://Waterfound/FAE-testnet/commit/488d5042292c34cde61e2fcf8a6d1d41cd191b1b/labs/asic-f2-pre-go/runtime/F2_A3_R4_CONTROL_REPAIR_R3_PHYSICAL_PROVIDER_RESULT.json",
+      "s3://fae-asic-lab-203842200752-20260922/evidence/i-02d25f0ae0583a844/f2-a3-r4-controlrepair-r3-physical/"
+    ],
+    "uncertainties": [
+      "The timing failure does not prove a unique root cause.",
+      "Any refinement remains a candidate until later physical validation under separate authority."
+    ],
+    "wake_admission": null,
+    "authority_grant": null,
+    "schema_version": "ge.resume-tick-observation.v1"
+  }
+}
