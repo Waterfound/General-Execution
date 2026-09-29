@@ -1,0 +1,58 @@
+{
+  "schema_version": "ge.human-authority-event.v1",
+  "event_id": "fae-asic-a3-r4-control-repair-r3-physical-authority-resume-001",
+  "approved_action_ref": "authority://fae-asic/a3/r4/control-repair-r3-physical-implementation",
+  "approved_at": "2026-09-29T06:54:00Z",
+  "policy": {
+    "policy_id": "fae-asic-a3-r4-control-repair-r3-physical-authority-resume",
+    "revision": "1",
+    "rules": [
+      {
+        "rule_id": "01-authorized-r3-physical-build",
+        "from_state": "human_gate",
+        "event": "verification_passed",
+        "to_state": "running",
+        "next_action_ref": "action://fae-asic/a3/r4/control-repair-r3-physical-implementation",
+        "effect": "none",
+        "required_evidence": [
+          "human_authority_recorded"
+        ],
+        "authority_mode": "preauthorized_required",
+        "authority_boundary": "Authorize one physical implementation build of the statically validated A3-R4 R3 control-plane repair candidate, preserving frozen DP6, the existing memory map, and control apertures 0x0000 and 0x1000; fail closed on timing; do not create an AFI, execute F2 runtime, benchmark, attacker sweep, sustained/HFB, change consensus or economics, release, activation height, or take mainnet action.",
+        "schema_version": "ge.transition-rule.v1"
+      }
+    ],
+    "default_disposition": "stop",
+    "schema_version": "ge.transition-policy.v1"
+  },
+  "observation": {
+    "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+    "expected_generation": 8,
+    "expected_state_digest": "sha256:f791b94911a7f88d88b563cac057b20c519485cceccd165cf55e15821c84134b",
+    "policy_digest": "sha256:9dfa7adac2c4cd82a770f7fb6f138dbd00e833bdcaab716036c6522fa327a2c5",
+    "event": "verification_passed",
+    "evidence": [
+      {
+        "kind": "human_authority_recorded",
+        "locator": "runtime://fae-asic-a3-r4-existing-afi-admission/explicit-user-authorization-r3-physical-build",
+        "digest": "sha256:7ef93a5a7739f4dfa8604ed224e0b9e450d7f23782e4d97a793943070a18744e",
+        "schema_version": "ge.checkpoint-evidence.v1"
+      }
+    ],
+    "action_ref": "runtime://fae-asic-a3-r4-existing-afi-admission/resume-r3-physical-build",
+    "observed_at": "2026-09-29T06:54:00Z",
+    "summary": "Explicit human authorization admits one physical implementation build of the statically validated A3-R4 R3 control-plane repair candidate, timing fail-closed, while AFI creation, F2 runtime, benchmark, attacker sweep, sustained/HFB, consensus/economics, release, activation-height, and mainnet actions remain forbidden.",
+    "canonical_refs": [
+      "github://Waterfound/General-Execution/blob/runtime/durable-asp-control/events/fae-asic-a3-r4-control-repair-r3-static-pass-gate-001.json",
+      "github://Waterfound/FAE-testnet/commit/dfb69145cc6c3505d50febe2ff6aa513e1c383c0/labs/asic-f2-pre-go/build-colony/control-repair-001/RUN.json",
+      "github://Waterfound/FAE-testnet/commit/c2f293941d637616b379f4161bc0f205377965c3/labs/asic-f2-pre-go/runtime/F2_A3_R4_CONTROL_REPAIR_R3_PROVIDER_RESULT.json"
+    ],
+    "uncertainties": [
+      "This authority does not assert that the original A3-R4 runtime root cause is proven.",
+      "Physical timing closure is not yet proven for R3."
+    ],
+    "wake_admission": null,
+    "authority_grant": null,
+    "schema_version": "ge.resume-tick-observation.v1"
+  }
+}
