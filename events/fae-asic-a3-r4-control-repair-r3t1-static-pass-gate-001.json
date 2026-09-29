@@ -1,0 +1,75 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-asic-a3-r4-control-repair-r3t1-static-pass-gate-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-asic-a3-r4-control-repair-r3t1-static-pass-gate",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-r3t1-static-pass-requires-physical-authority",
+          "from_state": "rework",
+          "event": "verification_passed",
+          "to_state": "human_gate",
+          "next_action_ref": "authority://fae-asic/a3/r4/control-repair-r3t1-physical-implementation",
+          "effect": "stop_human_gate",
+          "required_evidence": [
+            "a3_r4_r3t1_static_pass"
+          ],
+          "authority_mode": "human_required",
+          "authority_boundary": "Authorize one physical implementation build of the statically validated A3-R4 R3-T1 candidate at requested local 166.667 MHz, preserving frozen DP6, the existing memory map, and control apertures 0x0000 and 0x1000; fail closed on timing; do not create an AFI, execute F2 runtime, benchmark, attacker sweep, sustained/HFB, change consensus or economics, release, activation height, or take mainnet action.",
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "aws-ec2+s3+build-colony",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+      "policy_digest": "sha256:a37ff61d26f74c9512f3a21417678a6b1e2e4b55fa648b41c9904debfeaf756d",
+      "transition_event": "verification_passed"
+    },
+    "trigger": {
+      "source": "aws-ec2+s3+build-colony",
+      "event_id": "fae-asic-a3-r4-control-repair-r3t1-static-pass-gate-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:2a3344c55eb675771603df02868558883d7b83ae03433a06a3e0c8089aad7228",
+      "observation_digest": "sha256:16c6886ca32ebf2c2bb7a02f7a2f457a8209653170585df42fa17ae5aca87be3",
+      "admission_ref": "github://Waterfound/FAE-testnet/commit/a046db7e4a638d62337fe61272c877319b8bbb00/labs/asic-f2-pre-go/runtime/F2_A3_R4_CONTROL_REPAIR_R3T1_PROVIDER_RESULT.json"
+    },
+    "observation": {
+      "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+      "expected_generation": 11,
+      "expected_state_digest": "sha256:93bd2afe5a3c9993d0e494e62505190f03bca30cd37f6838248f5cbb8776c332",
+      "policy_digest": "sha256:a37ff61d26f74c9512f3a21417678a6b1e2e4b55fa648b41c9904debfeaf756d",
+      "event": "verification_passed",
+      "evidence": [
+        {
+          "kind": "a3_r4_r3t1_static_pass",
+          "locator": "github://Waterfound/FAE-testnet/blob/colony/fae-asic-a3-r4-control-repair-001/labs/asic-f2-pre-go/runtime/F2_A3_R4_CONTROL_REPAIR_R3T1_PROVIDER_RESULT.json",
+          "digest": "sha256:2a3344c55eb675771603df02868558883d7b83ae03433a06a3e0c8089aad7228",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "action://fae-asic/a3/r4/admit-control-repair-r3t1-static-pass",
+      "observed_at": "2026-09-29T18:22:05Z",
+      "summary": "R3-T1 reduced only the requested local clock from 200.000 MHz to 166.667 MHz while preserving frozen DP6, the R3 SmartConnect control topology, memory map, and OCL control apertures. AWS Vivado returned rc=0, emitted the R3-T1 PASS and 166.667 MHz markers, and reported BD 41-237=0 and BD 41-737=0. A post-Vivado wrapper text corruption caused exit 2 but did not invalidate provider-static evidence; no physical implementation, AFI, F2 runtime, benchmark, attacker sweep, sustained/HFB, consensus/economics, release, activation-height, or mainnet action occurred.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/a046db7e4a638d62337fe61272c877319b8bbb00/labs/asic-f2-pre-go/runtime/F2_A3_R4_CONTROL_REPAIR_R3T1_PROVIDER_RESULT.json",
+        "github://Waterfound/FAE-testnet/commit/29a37b3b2ffbe88ecb7d600e1fb55b85656e6dcd/labs/asic-f2-pre-go/build-colony/control-repair-001/timing-refinement-001/RESULT.json",
+        "s3://fae-asic-lab-203842200752-20260922/evidence/i-01388ffc8fb1771ff/a3-r4-controlrepair-r3t1-static/",
+        "github://Waterfound/General-Execution/commit/ec8a7150279aba24a7733aa3350d6e4dbdedc590/authority/fae-asic-a3-r4-control-repair-r3-timing-refinement-authority-resume-001.json"
+      ],
+      "uncertainties": [
+        "Static validation does not prove physical timing closure for R3-T1.",
+        "The R3 physical timing failure and T1 refinement do not prove the original A3-R4 runtime root cause."
+      ],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
