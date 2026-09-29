@@ -1,0 +1,74 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-asic-a3-r4-control-repair-r3-static-pass-gate-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-asic-a3-r4-control-repair-r3-static-pass-gate",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-static-pass-requires-physical-build-authority",
+          "from_state": "rework",
+          "event": "verification_passed",
+          "to_state": "human_gate",
+          "next_action_ref": "authority://fae-asic/a3/r4/control-repair-r3-physical-implementation",
+          "effect": "stop_human_gate",
+          "required_evidence": [
+            "a3_r4_control_repair_static_pass"
+          ],
+          "authority_mode": "human_required",
+          "authority_boundary": "Authorize one physical implementation build of the statically validated A3-R4 R3 control-plane repair candidate, preserving frozen DP6, the existing memory map, and control apertures 0x0000 and 0x1000; fail closed on timing; do not create an AFI, execute F2 runtime, benchmark, attacker sweep, sustained/HFB, change consensus or economics, release, activation height, or take mainnet action.",
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "aws-ec2+s3+build-colony",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+      "policy_digest": "sha256:6cf03fbcd8524c8134c8a6b5e12a4b73562b2c87b9db2e13e23655bba73cf13b",
+      "transition_event": "verification_passed"
+    },
+    "trigger": {
+      "source": "aws-ec2+s3+build-colony",
+      "event_id": "fae-asic-a3-r4-control-repair-r3-static-pass-gate-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:ed840e56581b3c12963696badca6256c05e5330535fd2279f3f68bddf65b3462",
+      "observation_digest": "sha256:22142b9474f41b125f797a236525c9f7a8898545318e46e8a0ad94f00ee3e7b1",
+      "admission_ref": "github://Waterfound/FAE-testnet/commit/c2f293941d637616b379f4161bc0f205377965c3/labs/asic-f2-pre-go/runtime/F2_A3_R4_CONTROL_REPAIR_R3_PROVIDER_RESULT.json"
+    },
+    "observation": {
+      "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+      "expected_generation": 7,
+      "expected_state_digest": "sha256:e4f8cf44bda1f7122e7dd6683f5956dddcf48ed5f5325184948bdad9daa86fa5",
+      "policy_digest": "sha256:6cf03fbcd8524c8134c8a6b5e12a4b73562b2c87b9db2e13e23655bba73cf13b",
+      "event": "verification_passed",
+      "evidence": [
+        {
+          "kind": "a3_r4_control_repair_static_pass",
+          "locator": "s3://fae-asic-lab-203842200752-20260922/evidence/i-04978ee222eb2661d/a3-r4-controlrepair-r3-static/",
+          "digest": "sha256:ed840e56581b3c12963696badca6256c05e5330535fd2279f3f68bddf65b3462",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "action://fae-asic/a3/r4/admit-control-repair-r3-static-pass",
+      "observed_at": "2026-09-29T05:02:20Z",
+      "summary": "The bounded A3-R4 control-plane repair campaign rejected R1 and R2 fail-closed and statically validated R3: control CDC moved into a two-clock SmartConnect, DP6 and the existing memory map were preserved, OCL apertures remained 0x0000 and 0x1000, Vivado returned rc=0, both HLS control interfaces reported AXI4LITE with MAX_BURST_LENGTH=1, and BD 41-237/737 counts were zero. No physical implementation, AFI, F2 runtime, benchmark, attacker sweep, sustained/HFB, consensus/economics, release, activation-height, or mainnet action occurred.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/c2f293941d637616b379f4161bc0f205377965c3/labs/asic-f2-pre-go/runtime/F2_A3_R4_CONTROL_REPAIR_R3_PROVIDER_RESULT.json",
+        "github://Waterfound/FAE-testnet/commit/dfb69145cc6c3505d50febe2ff6aa513e1c383c0/labs/asic-f2-pre-go/build-colony/control-repair-001/RUN.json",
+        "github://Waterfound/General-Execution/commit/54e69377a92749293a0fe28b9e4bab6dce897578/authority/fae-asic-a3-r4-control-plane-repair-authority-reconcile-001.json"
+      ],
+      "uncertainties": [
+        "Static validation does not prove the original A3-R4 runtime root cause.",
+        "Static validation does not prove physical timing closure or F2 runtime parity/correctness for R3."
+      ],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
