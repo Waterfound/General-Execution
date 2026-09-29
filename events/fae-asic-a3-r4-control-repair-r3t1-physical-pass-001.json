@@ -1,0 +1,74 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-asic-a3-r4-control-repair-r3t1-physical-pass-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-asic-a3-r4-r3t1-physical-result-admission",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-admit-r3t1-physical-pass",
+          "from_state": "running",
+          "event": "execution_completed",
+          "to_state": "verifying",
+          "next_action_ref": "action://fae-asic/a3/r4/r3t1/evaluate-program-disposition",
+          "effect": "none",
+          "required_evidence": [
+            "a3_r4_r3t1_physical_pass"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "aws-ec2+s3+build-colony",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+      "policy_digest": "sha256:64d8bf098944ebf01412dab66db3ec58fc904cf94d19996c89d1ee5222869aca",
+      "transition_event": "execution_completed"
+    },
+    "trigger": {
+      "source": "aws-ec2+s3+build-colony",
+      "event_id": "fae-asic-a3-r4-control-repair-r3t1-physical-pass-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:49935bcd5d87cabf339a0845f7a07e5bcae0c3292fc3983f5afddedce26c2317",
+      "observation_digest": "sha256:1048f091d07ab614ef969de39bf06eb9889f45613d7127e633544a04c64599e1",
+      "admission_ref": "github://Waterfound/FAE-testnet/commit/69770a057df19628bf912fc8ad055a8f19ddf2cd/labs/asic-f2-pre-go/runtime/F2_A3_R4_CONTROL_REPAIR_R3T1_PHYSICAL_PROVIDER_RESULT.json"
+    },
+    "observation": {
+      "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+      "expected_generation": 14,
+      "expected_state_digest": "sha256:5daf95cfa63abaafb0d5de5fa274e911b05200083737fde5b2e0eceb0023fb51",
+      "policy_digest": "sha256:64d8bf098944ebf01412dab66db3ec58fc904cf94d19996c89d1ee5222869aca",
+      "event": "execution_completed",
+      "evidence": [
+        {
+          "kind": "a3_r4_r3t1_physical_pass",
+          "locator": "github://Waterfound/FAE-testnet/blob/colony/fae-asic-a3-r4-control-repair-001/labs/asic-f2-pre-go/runtime/F2_A3_R4_CONTROL_REPAIR_R3T1_PHYSICAL_PROVIDER_RESULT.json",
+          "digest": "sha256:49935bcd5d87cabf339a0845f7a07e5bcae0c3292fc3983f5afddedce26c2317",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "aws://us-east-1/i-048be4270db25bf9b/f2-a3-r4-controlrepair-r3t1-physical/result",
+      "observed_at": "2026-09-29T21:15:36Z",
+      "summary": "R3-T1 physical implementation completed successfully. Source was pinned to 40787876f1e32e4f955cd3b47b93585d954a399f; frozen DP6 and the existing memory map/control apertures were preserved. Routing completed with 645509/645509 routable nets fully routed and zero routing errors. Final timing passed WNS=+0.023269 ns, TNS=0, WHS=+0.009551 ns, THS=0. Developer_CL was produced as evidence only. No AFI, F2 runtime, benchmark, attacker sweep, sustained/HFB, release, activation-height, or mainnet action occurred.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/69770a057df19628bf912fc8ad055a8f19ddf2cd/labs/asic-f2-pre-go/runtime/F2_A3_R4_CONTROL_REPAIR_R3T1_PHYSICAL_PROVIDER_RESULT.json",
+        "s3://fae-asic-lab-203842200752-20260922/evidence/i-048be4270db25bf9b/f2-a3-r4-controlrepair-r3t1-physical/",
+        "github://Waterfound/FAE-testnet/commit/40787876f1e32e4f955cd3b47b93585d954a399f"
+      ],
+      "uncertainties": [
+        "Physical timing closure does not prove the economically central DP6 ASIC-resistance premise.",
+        "The earlier A3-R4 runtime liveness root cause remains not proven by this physical PASS."
+      ],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
