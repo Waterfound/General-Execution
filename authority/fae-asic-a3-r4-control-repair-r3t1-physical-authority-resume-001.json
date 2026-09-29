@@ -1,0 +1,58 @@
+{
+  "schema_version": "ge.human-authority-event.v1",
+  "event_id": "fae-asic-a3-r4-control-repair-r3t1-physical-authority-resume-001",
+  "approved_action_ref": "authority://fae-asic/a3/r4/control-repair-r3t1-physical-implementation",
+  "approved_at": "2026-09-29T18:28:00Z",
+  "policy": {
+    "policy_id": "fae-asic-a3-r4-control-repair-r3t1-physical-authority-resume",
+    "revision": "1",
+    "rules": [
+      {
+        "rule_id": "01-authorized-single-r3t1-physical-build",
+        "from_state": "human_gate",
+        "event": "verification_passed",
+        "to_state": "verification",
+        "next_action_ref": "action://fae-asic/a3/r4/control-repair-r3t1-physical-implementation",
+        "effect": "none",
+        "required_evidence": [
+          "human_authority_recorded"
+        ],
+        "authority_mode": "preauthorized_required",
+        "authority_boundary": "Authorize exactly one physical implementation build of A3-R4 R3-T1 at requested local 166.667 MHz, preserving frozen DP6, the existing memory map, and control apertures 0x0000 and 0x1000, with timing fail-closed. Do not authorize AFI creation, F2 runtime, benchmark, attacker sweep, sustained/HFB, consensus or economics changes, release, activation height, or mainnet action.",
+        "schema_version": "ge.transition-rule.v1"
+      }
+    ],
+    "default_disposition": "stop",
+    "schema_version": "ge.transition-policy.v1"
+  },
+  "observation": {
+    "portfolio_id": "fae-asic-a3-r4-existing-afi-admission",
+    "expected_generation": 12,
+    "expected_state_digest": "sha256:2ca8708613148a62061ece1c9b0cdfc01d87759f385293569a401e12857f53a5",
+    "policy_digest": "sha256:7d5dd1ae62e182822b3887b0a425e992b4e56466ad894ed0e5fc8f2fc6811579",
+    "event": "verification_passed",
+    "evidence": [
+      {
+        "kind": "human_authority_recorded",
+        "locator": "runtime://fae-asic-a3-r4-existing-afi-admission/explicit-user-authorization-r3t1-single-physical-build",
+        "digest": "sha256:dd24a74fe7bf4959836da00e61241eafba737cf86cc14be44ca6510ef259334e",
+        "schema_version": "ge.checkpoint-evidence.v1"
+      }
+    ],
+    "action_ref": "runtime://fae-asic-a3-r4-existing-afi-admission/resume-r3t1-single-physical-build",
+    "observed_at": "2026-09-29T18:28:00Z",
+    "summary": "Explicit human authorization admits exactly one fail-closed physical implementation build of R3-T1 at requested local 166.667 MHz while preserving frozen DP6, memory map, and control apertures 0x0000/0x1000. AFI creation, F2 runtime, benchmark, attacker sweep, sustained/HFB, consensus/economics, release, activation-height, and mainnet remain forbidden.",
+    "canonical_refs": [
+      "github://Waterfound/General-Execution/blob/runtime/durable-asp-control/events/fae-asic-a3-r4-control-repair-r3t1-static-pass-gate-001.json",
+      "github://Waterfound/FAE-testnet/commit/a046db7e4a638d62337fe61272c877319b8bbb00/labs/asic-f2-pre-go/runtime/F2_A3_R4_CONTROL_REPAIR_R3T1_PROVIDER_RESULT.json",
+      "github://Waterfound/FAE-testnet/commit/29a37b3b2ffbe88ecb7d600e1fb55b85656e6dcd/labs/asic-f2-pre-go/build-colony/control-repair-001/timing-refinement-001/RESULT.json"
+    ],
+    "uncertainties": [
+      "Physical timing closure for R3-T1 is not yet proven.",
+      "Physical timing success would not prove the original runtime root cause."
+    ],
+    "wake_admission": null,
+    "authority_grant": null,
+    "schema_version": "ge.resume-tick-observation.v1"
+  }
+}
