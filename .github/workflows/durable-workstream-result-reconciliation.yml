@@ -21,6 +21,18 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
+      - name: Enforce reconciler host boundary
+        shell: bash
+        run: |
+          case "$GITHUB_ACTOR" in
+            Waterfound|github-actions\[bot\]) ;;
+            *) echo "unauthorized reconciler actor: $GITHUB_ACTOR" >&2; exit 1 ;;
+          esac
+          case "$GITHUB_EVENT_NAME" in
+            schedule|workflow_dispatch) ;;
+            *) echo "unsupported reconciler trigger: $GITHUB_EVENT_NAME" >&2; exit 1 ;;
+          esac
+
       - name: Checkout exact reconciler revision
         uses: actions/checkout@v4
         with:
