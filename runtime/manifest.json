@@ -1,10 +1,10 @@
 {
   "authority_created": false,
-  "database_sha256": "sha256:8871bcc0e1e22c9660891de34b4628acd8402adbe9a185e9eae2f0fd29b8accc",
-  "last_event_id": "cii-provider-result-handoff-bootstrap-001",
-  "last_event_report_digest": "sha256:630ea77ff67dbc4b6bbe9fb7232c4dc7edfd9bafbcc7c05421b5779f9e973441",
-  "last_operation": "bootstrap",
-  "last_trigger_commit": "c90da8d733ba1030cfe6f5d21968e219286e1c5a",
+  "database_sha256": "sha256:b0809302c1fe40562cbffdab4d8eaf5d9d1397b867a1997f7a3c51013dba2750",
+  "last_event_id": "cii-provider-result-handoff-canonical-pass-001",
+  "last_event_report_digest": "sha256:bf411d3235e4ff7187c047a496ecbbdcd987a4c4493275c6cfdefd209fd6f499",
+  "last_operation": "transition",
+  "last_trigger_commit": "c0eea3c9b642143ef195625fe1d40c096a2240f8",
   "persistent_provider_trigger_enabled": true,
   "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
   "schema_version": "ge.persistent-runtime-manifest.v1"
