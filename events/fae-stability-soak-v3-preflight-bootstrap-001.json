@@ -1,0 +1,168 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-stability-soak-v3-preflight-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "fae-stability-soak-v3-preflight-launch-readiness",
+      "generation": 0,
+      "active": {
+        "work_id": "SSV3-01-PREFLIGHT",
+        "role": "active",
+        "state": "waiting_external",
+        "objective": "Complete evidence-first Stability Soak V3 preflight and preserve a restart-safe launch-ready state without starting the real 96h soak before the zero-cost and temporal launch gates are satisfied.",
+        "active_gate": "zero-cost-provider-and-exact-source-preflight-admission",
+        "next_action_ref": "condition://fae-stability-soak-v3/preflight-launch-readiness",
+        "source_revision": "34d6b014f83e6b32493ee978fb8bcce261522ec9",
+        "evidence_required": [
+          "v1_v2_failure_reconstruction",
+          "frozen_96h_success_contract",
+          "fail_closed_analyzer_and_recovery_regressions",
+          "exact_source_preflight_execution_receipt",
+          "five_service_free_plan_inventory",
+          "render_workspace_unsuspended",
+          "remaining_free_instance_hours_at_least_540",
+          "exact_launch_procedure_and_t0_evidence"
+        ],
+        "authority_boundary": "Zero-cost only. No paid provider, new spend, plan change, production/mainnet, consensus/economics change, release, activation height, destructive infrastructure change, or weakening of the Stability Soak success criteria.",
+        "authority_ref": null,
+        "blockers": [
+          {
+            "kind": "infrastructure",
+            "detail": "Live Render inspection shows all five intended free-plan services are suspended with suspender=billing; no paid fallback is authorized.",
+            "evidence_refs": [
+              "render://workspace/tea-daicggp594qs7386ck00/services/zero-cost-v3-inventory",
+              "github://Waterfound/FAE-testnet/commit/34d6b014f83e6b32493ee978fb8bcce261522ec9/sovereign-forge/release/stability-soak-v3-zero-cost-candidate.json"
+            ],
+            "schema_version": "ge.portfolio-blocker.v1"
+          },
+          {
+            "kind": "evidence",
+            "detail": "The current exact source 34d6b014f83e6b32493ee978fb8bcce261522ec9 has no recorded stability-soak-v3-preflight-readiness workflow run; historical zero-cost harness evidence is not an exact-source receipt for this revision.",
+            "evidence_refs": [
+              "github://Waterfound/FAE-testnet/commit/34d6b014f83e6b32493ee978fb8bcce261522ec9",
+              "github-actions://Waterfound/FAE-testnet/stability-soak-v3-preflight-readiness/no-run-observed"
+            ],
+            "schema_version": "ge.portfolio-blocker.v1"
+          },
+          {
+            "kind": "time",
+            "detail": "The planned checkpoint is 2026-10-01; the real soak must not be represented as started before a launch event with durable T0 evidence.",
+            "evidence_refs": [
+              "github://Waterfound/FAE-testnet/commit/359d2cefab3a2003c8563069f4f0d0adb77f44c3/sovereign-forge/release/FAE_STABILITY_SOAK_V3_SUCCESS_CONTRACT.json"
+            ],
+            "schema_version": "ge.portfolio-blocker.v1"
+          }
+        ],
+        "wake_condition": {
+          "kind": "evidence_predicate_satisfied",
+          "value": "date>=2026-10-01 AND render_workspace_unsuspended=true AND remaining_free_instance_hours>=540 AND exact_source_preflight_receipt=PASS",
+          "schema_version": "ge.wake-condition.v1"
+        },
+        "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/34d6b014f83e6b32493ee978fb8bcce261522ec9",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "SSV3-02-LAUNCH",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Admit the exact zero-cost five-service launch only after the frozen prestart gate passes and persist T0 plus exact source/provider bindings before any 96h clock is considered started.",
+        "active_gate": "launch-admission",
+        "next_action_ref": "launch://fae-stability-soak-v3/exact-five-service-t0",
+        "source_revision": "34d6b014f83e6b32493ee978fb8bcce261522ec9",
+        "evidence_required": [
+          "SSV3-01-PREFLIGHT_complete",
+          "five_services_healthy_free_autodeploy_off",
+          "three_distinct_node_identities",
+          "peer_bootstrap_complete",
+          "controller_and_observer_healthy",
+          "remaining_free_instance_hours_at_least_540",
+          "run_started_false_before_t0"
+        ],
+        "authority_boundary": "Launch remains zero-cost and testnet-only; no production/mainnet or paid fallback authority is implied.",
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/34d6b014f83e6b32493ee978fb8bcce261522ec9/sovereign-forge/lab/stability-soak-v3/prestart-gate.mjs",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [
+        {
+          "work_id": "SSV3-03-SOAK",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Run the frozen 96h Stability Soak V3 with four 24h phases and complete controller/observer evidence.",
+          "active_gate": "96h-continuous-soak",
+          "next_action_ref": "event://fae-stability-soak-v3/launch-admitted",
+          "source_revision": "34d6b014f83e6b32493ee978fb8bcce261522ec9",
+          "evidence_required": [
+            "durable_t0",
+            "96h_continuous_duration",
+            "dual_monitor_coverage",
+            "stale_and_wilson_metrics",
+            "reorg_accounting",
+            "p95_propagation_latency",
+            "chain_progression",
+            "recovery_events"
+          ],
+          "authority_boundary": null,
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "external_dependency",
+              "detail": "The soak cannot begin until SSV3-02-LAUNCH records a valid launch-admission event and durable T0.",
+              "evidence_refs": [
+                "github://Waterfound/FAE-testnet/commit/359d2cefab3a2003c8563069f4f0d0adb77f44c3/sovereign-forge/release/FAE_STABILITY_SOAK_V3_SUCCESS_CONTRACT.json"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "event_received",
+            "value": "fae-stability-soak-v3-launch-admitted",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/359d2cefab3a2003c8563069f4f0d0adb77f44c3/sovereign-forge/release/FAE_STABILITY_SOAK_V3_SUCCESS_CONTRACT.json",
+          "schema_version": "ge.portfolio-entry.v1"
+        },
+        {
+          "work_id": "SSV3-04-ANALYSIS",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Classify the completed run strictly as PASS, FAIL, INCONCLUSIVE, PROVIDER_FAILURE, HARNESS_FAILURE, or EVIDENCE_INCOMPLETE under the frozen contract.",
+          "active_gate": "terminal-evidence-analysis",
+          "next_action_ref": "event://fae-stability-soak-v3/run-terminal",
+          "source_revision": "34d6b014f83e6b32493ee978fb8bcce261522ec9",
+          "evidence_required": [
+            "terminal_run_bundle",
+            "frozen_harness_revision",
+            "complete_timestamps",
+            "final_chain_validity",
+            "four_phase_monitor_coverage"
+          ],
+          "authority_boundary": null,
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "external_dependency",
+              "detail": "Terminal analysis requires a completed or interrupted real V3 execution bundle; partial execution must never be normalized into PASS.",
+              "evidence_refs": [
+                "github://Waterfound/FAE-testnet/commit/359d2cefab3a2003c8563069f4f0d0adb77f44c3/sovereign-forge/release/FAE_STABILITY_SOAK_V3_SUCCESS_CONTRACT.json"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "event_received",
+            "value": "fae-stability-soak-v3-run-terminal",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/34d6b014f83e6b32493ee978fb8bcce261522ec9/sovereign-forge/lab/stability-soak-v3/analyze-evidence.mjs",
+          "schema_version": "ge.portfolio-entry.v1"
+        }
+      ],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
