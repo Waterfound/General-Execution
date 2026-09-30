@@ -45,11 +45,21 @@
     ]
   },
   "schedule": [
-    ["ELG01-OWNERSHIP"],
-    ["ELG01-CONTRACT"],
-    ["ELG01-CONTINUITY"],
-    ["ELG01-REPLAY"],
-    ["ELG01-CANONICAL"]
+    [
+      "ELG01-OWNERSHIP"
+    ],
+    [
+      "ELG01-CONTRACT"
+    ],
+    [
+      "ELG01-CONTINUITY"
+    ],
+    [
+      "ELG01-REPLAY"
+    ],
+    [
+      "ELG01-CANONICAL"
+    ]
   ],
   "frontiers": [
     {
@@ -66,19 +76,19 @@
     },
     {
       "id": "ELG01-CONTRACT",
-      "state": "ACTIVE"
+      "state": "PASS"
     },
     {
       "id": "ELG01-CONTINUITY",
-      "state": "PENDING"
+      "state": "PASS"
     },
     {
       "id": "ELG01-REPLAY",
-      "state": "PENDING"
+      "state": "PASS"
     },
     {
       "id": "ELG01-CANONICAL",
-      "state": "PENDING"
+      "state": "PASS"
     }
   ],
   "serialization_rule": "Parallelize independence. Serialize shared state.",
@@ -88,5 +98,15 @@
     "First observable divergence is not root-cause proof.",
     "conversation interruption != development interruption"
   ],
-  "status": "RUNNING"
+  "status": "CANONICAL_PASS",
+  "terminal_evidence": {
+    "implementation_merge": "33432d39328a7b0720dbf3f07674576acfe3a00c",
+    "host_activation_merge": "34aa19e4ae8d4d61a8b9229c593cd7da65ce1e87",
+    "live_receipt_commit": "a9aab639d8aa064de7d0693eac78ff70ce63ce24",
+    "live_receipt_id": "gelr-a71212210a90a1f87aa6c67a",
+    "live_replay_status": "ALREADY_RECORDED",
+    "durable_closeout_commit": "1fc92fd6812278b07c3dd985c5db996c49f56a32",
+    "durable_post_state_digest": "sha256:4bf311bae501aba88555fb61dd7856d428959f927a8b1510739263530750c421"
+  },
+  "terminal_verdict": "ELG01_CANONICAL_PASS__LAUNCH_ADMISSION_CONTRACT_CLOSED__COMMON_ROOT_CAUSE_NOT_PROVEN"
 }
