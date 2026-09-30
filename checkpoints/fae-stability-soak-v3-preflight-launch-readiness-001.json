@@ -1,0 +1,98 @@
+{
+  "schema": "FAE_STABILITY_SOAK_V3_PREFLIGHT_LAUNCH_READINESS_CHECKPOINT_V1",
+  "checkpoint_id": "fae-stability-soak-v3-preflight-launch-readiness-001",
+  "recorded_date": "2026-09-29",
+  "workstream_id": "fae-stability-soak-v3-preflight-launch-readiness",
+  "portfolio_class": "SECONDARY",
+  "owner_repository": "Waterfound/FAE-testnet",
+  "operational_branch": "render-wan-lab",
+  "operational_revision": "ef8f6ca3838abf6ef0e882c10a31bc70a2ae6e9d",
+  "artifact_branch": "preflight/stability-soak-v3-launch-readiness-20260929",
+  "artifact_revision": "6d366d28cf93463623521c66fbc44a678882eb7f",
+  "run_id": "FAE-STABILITY-SOAK-V3-20261001-001",
+  "run_started": false,
+  "preflight": {
+    "github_actions_run": 36657167384,
+    "conclusion": "success",
+    "exact_tested_revision": "ef8f6ca3838abf6ef0e882c10a31bc70a2ae6e9d",
+    "substantive_checks": [
+      "syntax_and_config",
+      "frozen_analyzer_and_terminal_classification",
+      "prestart_and_provider_fail_closed",
+      "crash_restart_and_96h_scale_recovery",
+      "node_controller_observer_harness_smoke",
+      "atomic_checkpoint_recovery",
+      "side_effect_free_preflight"
+    ]
+  },
+  "durable_bootstrap": {
+    "event_id": "fae-stability-soak-v3-preflight-bootstrap-001",
+    "trigger_commit": "fbd55f55c8b07d81f72e61f820f531dd5d6b7a58",
+    "workflow_run": 36657313962,
+    "event_report_digest": "sha256:c7ea5fb54dd4df9d8bc04670982ffe279ded2fe98e86cfa220e70472d56127d3",
+    "post_state_digest": "sha256:2d649b548c0b57abdc2664767ea223922dd05a9c5f259e007ffef99b6402fc19",
+    "database_sha256": "sha256:c62507729a6675dfb4aaefd2015955137305c256588eb340b67dc1c957b8c308",
+    "authority_created": false,
+    "note": "Bootstrap occurred before the final exact-source preflight PASS and therefore contains an obsolete exact-source evidence blocker. It remains the canonical runtime bootstrap; this checkpoint binds the later verified evidence without inventing an unsupported ASP transition."
+  },
+  "rejected_duplicate_bootstrap": {
+    "event_id": "fae-stability-soak-v3-preflight-condition-wait-001",
+    "trigger_commit": "d250336e73a757e3ea336761fe299c125d45b671",
+    "workflow_run": 36658053781,
+    "admitted": false,
+    "reason": "durable portfolio head already exists with different state",
+    "effect_on_canonical_state": "none"
+  },
+  "build_colony": {
+    "branch": "colony-run/fae-stability-soak-v3-preflight-20260929",
+    "profile_revision": "8a97faa52c8ebd5112dd8465e98abf8d4b45dca8",
+    "workflow_revision": "c57c9a080b1eb17b537ecb0348782e584cd56c4f",
+    "targeted_run": 36657738257,
+    "result": "RUN_ATTEMPTED_NOT_ADMITTED",
+    "job_started_steps": 0,
+    "cause_proven": false,
+    "note": "The private-repository Actions job terminated before any workflow step was exposed and no log blob was available. It is not counted as Build Colony PASS evidence. Core preflight evidence is independently provided by FAE-testnet run 36657167384."
+  },
+  "provider_boundary": {
+    "provider": "Render",
+    "required_services": 5,
+    "required_services_plan_free": true,
+    "workspace_suspended": true,
+    "suspender": "billing",
+    "free_instance_hours_required_with_margin": 540,
+    "quota_clear_proven": false,
+    "new_spend_authorized": false,
+    "paid_fallback_authorized": false
+  },
+  "wake": {
+    "checkpoint_date": "2026-10-01",
+    "exact_condition": "At or after 2026-10-01: Render workspace unsuspended AND all five required services remain free-plan AND at least 540 free instance-hours are positively proven AND render-wan-lab resolves to ef8f6ca3838abf6ef0e882c10a31bc70a2ae6e9d AND prestart health/identity/topology gates are GREEN.",
+    "next_action": "Read-only provider/capacity recheck, then prestart admission. Launch automatically only if every zero-cost and authority condition is positively satisfied; otherwise preserve CONDITION_WAIT.",
+    "no_background_claim": true
+  },
+  "evidence_locations": {
+    "success_contract": "github://Waterfound/FAE-testnet/commit/6d366d28cf93463623521c66fbc44a678882eb7f/sovereign-forge/release/FAE_STABILITY_SOAK_V3_SUCCESS_CONTRACT.json",
+    "launch_package": "github://Waterfound/FAE-testnet/commit/6d366d28cf93463623521c66fbc44a678882eb7f/sovereign-forge/release/FAE_STABILITY_SOAK_V3_LAUNCH_PACKAGE.json",
+    "readiness_artifact": "github://Waterfound/FAE-testnet/commit/6d366d28cf93463623521c66fbc44a678882eb7f/sovereign-forge/release/FAE_STABILITY_SOAK_V3_PREFLIGHT_AND_LAUNCH_READINESS.json",
+    "durable_report": "github://Waterfound/General-Execution/runtime/durable-asp-control/runtime/reports/fae-stability-soak-v3-preflight-bootstrap-001.json",
+    "durable_processed": "github://Waterfound/General-Execution/runtime/durable-asp-control/runtime/processed/fae-stability-soak-v3-preflight-bootstrap-001.json"
+  },
+  "continuity_semantics": {
+    "resume_without_chat_memory": true,
+    "exact_operational_revision_bound": true,
+    "unsupported_asp_transition_invented": false,
+    "partial_soak_is_pass": false,
+    "current_terminal_classification": "CONDITION_WAIT"
+  },
+  "authority_boundary": {
+    "new_spend": false,
+    "paid_fallback": false,
+    "consensus_changes": false,
+    "economics_changes": false,
+    "release": false,
+    "production_mainnet": false,
+    "activation_height": false,
+    "success_criteria_weakening": false,
+    "destructive_infrastructure": false
+  }
+}
