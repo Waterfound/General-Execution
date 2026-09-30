@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:7508988922204d086bb20b3c2e70f2ca60213e5a50a3c33281728e56a2909cce",
+  "event_report": {
+    "checkpoint_digest": "sha256:86aeca14bc3cfa13ded159a298f90b1a1f7ffabd3bbb253dbe4010c3c52d6aa3",
+    "event_id": "fae-browsercoin-design-assurance-bounded-verified-002",
+    "human_required": false,
+    "operation": "transition",
+    "portfolio_id": "fae-browsercoin-design-assurance",
+    "post_generation": 1,
+    "post_state_digest": "sha256:4ad3ac20d69cfefbfd3a758fa365da1bf59e0864b69d132d09e1547f0aa56a22",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:a319c37f5fa757f3db92422ba4080edf385be4c6ff0df727a6c68b90a0100a77",
+    "requested_action_ref": null,
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "committed"
+  },
+  "event_report_digest": "sha256:46090fad62b39d8f7c5d848ded41a177916f9c737ec83a7920bdec1a3078fd8a",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
