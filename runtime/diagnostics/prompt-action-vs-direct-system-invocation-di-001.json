@@ -1,0 +1,182 @@
+{
+  "schema": "ge.diagnostic-intelligence-result.v1",
+  "report_id": "prompt-action-vs-direct-system-invocation-di-001",
+  "recorded_date": "2026-09-29",
+  "diagnostic_class": "Conversation Orchestration -> Execution Continuity",
+  "mode": "evidence-first-read-only-targets",
+  "question": "Does the newer detailed prompt-action pattern materially reduce execution durability compared with the older compact direct Build Colony + Durable Execution command, and is task volume/agent overload the cause?",
+  "epistemic_rules": [
+    "Evidence before status.",
+    "Memory suggests. Evidence decides.",
+    "Correlation is not root-cause proof.",
+    "Valid HUMAN_GATE/provider failure is not execution-continuity failure.",
+    "Prompt length is not treated as a causal variable without counterfactual evidence."
+  ],
+  "cohorts": {
+    "compact_direct_system_invocation": [
+      {
+        "workstream": "FAE — Independent Operator Readiness",
+        "command_shape": "direct Build Colony run + Durable Execution across all admissible frontiers",
+        "evidence": [
+          "FAE-testnet commit 838f5019088b2e036a4aa06c3638fb8ab7fdb04e (IOR-01/02 contract)",
+          "FAE-testnet commit ca9efe2120dbd8ca9a9b497f69932fd5ce037ea8 (IOR execution plan)",
+          "FAE-testnet commit 9caa29ecd2c0a38692f0c9776f1779ed1268e828 (IOR-12 closure)",
+          "FAE-testnet commit d6c3ac8670806729ec10d026c15317ebb73f4f69 (canonical merge)"
+        ],
+        "outcome": "SUSTAINED_MULTI_FRONTIER_CLOSURE",
+        "continuity_failure": false
+      },
+      {
+        "workstream": "FAE — Representative Device Physical Autopilot",
+        "command_shape": "direct Build Colony run + Durable Execution across all admissible software frontiers",
+        "evidence": [
+          "FAE-testnet commit 4f3b4968d5198343050324c5f789f9ef431293e8 (Build Colony run artifact)",
+          "FAE-testnet commit 485050e99c9aae3409429fb1f15b7d927a773632 (Durable state)",
+          "FAE-testnet commit bb875a8092c987f0b6097be708e570e86e5411 (verified Build Colony closure)",
+          "FAE-testnet commit b29b5e43937c4a5a4ff6e61b319520d1d629ae1a (close admissible Durable frontiers)",
+          "FAE-testnet commit b00bbebca81a8f1085f7e61beddca862d8b5dfaa (canonical merge)"
+        ],
+        "outcome": "SUSTAINED_MULTI_FRONTIER_CLOSURE_THEN_EXTERNAL_EVIDENCE_GATE",
+        "continuity_failure": false
+      }
+    ],
+    "detailed_prompt_action": [
+      {
+        "workstream": "FAE — Browser-Coin Design Assurance Review",
+        "command_shape": "large evidence-first prompt with challenge method, CII/Build Colony/Durable sequencing and extensive constraints",
+        "evidence": [
+          "FAE-testnet commit a4028c8c26a6de11bb307fb915b89637f745d8bd (review admission)",
+          "FAE-testnet commit c79e131d87b4af35a1ce4415c7bfb59dcbb66cde (Build Colony run manifest)",
+          "FAE-testnet commit 4ffd55f65993eafbbdc996ff9bd3d7f825408a5e (resumable Durable state)",
+          "FAE-testnet commit 6856e6bd56ed406827042cafb1bf4ca459e0f2ad (machine-readable seven-challenge review)",
+          "FAE-testnet commit c2b0f2cff2caefedb280321d9b0b141e2ef15108 (Durable review checkpoint closure)",
+          "FAE-testnet commit 3ae59d0d013af0ee518f3cfb73c5fcb08394b075 (canonical merge)"
+        ],
+        "outcome": "SUSTAINED_MULTI_FRONTIER_CLOSURE",
+        "continuity_failure": false,
+        "counterexample_to_prompt_length_hypothesis": true
+      },
+      {
+        "workstream": "FAE — DP6 Robust Premise Review / RP-B3-T1",
+        "command_shape": "large bounded technical continuation prompt with exact branch/SHA/evidence constraints",
+        "evidence": [
+          "FAE-testnet evidence/fae-dp6-rp-b3-t1-20260929/labs/asic-f2-pre-go/reviews/rp-b3-t1/RUN.json",
+          "FAE-testnet evidence/fae-dp6-rp-b3-t1-20260929/labs/asic-f2-pre-go/reviews/rp-b3-t1/BUILD_COLONY_RUN.json",
+          "FAE-testnet evidence/fae-dp6-rp-b3-t1-20260929/labs/asic-f2-pre-go/reviews/rp-b3-t1/DURABLE_CHECKPOINT.json",
+          "provider run 36654718186 fail-closed at frontend compatibility boundary",
+          "ATTEMPT_2_RECOVERY.json preserves recovery lineage"
+        ],
+        "outcome": "REAL_EXECUTION_FAIL_CLOSED_WITH_RESUMABLE_CHECKPOINT",
+        "continuity_failure": false,
+        "counterexample_to_prompt_length_hypothesis": true
+      },
+      {
+        "workstream": "Red Team / BrowserCoin",
+        "command_shape": "detailed Project Assurance bounded-local-validation action prompt",
+        "evidence": [
+          "No BrowserCoin/Sandglass branch in Waterfound/Red-Team",
+          "No BrowserCoin PR/content/campaign artifact",
+          "Latest observed Red-Team workflow remains unrelated run 35408954783"
+        ],
+        "outcome": "NO_PERSISTENT_LAUNCH_MATERIALIZATION",
+        "continuity_failure": true
+      },
+      {
+        "workstream": "FAE — Browser-Coin Design Assurance Review (initial launch attempt)",
+        "command_shape": "detailed cross-system prompt requesting CII/Build Colony/Durable",
+        "evidence": [
+          "Initial Continuity Check found no branch, Build Colony artifact or Durable checkpoint before later successful relaunch"
+        ],
+        "outcome": "INITIAL_EXECUTION_LAUNCH_GAP",
+        "continuity_failure": true
+      }
+    ]
+  },
+  "findings": {
+    "perception": {
+      "verdict": "PARTLY_REAL",
+      "explanation": "There was a real increase in observable interruption/no-first-artifact cases around some prompt-action launches, but the effect is not universal and is not explained by prompt length alone."
+    },
+    "prompt_length_or_task_volume": {
+      "cause_proven": false,
+      "verdict": "NOT_SUPPORTED_AS_PRIMARY_CAUSE",
+      "evidence": [
+        "Browser-Coin Design Assurance used a highly detailed prompt yet produced admission, Build Colony manifest, Durable state, seven-challenge report and canonical merge.",
+        "RP-B3-T1 used a highly detailed prompt yet produced real execution, provider failure evidence and resumable checkpoints.",
+        "Compact direct runs also experienced occasional crashes/provider failures while still preserving continuity."
+      ]
+    },
+    "first_proven_difference": {
+      "name": "distance_to_first_persistent_artifact",
+      "verdict": "SUPPORTED",
+      "explanation": "Compact commands make Build Colony execution the first operational imperative. Prompt-action messages often place reconstruction, classification, conditional system selection and authority interpretation before launch materialization."
+    },
+    "orchestration_indirection": {
+      "verdict": "SUPPORTED_AS_RISK_FACTOR",
+      "mechanism": [
+        "More pre-launch decision nodes before any durable write",
+        "Conditional language such as when-applicable/if-needed can leave no single mandatory executor",
+        "Multiple subsystem handoffs can leave ownership of the first artifact implicit",
+        "Narrative context can be correctly understood without that understanding being equivalent to executor invocation"
+      ]
+    },
+    "launch_handshake_gap": {
+      "verdict": "PROVEN_HISTORICAL_SYSTEM_GAP",
+      "evidence": [
+        "Earlier BrowserCoin DI localized first divergence at explicit_execution_order -> execution_admission/materialized_launch.",
+        "General Execution subsequently added ELG-01 execution launch admission.",
+        "ELG-01 defines immutable ADMITTED/HUMAN_GATE/REJECTED/FAILED_BEFORE_LAUNCH receipts and requires owner/repository/executor bindings.",
+        "The durable ELG-01 host persists receipts but explicitly does not create authority or trigger an executor."
+      ],
+      "implication": "The historical silent-loss mode was real. ELG-01 improves observability/fail-closed semantics, but by design it does not itself guarantee that Build Colony or another executor actually starts."
+    },
+    "user_prompt_style_effect": {
+      "verdict": "SECONDARY_NOT_PRIMARY",
+      "explanation": "Assistant-generated prompt-action text can worsen the risk when it over-specifies the task graph but fails to make launch materialization the first mandatory operation. The harmful property is orchestration indirection without an immediate persistent handshake, not verbosity itself."
+    }
+  },
+  "ruled_out": [
+    {
+      "hypothesis": "The agent is simply overloaded by the number of tasks in long prompts.",
+      "status": "NOT_PROVEN_AND_CONTRADICTED_BY_CONTROLS"
+    },
+    {
+      "hypothesis": "Detailed prompts are generally less effective than compact prompts.",
+      "status": "CONTRADICTED_BY_BROWSERCOIN_DESIGN_ASSURANCE_AND_DP6_RP_B3_T1"
+    },
+    {
+      "hypothesis": "Durable Execution itself is the original cause of the interruptions.",
+      "status": "RULED_OUT_AS_PRIMARY_CAUSE_FOR_PRE_LAUNCH_CASES"
+    },
+    {
+      "hypothesis": "All interruptions reflect a continuity defect.",
+      "status": "RULED_OUT",
+      "explanation": "Some stops are correct fail-closed provider/technical/human/external gates."
+    }
+  ],
+  "diagnosis": {
+    "primary_classification": "ORCHESTRATION_INDIRECTION_WITH_PRE_LAUNCH_HANDSHAKE_RISK",
+    "secondary_classification": "HISTORICAL_EXECUTION_LAUNCH_GAP",
+    "prompt_volume_causality": "NOT_PROVEN",
+    "common_root_cause_for_all_interruptions": false,
+    "confidence": "HIGH_FOR_MECHANISM_MEDIUM_FOR_CAUSAL_ATTRIBUTION"
+  },
+  "smallest_operational_change_without_system_repair": {
+    "id": "PROMPT-LAUNCH-FIRST",
+    "description": "For future action prompts, keep the rich context but make the first imperative a mandatory idempotent execution-launch materialization before reconstruction or substantive work.",
+    "template_semantics": [
+      "Materialize this run identity/launch receipt first.",
+      "Bind owner, repository, executor and authority envelope.",
+      "If launch cannot be admitted, persist HUMAN_GATE/REJECTED/FAILED_BEFORE_LAUNCH instead of continuing narratively.",
+      "After ADMITTED, invoke Build Colony immediately when requested.",
+      "Then use Durable Execution across every admissible frontier without asking to proceed.",
+      "Stop only at genuine human authority, external/provider wait, fail-closed technical boundary or terminal closure."
+    ],
+    "note": "This does not require making prompts shorter. It changes ordering and makes persistence precede analysis."
+  },
+  "cii_needed": {
+    "verdict": "NO_NEW_CII_REQUIRED_FOR_THE_SAME_ELG_CLASS",
+    "reason": "ELG-01 has already been designed and canonicalized in General Execution. A future CII should be justified only if evidence shows admitted launch receipts still fail to produce executor-side first artifacts."
+  },
+  "terminal_verdict": "PERCEPTION_PARTLY_REAL__PROMPT_VOLUME_NOT_PRIMARY_CAUSE__ORCHESTRATION_INDIRECTION_AND_PRE_LAUNCH_HANDSHAKE_GAP_EXPLAIN_OBSERVED_VARIANCE"
+}
