@@ -15,6 +15,7 @@ on:
       - "tests/test_execution_launch_admission.py"
       - "evidence/continuous-improvement-intelligence/2026-09-29/execution-launch-gap/**"
       - ".github/workflows/execution-launch-admission-verification.yml"
+      - ".github/workflows/durable-launch-admission.yml"
   push:
     branches:
       - main
@@ -66,6 +67,7 @@ jobs:
           docs=Path("docs/execution-launch-admission.md").read_text()
           schema=json.loads(Path("schemas/execution-launch-admission-v1.schema.json").read_text())
           run=json.loads(Path("evidence/continuous-improvement-intelligence/2026-09-29/execution-launch-gap/build-colony-run.json").read_text())
+          host=Path(".github/workflows/durable-launch-admission.yml").read_text()
 
           for disposition in ("ADMITTED","HUMAN_GATE","REJECTED","FAILED_BEFORE_LAUNCH"):
               assert disposition in module
@@ -81,4 +83,22 @@ jobs:
           assert run["ownership"]["owner_repository"]=="Waterfound/General-Execution"
           assert "execute BrowserCoin Red Team campaign" in run["authority_boundary"]["may_not"]
           assert "create authority" in run["authority_boundary"]["may_not"]
+          required_host=[
+              "runtime/durable-asp-control",
+              '"launch-orders/*.json"',
+              "33432d39328a7b0720dbf3f07674576acfe3a00c",
+              "group: durable-asp-persistent-runtime",
+              "cancel-in-progress: false",
+              "launch order must be immutable create-only",
+              "runtime/launch-admission/workstreams/",
+              "authority_created",
+              "execution_triggered",
+          ]
+          for item in required_host:
+              assert item in host, item
+          assert "execute BrowserCoin" not in host
           PY
+
+      - name: Parse launch-host workflow YAML
+        run: |
+          ruby -e 'require "yaml"; YAML.load_file(".github/workflows/durable-launch-admission.yml")'
