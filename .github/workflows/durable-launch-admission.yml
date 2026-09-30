@@ -1,0 +1,222 @@
+name: Durable execution launch admission
+
+on:
+  push:
+    branches:
+      - runtime/durable-asp-control
+    paths:
+      - "launch-orders/*.json"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: durable-asp-persistent-runtime
+  cancel-in-progress: false
+
+env:
+  RUNTIME_BRANCH: runtime/durable-asp-control
+  LAUNCH_ADMISSION_REVISION: 33432d39328a7b0720dbf3f07674576acfe3a00c
+
+jobs:
+  admit-launch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Enforce launch host boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = "$RUNTIME_BRANCH"
+          case "$GITHUB_ACTOR" in
+            Waterfound|github-actions\[bot\]) ;;
+            *) echo "unauthorized launch-order actor: $GITHUB_ACTOR" >&2; exit 1 ;;
+          esac
+
+      - name: Checkout immutable launch-order trigger
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.sha }}
+
+      - name: Admit exactly one immutable launch order
+        id: order
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff-tree --no-commit-id --name-status -r "$GITHUB_SHA" -- 'launch-orders/*.json' > /tmp/launch-order-changes.txt
+          python - <<'PY'
+          import json, os, pathlib, re
+          rows=[line.strip().split("\t",1) for line in pathlib.Path("/tmp/launch-order-changes.txt").read_text().splitlines() if line.strip()]
+          assert len(rows)==1, f"expected exactly one launch order, got {rows}"
+          status,path=rows[0]
+          assert status=="A", f"launch order must be immutable create-only, got {status}"
+          assert path.startswith("launch-orders/") and path.endswith(".json")
+          data=json.loads(pathlib.Path(path).read_text())
+          workstream=data.get("workstream_id")
+          assert isinstance(workstream,str) and re.fullmatch(r"[A-Za-z0-9._:-]{1,160}",workstream)
+          if os.environ["GITHUB_ACTOR"]=="github-actions[bot]":
+              assert data.get("required_authority_scopes")==[], "bot launch orders may not consume authority in ELG-01 v1"
+              assert data.get("authority") is None, "bot launch orders may not carry authority in ELG-01 v1"
+          pathlib.Path("/tmp/launch-order.json").write_bytes(pathlib.Path(path).read_bytes())
+          with open(os.environ["GITHUB_OUTPUT"],"a") as out:
+              out.write(f"path={path}\n")
+              out.write(f"workstream={workstream}\n")
+          PY
+
+      - name: Reject credential-shaped launch data
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,pathlib
+          data=json.loads(pathlib.Path("/tmp/launch-order.json").read_text())
+          forbidden=("secret","password","token","credential","private_key","private-key","api_key","api-key")
+          def walk(value,path="$"):
+              if isinstance(value,dict):
+                  for key,child in value.items():
+                      low=key.lower()
+                      assert not any(term in low for term in forbidden), f"credential-shaped key forbidden: {path}.{key}"
+                      walk(child,f"{path}.{key}")
+              elif isinstance(value,list):
+                  for index,child in enumerate(value):
+                      walk(child,f"{path}[{index}]")
+          walk(data)
+          PY
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Prepare pinned verified launch-admission source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git cat-file -e "$LAUNCH_ADMISSION_REVISION^{commit}"
+          git worktree add --detach /tmp/launch-src "$LAUNCH_ADMISSION_REVISION"
+          cd /tmp/launch-src
+          python -m pip install -e '.[dev]' --disable-pip-version-check
+          python -m compileall -q src scripts
+          python -m pytest tests/test_execution_launch_admission.py -q
+
+      - name: Authenticate order and derive durable identity
+        id: identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          digest="$(PYTHONPATH=/tmp/launch-src/src python /tmp/launch-src/scripts/run_execution_launch_admission.py --order /tmp/launch-order.json --authenticated-actor "$GITHUB_ACTOR" --print-order-digest)"
+          python - "$digest" <<'PY'
+          import hashlib,json,os,sys
+          from pathlib import Path
+          data=json.loads(Path("/tmp/launch-order.json").read_text())
+          digest=sys.argv[1]
+          key=hashlib.sha256(data["workstream_id"].encode()).hexdigest()[:24]
+          with open(os.environ["GITHUB_OUTPUT"],"a") as out:
+              out.write(f"order_digest={digest}\n")
+              out.write(f"workstream_key={key}\n")
+          PY
+
+      - name: Move to latest serialized runtime head
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin "$RUNTIME_BRANCH"
+          git rev-parse "origin/$RUNTIME_BRANCH" > /tmp/runtime-start.txt
+          git checkout -B "$RUNTIME_BRANCH" "origin/$RUNTIME_BRANCH"
+
+      - name: Recover prior receipt if this workstream already exists
+        id: replay
+        shell: bash
+        run: |
+          set -euo pipefail
+          marker="runtime/launch-admission/workstreams/${{ steps.identity.outputs.workstream_key }}.json"
+          if test -f "$marker"; then
+            receipt_path="$(python - "$marker" <<'PY'
+          import json,sys
+          print(json.load(open(sys.argv[1]))["receipt_path"])
+          PY
+            )"
+            test -f "$receipt_path"
+            cp "$receipt_path" /tmp/existing-launch-receipt.json
+            echo "existing=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "existing=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Materialize deterministic immutable receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          args=(
+            --order /tmp/launch-order.json
+            --authenticated-actor "$GITHUB_ACTOR"
+            --authenticated-order-digest "${{ steps.identity.outputs.order_digest }}"
+            --receipt-out /tmp/launch-receipt.json
+            --result-out /tmp/launch-result.json
+          )
+          if test "${{ steps.replay.outputs.existing }}" = "true"; then
+            args+=(--existing-receipt /tmp/existing-launch-receipt.json)
+          fi
+          PYTHONPATH=/tmp/launch-src/src python /tmp/launch-src/scripts/run_execution_launch_admission.py "${args[@]}"
+          cat /tmp/launch-result.json
+
+      - name: Persist receipt and workstream binding
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p runtime/launch-admission/{receipts,results,workstreams}
+          python - "${{ steps.identity.outputs.workstream_key }}" <<'PY'
+          import json,pathlib,sys
+          order=json.loads(pathlib.Path("/tmp/launch-order.json").read_text())
+          receipt=json.loads(pathlib.Path("/tmp/launch-receipt.json").read_text())
+          result=json.loads(pathlib.Path("/tmp/launch-result.json").read_text())
+          key=sys.argv[1]
+          receipt_path=f"runtime/launch-admission/receipts/{receipt['receipt_id']}.json"
+          result_path=f"runtime/launch-admission/results/{receipt['order_id']}.json"
+          marker_path=f"runtime/launch-admission/workstreams/{key}.json"
+          pathlib.Path(receipt_path).write_text(json.dumps(receipt,sort_keys=True,indent=2)+"\n")
+          pathlib.Path(result_path).write_text(json.dumps(result,sort_keys=True,indent=2)+"\n")
+          marker={
+              "schema_version":"ge.execution-launch-workstream-binding.v1",
+              "workstream_id":order["workstream_id"],
+              "order_id":receipt["order_id"],
+              "order_digest":receipt["order_digest"],
+              "receipt_id":receipt["receipt_id"],
+              "receipt_path":receipt_path,
+              "disposition":receipt["disposition"],
+              "launch_id":receipt["launch_id"],
+              "dispatch_identity":receipt["dispatch_identity"],
+              "authority_created":False,
+              "execution_triggered":False,
+          }
+          existing=pathlib.Path(marker_path)
+          if existing.exists():
+              prior=json.loads(existing.read_text())
+              assert prior==marker, "workstream binding changed on replay"
+          else:
+              existing.write_text(json.dumps(marker,sort_keys=True,indent=2)+"\n")
+          PY
+
+      - name: Commit only receipt evidence with runtime-head CAS
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin "$RUNTIME_BRANCH"
+          test "$(git rev-parse "origin/$RUNTIME_BRANCH")" = "$(cat /tmp/runtime-start.txt)"
+          git config user.name "durable-launch-admission"
+          git config user.email "durable-launch-admission@users.noreply.github.com"
+          git add runtime/launch-admission/
+          git diff --cached --quiet && exit 0
+          git commit -m "runtime: admit execution launch ${{ steps.order.outputs.workstream }} [skip ci]"
+          git push origin "HEAD:refs/heads/$RUNTIME_BRANCH"
+
+      - name: Upload launch admission evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: execution-launch-admission-${{ github.run_id }}
+          path: |
+            /tmp/launch-order.json
+            /tmp/launch-receipt.json
+            /tmp/launch-result.json
+          if-no-files-found: warn
+          retention-days: 30
