@@ -576,3 +576,36 @@ __all__.extend([
     "render_report",
     "resolve_workstream",
 ])
+
+
+# ELG-01: persistent execution-launch admission. This consumes authenticated
+# order/authority evidence and never dispatches work or creates authority.
+from .execution_launch_admission import (
+    ExecutionLaunchAdmissionError,
+    ExecutionLaunchOrder,
+    ExecutionLaunchReceipt,
+    LaunchAdmissionResult,
+    LaunchAuthorityBinding,
+    LaunchExecutorBinding,
+    admit_execution_launch_order,
+    admit_or_replay_execution_launch,
+    execution_launch_order_from_dict,
+    execution_launch_receipt_from_dict,
+    launch_order_to_dict,
+    launch_receipt_to_dict,
+)
+
+__all__.extend([
+    "ExecutionLaunchAdmissionError",
+    "ExecutionLaunchOrder",
+    "ExecutionLaunchReceipt",
+    "LaunchAdmissionResult",
+    "LaunchAuthorityBinding",
+    "LaunchExecutorBinding",
+    "admit_execution_launch_order",
+    "admit_or_replay_execution_launch",
+    "execution_launch_order_from_dict",
+    "execution_launch_receipt_from_dict",
+    "launch_order_to_dict",
+    "launch_receipt_to_dict",
+])

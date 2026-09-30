@@ -1,0 +1,92 @@
+{
+  "schema": "GE_ELG01_BUILD_COLONY_RUN_V1",
+  "run_kind": "REAL_BUILD_COLONY_RUN",
+  "run_date": "2026-09-29",
+  "run_id": "bc2-f49497c50e1b0150",
+  "project": "general-execution-elg01",
+  "profile_version": "1",
+  "profile_digest": "79170f75f78f5d693f2c564057fe1f07eab79a6b17fdff55f2dca51523b825a5",
+  "build_colony_revision": "17979869a85c9f5adf2cef2ceb589a07fcef6239",
+  "repository": "Waterfound/General-Execution",
+  "branch": "colony/execution-launch-admission-elg01-001",
+  "source_main_revision": "aa230a84157b47769c29942f1dbae8079bb2b58c",
+  "workstream_id": "cii-execution-launch-gap-elg01-001",
+  "mission": "Implement only the smallest evidence-bound Explicit Execution Order -> Launch Admission Receipt hardening after proving ownership.",
+  "ownership": {
+    "status": "PROVEN",
+    "owner_repository": "Waterfound/General-Execution",
+    "boundary": "pre-ExecutionSpec execution-launch admission",
+    "non_owners": [
+      "Waterfound/Build-Colony",
+      "Waterfound/Red-Team",
+      "Waterfound/System-Interoperability-Envelope",
+      "Waterfound/Continuous-Improvement-Intelligence-CII",
+      "Waterfound/Diagnostic-Intelligence-DI",
+      "Continuity Check",
+      "Durable Execution event consumer"
+    ]
+  },
+  "authority_boundary": {
+    "may": [
+      "implement provider-neutral launch admission contract",
+      "persist deterministic immutable launch receipts",
+      "add read-only Continuity Check consumption",
+      "run deterministic/local/GitHub regression and historical replay",
+      "integrate General Execution after verification",
+      "use Durable Execution for this CII improvement closeout"
+    ],
+    "may_not": [
+      "execute BrowserCoin Red Team campaign",
+      "execute substantive Browser-Coin Design Assurance work",
+      "change FAE consensus, economics or DP6",
+      "release, activate or take mainnet action",
+      "incur new paid-provider execution",
+      "create authority"
+    ]
+  },
+  "schedule": [
+    ["ELG01-OWNERSHIP"],
+    ["ELG01-CONTRACT"],
+    ["ELG01-CONTINUITY"],
+    ["ELG01-REPLAY"],
+    ["ELG01-CANONICAL"]
+  ],
+  "frontiers": [
+    {
+      "id": "ELG01-OWNERSHIP",
+      "state": "PASS",
+      "evidence": [
+        "General Execution owns provider-neutral execution mechanics and consumes already-existing authority.",
+        "Build Colony Run Manifest begins only after Profile + immutable source revision.",
+        "Build Colony Envelope AdmissionReceipt explicitly has execution_authorized=false.",
+        "System Interoperability Envelope is stateless and has no scheduler/retry ledger.",
+        "Red Team is a domain-specific Project Assurance executor.",
+        "CII and DI are advisory/read-only; Continuity Check is read-only; Durable is downstream of event materialization."
+      ]
+    },
+    {
+      "id": "ELG01-CONTRACT",
+      "state": "ACTIVE"
+    },
+    {
+      "id": "ELG01-CONTINUITY",
+      "state": "PENDING"
+    },
+    {
+      "id": "ELG01-REPLAY",
+      "state": "PENDING"
+    },
+    {
+      "id": "ELG01-CANONICAL",
+      "state": "PENDING"
+    }
+  ],
+  "serialization_rule": "Parallelize independence. Serialize shared state.",
+  "evidence_rules": [
+    "Evidence before status.",
+    "Memory suggests. Evidence decides.",
+    "First observable divergence is not root-cause proof.",
+    "conversation interruption != development interruption"
+  ],
+  "status": "RUNNING"
+}

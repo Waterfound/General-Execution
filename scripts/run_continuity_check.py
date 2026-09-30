@@ -11,6 +11,7 @@ from general_execution.continuity_adapters import (
     conversation_from_mapping,
     durable_from_mapping,
     gates_from_mappings,
+    launch_admission_from_mapping,
     provider_from_mapping,
     repository_from_mapping,
 )
@@ -32,6 +33,7 @@ def main() -> int:
         durable=durable_from_mapping(data.get("durable")),
         build_colony=build_colony_from_mapping(data.get("build_colony")),
         provider=provider_from_mapping(data.get("provider")),
+        launch_admission=launch_admission_from_mapping(data.get("launch_admission")),
         gates=gates_from_mappings(data.get("gates")),
         canonical_integration_required=bool(data.get("canonical_integration_required", True)),
     )

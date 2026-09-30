@@ -90,6 +90,13 @@ class GateKind(str, Enum):
     EXTERNAL_EVIDENCE = "EXTERNAL_EVIDENCE"
 
 
+class LaunchDisposition(str, Enum):
+    ADMITTED = "ADMITTED"
+    HUMAN_GATE = "HUMAN_GATE"
+    REJECTED = "REJECTED"
+    FAILED_BEFORE_LAUNCH = "FAILED_BEFORE_LAUNCH"
+
+
 @dataclass(frozen=True, slots=True)
 class WorkstreamCandidate:
     workstream_id: str
@@ -203,6 +210,29 @@ class GateEvidence:
 
 
 @dataclass(frozen=True, slots=True)
+class LaunchAdmissionEvidence:
+    validated: bool
+    workstream_id: str
+    disposition: LaunchDisposition
+    receipt_ref: str
+    launch_id: str | None = None
+    repository: str | None = None
+    executor: str | None = None
+    dispatch_identity: str | None = None
+    first_artifact_ref: str | None = None
+    observed_at: str | None = None
+    recovery_semantics_exhausted: bool = False
+    detail: str | None = None
+
+    def __post_init__(self) -> None:
+        if not self.workstream_id.strip() or not self.receipt_ref.strip():
+            raise ValueError("launch admission identity must be non-empty")
+        if self.disposition is LaunchDisposition.ADMITTED:
+            if not self.launch_id or not self.dispatch_identity:
+                raise ValueError("ADMITTED launch evidence requires launch/dispatch identity")
+
+
+@dataclass(frozen=True, slots=True)
 class ContinuitySnapshot:
     checked_at: str
     query: str
@@ -212,6 +242,7 @@ class ContinuitySnapshot:
     durable: DurableStateEvidence | None = None
     build_colony: BuildColonyEvidence | None = None
     provider: ProviderEvidence | None = None
+    launch_admission: LaunchAdmissionEvidence | None = None
     gates: tuple[GateEvidence, ...] = ()
     canonical_integration_required: bool = True
 
@@ -316,7 +347,21 @@ def _provider_matches_repo(provider: ProviderEvidence, repo: RepositoryEvidence 
     return provider.subject_revision in revisions
 
 
-def _latest_progress(snapshot: ContinuitySnapshot, durable_ok: bool, colony_ok: bool, provider_ok: bool) -> tuple[str, str] | None:
+def _launch_matches_repo(launch: LaunchAdmissionEvidence, repo: RepositoryEvidence | None) -> bool:
+    if not launch.validated:
+        return False
+    if repo is None or launch.repository is None:
+        return True
+    return launch.repository == repo.repository
+
+
+def _latest_progress(
+    snapshot: ContinuitySnapshot,
+    durable_ok: bool,
+    colony_ok: bool,
+    provider_ok: bool,
+    launch_ok: bool,
+) -> tuple[str, str] | None:
     candidates: list[tuple[datetime, str, str]] = []
     repo = snapshot.repository
     if repo and repo.latest_related_commit and repo.latest_related_commit_at:
@@ -336,6 +381,11 @@ def _latest_progress(snapshot: ContinuitySnapshot, durable_ok: bool, colony_ok: 
         dt = _parse_time(provider.observed_at)
         if dt:
             candidates.append((dt, "provider", provider.provider))
+    launch = snapshot.launch_admission
+    if launch_ok and launch and launch.observed_at:
+        dt = _parse_time(launch.observed_at)
+        if dt:
+            candidates.append((dt, "launch_admission", launch.receipt_ref))
     if not candidates:
         return None
     dt, kind, ref = max(candidates, key=lambda item: item[0])
@@ -414,19 +464,26 @@ def inspect_continuity(snapshot: ContinuitySnapshot) -> ContinuityReport:
     durable_ok = bool(snapshot.durable and snapshot.durable.workstream_id == identity.workstream_id and _durable_matches_repo(snapshot.durable, repo))
     colony_ok = bool(snapshot.build_colony and snapshot.build_colony.workstream_id == identity.workstream_id and _build_colony_matches_repo(snapshot.build_colony, repo))
     provider_ok = bool(snapshot.provider and _provider_matches_repo(snapshot.provider, repo))
+    launch_ok = bool(
+        snapshot.launch_admission
+        and snapshot.launch_admission.workstream_id == identity.workstream_id
+        and _launch_matches_repo(snapshot.launch_admission, repo)
+    )
     if snapshot.durable and not durable_ok:
         warnings.append("durable_state_mismatch_or_unvalidated")
     if snapshot.build_colony and not colony_ok:
         warnings.append("build_colony_state_mismatch_or_unvalidated")
     if snapshot.provider and not provider_ok:
         warnings.append("provider_evidence_revision_mismatch")
+    if snapshot.launch_admission and not launch_ok:
+        warnings.append("launch_admission_mismatch_or_unvalidated")
 
     infrastructure = _infrastructure(snapshot, provider_ok)
     unsatisfied = [gate for gate in snapshot.gates if not gate.satisfied]
     human_gate = next((gate for gate in unsatisfied if gate.kind is GateKind.HUMAN), None)
     external_gate = next((gate for gate in unsatisfied if gate.kind is GateKind.EXTERNAL_EVIDENCE), None)
 
-    latest = _latest_progress(snapshot, durable_ok, colony_ok, provider_ok)
+    latest = _latest_progress(snapshot, durable_ok, colony_ok, provider_ok, launch_ok)
     latest_exec = {"observed_at": latest[0], "ref": latest[1]} if latest else None
 
     technical_terminal = None
@@ -449,6 +506,8 @@ def inspect_continuity(snapshot: ContinuitySnapshot) -> ContinuityReport:
     verdict: DevelopmentVerdict
     gate: GateEvidence | None = None
 
+    launch = snapshot.launch_admission if launch_ok else None
+
     if canonical_done:
         verdict = DevelopmentVerdict.DONE_CANONICAL
     elif human_gate is not None:
@@ -457,11 +516,18 @@ def inspect_continuity(snapshot: ContinuitySnapshot) -> ContinuityReport:
     elif external_gate is not None:
         verdict = DevelopmentVerdict.EXTERNAL_EVIDENCE_GATE
         gate = external_gate
+    elif launch and launch.disposition is LaunchDisposition.HUMAN_GATE:
+        verdict = DevelopmentVerdict.HUMAN_GATE
     elif durable_ok and snapshot.durable and snapshot.durable.scheduled_checkpoint:
         verdict = DevelopmentVerdict.SCHEDULED_WAIT
     elif durable_ok and snapshot.durable and snapshot.durable.wake_condition:
         verdict = DevelopmentVerdict.CONDITION_WAIT
     elif workload_failure:
+        verdict = DevelopmentVerdict.FAILED
+    elif launch and launch.disposition in {
+        LaunchDisposition.REJECTED,
+        LaunchDisposition.FAILED_BEFORE_LAUNCH,
+    }:
         verdict = DevelopmentVerdict.FAILED
     elif technical_terminal:
         verdict = DevelopmentVerdict.DONE_TECHNICAL
@@ -484,6 +550,12 @@ def inspect_continuity(snapshot: ContinuitySnapshot) -> ContinuityReport:
             verdict = DevelopmentVerdict.CHECKPOINTED_RESUMABLE
     elif colony_ok and snapshot.build_colony and snapshot.build_colony.admissible_next:
         verdict = DevelopmentVerdict.CHECKPOINTED_RESUMABLE
+    elif launch and launch.disposition is LaunchDisposition.ADMITTED:
+        verdict = (
+            DevelopmentVerdict.DEVELOPMENT_STALLED
+            if launch.recovery_semantics_exhausted
+            else DevelopmentVerdict.CHECKPOINTED_RESUMABLE
+        )
     else:
         verdict = DevelopmentVerdict.INSUFFICIENT_EVIDENCE
 
@@ -510,17 +582,38 @@ def inspect_continuity(snapshot: ContinuitySnapshot) -> ContinuityReport:
     blocking_gate = None
     if gate:
         blocking_gate = {"kind": gate.kind.value, "ref": gate.ref, "reason": gate.reason, "frontier": gate.frontier}
+    elif launch and launch.disposition is LaunchDisposition.HUMAN_GATE:
+        blocking_gate = {
+            "kind": "HUMAN",
+            "ref": launch.receipt_ref,
+            "reason": launch.detail or "execution launch authority gate",
+            "frontier": launch.launch_id or "execution-launch-admission",
+        }
     elif verdict is DevelopmentVerdict.SCHEDULED_WAIT and snapshot.durable:
         blocking_gate = {"kind": "SCHEDULED", "ref": snapshot.durable.scheduled_checkpoint, "reason": "scheduled checkpoint", "frontier": snapshot.durable.current_frontier}
     elif verdict is DevelopmentVerdict.CONDITION_WAIT and snapshot.durable:
         blocking_gate = {"kind": "CONDITION", "ref": snapshot.durable.wake_condition, "reason": "observable wake condition", "frontier": snapshot.durable.current_frontier}
     elif verdict is DevelopmentVerdict.FAILED:
         reason = None
+        failure_ref = "failure://continuity-check"
+        frontier = snapshot.durable.current_frontier if snapshot.durable else None
         if durable_ok and snapshot.durable:
             reason = snapshot.durable.failed_terminal_reason
         if reason is None and snapshot.provider:
             reason = snapshot.provider.detail
-        blocking_gate = {"kind": "FAILURE", "ref": "failure://continuity-check", "reason": reason or "explicit workload failure", "frontier": snapshot.durable.current_frontier if snapshot.durable else None}
+        if launch and launch.disposition in {
+            LaunchDisposition.REJECTED,
+            LaunchDisposition.FAILED_BEFORE_LAUNCH,
+        }:
+            reason = launch.detail or launch.disposition.value
+            failure_ref = launch.receipt_ref
+            frontier = launch.launch_id or "execution-launch-admission"
+        blocking_gate = {
+            "kind": "FAILURE",
+            "ref": failure_ref,
+            "reason": reason or "explicit workload failure",
+            "frontier": frontier,
+        }
 
     action = _action(verdict, snapshot.canonical_integration_required)
     return ContinuityReport(

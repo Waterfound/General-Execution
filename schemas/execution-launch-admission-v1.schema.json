@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Waterfound/General-Execution/schemas/execution-launch-admission-v1.schema.json",
+  "title": "General Execution ELG-01 execution launch admission",
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "actor",
+        "authority_ref",
+        "authority_boundary",
+        "granted_scopes",
+        "schema_version"
+      ],
+      "properties": {
+        "actor": {"type": "string", "minLength": 1},
+        "authority_ref": {"type": "string", "minLength": 1},
+        "authority_boundary": {"type": "string", "minLength": 1},
+        "granted_scopes": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "schema_version": {"const": "ge.execution-launch-authority-binding.v1"}
+      }
+    },
+    "executor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "executor",
+        "availability",
+        "evidence_ref",
+        "evidence_digest",
+        "schema_version"
+      ],
+      "properties": {
+        "executor": {"type": "string", "minLength": 1},
+        "availability": {"enum": ["AVAILABLE", "UNAVAILABLE"]},
+        "evidence_ref": {"type": "string", "minLength": 1},
+        "evidence_digest": {"$ref": "#/$defs/sha256"},
+        "schema_version": {"const": "ge.execution-launch-executor-binding.v1"}
+      }
+    },
+    "order": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "workstream_id",
+        "owner",
+        "repository",
+        "executor",
+        "objective",
+        "order_ref",
+        "source_revision",
+        "required_authority_scopes",
+        "authority",
+        "executor_binding",
+        "known_first_artifact_ref",
+        "schema_version"
+      ],
+      "properties": {
+        "workstream_id": {"type": "string", "minLength": 1},
+        "owner": {"type": ["string", "null"]},
+        "repository": {
+          "type": ["string", "null"],
+          "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+        },
+        "executor": {"type": ["string", "null"]},
+        "objective": {"type": "string", "minLength": 1},
+        "order_ref": {"type": "string", "minLength": 1},
+        "source_revision": {"type": ["string", "null"]},
+        "required_authority_scopes": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "authority": {
+          "oneOf": [
+            {"$ref": "#/$defs/authority"},
+            {"type": "null"}
+          ]
+        },
+        "executor_binding": {
+          "oneOf": [
+            {"$ref": "#/$defs/executor"},
+            {"type": "null"}
+          ]
+        },
+        "known_first_artifact_ref": {"type": ["string", "null"]},
+        "schema_version": {"const": "ge.execution-launch-order.v1"}
+      }
+    },
+    "receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "receipt_id",
+        "order_id",
+        "order_digest",
+        "disposition",
+        "disposition_reason",
+        "workstream_id",
+        "owner",
+        "repository",
+        "executor",
+        "launch_id",
+        "dispatch_identity",
+        "first_artifact_ref",
+        "authority_ref",
+        "authority_binding_digest",
+        "executor_binding_digest",
+        "recovery_required",
+        "authority_created",
+        "execution_triggered",
+        "schema_version"
+      ],
+      "properties": {
+        "receipt_id": {"type": "string", "pattern": "^gelr-[0-9a-f]{24}$"},
+        "order_id": {"type": "string", "pattern": "^gelo-[0-9a-f]{24}$"},
+        "order_digest": {"$ref": "#/$defs/sha256"},
+        "disposition": {
+          "enum": ["ADMITTED", "HUMAN_GATE", "REJECTED", "FAILED_BEFORE_LAUNCH"]
+        },
+        "disposition_reason": {"type": "string", "minLength": 1},
+        "workstream_id": {"type": "string", "minLength": 1},
+        "owner": {"type": ["string", "null"]},
+        "repository": {"type": ["string", "null"]},
+        "executor": {"type": ["string", "null"]},
+        "launch_id": {"type": ["string", "null"]},
+        "dispatch_identity": {"type": ["string", "null"]},
+        "first_artifact_ref": {"type": ["string", "null"]},
+        "authority_ref": {"type": ["string", "null"]},
+        "authority_binding_digest": {
+          "oneOf": [
+            {"$ref": "#/$defs/sha256"},
+            {"type": "null"}
+          ]
+        },
+        "executor_binding_digest": {
+          "oneOf": [
+            {"$ref": "#/$defs/sha256"},
+            {"type": "null"}
+          ]
+        },
+        "recovery_required": {"type": "boolean"},
+        "authority_created": {"const": false},
+        "execution_triggered": {"const": false},
+        "schema_version": {"const": "ge.execution-launch-receipt.v1"}
+      }
+    }
+  },
+  "oneOf": [
+    {"$ref": "#/$defs/order"},
+    {"$ref": "#/$defs/receipt"}
+  ]
+}
