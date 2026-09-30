@@ -1,0 +1,106 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-browsercoin-design-assurance-bounded-verified-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-browsercoin-design-assurance-v1",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-active-verified-promote-wallet",
+          "from_state": "verifying",
+          "event": "verification_passed",
+          "to_state": "complete",
+          "next_action_ref": "action://fae-browsercoin-design-assurance/DA-W1",
+          "effect": "promote_secondary",
+          "required_evidence": [
+            "bounded_assurance_ci"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        },
+        {
+          "rule_id": "02-wake-cold-start-secondary",
+          "from_state": "passive",
+          "event": "wake_satisfied",
+          "to_state": "ready",
+          "next_action_ref": "action://fae-browsercoin-design-assurance/DA-CS1",
+          "effect": "wake_passive",
+          "required_evidence": [
+            "bounded_assurance_ci"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-push",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-browsercoin-design-assurance",
+      "policy_digest": "sha256:bd9fd3995310d977ac147380f3cd43b6ec1bac7ee350a555b169e881ceea94ec",
+      "transition_event": "verification_passed"
+    },
+    "trigger": {
+      "source": "github-push",
+      "event_id": "fae-browsercoin-design-assurance-bounded-verified-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:1aabd979eed53fdcd24ffb8b6dd669bebc6cd1298370df4cad82121f53316aac",
+      "observation_digest": "sha256:b045d51936be5ac14c0b1ec77fc6e58813dee33433ed0224f4963b08a1e2d01e",
+      "admission_ref": "github://Waterfound/General-Execution/events/fae-browsercoin-design-assurance-bounded-verified-001"
+    },
+    "observation": {
+      "portfolio_id": "fae-browsercoin-design-assurance",
+      "expected_generation": 0,
+      "expected_state_digest": "sha256:a319c37f5fa757f3db92422ba4080edf385be4c6ff0df727a6c68b90a0100a77",
+      "policy_digest": "sha256:bd9fd3995310d977ac147380f3cd43b6ec1bac7ee350a555b169e881ceea94ec",
+      "event": "verification_passed",
+      "evidence": [
+        {
+          "kind": "bounded_assurance_ci",
+          "locator": "github://Waterfound/FAE-testnet/commit/93eaf13a68b3b8000b94499bf7060fe674fda6ca/docs/design-assurance/FAE_BROWSER_COIN_DESIGN_ASSURANCE_CI_EVIDENCE_20260929.json",
+          "digest": "sha256:1aabd979eed53fdcd24ffb8b6dd669bebc6cd1298370df4cad82121f53316aac",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "github://Waterfound/FAE-testnet/commit/93eaf13a68b3b8000b94499bf7060fe674fda6ca",
+      "observed_at": "2026-09-30T01:13:00Z",
+      "summary": "The bounded Browser-Coin Design Assurance candidate package passed cross-lab integration, PSR-15, recurring public-code security, CodeQL, and canonical-source verification; this verifies the bounded assurance package without closing its declared residual design/evidence gaps.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/commit/93eaf13a68b3b8000b94499bf7060fe674fda6ca",
+        "github://Waterfound/FAE-testnet/actions/runs/36653906275",
+        "github://Waterfound/FAE-testnet/pull/267"
+      ],
+      "uncertainties": [
+        "The underlying long-horizon, wallet same-origin/delivery-integrity, and cold-start real-WAN residuals remain open after bounded probe verification."
+      ],
+      "wake_admission": {
+        "portfolio_id": "fae-browsercoin-design-assurance",
+        "portfolio_generation": 0,
+        "portfolio_state_digest": "sha256:a319c37f5fa757f3db92422ba4080edf385be4c6ff0df727a6c68b90a0100a77",
+        "work_id": "DA-CS1-cold-start-infrastructure-independence",
+        "wake_condition_digest": "sha256:e3be6d50df381988f72b0ba0a69e74092b515d0eb5845a50b3dc488c7126dd39",
+        "policy_digest": "sha256:bd9fd3995310d977ac147380f3cd43b6ec1bac7ee350a555b169e881ceea94ec",
+        "rule_digest": "sha256:81d96ce422bea8800ba5d770ab09306288637ba87c1e6a0ddb41c667201488cd",
+        "evidence": [
+          {
+            "kind": "bounded_assurance_ci",
+            "locator": "github://Waterfound/FAE-testnet/commit/93eaf13a68b3b8000b94499bf7060fe674fda6ca/docs/design-assurance/FAE_BROWSER_COIN_DESIGN_ASSURANCE_CI_EVIDENCE_20260929.json",
+            "digest": "sha256:1aabd979eed53fdcd24ffb8b6dd669bebc6cd1298370df4cad82121f53316aac",
+            "schema_version": "ge.checkpoint-evidence.v1"
+          }
+        ],
+        "next_action_ref": "action://fae-browsercoin-design-assurance/DA-CS1",
+        "authority_grant": null,
+        "schema_version": "ge.passive-wake-admission.v1"
+      },
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
