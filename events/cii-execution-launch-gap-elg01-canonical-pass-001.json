@@ -1,0 +1,133 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "cii-execution-launch-gap-elg01-canonical-pass-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "cii-execution-launch-gap-elg01-closeout",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-elg01-canonical-pass",
+          "from_state": "verifying",
+          "event": "verification_passed",
+          "to_state": "complete",
+          "next_action_ref": "action://cii/execution-launch-gap/elg01/archive",
+          "effect": "none",
+          "required_evidence": [
+            "authority_semantics_preserved",
+            "browsercoin_negative_replays_passed",
+            "continuity_check_compatibility_passed",
+            "di_terminal_verdict_consumed",
+            "implementation_merge_verified",
+            "live_launch_receipt_admitted",
+            "live_replay_already_recorded",
+            "ownership_proven",
+            "positive_control_passed"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github+cii+elg01",
+      "event_kind": "durable-transition",
+      "portfolio_id": "cii-execution-launch-gap-elg01-001",
+      "policy_digest": "sha256:24cb3b419edccbf8a332fefa0d7e24420c906b23c674dd596dea75cb29d73779",
+      "transition_event": "verification_passed"
+    },
+    "trigger": {
+      "source": "github+cii+elg01",
+      "event_id": "cii-execution-launch-gap-elg01-canonical-pass-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:b9f3df2e0a9db37b6fd6bc437aff93a62e6a21e2b7adabe3b2e5bb106fb0e45f",
+      "observation_digest": "sha256:bb5204e5d3434303187f7fdbd7ce21cf9d6625491cf7c3b7700d64aca818fd4a",
+      "admission_ref": "github://Waterfound/General-Execution/commit/34aa19e4ae8d4d61a8b9229c593cd7da65ce1e87"
+    },
+    "observation": {
+      "portfolio_id": "cii-execution-launch-gap-elg01-001",
+      "expected_generation": 0,
+      "expected_state_digest": "sha256:86caf6c965d37c6029ffec1b2ac577d976748133817c7de1f1b7af5f21af587c",
+      "policy_digest": "sha256:24cb3b419edccbf8a332fefa0d7e24420c906b23c674dd596dea75cb29d73779",
+      "event": "verification_passed",
+      "evidence": [
+        {
+          "kind": "di_terminal_verdict_consumed",
+          "locator": "diagnostic://execution-launch-first-persistent-artifact-browsercoin-001",
+          "digest": "sha256:27b3fe17ec36d2903ba42c7b59e4b91ec4b8ea84013bf81dab5feca7c74305ee",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "ownership_proven",
+          "locator": "github://Waterfound/General-Execution/commit/33432d39328a7b0720dbf3f07674576acfe3a00c/evidence/continuous-improvement-intelligence/2026-09-29/execution-launch-gap/build-colony-run.json",
+          "digest": "sha256:decc50e98d33f94869b0fd7b1ed80aba6f64ebe85dbe11db057429cb318d4dab",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "implementation_merge_verified",
+          "locator": "github://Waterfound/General-Execution/commit/34aa19e4ae8d4d61a8b9229c593cd7da65ce1e87",
+          "digest": "sha256:84c538e4917acce83a8f9578b3c3b8ca03555452293864bb28c0ca566d6eda1f",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "live_launch_receipt_admitted",
+          "locator": "github://Waterfound/General-Execution/commit/a9aab639d8aa064de7d0693eac78ff70ce63ce24/runtime/launch-admission/receipts/gelr-a71212210a90a1f87aa6c67a.json",
+          "digest": "sha256:04ed1af66be59d055d90556438670cbc5a800be534bd0826eb77c1cad3fd4fec",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "live_replay_already_recorded",
+          "locator": "github://Waterfound/General-Execution/actions/runs/36656315522",
+          "digest": "sha256:76cab4497e755b6858d82432c05e1d3d8ebc3c47b5cc9cebf8f6c4906a9f37c4",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "browsercoin_negative_replays_passed",
+          "locator": "github://Waterfound/General-Execution/actions/runs/36655917203",
+          "digest": "sha256:31b46c2df67e6da3e578b70a477f51b4f9f7577d92c553018667fb0cd3305fc1",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "positive_control_passed",
+          "locator": "github://Waterfound/General-Execution/actions/runs/36655917203",
+          "digest": "sha256:0ae118bc9103939a073e1c44134aa0f72f718627f76bf063d39cea884302a440",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "continuity_check_compatibility_passed",
+          "locator": "github://Waterfound/General-Execution/actions/runs/36656257023",
+          "digest": "sha256:84ea462b0a9ee60941e53bc7db7d6321c3534eb525b59d412f05f8b31ed1e7cf",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "authority_semantics_preserved",
+          "locator": "github://Waterfound/General-Execution/actions/runs/36656257023",
+          "digest": "sha256:02cc1e0e394912ff22947f6797c5fba55d037a5709b505c4f7c5da4acfbf8f12",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "action://cii/execution-launch-gap/elg01/admit-canonical-verification",
+      "observed_at": "2026-09-30T01:46:00Z",
+      "summary": "ELG-01 ownership, implementation, historical replays, positive control, Continuity Check compatibility and live append-only launch-admission persistence/replay are verified without BrowserCoin execution or authority creation.",
+      "canonical_refs": [
+        "github://Waterfound/General-Execution/commit/33432d39328a7b0720dbf3f07674576acfe3a00c",
+        "github://Waterfound/General-Execution/commit/34aa19e4ae8d4d61a8b9229c593cd7da65ce1e87",
+        "github://Waterfound/General-Execution/commit/a9aab639d8aa064de7d0693eac78ff70ce63ce24/runtime/launch-admission/receipts/gelr-a71212210a90a1f87aa6c67a.json",
+        "github://Waterfound/General-Execution/actions/runs/36656315522",
+        "github://Waterfound/General-Execution/actions/runs/36656257023"
+      ],
+      "uncertainties": [
+        "ELG-01 does not prove a common internal root cause for the two historical BrowserCoin cases.",
+        "A caller accepting an executable conversational order must still materialize the authenticated launch order; General Execution does not listen to conversation memory.",
+        "Executor-native launch adapters must propagate or bind the ELG-01 dispatch identity when deeper automatic dispatch is desired."
+      ],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
