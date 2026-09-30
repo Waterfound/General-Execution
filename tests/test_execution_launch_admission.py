@@ -10,6 +10,7 @@ from general_execution.continuity_check import (
     ConversationEvidence,
     DevelopmentVerdict,
     DurableStateEvidence,
+    FailureScope,
     InfrastructureStatus,
     LaunchAdmissionEvidence,
     LaunchDisposition,
@@ -293,6 +294,28 @@ def test_admitted_launch_becomes_stalled_only_when_recovery_semantics_are_exhaus
     )
     report = inspect_continuity(snapshot)
     assert report.development_verdict == DevelopmentVerdict.DEVELOPMENT_STALLED.value
+
+
+def test_build_colony_bootstrap_failure_is_explicit_failure_without_erasing_receipt():
+    value = order()
+    receipt = admit(value).receipt
+    snapshot = ContinuitySnapshot(
+        checked_at="2026-09-29T22:05:00Z",
+        query=value.workstream_id,
+        candidates=(candidate(value.workstream_id, value.repository),),
+        repository=repo(value.repository),
+        launch_admission=launch_evidence(receipt),
+        provider=ProviderEvidence(
+            provider="build-colony-bootstrap",
+            state=ProviderState.FAILED,
+            failure_scope=FailureScope.WORKLOAD,
+            detail="bootstrap failed before first substantive artifact",
+        ),
+    )
+    report = inspect_continuity(snapshot)
+    assert report.development_verdict == DevelopmentVerdict.FAILED.value
+    assert report.latest_execution_evidence is not None
+    assert receipt.disposition == "ADMITTED"
 
 
 def test_durable_temporarily_unavailable_does_not_erase_admitted_launch():
