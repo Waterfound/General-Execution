@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:796d979c4bd13712e413c8909a10cd4a27da1a638da35306993a578d9e38083b",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "fae-browsercoin-design-assurance-bootstrap-002",
+    "human_required": false,
+    "operation": "bootstrap",
+    "portfolio_id": "fae-browsercoin-design-assurance",
+    "post_generation": 0,
+    "post_state_digest": "sha256:a319c37f5fa757f3db92422ba4080edf385be4c6ff0df727a6c68b90a0100a77",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:a319c37f5fa757f3db92422ba4080edf385be4c6ff0df727a6c68b90a0100a77",
+    "requested_action_ref": "github://Waterfound/FAE-testnet/pull/267#long-horizon-node-survivability",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:fdd29d5583bccfbce3d669f77c10f96b509af9a1dfef9afea9449ec911ab17c1",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}

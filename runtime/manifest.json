@@ -1,10 +1,10 @@
 {
   "authority_created": false,
-  "database_sha256": "sha256:39b222da993f07a9cadba413ded16264b69dfd9e4d31f5028c6837db069ba3bb",
-  "last_event_id": "fae-dp6-robust-premise-hold-gate-001",
-  "last_event_report_digest": "sha256:126be87d757b8c665a08e10bf507c1fc9c1ceedac43d42b0a3df1f88918baeba",
-  "last_operation": "transition",
-  "last_trigger_commit": "0e22b22eeb1b4f4ef8d9d53f2b1a895b9d28ad2a",
+  "database_sha256": "sha256:796d979c4bd13712e413c8909a10cd4a27da1a638da35306993a578d9e38083b",
+  "last_event_id": "fae-browsercoin-design-assurance-bootstrap-002",
+  "last_event_report_digest": "sha256:fdd29d5583bccfbce3d669f77c10f96b509af9a1dfef9afea9449ec911ab17c1",
+  "last_operation": "bootstrap",
+  "last_trigger_commit": "99064b4fb31d136a2b7b2f38b45b96a4b7df007f",
   "persistent_provider_trigger_enabled": true,
   "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
   "schema_version": "ge.persistent-runtime-manifest.v1"
