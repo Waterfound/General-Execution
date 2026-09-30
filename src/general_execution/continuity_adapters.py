@@ -10,6 +10,8 @@ from .continuity_check import (
     FailureScope,
     GateEvidence,
     GateKind,
+    LaunchAdmissionEvidence,
+    LaunchDisposition,
     ProviderEvidence,
     ProviderState,
     RepositoryEvidence,
@@ -127,4 +129,35 @@ def gates_from_mappings(values: Sequence[Mapping[str, object]] | None) -> tuple[
             satisfied=bool(item.get("satisfied", False)),
         )
         for item in values
+    )
+
+
+def launch_admission_from_mapping(
+    data: Mapping[str, object] | None,
+) -> LaunchAdmissionEvidence | None:
+    if data is None:
+        return None
+    return LaunchAdmissionEvidence(
+        validated=bool(data.get("validated", False)),
+        workstream_id=str(data["workstream_id"]),
+        disposition=LaunchDisposition(str(data["disposition"])),
+        receipt_ref=str(data["receipt_ref"]),
+        launch_id=str(data["launch_id"]) if data.get("launch_id") is not None else None,
+        repository=str(data["repository"]) if data.get("repository") is not None else None,
+        executor=str(data["executor"]) if data.get("executor") is not None else None,
+        dispatch_identity=(
+            str(data["dispatch_identity"])
+            if data.get("dispatch_identity") is not None
+            else None
+        ),
+        first_artifact_ref=(
+            str(data["first_artifact_ref"])
+            if data.get("first_artifact_ref") is not None
+            else None
+        ),
+        observed_at=str(data["observed_at"]) if data.get("observed_at") is not None else None,
+        recovery_semantics_exhausted=bool(
+            data.get("recovery_semantics_exhausted", False)
+        ),
+        detail=str(data["detail"]) if data.get("detail") is not None else None,
     )
