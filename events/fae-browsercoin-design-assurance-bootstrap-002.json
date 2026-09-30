@@ -1,0 +1,95 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-browsercoin-design-assurance-bootstrap-002",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "fae-browsercoin-design-assurance",
+      "generation": 0,
+      "active": {
+        "work_id": "DA-LH1-long-horizon-node-survivability",
+        "role": "active",
+        "state": "verifying",
+        "objective": "Independently verify the bounded long-horizon node survivability hardening on FAE-testnet PR #267, including the explicit 50,000-block sync ceiling evidence, without changing consensus, pruning semantics, economics, release, or mainnet.",
+        "active_gate": "DA-LH1-independent-verification",
+        "next_action_ref": "github://Waterfound/FAE-testnet/pull/267#long-horizon-node-survivability",
+        "source_revision": "93eaf13a68b3b8000b94499bf7060fe674fda6ca",
+        "evidence_required": [
+          "acceptance_contract_present",
+          "current_50000_block_ceiling_reproduced",
+          "candidate_regression_probe_valid",
+          "independent_ci_green",
+          "no_consensus_behavior_change"
+        ],
+        "authority_boundary": "Design-assurance candidate branch only. No merge, consensus/DP6/economic change, pruning activation, release, deployment, activation height, new provider run, or mainnet authority.",
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/FAE-testnet/actions/runs/36653751407",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "DA-W1-wallet-delivered-code-signing-integrity",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Verify and then harden the existing Wallet + Public Code Security owner around reviewed intent to signed payload to delivered artifact binding, preserving the explicit non-claim against arbitrary malicious same-origin JavaScript.",
+        "active_gate": "DA-W1-independent-verification",
+        "next_action_ref": "github://Waterfound/FAE-testnet/pull/267#wallet-delivered-code-signing-integrity",
+        "source_revision": "93eaf13a68b3b8000b94499bf7060fe674fda6ca",
+        "evidence_required": [
+          "canonical_wallet_signing_path_bound",
+          "acceptance_contract_present",
+          "substitution_regression_requirement_preserved",
+          "release_delivery_binding_requirement_preserved",
+          "independent_ci_green"
+        ],
+        "authority_boundary": "Candidate assurance only. No wallet material exposure, merge, release, deployment, consensus/economics, or mainnet authority.",
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/FAE-testnet/actions/runs/36653751407",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [
+        {
+          "work_id": "DA-CS1-cold-start-infrastructure-independence",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Verify the zero-seed negative control and preserve a future independently administered bootstrap topology plus real-WAN evidence gate inside the existing Peer Isolation/Eclipse + Independent Node owner.",
+          "active_gate": "DA-CS1-software-verification",
+          "next_action_ref": "github://Waterfound/FAE-testnet/pull/267#cold-start-infrastructure-independence",
+          "source_revision": "93eaf13a68b3b8000b94499bf7060fe674fda6ca",
+          "evidence_required": [
+            "zero_seed_control_valid",
+            "acceptance_contract_present",
+            "independent_bootstrap_topology_not_official_only",
+            "independent_ci_green",
+            "real_wan_residual_explicit"
+          ],
+          "authority_boundary": "Software-only candidate assurance. No new WAN/provider run, bootstrap production selection, release, deployment, consensus/economics, or mainnet authority.",
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "evidence",
+              "detail": "Cold-start remains serialized behind the active and secondary assurance dispositions; real-WAN independently administered bootstrap evidence is external and is not authorized by this review.",
+              "evidence_refs": [
+                "github://Waterfound/FAE-testnet/actions/runs/36653751407",
+                "github://Waterfound/FAE-testnet/pull/267"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "DA-LH1 and DA-W1 verification disposition available",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/FAE-testnet/actions/runs/36653751407",
+          "schema_version": "ge.portfolio-entry.v1"
+        }
+      ],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
