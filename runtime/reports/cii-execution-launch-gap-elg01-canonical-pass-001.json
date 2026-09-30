@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:7fcec8a4037a50b6cae2a1e0a9a8867af7b48bb34ba4099364fe2a1105c5d9e8",
+  "event_report": {
+    "checkpoint_digest": "sha256:58f0886c0297a45afe2493540280a140cb6469c12de69c79cd72b3fdc85dc366",
+    "event_id": "cii-execution-launch-gap-elg01-canonical-pass-001",
+    "human_required": false,
+    "operation": "transition",
+    "portfolio_id": "cii-execution-launch-gap-elg01-001",
+    "post_generation": 1,
+    "post_state_digest": "sha256:4bf311bae501aba88555fb61dd7856d428959f927a8b1510739263530750c421",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:86caf6c965d37c6029ffec1b2ac577d976748133817c7de1f1b7af5f21af587c",
+    "requested_action_ref": null,
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "committed"
+  },
+  "event_report_digest": "sha256:0e213c8401b09a942930bdfc54a0f75ec64e1086e58efd3a99cb5361bee2c2ed",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
