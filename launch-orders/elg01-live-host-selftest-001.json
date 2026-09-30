@@ -1,0 +1,20 @@
+{
+  "workstream_id": "elg01-live-host-selftest-001",
+  "owner": "general_execution",
+  "repository": "Waterfound/General-Execution",
+  "executor": "general_execution/launch-admission-verifier",
+  "objective": "Materialize one authority-free ELG-01 launch receipt and prove persistence/replay without dispatching any workload.",
+  "order_ref": "cii://execution-launch-gap/elg01/live-host-selftest-001",
+  "source_revision": "34aa19e4ae8d4d61a8b9229c593cd7da65ce1e87",
+  "required_authority_scopes": [],
+  "authority": null,
+  "executor_binding": {
+    "executor": "general_execution/launch-admission-verifier",
+    "availability": "AVAILABLE",
+    "evidence_ref": "github://Waterfound/General-Execution/commit/34aa19e4ae8d4d61a8b9229c593cd7da65ce1e87/.github/workflows/execution-launch-admission-verification.yml",
+    "evidence_digest": "sha256:65fcff2a7f54f42f2ade641270e41cd45e843c5164bbf66eb20439148dc6830c",
+    "schema_version": "ge.execution-launch-executor-binding.v1"
+  },
+  "known_first_artifact_ref": null,
+  "schema_version": "ge.execution-launch-order.v1"
+}
