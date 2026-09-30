@@ -1,0 +1,84 @@
+name: Execution launch admission verification
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "src/general_execution/execution_launch_admission.py"
+      - "src/general_execution/continuity_check.py"
+      - "src/general_execution/continuity_adapters.py"
+      - "scripts/run_execution_launch_admission.py"
+      - "scripts/run_continuity_check.py"
+      - "schemas/execution-launch-admission-v1.schema.json"
+      - "docs/execution-launch-admission.md"
+      - "tests/test_execution_launch_admission.py"
+      - "evidence/continuous-improvement-intelligence/2026-09-29/execution-launch-gap/**"
+      - ".github/workflows/execution-launch-admission-verification.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "src/general_execution/execution_launch_admission.py"
+      - "src/general_execution/continuity_check.py"
+      - "src/general_execution/continuity_adapters.py"
+      - "scripts/run_execution_launch_admission.py"
+      - "scripts/run_continuity_check.py"
+      - "schemas/execution-launch-admission-v1.schema.json"
+      - "docs/execution-launch-admission.md"
+      - "tests/test_execution_launch_admission.py"
+      - "evidence/continuous-improvement-intelligence/2026-09-29/execution-launch-gap/**"
+      - ".github/workflows/execution-launch-admission-verification.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install and compile
+        run: |
+          python -m pip install -e '.[dev]' --disable-pip-version-check
+          python -m compileall -q src scripts
+
+      - name: Focused ELG-01 adversarial and replay bank
+        run: python -m pytest tests/test_execution_launch_admission.py -q
+
+      - name: Full regression
+        run: python -m pytest -q
+
+      - name: Audit authority and Continuity Check boundaries
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          module=Path("src/general_execution/execution_launch_admission.py").read_text()
+          cc=Path("src/general_execution/continuity_check.py").read_text()
+          docs=Path("docs/execution-launch-admission.md").read_text()
+          schema=json.loads(Path("schemas/execution-launch-admission-v1.schema.json").read_text())
+          run=json.loads(Path("evidence/continuous-improvement-intelligence/2026-09-29/execution-launch-gap/build-colony-run.json").read_text())
+
+          for disposition in ("ADMITTED","HUMAN_GATE","REJECTED","FAILED_BEFORE_LAUNCH"):
+              assert disposition in module
+          assert "authority_created: bool = False" in module
+          assert "execution_triggered: bool = False" in module
+          assert "Continuity Check remains read-only" in docs
+          assert "INSUFFICIENT_EVIDENCE" in docs
+          assert "LaunchAdmissionEvidence" in cc
+          assert schema["$defs"]["receipt"]["properties"]["authority_created"]["const"] is False
+          assert schema["$defs"]["receipt"]["properties"]["execution_triggered"]["const"] is False
+          assert run["run_kind"]=="REAL_BUILD_COLONY_RUN"
+          assert run["ownership"]["status"]=="PROVEN"
+          assert run["ownership"]["owner_repository"]=="Waterfound/General-Execution"
+          assert "execute BrowserCoin Red Team campaign" in run["authority_boundary"]["may_not"]
+          assert "create authority" in run["authority_boundary"]["may_not"]
+          PY
