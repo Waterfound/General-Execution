@@ -1,0 +1,65 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "cii-execution-launch-first-artifact-architecture-gate-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "cii-execution-launch-first-artifact-001",
+      "generation": 0,
+      "active": {
+        "work_id": "ELG-01-OWNERSHIP-GATE",
+        "role": "active",
+        "state": "waiting_external",
+        "objective": "Resolve evidence-first the persistent pre-executor launch initiator owner/repository for ELG-01 before any repair implementation.",
+        "active_gate": "architecture-evidence-owner-resolution",
+        "next_action_ref": "action://cii/elg01/resolve-pre-executor-launch-owner",
+        "source_revision": "b97b965ac8452b4a77cdc907e9bb85d973dd8751",
+        "evidence_required": [
+          "persistent_launch_initiator_owner_proven",
+          "owner_repository_or_platform_integration_point_proven",
+          "receipt_before_side_effect_enforcement_proven"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [
+          {
+            "kind": "evidence",
+            "detail": "No reviewed user-owned system contract currently owns the raw conversation-order -> persistent launch-admission boundary. ELG-01 implementation is prohibited until a concrete persistent owner/repository or platform integration point is proven.",
+            "evidence_refs": [
+              "github://Waterfound/Continuous-Improvement-Intelligence-CII/commit/b97b965ac8452b4a77cdc907e9bb85d973dd8751/runs/execution-launch-first-artifact-001/cii-result.json"
+            ],
+            "schema_version": "ge.portfolio-blocker.v1"
+          }
+        ],
+        "wake_condition": {
+          "kind": "evidence_predicate_satisfied",
+          "value": "A concrete persistent pre-executor launch initiator owner/repository or platform integration point is proven with authority-aware receipt-before-side-effect semantics.",
+          "schema_version": "ge.wake-condition.v1"
+        },
+        "checkpoint_ref": "github://Waterfound/Continuous-Improvement-Intelligence-CII/commit/b97b965ac8452b4a77cdc907e9bb85d973dd8751/runs/execution-launch-first-artifact-001/cii-result.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "ELG-01-EVIDENCE-ARCHIVE",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Preserve DI input, CII ownership analysis, replays and positive-control evidence without granting repair or execution authority.",
+        "active_gate": "evidence-preservation",
+        "next_action_ref": "action://cii/elg01/preserve-evidence",
+        "source_revision": "b97b965ac8452b4a77cdc907e9bb85d973dd8751",
+        "evidence_required": [
+          "cii_machine_readable_result_canonical"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/Continuous-Improvement-Intelligence-CII/commit/b97b965ac8452b4a77cdc907e9bb85d973dd8751/runs/execution-launch-first-artifact-001/cii-run-receipt.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
