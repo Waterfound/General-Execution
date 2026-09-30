@@ -1,0 +1,362 @@
+{
+  "schema_version": "ge.cii-result.v1",
+  "cii_id": "cii-execution-launch-gap-elg01-001",
+  "recorded_at": "2026-09-30T01:46:00Z",
+  "subject": "Execution Launch -> First Persistent Artifact Admission",
+  "di_input": {
+    "diagnostic_id": "execution-launch-first-persistent-artifact-browsercoin-001",
+    "uploaded_artifact_sha256": "sha256:4474314bf073f21061e8356dacdba82765f4c4e96ecdf377337034a270e6767c",
+    "terminal_verdict": "EXECUTION_LAUNCH_GAP_PROVEN_AT_OBSERVABLE_BOUNDARY__COMMON_ROOT_CAUSE_NOT_PROVEN",
+    "classification": {
+      "primary": "EXECUTION_LAUNCH_GAP",
+      "modifier": "CAUSE_NOT_PROVEN",
+      "cii_justified": true
+    },
+    "consumed_without_reinterpreting_first_divergence": true
+  },
+  "ownership": {
+    "status": "PROVEN",
+    "owner_repository": "Waterfound/General-Execution",
+    "exact_boundary": "pre-ExecutionSpec execution-launch admission",
+    "rationale": [
+      "General Execution already owns provider-neutral execution identity, authority consumption, durable dispatch identity and restart/reconciliation semantics.",
+      "Build Colony native RunManifest begins after target Profile and immutable source revision exist; its cross-system AdmissionReceipt explicitly keeps execution_authorized=false.",
+      "Red Team Project Assurance is a domain executor rather than a cross-executor launch owner.",
+      "System Interoperability Envelope/ECL is a stateless binder and explicitly owns no database, scheduler, retry ledger or merged execution state.",
+      "CII and DI are advisory/read-only, Continuity Check is read-only, and Durable Execution is downstream of materialized execution events."
+    ],
+    "non_owners": [
+      "Waterfound/Build-Colony",
+      "Waterfound/Red-Team",
+      "Waterfound/System-Interoperability-Envelope",
+      "Waterfound/Continuous-Improvement-Intelligence-CII",
+      "Waterfound/Diagnostic-Intelligence-DI",
+      "Continuity Check",
+      "Durable Execution event consumer"
+    ]
+  },
+  "systemic_cause_assessment": {
+    "observable_gap_cause_status": "PROVEN",
+    "observable_gap_cause": "NO_GENERAL_EXECUTION_PRE_EXECUTIONSPEC_LAUNCH_ADMISSION_CONTRACT",
+    "statement": "Before ELG-01, there was no enforced persistent provider-neutral contract between an authenticated executable order and executor-native launch materialization. Existing systems began either before execution semantics (conversation/ECL/advisory layers) or after native work/run materialization.",
+    "common_internal_root_cause_proven": false,
+    "common_internal_root_cause_statement": "The two historical BrowserCoin cases still do not have a proven common internal reason for why their native executor/tool invocation was not initially materialized. ELG-01 repairs the shared observability/admission boundary only."
+  },
+  "repair": {
+    "id": "ELG-01",
+    "name": "Explicit Execution Order -> Launch Admission Receipt",
+    "repository": "Waterfound/General-Execution",
+    "implementation": [
+      "src/general_execution/execution_launch_admission.py",
+      "scripts/run_execution_launch_admission.py",
+      "schemas/execution-launch-admission-v1.schema.json",
+      "docs/execution-launch-admission.md",
+      "src/general_execution/continuity_check.py",
+      "src/general_execution/continuity_adapters.py",
+      "scripts/run_continuity_check.py",
+      ".github/workflows/durable-launch-admission.yml"
+    ],
+    "contract": {
+      "order_schema": "ge.execution-launch-order.v1",
+      "authority_schema": "ge.execution-launch-authority-binding.v1",
+      "executor_schema": "ge.execution-launch-executor-binding.v1",
+      "receipt_schema": "ge.execution-launch-receipt.v1",
+      "dispositions": [
+        "ADMITTED",
+        "HUMAN_GATE",
+        "REJECTED",
+        "FAILED_BEFORE_LAUNCH"
+      ],
+      "admitted_requires": [
+        "workstream_id",
+        "owner",
+        "repository",
+        "executor",
+        "sufficient existing authority when required",
+        "executor availability evidence",
+        "deterministic launch_id",
+        "deterministic dispatch_identity",
+        "first_artifact_ref when already known"
+      ],
+      "invariants": {
+        "authority_created": false,
+        "execution_triggered": false,
+        "receipt_immutable": true,
+        "order_immutable": true,
+        "provider_neutral_core": true,
+        "continuity_check_read_only": true
+      }
+    }
+  },
+  "before_state_machine": [
+    "explicit_execution_order",
+    "optional conversational acknowledgement",
+    "UNOBSERVABLE GAP: no canonical execution-admission identity",
+    "executor-native launch may or may not materialize",
+    "Build Colony/Red Team artifact if native launch succeeds",
+    "Durable visibility only after persistent downstream evidence exists"
+  ],
+  "after_state_machine": {
+    "input": "authenticated immutable execution launch order",
+    "admission": [
+      "identity binding",
+      "existing-authority scope check",
+      "executor availability binding",
+      "deterministic receipt materialization"
+    ],
+    "dispositions": {
+      "ADMITTED": "persistent receipt + workstream identity + launch_id + dispatch_identity + optional known first artifact; recovery_required until first artifact is observed",
+      "HUMAN_GATE": "persistent receipt identifying missing/insufficient authority; no launch identity",
+      "REJECTED": "persistent receipt identifying invalid/missing identity or authority actor substitution; no launch identity",
+      "FAILED_BEFORE_LAUNCH": "persistent receipt identifying executor unavailability/capability failure; no launch identity"
+    },
+    "downstream": "executor-native work remains executor-owned; later repository/Build Colony/provider/Durable evidence outranks the launch receipt"
+  },
+  "idempotency_and_recovery": {
+    "crash_immediately_before_receipt": "The immutable launch order remains persistent; replay deterministically regenerates the same receipt.",
+    "crash_immediately_after_receipt": "Exact replay returns ALREADY_RECORDED and reproduces the same receipt/workstream binding.",
+    "crash_before_first_substantive_artifact": "ADMITTED receipt remains with recovery_required=true and Continuity Check reports CHECKPOINTED_RESUMABLE unless bounded recovery is explicitly exhausted.",
+    "duplicate_execution_order": "Exact duplicate reproduces the same order/receipt identities.",
+    "retry_replay_same_order": "Idempotent; live host replay proven ALREADY_RECORDED.",
+    "same_workstream_twice": "A different order digest for an already-bound workstream fails closed; no second launch identity is created.",
+    "authority_absent": "HUMAN_GATE.",
+    "authority_insufficient": "HUMAN_GATE.",
+    "repository_binding_absent": "REJECTED.",
+    "executor_unavailable": "FAILED_BEFORE_LAUNCH.",
+    "build_colony_bootstrap_failure": "Explicit downstream workload failure is reported FAILED while the earlier ADMITTED receipt remains immutable evidence.",
+    "durable_temporarily_unavailable": "Launch receipt remains CHECKPOINTED_RESUMABLE and infrastructure is reported unavailable.",
+    "branch_without_substantive_artifact": "Launch receipt makes the state CHECKPOINTED_RESUMABLE rather than silent.",
+    "artifact_created_but_not_discovered": "Continuity Check does not invent the artifact; it retains the launch checkpoint until stronger evidence is discovered.",
+    "conversation_terminated_after_launch": "Persistent launch evidence remains observable; conversation interruption does not erase development state.",
+    "conversation_active_while_launch_fails": "Explicit launch failure remains FAILED; open conversation does not imply progress."
+  },
+  "build_colony_run": {
+    "run_id": "bc2-f49497c50e1b0150",
+    "artifact": "evidence/continuous-improvement-intelligence/2026-09-29/execution-launch-gap/build-colony-run.json",
+    "branch": "colony/execution-launch-admission-elg01-001",
+    "build_colony_revision": "17979869a85c9f5adf2cef2ceb589a07fcef6239",
+    "result": "PASS"
+  },
+  "implementation_commits_and_prs": {
+    "implementation_pr": 13,
+    "implementation_merge": "33432d39328a7b0720dbf3f07674576acfe3a00c",
+    "host_activation_pr": 14,
+    "host_activation_merge": "34aa19e4ae8d4d61a8b9229c593cd7da65ce1e87",
+    "runtime_host_activation_commit": "0f15402235fe12e7da468067752d936517ef91d7",
+    "live_receipt_runtime_commit": "a9aab639d8aa064de7d0693eac78ff70ce63ce24",
+    "durable_closeout_runtime_commit": "1fc92fd6812278b07c3dd985c5db996c49f56a32"
+  },
+  "regression_and_adversarial_results": [
+    {
+      "case": "deterministic ADMITTED receipt",
+      "result": "PASS",
+      "run": 36655917203
+    },
+    {
+      "case": "duplicate execution order exact replay",
+      "result": "PASS",
+      "run": 36655917203
+    },
+    {
+      "case": "crash immediately before receipt deterministic regeneration",
+      "result": "PASS",
+      "run": 36655917203
+    },
+    {
+      "case": "crash immediately after receipt / retry",
+      "result": "PASS",
+      "run": 36655917203
+    },
+    {
+      "case": "same workstream changed order",
+      "result": "FAIL_CLOSED_PASS",
+      "run": 36655917203
+    },
+    {
+      "case": "authority absent",
+      "result": "HUMAN_GATE_PASS",
+      "run": 36655917203
+    },
+    {
+      "case": "authority insufficient",
+      "result": "HUMAN_GATE_PASS",
+      "run": 36655917203
+    },
+    {
+      "case": "authority actor substitution",
+      "result": "REJECTED_PASS",
+      "run": 36655917203
+    },
+    {
+      "case": "repository binding absent",
+      "result": "REJECTED_PASS",
+      "run": 36655917203
+    },
+    {
+      "case": "executor unavailable",
+      "result": "FAILED_BEFORE_LAUNCH_PASS",
+      "run": 36655917203
+    },
+    {
+      "case": "executor evidence absent",
+      "result": "FAILED_BEFORE_LAUNCH_PASS",
+      "run": 36655917203
+    },
+    {
+      "case": "branch created without substantive artifact",
+      "result": "CHECKPOINTED_RESUMABLE_PASS",
+      "run": 36655917203
+    },
+    {
+      "case": "Durable temporarily unavailable",
+      "result": "CHECKPOINTED_RESUMABLE_PASS",
+      "run": 36655917203
+    },
+    {
+      "case": "conversation terminated after launch",
+      "result": "CHECKPOINTED_RESUMABLE_PASS",
+      "run": 36655917203
+    },
+    {
+      "case": "conversation active while launch fails",
+      "result": "FAILED_PASS",
+      "run": 36655917203
+    },
+    {
+      "case": "artifact not discovered",
+      "result": "NO_FALSE_PROGRESS_PASS",
+      "run": 36655917203
+    },
+    {
+      "case": "Build Colony bootstrap failure before first artifact",
+      "result": "FAILED_WITH_RECEIPT_PRESERVED_PASS",
+      "run": 36656185734
+    },
+    {
+      "case": "full repository regression",
+      "result": "PASS",
+      "run": 36656185734
+    },
+    {
+      "case": "post-merge focused verification",
+      "result": "PASS",
+      "run": 36656257023
+    },
+    {
+      "case": "post-merge main integration",
+      "result": "PASS",
+      "run": 36656257158
+    },
+    {
+      "case": "post-merge terminal verification",
+      "result": "PASS",
+      "run": 36656257113
+    },
+    {
+      "case": "live append-only host first admission",
+      "result": "CREATED_PASS",
+      "run": 36656315522
+    },
+    {
+      "case": "live append-only host exact replay",
+      "result": "ALREADY_RECORDED_PASS",
+      "run": 36656315522
+    }
+  ],
+  "replay_red_team_browsercoin": {
+    "mode": "NON_DESTRUCTIVE_HISTORICAL_REPLAY",
+    "campaign_executed": false,
+    "repository": "Waterfound/Red-Team",
+    "current_browsercoin_branch_found": false,
+    "expected_new_behavior": "The historical executable order produces a deterministic ADMITTED launch receipt and dispatch identity before Project Assurance substantive work. If Project Assurance never materializes its report, the launch remains discoverable/resumable instead of conversation-only.",
+    "result": "PASS"
+  },
+  "replay_fae_browsercoin_design_assurance": {
+    "mode": "NON_DESTRUCTIVE_HISTORICAL_REPLAY",
+    "substantive_review_executed_by_cii": false,
+    "repository": "Waterfound/FAE-testnet",
+    "branch": "colony/fae-browsercoin-design-assurance-001",
+    "historical_problem_state": "branch created / execution body not yet persisted",
+    "later_evidence": {
+      "admission_commit": "a4028c8c26a6de11bb307fb915b89637f745d8bd",
+      "build_colony_manifest_commit": "c79e131d87b4af35a1ce4415c7bfb59dcbb66cde",
+      "durable_state_commit": "4ffd55f65993eafbbdc996ff9bd3d7f825408a5e",
+      "run_id": "bc2-71a6f1e4cc210352"
+    },
+    "expected_new_behavior": "The branch-only interval remains bound to an ADMITTED receipt/dispatch identity and classifies CHECKPOINTED_RESUMABLE until Build Colony/Durable evidence appears.",
+    "convergence": "Later Build Colony evidence becomes the stronger execution evidence without rewriting the immutable launch receipt.",
+    "result": "PASS"
+  },
+  "positive_control": {
+    "workstream": "Wallet Transaction UX",
+    "repository": "Waterfound/FAE-testnet",
+    "branch": "build-colony/wallet-tx-ux-current-main-20260927",
+    "existing_durable_execution_start_event": "events/fae-wallet-transaction-ux-execution-start-001.json",
+    "existing_evidence_kind": "dispatch_admitted",
+    "result": "PASS_NO_DUPLICATION",
+    "statement": "When stronger Durable running evidence exists, Continuity Check keeps DEVELOPMENT_PROGRESSING; ELG-01 does not replace or duplicate the native Durable path."
+  },
+  "continuity_check_compatibility": {
+    "result": "PASS",
+    "authority_created": false,
+    "execution_triggered": false,
+    "insufficient_evidence_preserved": true,
+    "admitted_without_downstream_artifact": "CHECKPOINTED_RESUMABLE",
+    "admitted_recovery_exhausted": "DEVELOPMENT_STALLED",
+    "human_gate": "HUMAN_GATE",
+    "rejected_or_failed_before_launch": "FAILED",
+    "stronger_evidence_precedence_preserved": true
+  },
+  "live_host_evidence": {
+    "workflow": ".github/workflows/durable-launch-admission.yml",
+    "source_revision_pin": "33432d39328a7b0720dbf3f07674576acfe3a00c",
+    "runtime_branch": "runtime/durable-asp-control",
+    "live_order_commit": "998d60e8308afc6b063e7e52bb7b4478c0dfaf79",
+    "receipt_commit": "a9aab639d8aa064de7d0693eac78ff70ce63ce24",
+    "receipt_id": "gelr-a71212210a90a1f87aa6c67a",
+    "launch_id": "gel-b4c3fa2147c508eb57960c50",
+    "dispatch_identity": "geld-54e603154b964ab4af85be54",
+    "disposition": "ADMITTED",
+    "recovery_required": true,
+    "authority_created": false,
+    "execution_triggered": false,
+    "replay_run": 36656315522,
+    "replay_status": "ALREADY_RECORDED"
+  },
+  "durable_execution_closeout": {
+    "portfolio_id": "cii-execution-launch-gap-elg01-001",
+    "bootstrap_run": 36656466351,
+    "closeout_run": 36656606250,
+    "runtime_commit": "1fc92fd6812278b07c3dd985c5db996c49f56a32",
+    "status": "committed",
+    "pre_generation": 0,
+    "post_generation": 1,
+    "pre_state_digest": "sha256:86caf6c965d37c6029ffec1b2ac577d976748133817c7de1f1b7af5f21af587c",
+    "post_state_digest": "sha256:4bf311bae501aba88555fb61dd7856d428959f927a8b1510739263530750c421",
+    "checkpoint_digest": "sha256:58f0886c0297a45afe2493540280a140cb6469c12de69c79cd72b3fdc85dc366",
+    "human_required": false,
+    "requested_action_ref": null
+  },
+  "authority_impact": {
+    "new_authority_created": false,
+    "durable_authority_changed": false,
+    "build_colony_authority_changed": false,
+    "red_team_authority_changed": false,
+    "continuity_check_execution_authority_added": false,
+    "browsercoin_campaign_executed": false,
+    "fae_design_assurance_substantive_work_executed": false,
+    "paid_provider_execution": false,
+    "fae_consensus_or_economics_changed": false,
+    "dp6_changed": false,
+    "release_or_activation_or_mainnet": false
+  },
+  "residual_risks": [
+    "ELG-01 does not itself hook the ChatGPT conversation product. A caller that accepts an executable conversational order must materialize the authenticated launch-order artifact before describing the work as launched.",
+    "ELG-01 v1 persists and classifies launch admission but deliberately does not dispatch the native executor; executor-specific adapters must consume/bind dispatch_identity if automatic launch is desired.",
+    "github-actions[bot] is intentionally limited to authority-free launch orders in the canonical host; authority-bearing unattended launch requires a separately proven immutable authority-authentication adapter.",
+    "The common internal root cause of the two historical BrowserCoin non-launches remains unproven.",
+    "A first substantive artifact that exists but is not discoverable remains unknown to Continuity Check; ELG-01 prevents silence by preserving the launch checkpoint but does not fabricate discovery."
+  ],
+  "exact_terminal_verdict": "ELG01_CANONICAL_PASS__LAUNCH_ADMISSION_CONTRACT_CLOSED__COMMON_ROOT_CAUSE_NOT_PROVEN",
+  "exact_next_frontier": null
+}
