@@ -1,0 +1,30 @@
+{
+  "schema": "FAE_BROWSER_COIN_DESIGN_ASSURANCE_CANONICAL_MERGE_AUTHORITY_V1",
+  "authority_id": "fae-browsercoin-design-assurance-pr267-merge-authority-001",
+  "granted_by": "Waterfound",
+  "granted_in_conversation": true,
+  "repository": "Waterfound/FAE-testnet",
+  "pull_request": 267,
+  "exact_authorized_head": "9754037be0ae76496f66c8d958c0d83371f3f9cc",
+  "authorized_action": "Merge PR #267 into canonical main only.",
+  "explicitly_not_authorized": [
+    "release or deployment",
+    "DP6 or consensus changes",
+    "economics, tokenomics, or halving changes",
+    "activation changes",
+    "wallet authority or spending",
+    "destructive infrastructure",
+    "paid-provider execution",
+    "execution of residual workstreams"
+  ],
+  "premerge_evidence": {
+    "head_matches": true,
+    "ahead_by": 17,
+    "behind_by": 0,
+    "required_validation_gates_green": true,
+    "prohibited_diff_changes": false,
+    "new_frontier_justified": 0
+  },
+  "source_gate_checkpoint": "checkpoints/fae-browsercoin-design-assurance-canonical-merge-gate-001.json",
+  "authority_scope_terminal": "CANONICAL_MERGE_ONLY"
+}
