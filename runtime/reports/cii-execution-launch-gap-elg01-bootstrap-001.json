@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:5bcd16c210f9546a9865f483966ef5a10d7f325d7c78ddf69eb75706b34d4c13",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "cii-execution-launch-gap-elg01-bootstrap-001",
+    "human_required": false,
+    "operation": "bootstrap",
+    "portfolio_id": "cii-execution-launch-gap-elg01-001",
+    "post_generation": 0,
+    "post_state_digest": "sha256:86caf6c965d37c6029ffec1b2ac577d976748133817c7de1f1b7af5f21af587c",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:86caf6c965d37c6029ffec1b2ac577d976748133817c7de1f1b7af5f21af587c",
+    "requested_action_ref": "action://cii/execution-launch-gap/elg01/verify-canonical",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:fd276bc4b303ff7d5e5d26fcc6e439f764d518a6a9e02bffc900f7ffe1c12f8d",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}

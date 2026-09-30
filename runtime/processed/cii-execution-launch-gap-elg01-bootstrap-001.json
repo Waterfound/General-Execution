@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:5bcd16c210f9546a9865f483966ef5a10d7f325d7c78ddf69eb75706b34d4c13",
+  "event_id": "cii-execution-launch-gap-elg01-bootstrap-001",
+  "event_report_digest": "sha256:fd276bc4b303ff7d5e5d26fcc6e439f764d518a6a9e02bffc900f7ffe1c12f8d",
+  "operation": "bootstrap",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "62e77ec5f0b89810e1c77e6f0c86a5d528e54e5e"
+}
