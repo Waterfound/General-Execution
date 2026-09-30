@@ -1,0 +1,58 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "cii-execution-launch-gap-elg01-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "cii-execution-launch-gap-elg01-001",
+      "generation": 0,
+      "active": {
+        "work_id": "ELG01-CANONICAL",
+        "role": "active",
+        "state": "verifying",
+        "objective": "Verify and canonically close ELG-01 after evidence-bound ownership proof, implementation, non-destructive historical replays, positive control and live durable launch-admission host replay.",
+        "active_gate": "elg01-canonical-closeout",
+        "next_action_ref": "action://cii/execution-launch-gap/elg01/verify-canonical",
+        "source_revision": "34aa19e4ae8d4d61a8b9229c593cd7da65ce1e87",
+        "evidence_required": [
+          "di_terminal_verdict_consumed",
+          "ownership_proven",
+          "implementation_merge_verified",
+          "live_launch_receipt_admitted",
+          "live_replay_already_recorded",
+          "browsercoin_negative_replays_passed",
+          "positive_control_passed",
+          "continuity_check_compatibility_passed",
+          "authority_semantics_preserved"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/General-Execution/commit/34aa19e4ae8d4d61a8b9229c593cd7da65ce1e87",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "ELG01-ARCHIVE",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Preserve the canonical ELG-01 CII evidence after closeout without creating execution or authority.",
+        "active_gate": "elg01-evidence-preservation",
+        "next_action_ref": "action://cii/execution-launch-gap/elg01/archive",
+        "source_revision": "34aa19e4ae8d4d61a8b9229c593cd7da65ce1e87",
+        "evidence_required": [
+          "CII_ELG01_CANONICAL_PASS"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/General-Execution/commit/34aa19e4ae8d4d61a8b9229c593cd7da65ce1e87",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
