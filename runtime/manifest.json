@@ -1,10 +1,10 @@
 {
   "authority_created": false,
-  "database_sha256": "sha256:7508988922204d086bb20b3c2e70f2ca60213e5a50a3c33281728e56a2909cce",
-  "last_event_id": "fae-browsercoin-design-assurance-bounded-verified-002",
-  "last_event_report_digest": "sha256:46090fad62b39d8f7c5d848ded41a177916f9c737ec83a7920bdec1a3078fd8a",
-  "last_operation": "transition",
-  "last_trigger_commit": "9c539a311d75a86589720c1222a9431ef4c3e280",
+  "database_sha256": "sha256:3b9baad8cd76216639a25128082fd9a168568b396763290d21e7701df7b23193",
+  "last_event_id": "cii-execution-launch-first-artifact-architecture-gate-001",
+  "last_event_report_digest": "sha256:28b5c6d6c192d6e9f7382d5a1eeeea20d527050273cf5b93b5235b387d60a552",
+  "last_operation": "bootstrap",
+  "last_trigger_commit": "dca96825bf5d38cf815820495d96366c918a536f",
   "persistent_provider_trigger_enabled": true,
   "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
   "schema_version": "ge.persistent-runtime-manifest.v1"

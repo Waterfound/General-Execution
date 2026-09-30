@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:3b9baad8cd76216639a25128082fd9a168568b396763290d21e7701df7b23193",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "cii-execution-launch-first-artifact-architecture-gate-001",
+    "human_required": false,
+    "operation": "bootstrap",
+    "portfolio_id": "cii-execution-launch-first-artifact-001",
+    "post_generation": 0,
+    "post_state_digest": "sha256:ebe89371d915fda112e70f8c50c184eed22feeee46e4c483ce0faaad37b8afb6",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:ebe89371d915fda112e70f8c50c184eed22feeee46e4c483ce0faaad37b8afb6",
+    "requested_action_ref": "action://cii/elg01/resolve-pre-executor-launch-owner",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:28b5c6d6c192d6e9f7382d5a1eeeea20d527050273cf5b93b5235b387d60a552",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
