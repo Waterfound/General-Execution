@@ -1,0 +1,81 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-stability-soak-v3-preflight-condition-wait-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "fae-stability-soak-v3-preflight-launch-readiness",
+      "generation": 0,
+      "active": {
+        "work_id": "stability-soak-v3-zero-cost-wake",
+        "role": "active",
+        "state": "waiting_external",
+        "objective": "Hold the FAE Stability Soak V3 launch at the exact zero-cost/time boundary after verified harness preflight; recheck provider readiness at the 2026-10-01 checkpoint without relying on chat memory.",
+        "active_gate": "render-zero-cost-launch-admission",
+        "next_action_ref": "github://Waterfound/FAE-testnet/commit/6d366d28cf93463623521c66fbc44a678882eb7f/sovereign-forge/release/FAE_STABILITY_SOAK_V3_LAUNCH_PACKAGE.json",
+        "source_revision": "6d366d28cf93463623521c66fbc44a678882eb7f",
+        "evidence_required": [
+          "checkpoint_at_or_after_2026_10_01",
+          "render_workspace_unsuspended",
+          "five_required_services_plan_free",
+          "free_instance_hours_at_least_540_proven",
+          "operational_branch_exact_revision",
+          "prestart_health_and_identity_gate_green",
+          "no_new_spend_or_paid_fallback"
+        ],
+        "authority_boundary": "FAE program portfolio classification remains SECONDARY. Authorized only for zero-cost lab Stability Soak V3 under the existing 96h success contract. No paid provider/fallback, consensus/economics change, release, production/mainnet, activation height, criteria weakening, destructive infrastructure, or fabricated authority.",
+        "authority_ref": null,
+        "blockers": [
+          {
+            "kind": "time",
+            "detail": "Planned temporal checkpoint is 2026-10-01; V3 must not be considered started before a real persisted launch at/after the checkpoint.",
+            "evidence_refs": [
+              "github://Waterfound/FAE-testnet/commit/6d366d28cf93463623521c66fbc44a678882eb7f/sovereign-forge/release/FAE_STABILITY_SOAK_V3_PREFLIGHT_AND_LAUNCH_READINESS.json"
+            ],
+            "schema_version": "ge.portfolio-blocker.v1"
+          },
+          {
+            "kind": "infrastructure",
+            "detail": "Current Render workspace is billing-suspended; all required services are free-plan but quota_clear is not proven. No paid fallback is authorized.",
+            "evidence_refs": [
+              "render://workspace/tea-daicggp594qs7386ck00",
+              "github://Waterfound/FAE-testnet/commit/6d366d28cf93463623521c66fbc44a678882eb7f/sovereign-forge/release/FAE_STABILITY_SOAK_V3_LAUNCH_PACKAGE.json"
+            ],
+            "schema_version": "ge.portfolio-blocker.v1"
+          }
+        ],
+        "wake_condition": {
+          "kind": "at_or_after",
+          "value": "2026-10-01T00:00:00-03:00",
+          "schema_version": "ge.wake-condition.v1"
+        },
+        "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/6d366d28cf93463623521c66fbc44a678882eb7f/sovereign-forge/release/FAE_STABILITY_SOAK_V3_PREFLIGHT_AND_LAUNCH_READINESS.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "stability-soak-v3-launch-admission",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "After the temporal wake, re-run only the zero-cost provider/prestart admission and launch the exact frozen V3 run automatically only if every existing authority condition is positively satisfied.",
+        "active_gate": "post-wake-provider-prestart-recheck",
+        "next_action_ref": "github://Waterfound/FAE-testnet/commit/6d366d28cf93463623521c66fbc44a678882eb7f/sovereign-forge/release/FAE_STABILITY_SOAK_V3_LAUNCH_PACKAGE.json",
+        "source_revision": "6d366d28cf93463623521c66fbc44a678882eb7f",
+        "evidence_required": [
+          "durable_wake_observed",
+          "zero_cost_capacity_proven",
+          "exact_revision_prestart_green",
+          "persisted_launch_evidence_before_started_status"
+        ],
+        "authority_boundary": "Automatic launch is permitted only inside the already granted zero-cost lab envelope and exact frozen success contract. Otherwise remain waiting.",
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/6d366d28cf93463623521c66fbc44a678882eb7f/sovereign-forge/release/FAE_STABILITY_SOAK_V3_LAUNCH_PACKAGE.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
