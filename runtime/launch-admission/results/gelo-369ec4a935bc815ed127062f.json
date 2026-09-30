@@ -8,6 +8,6 @@
   "order_id": "gelo-369ec4a935bc815ed127062f",
   "receipt_digest": "sha256:1fa8ed61fa5c0847c4881f55a9e9d43f2bac85f860d734f39acad994f449c777",
   "receipt_id": "gelr-a71212210a90a1f87aa6c67a",
-  "replay_status": "CREATED",
+  "replay_status": "ALREADY_RECORDED",
   "schema_version": "ge.execution-launch-admission-result.v1"
 }
