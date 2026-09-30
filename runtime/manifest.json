@@ -1,10 +1,10 @@
 {
   "authority_created": false,
-  "database_sha256": "sha256:7fcec8a4037a50b6cae2a1e0a9a8867af7b48bb34ba4099364fe2a1105c5d9e8",
-  "last_event_id": "cii-execution-launch-gap-elg01-canonical-pass-001",
-  "last_event_report_digest": "sha256:0e213c8401b09a942930bdfc54a0f75ec64e1086e58efd3a99cb5361bee2c2ed",
-  "last_operation": "transition",
-  "last_trigger_commit": "797a1d427d9665272960b59db13ab632ec7362bb",
+  "database_sha256": "sha256:c62507729a6675dfb4aaefd2015955137305c256588eb340b67dc1c957b8c308",
+  "last_event_id": "fae-stability-soak-v3-preflight-bootstrap-001",
+  "last_event_report_digest": "sha256:c7ea5fb54dd4df9d8bc04670982ffe279ded2fe98e86cfa220e70472d56127d3",
+  "last_operation": "bootstrap",
+  "last_trigger_commit": "fbd55f55c8b07d81f72e61f820f531dd5d6b7a58",
   "persistent_provider_trigger_enabled": true,
   "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
   "schema_version": "ge.persistent-runtime-manifest.v1"

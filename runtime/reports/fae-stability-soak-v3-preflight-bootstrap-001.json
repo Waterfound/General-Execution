@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:c62507729a6675dfb4aaefd2015955137305c256588eb340b67dc1c957b8c308",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "fae-stability-soak-v3-preflight-bootstrap-001",
+    "human_required": false,
+    "operation": "bootstrap",
+    "portfolio_id": "fae-stability-soak-v3-preflight-launch-readiness",
+    "post_generation": 0,
+    "post_state_digest": "sha256:2d649b548c0b57abdc2664767ea223922dd05a9c5f259e007ffef99b6402fc19",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:2d649b548c0b57abdc2664767ea223922dd05a9c5f259e007ffef99b6402fc19",
+    "requested_action_ref": "condition://fae-stability-soak-v3/preflight-launch-readiness",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:c7ea5fb54dd4df9d8bc04670982ffe279ded2fe98e86cfa220e70472d56127d3",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
