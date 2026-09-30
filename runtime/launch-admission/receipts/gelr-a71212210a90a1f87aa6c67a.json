@@ -1,0 +1,21 @@
+{
+  "authority_binding_digest": null,
+  "authority_created": false,
+  "authority_ref": null,
+  "dispatch_identity": "geld-54e603154b964ab4af85be54",
+  "disposition": "ADMITTED",
+  "disposition_reason": "launch_admitted",
+  "execution_triggered": false,
+  "executor": "general_execution/launch-admission-verifier",
+  "executor_binding_digest": "sha256:0366703805ffefaffc0aa9f716d511d7f9658929d0b55f8e7643957eacf3fb2d",
+  "first_artifact_ref": null,
+  "launch_id": "gel-b4c3fa2147c508eb57960c50",
+  "order_digest": "sha256:369ec4a935bc815ed127062f03b2f3676138d43789437f2b3a8ed314618631e7",
+  "order_id": "gelo-369ec4a935bc815ed127062f",
+  "owner": "general_execution",
+  "receipt_id": "gelr-a71212210a90a1f87aa6c67a",
+  "recovery_required": true,
+  "repository": "Waterfound/General-Execution",
+  "schema_version": "ge.execution-launch-receipt.v1",
+  "workstream_id": "elg01-live-host-selftest-001"
+}

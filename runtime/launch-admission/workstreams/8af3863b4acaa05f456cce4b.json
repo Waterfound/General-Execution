@@ -1,0 +1,13 @@
+{
+  "authority_created": false,
+  "dispatch_identity": "geld-54e603154b964ab4af85be54",
+  "disposition": "ADMITTED",
+  "execution_triggered": false,
+  "launch_id": "gel-b4c3fa2147c508eb57960c50",
+  "order_digest": "sha256:369ec4a935bc815ed127062f03b2f3676138d43789437f2b3a8ed314618631e7",
+  "order_id": "gelo-369ec4a935bc815ed127062f",
+  "receipt_id": "gelr-a71212210a90a1f87aa6c67a",
+  "receipt_path": "runtime/launch-admission/receipts/gelr-a71212210a90a1f87aa6c67a.json",
+  "schema_version": "ge.execution-launch-workstream-binding.v1",
+  "workstream_id": "elg01-live-host-selftest-001"
+}
