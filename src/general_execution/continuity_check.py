@@ -97,6 +97,12 @@ class LaunchDisposition(str, Enum):
     FAILED_BEFORE_LAUNCH = "FAILED_BEFORE_LAUNCH"
 
 
+class ExecutorActivationDisposition(str, Enum):
+    EXECUTOR_ACCEPTED = "EXECUTOR_ACCEPTED"
+    CONDITION_WAIT = "CONDITION_WAIT"
+    FAILED_ACTIVATION = "FAILED_ACTIVATION"
+
+
 @dataclass(frozen=True, slots=True)
 class WorkstreamCandidate:
     workstream_id: str
@@ -233,6 +239,47 @@ class LaunchAdmissionEvidence:
 
 
 @dataclass(frozen=True, slots=True)
+class ExecutorActivationEvidence:
+    validated: bool
+    workstream_id: str
+    disposition: ExecutorActivationDisposition
+    activation_ref: str
+    launch_receipt_ref: str
+    dispatch_identity: str
+    repository: str | None = None
+    executor: str | None = None
+    native_execution_ref: str | None = None
+    condition_ref: str | None = None
+    observed_at: str | None = None
+    detail: str | None = None
+
+    def __post_init__(self) -> None:
+        for value in (
+            self.workstream_id,
+            self.activation_ref,
+            self.launch_receipt_ref,
+            self.dispatch_identity,
+        ):
+            if not value.strip():
+                raise ValueError("executor activation identity must be non-empty")
+        if self.disposition is ExecutorActivationDisposition.EXECUTOR_ACCEPTED:
+            if not self.native_execution_ref:
+                raise ValueError(
+                    "EXECUTOR_ACCEPTED activation evidence requires native execution reference"
+                )
+        elif self.disposition is ExecutorActivationDisposition.CONDITION_WAIT:
+            if not self.condition_ref:
+                raise ValueError(
+                    "CONDITION_WAIT activation evidence requires condition reference"
+                )
+        elif self.disposition is ExecutorActivationDisposition.FAILED_ACTIVATION:
+            if not self.detail:
+                raise ValueError(
+                    "FAILED_ACTIVATION evidence requires failure detail"
+                )
+
+
+@dataclass(frozen=True, slots=True)
 class ContinuitySnapshot:
     checked_at: str
     query: str
@@ -243,6 +290,7 @@ class ContinuitySnapshot:
     build_colony: BuildColonyEvidence | None = None
     provider: ProviderEvidence | None = None
     launch_admission: LaunchAdmissionEvidence | None = None
+    executor_activation: ExecutorActivationEvidence | None = None
     gates: tuple[GateEvidence, ...] = ()
     canonical_integration_required: bool = True
 
@@ -355,12 +403,34 @@ def _launch_matches_repo(launch: LaunchAdmissionEvidence, repo: RepositoryEviden
     return launch.repository == repo.repository
 
 
+def _activation_matches(
+    activation: ExecutorActivationEvidence,
+    repo: RepositoryEvidence | None,
+    launch: LaunchAdmissionEvidence | None,
+) -> bool:
+    if not activation.validated:
+        return False
+    if repo is not None and activation.repository is not None:
+        if activation.repository != repo.repository:
+            return False
+    if launch is not None:
+        if activation.dispatch_identity != launch.dispatch_identity:
+            return False
+        if activation.launch_receipt_ref != launch.receipt_ref:
+            return False
+        if activation.executor and launch.executor:
+            if activation.executor != launch.executor:
+                return False
+    return True
+
+
 def _latest_progress(
     snapshot: ContinuitySnapshot,
     durable_ok: bool,
     colony_ok: bool,
     provider_ok: bool,
     launch_ok: bool,
+    activation_ok: bool,
 ) -> tuple[str, str] | None:
     candidates: list[tuple[datetime, str, str]] = []
     repo = snapshot.repository
@@ -386,6 +456,11 @@ def _latest_progress(
         dt = _parse_time(launch.observed_at)
         if dt:
             candidates.append((dt, "launch_admission", launch.receipt_ref))
+    activation = snapshot.executor_activation
+    if activation_ok and activation and activation.observed_at:
+        dt = _parse_time(activation.observed_at)
+        if dt:
+            candidates.append((dt, "executor_activation", activation.activation_ref))
     if not candidates:
         return None
     dt, kind, ref = max(candidates, key=lambda item: item[0])
@@ -469,6 +544,15 @@ def inspect_continuity(snapshot: ContinuitySnapshot) -> ContinuityReport:
         and snapshot.launch_admission.workstream_id == identity.workstream_id
         and _launch_matches_repo(snapshot.launch_admission, repo)
     )
+    activation_ok = bool(
+        snapshot.executor_activation
+        and snapshot.executor_activation.workstream_id == identity.workstream_id
+        and _activation_matches(
+            snapshot.executor_activation,
+            repo,
+            snapshot.launch_admission if launch_ok else None,
+        )
+    )
     if snapshot.durable and not durable_ok:
         warnings.append("durable_state_mismatch_or_unvalidated")
     if snapshot.build_colony and not colony_ok:
@@ -477,13 +561,22 @@ def inspect_continuity(snapshot: ContinuitySnapshot) -> ContinuityReport:
         warnings.append("provider_evidence_revision_mismatch")
     if snapshot.launch_admission and not launch_ok:
         warnings.append("launch_admission_mismatch_or_unvalidated")
+    if snapshot.executor_activation and not activation_ok:
+        warnings.append("executor_activation_mismatch_or_unvalidated")
 
     infrastructure = _infrastructure(snapshot, provider_ok)
     unsatisfied = [gate for gate in snapshot.gates if not gate.satisfied]
     human_gate = next((gate for gate in unsatisfied if gate.kind is GateKind.HUMAN), None)
     external_gate = next((gate for gate in unsatisfied if gate.kind is GateKind.EXTERNAL_EVIDENCE), None)
 
-    latest = _latest_progress(snapshot, durable_ok, colony_ok, provider_ok, launch_ok)
+    latest = _latest_progress(
+        snapshot,
+        durable_ok,
+        colony_ok,
+        provider_ok,
+        launch_ok,
+        activation_ok,
+    )
     latest_exec = {"observed_at": latest[0], "ref": latest[1]} if latest else None
 
     technical_terminal = None
@@ -498,9 +591,15 @@ def inspect_continuity(snapshot: ContinuitySnapshot) -> ContinuityReport:
         or (provider_ok and snapshot.provider and snapshot.provider.state is ProviderState.FAILED and snapshot.provider.failure_scope is FailureScope.WORKLOAD)
     )
 
+    activation = snapshot.executor_activation if activation_ok else None
     active_execution = bool(
         (durable_ok and snapshot.durable and snapshot.durable.active_dispatch)
         or (provider_ok and snapshot.provider and snapshot.provider.state is ProviderState.ACTIVE)
+        or (
+            activation
+            and activation.disposition
+            is ExecutorActivationDisposition.EXECUTOR_ACCEPTED
+        )
     )
 
     verdict: DevelopmentVerdict
@@ -529,6 +628,12 @@ def inspect_continuity(snapshot: ContinuitySnapshot) -> ContinuityReport:
         LaunchDisposition.FAILED_BEFORE_LAUNCH,
     }:
         verdict = DevelopmentVerdict.FAILED
+    elif (
+        activation
+        and activation.disposition
+        is ExecutorActivationDisposition.FAILED_ACTIVATION
+    ):
+        verdict = DevelopmentVerdict.FAILED
     elif technical_terminal:
         verdict = DevelopmentVerdict.DONE_TECHNICAL
     elif active_execution:
@@ -543,6 +648,12 @@ def inspect_continuity(snapshot: ContinuitySnapshot) -> ContinuityReport:
             verdict = DevelopmentVerdict.CONVERSATION_INTERRUPTED_DEVELOPMENT_CONTINUED
         else:
             verdict = DevelopmentVerdict.DEVELOPMENT_PROGRESSING
+    elif (
+        activation
+        and activation.disposition
+        is ExecutorActivationDisposition.CONDITION_WAIT
+    ):
+        verdict = DevelopmentVerdict.CONDITION_WAIT
     elif durable_ok and snapshot.durable and snapshot.durable.admissible_next:
         if snapshot.durable.execution_expected and snapshot.durable.recovery_semantics_exhausted:
             verdict = DevelopmentVerdict.DEVELOPMENT_STALLED
@@ -591,8 +702,24 @@ def inspect_continuity(snapshot: ContinuitySnapshot) -> ContinuityReport:
         }
     elif verdict is DevelopmentVerdict.SCHEDULED_WAIT and snapshot.durable:
         blocking_gate = {"kind": "SCHEDULED", "ref": snapshot.durable.scheduled_checkpoint, "reason": "scheduled checkpoint", "frontier": snapshot.durable.current_frontier}
-    elif verdict is DevelopmentVerdict.CONDITION_WAIT and snapshot.durable:
+    elif (
+        verdict is DevelopmentVerdict.CONDITION_WAIT
+        and snapshot.durable
+        and snapshot.durable.wake_condition
+    ):
         blocking_gate = {"kind": "CONDITION", "ref": snapshot.durable.wake_condition, "reason": "observable wake condition", "frontier": snapshot.durable.current_frontier}
+    elif (
+        verdict is DevelopmentVerdict.CONDITION_WAIT
+        and activation
+        and activation.disposition
+        is ExecutorActivationDisposition.CONDITION_WAIT
+    ):
+        blocking_gate = {
+            "kind": "CONDITION",
+            "ref": activation.condition_ref,
+            "reason": activation.detail or "executor activation condition wait",
+            "frontier": activation.activation_ref,
+        }
     elif verdict is DevelopmentVerdict.FAILED:
         reason = None
         failure_ref = "failure://continuity-check"
@@ -608,6 +735,14 @@ def inspect_continuity(snapshot: ContinuitySnapshot) -> ContinuityReport:
             reason = launch.detail or launch.disposition.value
             failure_ref = launch.receipt_ref
             frontier = launch.launch_id or "execution-launch-admission"
+        if (
+            activation
+            and activation.disposition
+            is ExecutorActivationDisposition.FAILED_ACTIVATION
+        ):
+            reason = activation.detail or activation.disposition.value
+            failure_ref = activation.activation_ref
+            frontier = activation.dispatch_identity
         blocking_gate = {
             "kind": "FAILURE",
             "ref": failure_ref,

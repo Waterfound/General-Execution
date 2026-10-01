@@ -10,6 +10,7 @@ from general_execution.continuity_adapters import (
     candidate_from_mapping,
     conversation_from_mapping,
     durable_from_mapping,
+    executor_activation_from_mapping,
     gates_from_mappings,
     launch_admission_from_mapping,
     provider_from_mapping,
@@ -34,6 +35,7 @@ def main() -> int:
         build_colony=build_colony_from_mapping(data.get("build_colony")),
         provider=provider_from_mapping(data.get("provider")),
         launch_admission=launch_admission_from_mapping(data.get("launch_admission")),
+        executor_activation=executor_activation_from_mapping(data.get("executor_activation")),
         gates=gates_from_mappings(data.get("gates")),
         canonical_integration_required=bool(data.get("canonical_integration_required", True)),
     )

@@ -1,0 +1,32 @@
+{
+  "authority": {
+    "actor": "Waterfound",
+    "authority_boundary": "Bounded EAC-01 production executor adapter candidate and verification only; no release, mainnet, paid-provider expansion or authority widening.",
+    "authority_ref": "authority://waterfound/eac01-production-executor-adapter-2026-10-01",
+    "granted_scopes": [
+      "candidate_write",
+      "executor_activation"
+    ],
+    "schema_version": "ge.execution-launch-authority-binding.v1"
+  },
+  "executor": "github_actions",
+  "executor_binding": {
+    "availability": "AVAILABLE",
+    "evidence_digest": "sha256:2bb3df89b9ef952c731dccd85873ed820bddaf81c2471399e05dce5a97b9e215",
+    "evidence_ref": "adapter://general-execution/github-actions-production-v1",
+    "executor": "github_actions",
+    "schema_version": "ge.execution-launch-executor-binding.v1"
+  },
+  "known_first_artifact_ref": null,
+  "objective": "Prove production EAC-01 activation on a real GitHub Actions executor lineage without Waterfound transport after authorized order materialization.",
+  "order_ref": "order://eac01-production-github-actions-001",
+  "owner": "general_execution",
+  "repository": "Waterfound/General-Execution",
+  "required_authority_scopes": [
+    "candidate_write",
+    "executor_activation"
+  ],
+  "schema_version": "ge.execution-launch-order.v1",
+  "source_revision": null,
+  "workstream_id": "eac01-production-github-actions-001"
+}
