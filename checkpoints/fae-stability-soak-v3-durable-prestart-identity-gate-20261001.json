@@ -1,0 +1,87 @@
+{
+  "schema": "FAE_STABILITY_SOAK_V3_DURABLE_PRESTART_IDENTITY_GATE_20261001_V1",
+  "checkpoint_id": "fae-stability-soak-v3-durable-prestart-identity-gate-20261001",
+  "recorded_at": "2026-10-01T17:20:35Z",
+  "portfolio_id": "fae-stability-soak-v3-preflight-launch-readiness",
+  "portfolio_class": "SECONDARY",
+  "terminal_classification": "HUMAN_GATE",
+  "run_id": "FAE-STABILITY-SOAK-V3-20261001-001",
+  "run_started": false,
+  "frozen_operational_commit": "8e061f81d0c9ec06e10f518a9dc3a9761cf7dfb3",
+  "frozen_tree": "f990a694b3c4f5a8ac27c76168b29dd0d2c640c7",
+  "operational_ref": "freeze/stability-soak-v3-operational-8e061f81-20261001",
+  "state": {
+    "five_source_bindings_exact": true,
+    "five_services_free": true,
+    "five_services_unsuspended": true,
+    "five_auto_deploy_off": true,
+    "capacity_lower_bound_hours_at_predeploy": 745.968888889,
+    "required_hours": 540,
+    "nonsecret_prestart_configuration_applied": true,
+    "t0_utc": null,
+    "controller_live_exact_frozen": true,
+    "observer_live_exact_frozen": true,
+    "node_a_live_exact_frozen": true,
+    "node_b_live_exact_frozen": false,
+    "node_c_live_exact_frozen": false
+  },
+  "exact_runtime_evidence": {
+    "node_a_identity": "922e96fbaf612dfd77d6564f4c376b5b8a82e6ae7af193078d4baaeee5ade236",
+    "node_a_configured_peers": 2,
+    "node_a_height": 0,
+    "controller_run_started": false,
+    "observer_run_started": false,
+    "controller_failed_prestart": true,
+    "observer_failed_prestart": true
+  },
+  "genuine_gate": {
+    "code": "NODE_B_C_STABLE_SECRET_IDENTITY_MATERIAL_REQUIRED",
+    "cause_proven": true,
+    "evidence": "Both exact frozen node deploys failed at node-runtime.mjs stable_node_identity_required. Node A succeeded only after identity material was securely rematerialized in provider state.",
+    "machine_boundary": "The connected Render mutation tool does not expose secret-file creation and rejected secret-shaped private identity material; no repository-backed Render API credential path was found.",
+    "required_human_action": [
+      "Use authenticated Render Dashboard/Cloud Browser for node-b and node-c.",
+      "Create distinct stable Ed25519 identity material using a Render secret file referenced by FAE_IDENTITY_FILE or a secret FAE_NODE_IDENTITY_JSON_B64 value.",
+      "Do not publish private identity material or modify the frozen Git source.",
+      "Keep branch freeze/stability-soak-v3-operational-8e061f81-20261001, free plan, auto-deploy off, and FAE_V3_T0_UTC absent."
+    ],
+    "machine_resume_condition": "node-b and node-c exact frozen deploys are live and /v3/meta returns exact commit, distinct public identity IDs and configured_peers>=2."
+  },
+  "post_gate_sequence": [
+    "Verify node-b/node-c exact frozen deploy/source and identities.",
+    "Verify all three node identities are distinct and stable.",
+    "Restart controller and observer in prestart mode to clear failed=true without T0.",
+    "Verify three-node health, convergence and >=2 peers/node from both monitor perspectives.",
+    "Recheck >=540h zero-cost capacity immediately before any further provider action.",
+    "Execute frozen prestart admission.",
+    "Persist PREFLIGHT_VERIFIED_AND_LAUNCH_READY or exact residual gate; do not arm T0 before GREEN."
+  ],
+  "evidence_refs": [
+    "github://Waterfound/FAE-testnet/commit/b0cd500c909b7e0ef83a1ee036e54c2999455799/sovereign-forge/release/FAE_STABILITY_SOAK_V3_PRESTART_IDENTITY_GATE_20261001.json",
+    "render://deploy/dep-dav9b13ncjis73amhk0g",
+    "render://deploy/dep-dav9b1m7bikc73f91si0",
+    "render://deploy/dep-dav9b2jbc2fs738horlg",
+    "render://deploy/dep-dav9b3bbc2fs738hou50",
+    "render://deploy/dep-dav9b449v7es73flqas0",
+    "render://deploy/dep-dav9c0bbc2fs738hrp8g"
+  ],
+  "continuity_semantics": {
+    "resume_without_chat_memory": true,
+    "canonical_runtime_portfolio_head_not_reinitialized": true,
+    "unsupported_asp_transition_invented": false,
+    "prestart_failure_is_not_soak_failure": true,
+    "partial_provider_mutation_reconstructed_evidence_first": true
+  },
+  "authority_boundary": {
+    "authority_created": false,
+    "new_spend": false,
+    "paid_fallback": false,
+    "consensus": false,
+    "economics": false,
+    "dp6": false,
+    "release": false,
+    "activation_height": false,
+    "mainnet": false,
+    "frozen_source_modified": false
+  }
+}
