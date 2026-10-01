@@ -1,0 +1,82 @@
+{
+  "schema_version": "ge.eac01-production-executor-adapter-run.v1",
+  "date": "2026-10-01",
+  "frontier": "EAC-01-PRODUCTION-EXECUTOR-ADAPTER",
+  "repository": "Waterfound/General-Execution",
+  "branch": "build-colony/eac01-receipt-bound-executor-activation-001",
+  "candidate_before_closeout": "f198d3c6d3b728f4915c62960cb4dee943e32424",
+  "reference_contract_experiment_repeated": false,
+  "executor": {
+    "kind": "github_actions",
+    "adapter_id": "general-execution/github-actions-production",
+    "real_provider_run": 36826458560,
+    "run_attempts_verified": [1, 2],
+    "attempt_1_job_id": 110253127108,
+    "attempt_2_job_id": 110253298311,
+    "native_execution_ref": "github-actions://Waterfound/General-Execution/actions/runs/36826458560",
+    "dispatch_identity": "geld-c156976f1c2ce441a944372b",
+    "receipt_id": "gelr-224935fdca06f26696bfdb5e",
+    "receipt_digest": "sha256:c55383b57f76a5c12d0c8bd852b4853795e3a440c8ba936592d45a2f04c0a4b7"
+  },
+  "live_results": {
+    "first_activation_status": "executor_accepted",
+    "terminal_replay_status": "ALREADY_RECORDED",
+    "crash_recovery_status": "RECOVERED",
+    "crash_native_ref_matches": true,
+    "unique_native_execution_refs": 1,
+    "duplicate_native_launches": 0,
+    "manual_transport_steps_after_authorized_order_materialization": 0,
+    "condition_wait_status": "condition_wait",
+    "failed_activation_status": "failed_activation",
+    "failed_activation_reason": "repository_mismatch",
+    "false_executing_claims": 0,
+    "authority_created": false
+  },
+  "rerun_evidence": {
+    "same_workflow_run_id": true,
+    "attempt_1": 1,
+    "attempt_2": 2,
+    "same_dispatch_identity": true,
+    "same_native_execution_ref": true,
+    "same_candidate_sha": "f198d3c6d3b728f4915c62960cb4dee943e32424",
+    "attempt_1_artifact": {
+      "id": 11144908347,
+      "name": "eac01-production-executor-36826458560-1",
+      "digest": "sha256:c5808b9ac34e262de86d8390955d3c10f1739df26a64ea442ed8f395876f9d27"
+    },
+    "attempt_2_artifact": {
+      "id": 11145905208,
+      "name": "eac01-production-executor-36826458560-2",
+      "digest": "sha256:1e949aab1243b185b781518731d8d2d93f0a3e4afcd095efa63ec00775acc30c"
+    }
+  },
+  "candidate_verification": {
+    "main_integration_gate_run": 36826464680,
+    "execution_launch_admission_run": 36826464737,
+    "durable_terminal_verification_run": 36826464761,
+    "eac01_executor_activation_verification_run": 36826464708,
+    "all_green": true
+  },
+  "transport_boundary": {
+    "build_colony_cross_repo_probe_run": 36821388554,
+    "result": "UNAVAILABLE_WITH_CURRENT_GITHUB_TOKEN",
+    "meaning": "The repository-scoped General-Execution GITHUB_TOKEN cannot access private Waterfound/Build-Colony. A Build-Colony-specific production activation adapter cannot be claimed from this token without a separate cross-repository credential/app permission.",
+    "authority_widening_performed": false
+  },
+  "authority_boundary": {
+    "existing_authority_ref": "authority://waterfound/eac01-production-executor-adapter-2026-10-01",
+    "authority_created": false,
+    "continuity_check_actuator": false,
+    "new_meta_system_created": false,
+    "paid_provider_expansion": false,
+    "fae_consensus_economics_release_activation_mainnet_changes": false
+  },
+  "frontier_disposition": {
+    "first_real_production_executor_adapter": "PASS",
+    "generic_eac01_production_adapter_contract": "TECHNICALLY_CLOSED_FOR_GITHUB_ACTIONS",
+    "build_colony_specific_cross_repo_adapter": "CONDITION_WAIT_CREDENTIAL_CAPABILITY_GATE",
+    "project_assurance_specific_adapter": "NOT_EXECUTED",
+    "broader_autonomous_next_frontier": "NOT_ADMITTED"
+  },
+  "terminal_verdict": "EAC01_PRODUCTION_EXECUTOR_ADAPTER_GREEN__FIRST_REAL_EXECUTOR_PROVEN__BUILD_COLONY_CROSS_REPO_TRANSPORT_GATED"
+}
