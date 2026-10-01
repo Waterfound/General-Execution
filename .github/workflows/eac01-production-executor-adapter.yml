@@ -1,0 +1,44 @@
+name: EAC-01 production GitHub Actions executor adapter
+
+on:
+  push:
+    branches:
+      - "build-colony/eac01-receipt-bound-executor-activation-001"
+    paths:
+      - ".github/workflows/eac01-production-executor-adapter.yml"
+      - "evidence/continuous-improvement-intelligence/2026-10-01/eac01/production-executor-order.json"
+      - "src/general_execution/github_actions_executor_activation.py"
+      - "scripts/run_eac01_github_actions_production_pilot.py"
+      - "tests/test_github_actions_executor_activation.py"
+
+permissions:
+  contents: read
+
+jobs:
+  production-executor-adapter:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install candidate
+        run: python -m pip install -e '.[dev]' --disable-pip-version-check
+      - name: Compile production adapter
+        run: python -m compileall -q src scripts
+      - name: Focused production-adapter tests
+        run: python -m pytest tests/test_github_actions_executor_activation.py -q
+      - name: Execute real EAC-01 production adapter pilot
+        run: |
+          python scripts/run_eac01_github_actions_production_pilot.py \
+            --order evidence/continuous-improvement-intelligence/2026-10-01/eac01/production-executor-order.json \
+            --output out/eac01-production-executor-live-evidence.json
+          cat out/eac01-production-executor-live-evidence.json
+      - name: Upload live production-adapter evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: eac01-production-executor-\${{ github.run_id }}-\${{ github.run_attempt }}
+          path: out/eac01-production-executor-live-evidence.json
+          if-no-files-found: error
+          retention-days: 30
