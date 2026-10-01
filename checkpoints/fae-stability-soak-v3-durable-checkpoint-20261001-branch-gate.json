@@ -1,0 +1,96 @@
+{
+  "schema": "FAE_STABILITY_SOAK_V3_DURABLE_CHECKPOINT_20261001_V1",
+  "checkpoint_id": "fae-stability-soak-v3-durable-checkpoint-20261001-branch-gate",
+  "recorded_at": "2026-10-01T16:41:25Z",
+  "portfolio_id": "fae-stability-soak-v3-preflight-launch-readiness",
+  "portfolio_class": "SECONDARY",
+  "status": "EXTERNAL_PROVIDER_GATE",
+  "run_id": "FAE-STABILITY-SOAK-V3-20261001-001",
+  "run_started": false,
+  "frozen_operational_commit": "8e061f81d0c9ec06e10f518a9dc3a9761cf7dfb3",
+  "frozen_tree": "f990a694b3c4f5a8ac27c76168b29dd0d2c640c7",
+  "dedicated_operational_ref": "freeze/stability-soak-v3-operational-8e061f81-20261001",
+  "source_binding": {
+    "dedicated_ref_head": "8e061f81d0c9ec06e10f518a9dc3a9761cf7dfb3",
+    "dedicated_ref_identical_to_frozen": true,
+    "exact_frozen_preflight_run": 36893657646,
+    "exact_frozen_preflight_conclusion": "success"
+  },
+  "provider_observation": {
+    "workspace_id": "tea-daicggp594qs7386ck00",
+    "five_required_services_free": true,
+    "five_required_services_unsuspended": true,
+    "auto_deploy_off": true,
+    "current_render_branch": "render-wan-lab",
+    "current_render_branch_head": "ef8f6ca3838abf6ef0e882c10a31bc70a2ae6e9d",
+    "current_render_branch_equals_frozen": false,
+    "required_services_currently_deployed_from_frozen": false,
+    "current_live_deploys": {
+      "node_a": "0513006f24eb4c3249aa6a2c47240200de99bb66",
+      "node_b": "0513006f24eb4c3249aa6a2c47240200de99bb66",
+      "node_c": "0513006f24eb4c3249aa6a2c47240200de99bb66",
+      "controller": "d84399c7eaa25fea5bdad0a32146e14c8b9c7645",
+      "observer": "8a2a9ead7730521c86900210dd87ed91f686d504"
+    }
+  },
+  "zero_cost_capacity": {
+    "monthly_contract_hours": 750,
+    "required_hours": 540,
+    "conservative_remaining_lower_bound_at_observation": 588.3468475083,
+    "headroom_at_observation": 48.3468475083,
+    "checkpoint_gate": "PASS_AT_OBSERVATION_RECHECK_REQUIRED_AT_LAUNCH"
+  },
+  "prepared": {
+    "topology_urls": true,
+    "two_peer_per_node_mapping": true,
+    "controller_observer_urls": true,
+    "prestart_env_template": true,
+    "t0_absent": true,
+    "identity_contract": "three distinct stable provider-managed identities required and must be runtime-verified after frozen deploy"
+  },
+  "genuine_gate": {
+    "code": "RENDER_SERVICE_BRANCH_REF_MUTATION_REQUIRED",
+    "capability_status": "UNAVAILABLE_IN_CONNECTED_RENDER_TOOLS",
+    "authenticated_render_dashboard_profile_available": false,
+    "exact_action": "Change the Render branch/ref for all five required services from render-wan-lab to freeze/stability-soak-v3-operational-8e061f81-20261001. Do not trigger deploy until connector readback confirms the branch resolves exactly to frozen commit 8e061f81d0c9ec06e10f518a9dc3a9761cf7dfb3.",
+    "post_gate_machine_actions": [
+      "read back five service branch bindings",
+      "recheck zero-cost capacity",
+      "merge only nonsecret prestart environment variables",
+      "preserve or verify per-node identity binding",
+      "trigger manual deploys with autoDeploy off",
+      "verify each live deploy commit equals frozen SHA",
+      "verify three distinct node identities",
+      "verify >=2 configured peers per node",
+      "verify controller/observer/node health and common topology",
+      "verify run_started=false and no FAE_V3_T0_UTC",
+      "persist launch admission evidence; only then arm a future T0"
+    ]
+  },
+  "evidence_refs": [
+    "github://Waterfound/FAE-testnet/commit/95afef27a15eec8dc613348158b040e09baa26bc/sovereign-forge/release/FAE_STABILITY_SOAK_V3_CHECKPOINT_20261001.json",
+    "github-actions://Waterfound/FAE-testnet/36893657646",
+    "github://Waterfound/FAE-testnet/tree/freeze/stability-soak-v3-operational-8e061f81-20261001",
+    "render://workspace/tea-daicggp594qs7386ck00"
+  ],
+  "continuity_semantics": {
+    "resume_without_chat_memory": true,
+    "conversation_interruption_is_development_interruption": false,
+    "no_unsupported_asp_transition_invented": true,
+    "existing_runtime_portfolio_head_left_unchanged": true,
+    "reason": "The current ASP state model cannot accurately replace stale waiting_external blocker details without inventing a transition. This checkpoint binds the new evidence and precise external provider gate instead."
+  },
+  "authority_boundary": {
+    "new_spend": false,
+    "paid_fallback": false,
+    "consensus": false,
+    "economics": false,
+    "dp6": false,
+    "release": false,
+    "activation_height": false,
+    "mainnet": false,
+    "deploy_triggered": false,
+    "render_env_mutated": false,
+    "shared_git_ref_rewritten": false
+  }
+}
