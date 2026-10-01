@@ -702,7 +702,11 @@ def inspect_continuity(snapshot: ContinuitySnapshot) -> ContinuityReport:
         }
     elif verdict is DevelopmentVerdict.SCHEDULED_WAIT and snapshot.durable:
         blocking_gate = {"kind": "SCHEDULED", "ref": snapshot.durable.scheduled_checkpoint, "reason": "scheduled checkpoint", "frontier": snapshot.durable.current_frontier}
-    elif verdict is DevelopmentVerdict.CONDITION_WAIT and snapshot.durable:
+    elif (
+        verdict is DevelopmentVerdict.CONDITION_WAIT
+        and snapshot.durable
+        and snapshot.durable.wake_condition
+    ):
         blocking_gate = {"kind": "CONDITION", "ref": snapshot.durable.wake_condition, "reason": "observable wake condition", "frontier": snapshot.durable.current_frontier}
     elif (
         verdict is DevelopmentVerdict.CONDITION_WAIT
