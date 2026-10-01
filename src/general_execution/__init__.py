@@ -609,3 +609,52 @@ __all__.extend([
     "launch_order_to_dict",
     "launch_receipt_to_dict",
 ])
+
+
+# EAC-01: receipt-bound executor activation. This consumes only ADMITTED
+# ELG-01 receipts, preserves executor-native ownership, and never creates authority.
+from .executor_activation import (
+    ExecutorActivationAdapter,
+    ExecutorActivationCapability,
+    ExecutorActivationError,
+    ExecutorActivationIntent,
+    ExecutorActivationResult,
+    ExecutorActivationState,
+    NativeActivationObservation,
+    SqliteExecutorActivationStore,
+    activate_or_reconcile_executor,
+    activation_state_from_dict,
+    activation_state_to_dict,
+    begin_activation,
+    deserialize_activation_state,
+    initial_activation_state,
+    observe_activation,
+    prepare_executor_activation,
+    serialize_activation_state,
+)
+from .continuity_check import (
+    ExecutorActivationDisposition,
+    ExecutorActivationEvidence,
+)
+
+__all__.extend([
+    "ExecutorActivationAdapter",
+    "ExecutorActivationCapability",
+    "ExecutorActivationDisposition",
+    "ExecutorActivationError",
+    "ExecutorActivationEvidence",
+    "ExecutorActivationIntent",
+    "ExecutorActivationResult",
+    "ExecutorActivationState",
+    "NativeActivationObservation",
+    "SqliteExecutorActivationStore",
+    "activate_or_reconcile_executor",
+    "activation_state_from_dict",
+    "activation_state_to_dict",
+    "begin_activation",
+    "deserialize_activation_state",
+    "initial_activation_state",
+    "observe_activation",
+    "prepare_executor_activation",
+    "serialize_activation_state",
+])
