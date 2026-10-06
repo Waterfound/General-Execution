@@ -1,0 +1,30 @@
+{
+  "schema_version": "ge.system-preservation-runtime-mainline-repair-checkpoint.v1",
+  "checkpoint_id": "system-preservation-waiting-external-mainline-repair-20261006",
+  "program_id": "SYSTEM-PRESERVATION-001",
+  "current_runtime": {
+    "source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+    "manifest_last_event": "system-preservation-bootstrap-002",
+    "state_unchanged": true
+  },
+  "current_main": {
+    "revision": "8999b47cf3bd0276bf8feda24d3022f4d270e510",
+    "commits_ahead_of_runtime_pin": 161,
+    "same_bug_present_before_candidate": true
+  },
+  "verified_mainline_candidate": {
+    "branch": "repair/durable-waiting-external-metadata-main-001",
+    "verified_revision": "114cde320060d33997a731d0ae47e6c5e7879f99",
+    "evidence_revision": "c29932efa29d571617cb8d8b291025a5063d2734",
+    "verification_run": 37533734836,
+    "verification_job": 112509292095,
+    "focused_tests": 38,
+    "full_regression_tests": 564,
+    "conclusion": "success"
+  },
+  "integration_disposition": "TECHNICAL_REPAIR_READY__CANONICAL_MERGE_AND_RUNTIME_REPIN_NOT_AUTHORIZED",
+  "user_action_required_now": false,
+  "canonical_merge_performed": false,
+  "runtime_repin_performed": false,
+  "authority_created": false
+}
