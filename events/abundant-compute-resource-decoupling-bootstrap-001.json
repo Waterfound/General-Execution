@@ -1,0 +1,133 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "abundant-compute-resource-decoupling-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "abundant-compute-resource-decoupling-001",
+      "generation": 0,
+      "active": {
+        "work_id": "ACRD-06-CLOSURE",
+        "role": "active",
+        "state": "complete",
+        "objective": "Freeze the first Abundant Compute / Resource Decoupling and Temporal Compression wave at its evidence-supported software ceiling without granting canonical integration, paid-spend, provider-mutation or live-runtime authority.",
+        "active_gate": "candidate-software-ceiling-closure",
+        "next_action_ref": "terminal://acrd/001-candidate-software-ceiling-reached",
+        "source_revision": "019e2ad22f99edb18c5f2d1dd5f4ca29d33c7b86",
+        "evidence_required": [
+          "systems_abundant_compute_doctrine_candidate",
+          "general_execution_resource_admission_green",
+          "build_colony_saturation_green",
+          "abundant_saturation_rehearsal_pass",
+          "temporal_compression_green",
+          "real_build_colony_structure_run_green",
+          "continuity_check_preserved",
+          "system_preservation_preserved",
+          "zero_new_paid_spend"
+        ],
+        "authority_boundary": "Candidate closure only. No new paid spend, billing fallback, canonical merge, canonical runtime repin, provider or credential mutation, consensus/economics change, release, production or mainnet action is granted.",
+        "authority_ref": "github://Waterfound/Build-Colony/commit/10a87dbe7e20eae631ffbc852c4de80df727ead9/pilots/abundant-compute-resource-decoupling-001/PROGRAM.json",
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/Build-Colony/commit/019e2ad22f99edb18c5f2d1dd5f4ca29d33c7b86/pilots/abundant-compute-resource-decoupling-001/CLOSURE.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "ACRD-07-REAL-RESOURCE-SUBSTRATE",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "When a real resource substrate and its scarcity/cost evidence are available, verify that the resource can be classified and consumed under the Abundant Compute doctrine without creating authority, hidden paid fallback, exposure growth or continuity loss.",
+        "active_gate": "real-resource-substrate-evidence",
+        "next_action_ref": "external://acrd/real-resource-substrate-evidence",
+        "source_revision": "3f69a07b00ca3972a0861883a323d513b3da4887",
+        "evidence_required": [
+          "real_resource_identity",
+          "resource_capacity_measurement",
+          "scarcity_or_cost_envelope_evidence",
+          "paid_fallback_state",
+          "authority_envelope",
+          "system_preservation_compatibility",
+          "continuity_check_observability"
+        ],
+        "authority_boundary": "External evidence only. Measurement does not authorize new paid spend, plan changes, provider mutation, credential handling, hardware purchase, canonical integration or live routing.",
+        "authority_ref": "github://Waterfound/Build-Colony/commit/10a87dbe7e20eae631ffbc852c4de80df727ead9/pilots/abundant-compute-resource-decoupling-001/PROGRAM.json",
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/Build-Colony/commit/019e2ad22f99edb18c5f2d1dd5f4ca29d33c7b86/pilots/abundant-compute-resource-decoupling-001/CLOSURE.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [
+        {
+          "work_id": "ACRD-08-CANONICAL-INTEGRATION",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Integrate the verified doctrine and software candidates into their canonical branches only under separate explicit Waterfound integration authority and latest-main reconciliation.",
+          "active_gate": "canonical-integration-authority",
+          "next_action_ref": "authority://acrd/canonical-integration",
+          "source_revision": "019e2ad22f99edb18c5f2d1dd5f4ca29d33c7b86",
+          "evidence_required": [
+            "explicit_waterfound_integration_authority",
+            "latest_main_reconciliation",
+            "combined_verification",
+            "no_unintended_authority_or_spend_expansion"
+          ],
+          "authority_boundary": "Canonical merge is a separate Waterfound authority decision.",
+          "authority_ref": "github://Waterfound/Build-Colony/commit/10a87dbe7e20eae631ffbc852c4de80df727ead9/pilots/abundant-compute-resource-decoupling-001/PROGRAM.json",
+          "blockers": [
+            {
+              "kind": "authority",
+              "detail": "The current authorization allows candidate development and Durable Execution, but not canonical integration.",
+              "evidence_refs": [
+                "github://Waterfound/Build-Colony/commit/10a87dbe7e20eae631ffbc852c4de80df727ead9/pilots/abundant-compute-resource-decoupling-001/PROGRAM.json"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "event_received",
+            "value": "authority://acrd/canonical-integration",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/Build-Colony/commit/019e2ad22f99edb18c5f2d1dd5f4ca29d33c7b86/pilots/abundant-compute-resource-decoupling-001/CLOSURE.json",
+          "schema_version": "ge.portfolio-entry.v1"
+        },
+        {
+          "work_id": "ACRD-09-LIVE-ACTIVATION",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Activate abundant-resource admission, saturation or Temporal Compression in canonical execution paths only after canonical integration, resource evidence and separate live-activation authority.",
+          "active_gate": "live-activation-authority",
+          "next_action_ref": "authority://acrd/live-activation",
+          "source_revision": "019e2ad22f99edb18c5f2d1dd5f4ca29d33c7b86",
+          "evidence_required": [
+            "ACRD-08_complete",
+            "real_resource_substrate_evidence",
+            "explicit_live_activation_authority",
+            "runtime_repin_or_deployment_verification"
+          ],
+          "authority_boundary": "No live runtime repin, executor routing change, billing change or provider mutation is authorized by candidate closure.",
+          "authority_ref": "github://Waterfound/Build-Colony/commit/10a87dbe7e20eae631ffbc852c4de80df727ead9/pilots/abundant-compute-resource-decoupling-001/PROGRAM.json",
+          "blockers": [
+            {
+              "kind": "authority",
+              "detail": "Live activation requires canonical integration, real substrate evidence and separate Waterfound authority.",
+              "evidence_refs": [
+                "github://Waterfound/Build-Colony/commit/019e2ad22f99edb18c5f2d1dd5f4ca29d33c7b86/pilots/abundant-compute-resource-decoupling-001/CLOSURE.json"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "event_received",
+            "value": "authority://acrd/live-activation",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/Build-Colony/commit/019e2ad22f99edb18c5f2d1dd5f4ca29d33c7b86/pilots/abundant-compute-resource-decoupling-001/CLOSURE.json",
+          "schema_version": "ge.portfolio-entry.v1"
+        }
+      ],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
