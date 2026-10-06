@@ -132,3 +132,34 @@ This candidate does **not**:
 - authorize Work consumption, paid spend, merge, release, consensus/economics, physical hardware or mainnet.
 
 The intended effect is fewer repeated logins through legitimate session reuse and batching, not weaker authentication.
+
+
+## Post-login handoff
+
+A `USE_AUTH` drain plan may bind one selected provider-queue item into the existing Work-Sparse contract through `ProviderAuthQueueHandoff`.
+
+The handoff binds:
+
+- exact provider drain-plan digest;
+- exact auth-decision digest;
+- queue ID and queue-item digest;
+- resulting Work-Sparse work-item digest;
+- the original authority reference.
+
+It fixes:
+
+```text
+credentials_persisted = false
+cookies_persisted = false
+tokens_persisted = false
+authority_created = false
+execution_authorized = false
+```
+
+A human-authentication gate is provider-level, not task-level. Its durable action reference is:
+
+```text
+auth://<provider>/reauthenticate
+```
+
+After successful authentication, queued tasks can be drained through ordinary Work-Sparse routing. If an API/connector executor can satisfy the task, it remains preferred over Work. If only Work can satisfy the required capability, Work still requires its separate explicit invocation budget. Authentication success does not create Work authority.
