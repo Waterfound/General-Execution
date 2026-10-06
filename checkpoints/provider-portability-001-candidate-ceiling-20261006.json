@@ -1,0 +1,64 @@
+{
+  "schema_version": "ge.provider-portability-checkpoint.v1",
+  "checkpoint_id": "provider-portability-001-candidate-ceiling-20261006",
+  "program_id": "PPC-001",
+  "terminal_verdict": "CANDIDATE_SOFTWARE_CEILING_REACHED__DURABLY_ADMITTED",
+  "systems": {
+    "branch": "architecture/provider-portability-001",
+    "revision": "3263c7cfb3c4b3df64d7810ea88dfb1029b5816e",
+    "pull_request": 6
+  },
+  "general_execution_candidate": {
+    "branch": "feature/provider-portability-001",
+    "revision": "4a76ef3bea3a505df9a9eb6cb4e16e27002dd7b7",
+    "verification_run": 37543191020,
+    "focused_tests": "9/9 PASS",
+    "full_regression": "PASS",
+    "pull_request": 23
+  },
+  "build_colony": {
+    "branch": "colony/provider-portability-001",
+    "closure_revision": "346b14b4c1c3f5b3f28d068c212c23fc70333d44",
+    "rehearsal_run": 37543015011,
+    "closure_ci_run": 37543401465,
+    "closure_remote_pool_run": 37543401592,
+    "structure_run": 37543401511,
+    "run_id": "bc2-2e5680668347168e",
+    "manifest_digest": "1e7ee1d940bc3c949c925bdb3422e1046bb18c8cca5b5483cb6bf81a2243e5c6",
+    "pull_request": 33
+  },
+  "durable_execution": {
+    "portfolio_id": "provider-portability-001",
+    "workflow_run": 37543608072,
+    "trigger_commit": "ecb1e7ee93bcf4806b1e95a4f1eba0ce788b3755",
+    "persisted_runtime_commit": "8486eb5d4e3b6b0153c60bff9384c704bf2bb9da",
+    "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+    "state_digest": "sha256:aa9d62bd12da4293b3401d9e049e3823c41fdabb593ca6cc2f1d667ba39157eb",
+    "database_sha256": "sha256:3abfec2223ec80310e6d48539744f3d17bba57cceb789b5510fa7f6d9c709bc1",
+    "event_report_digest": "sha256:a90b88c521dbeea8eef2e91a43232eddc877ee096c54a7d8ce372232444d028b",
+    "human_required": true,
+    "requested_action_ref": "authority://provider-portability/canonical-integration"
+  },
+  "verified_properties": [
+    "minimum_provider_visible_semantics",
+    "truthful_provider_accounting",
+    "exact_internal_lineage",
+    "attempt_scoped_external_task_reference",
+    "resource_availability_fail_closed",
+    "continuation_only_across_already_authorized_resources",
+    "outside_authority_resource_rejected",
+    "provider_resource_authority_binding_verified"
+  ],
+  "remaining_frontiers": {
+    "PPC-06-CANONICAL-INTEGRATION": "AUTHORITY_GATE",
+    "PPC-07-POST-MERGE-READINESS": "BLOCKED_BY_CANONICAL_INTEGRATION",
+    "PPC-08-LIVE-ACTIVATION": "AUTHORITY_GATE_AFTER_INTEGRATION"
+  },
+  "machine_executable_frontier_remaining_under_current_authority": false,
+  "user_action_required_now": true,
+  "new_paid_spend": false,
+  "canonical_merge_authorized": false,
+  "runtime_repin_authorized": false,
+  "provider_mutation_authorized": false,
+  "authority_created": false
+}
