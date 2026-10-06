@@ -1,0 +1,126 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "system-preservation-bootstrap-002",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "system-preservation-low-exposure-002",
+      "generation": 0,
+      "active": {
+        "work_id": "SP-05-CROSS-SYSTEM-CLOSURE",
+        "role": "active",
+        "state": "complete",
+        "objective": "Freeze the first System Preservation wave at its evidence-supported software ceiling without granting canonical integration or live-system authority.",
+        "active_gate": "candidate-software-ceiling-closure",
+        "next_action_ref": "terminal://system-preservation/001-candidate-software-ceiling-reached",
+        "source_revision": "3886f854044f902c632a9445e7f56c9ca72d348a",
+        "evidence_required": [
+          "systems_doctrine_candidate_complete",
+          "durable_bootstrap_v1_success",
+          "fae_contract_green_exact_candidate",
+          "fail_closed_tests_6_of_6",
+          "ephemeral_identity_recovery_pass",
+          "no_live_behavior_path_changes"
+        ],
+        "authority_boundary": "Candidate closure only. No canonical merge, provider mutation, spending, release, consensus/economics, deployment/mainnet, or Stability Soak V3 mutation is granted.",
+        "authority_ref": "github://Waterfound/Build-Colony/commit/901e976e00a86c696b5fe18fe118edf76c71685b/pilots/system-preservation-001/PROGRAM.json",
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/Systems/commit/3886f854044f902c632a9445e7f56c9ca72d348a/architecture/SYSTEM_PRESERVATION_CANDIDATE_CLOSURE_001.md",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "SP-06-CROSS-PROVIDER-RECONSTRUCTION",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "When an isolated provider environment and protected-state channel are available, prove end-to-end reconstruction after provider loss without leaking protected identity material.",
+        "active_gate": "external-provider-loss-reconstruction",
+        "next_action_ref": "external://system-preservation/cross-provider-reconstruction",
+        "source_revision": "799dafcda97003b8d49a91cc098d370a2692bfc0",
+        "evidence_required": [
+          "provider_escape_inventory",
+          "ephemeral_identity_recovery_pass",
+          "isolated_real_provider_environment",
+          "protected_state_channel",
+          "exact_source_reconstruction",
+          "no_authority_expansion"
+        ],
+        "authority_boundary": "External evidence only; no Stability Soak V3 identities, production keys, paid fallback, release or mainnet authority.",
+        "authority_ref": "github://Waterfound/Build-Colony/commit/901e976e00a86c696b5fe18fe118edf76c71685b/pilots/system-preservation-001/PROGRAM.json",
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/ca906ba32482dc4567f4f97f1a6554cb5f30e5dc/evidence/system-preservation/FAE_SYSTEM_PRESERVATION_VERIFICATION_001.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [
+        {
+          "work_id": "SP-07-POST-SOAK-ENDPOINT-REVIEW",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Reassess default public endpoint concentration only after the Stability Soak V3 frozen execution is no longer a conflicting topology concern.",
+          "active_gate": "post-soak-endpoint-concentration-review",
+          "next_action_ref": "condition://system-preservation/stability-soak-v3-no-longer-frozen",
+          "source_revision": "799dafcda97003b8d49a91cc098d370a2692bfc0",
+          "evidence_required": [
+            "soak_v3_terminal_disposition",
+            "current_endpoint_exposure_reassessment"
+          ],
+          "authority_boundary": "No endpoint mutation before the frozen Soak V3 boundary is released.",
+          "authority_ref": "github://Waterfound/Build-Colony/commit/901e976e00a86c696b5fe18fe118edf76c71685b/pilots/system-preservation-001/PROGRAM.json",
+          "blockers": [
+            {
+              "kind": "external_dependency",
+              "detail": "Stability Soak V3 remains a frozen/gated evidence topology and must not be changed by preservation work.",
+              "evidence_refs": [
+                "github://Waterfound/FAE-testnet/commit/8e061f81d0c9ec06e10f518a9dc3a9761cf7dfb3"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "Stability Soak V3 frozen execution reaches terminal disposition and topology changes are again admissible",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/FAE-testnet/commit/ca906ba32482dc4567f4f97f1a6554cb5f30e5dc/evidence/system-preservation/FAE_SYSTEM_PRESERVATION_VERIFICATION_001.json",
+          "schema_version": "ge.portfolio-entry.v1"
+        },
+        {
+          "work_id": "SP-08-CANONICAL-INTEGRATION",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Integrate the verified preservation doctrine/candidate artifacts into canonical branches only under explicit Waterfound integration authority.",
+          "active_gate": "canonical-integration-authority",
+          "next_action_ref": "authority://system-preservation/canonical-integration",
+          "source_revision": "3886f854044f902c632a9445e7f56c9ca72d348a",
+          "evidence_required": [
+            "explicit_waterfound_merge_authority",
+            "latest_main_reconciliation",
+            "combined_verification"
+          ],
+          "authority_boundary": "Merging Systems, Build Colony or FAE preservation candidates is a separate Waterfound authority decision.",
+          "authority_ref": "github://Waterfound/Build-Colony/commit/901e976e00a86c696b5fe18fe118edf76c71685b/pilots/system-preservation-001/PROGRAM.json",
+          "blockers": [
+            {
+              "kind": "authority",
+              "detail": "Canonical integration was deliberately excluded from the current authorization.",
+              "evidence_refs": [
+                "github://Waterfound/Build-Colony/commit/901e976e00a86c696b5fe18fe118edf76c71685b/pilots/system-preservation-001/PROGRAM.json"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "event_received",
+            "value": "authority://system-preservation/canonical-integration",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/Build-Colony/commit/901e976e00a86c696b5fe18fe118edf76c71685b/pilots/system-preservation-001/PROGRAM.json",
+          "schema_version": "ge.portfolio-entry.v1"
+        }
+      ],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
