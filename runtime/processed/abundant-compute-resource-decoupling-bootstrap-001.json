@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:d6239889c45e99e084f1ca0b31b8eebc6c914642dfef165c012c88820777001a",
+  "event_id": "abundant-compute-resource-decoupling-bootstrap-001",
+  "event_report_digest": "sha256:e043b9de52d0a4cde3a75948367e3c34a9743d93bd16d404d7fc35f3c7e27215",
+  "operation": "bootstrap",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "ac29932bc179cd4676ec38fdc5ede6fd1bd03bfc"
+}

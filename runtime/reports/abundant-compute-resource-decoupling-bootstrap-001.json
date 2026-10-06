@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:d6239889c45e99e084f1ca0b31b8eebc6c914642dfef165c012c88820777001a",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "abundant-compute-resource-decoupling-bootstrap-001",
+    "human_required": false,
+    "operation": "bootstrap",
+    "portfolio_id": "abundant-compute-resource-decoupling-001",
+    "post_generation": 0,
+    "post_state_digest": "sha256:59149bb4a25ff121d62ef3c68e6e0d997430dd9c08c7dd8499a8398f0875ed14",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:59149bb4a25ff121d62ef3c68e6e0d997430dd9c08c7dd8499a8398f0875ed14",
+    "requested_action_ref": "terminal://acrd/001-candidate-software-ceiling-reached",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:e043b9de52d0a4cde3a75948367e3c34a9743d93bd16d404d7fc35f3c7e27215",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
