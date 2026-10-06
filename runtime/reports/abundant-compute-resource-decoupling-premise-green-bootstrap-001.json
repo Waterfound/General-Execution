@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:57c2c50ceb2d9391c83abd4d689cb7e52fbb807a0e5de6329c799fc6aafe2618",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "abundant-compute-resource-decoupling-premise-green-bootstrap-001",
+    "human_required": true,
+    "operation": "bootstrap",
+    "portfolio_id": "abundant-compute-resource-decoupling-002",
+    "post_generation": 0,
+    "post_state_digest": "sha256:cd6d4c1d044c871145eb0b6e1d00213445595f244b25494e18963a71ea733fba",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:cd6d4c1d044c871145eb0b6e1d00213445595f244b25494e18963a71ea733fba",
+    "requested_action_ref": "authority://acrd/canonical-integration",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:241706a4e9e58e307ea0ac93b8ae43f22ad283a2775572169fc19c78d013b856",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}

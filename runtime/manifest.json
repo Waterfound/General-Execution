@@ -1,10 +1,10 @@
 {
   "authority_created": false,
-  "database_sha256": "sha256:d6239889c45e99e084f1ca0b31b8eebc6c914642dfef165c012c88820777001a",
-  "last_event_id": "abundant-compute-resource-decoupling-bootstrap-001",
-  "last_event_report_digest": "sha256:e043b9de52d0a4cde3a75948367e3c34a9743d93bd16d404d7fc35f3c7e27215",
+  "database_sha256": "sha256:57c2c50ceb2d9391c83abd4d689cb7e52fbb807a0e5de6329c799fc6aafe2618",
+  "last_event_id": "abundant-compute-resource-decoupling-premise-green-bootstrap-001",
+  "last_event_report_digest": "sha256:241706a4e9e58e307ea0ac93b8ae43f22ad283a2775572169fc19c78d013b856",
   "last_operation": "bootstrap",
-  "last_trigger_commit": "ac29932bc179cd4676ec38fdc5ede6fd1bd03bfc",
+  "last_trigger_commit": "36223becfc974705498e89e5ce7a1361416d0395",
   "persistent_provider_trigger_enabled": true,
   "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
   "schema_version": "ge.persistent-runtime-manifest.v1"
