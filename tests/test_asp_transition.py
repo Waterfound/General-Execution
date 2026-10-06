@@ -642,3 +642,42 @@ def test_input_state_is_immutable_after_rotation():
     assert state == before
     assert state.active.work_id == "ACTIVE"
     assert state.secondary.work_id == "SECONDARY"
+
+
+def test_waiting_external_nonrotating_exit_clears_wait_metadata():
+    state = portfolio("waiting_external")
+    p = TransitionPolicy(
+        policy_id="waiting-external-exit",
+        revision="1",
+        rules=(
+            TransitionRule(
+                rule_id="01-fatal",
+                from_state="waiting_external",
+                event="fatal_failure",
+                to_state="failed",
+                next_action_ref="terminal://failed",
+                required_evidence=("fatal_evidence",),
+            ),
+        ),
+    )
+
+    result = apply_active_transition(
+        state,
+        p,
+        "fatal_failure",
+        (ev("fatal_evidence"),),
+        action_ref="artifact://observed-failure",
+        observed_at="2026-10-06T21:12:34Z",
+        summary="Waiting external candidate failed and must leave wait state cleanly",
+        canonical_refs=("github-actions://system-preservation/runtime-edge-case",),
+    )
+
+    assert state.active.state == "waiting_external"
+    assert state.active.blockers
+    assert state.active.wake_condition is not None
+    assert result.new_state.active.state == "failed"
+    assert result.new_state.active.blockers == ()
+    assert result.new_state.active.wake_condition is None
+    assert result.checkpoint.state_before == "waiting_external"
+    assert result.checkpoint.state_after == "failed"
+    assert result.checkpoint.next_transition_refs == ()
