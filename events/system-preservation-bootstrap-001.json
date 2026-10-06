@@ -1,0 +1,107 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "system-preservation-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "system-preservation-low-exposure-001",
+      "generation": 0,
+      "active": {
+        "work_id": "SP-03-FAE-EXPOSURE-AUDIT",
+        "role": "active",
+        "state": "waiting_external",
+        "objective": "Verify the evidence-bound FAE System Preservation exposure matrix and fail-closed contract on the exact isolated candidate without mutating live FAE behavior.",
+        "active_gate": "exact-candidate-preservation-contract-ci",
+        "next_action_ref": "condition://system-preservation/fae-contract-ci-pass",
+        "source_revision": "0c344fb56250d4ce12aed9458d193db2dc37e9a7",
+        "evidence_required": [
+          "FAE_SYSTEM_PRESERVATION_BASELINE_MATERIALIZED",
+          "exposure_matrix_schema_valid",
+          "fail_closed_negative_contract_tests",
+          "no_authority_created"
+        ],
+        "authority_boundary": "Candidate-only verification. No main merge, provider mutation, credential mutation, spend, consensus/economics, release, mainnet, or Stability Soak V3 mutation.",
+        "authority_ref": "github://Waterfound/General-Execution/commit/b291be0bfdadf7d20fcce2fd2b81e331e91b5495/authority/system-preservation-authority-20261006-001.json",
+        "blockers": [
+          {
+            "kind": "external_dependency",
+            "detail": "GitHub Actions run 37531610106 is verifying the exact preservation candidate.",
+            "evidence_refs": [
+              "github-actions://Waterfound/FAE-testnet/run/37531610106",
+              "github://Waterfound/FAE-testnet/commit/0c344fb56250d4ce12aed9458d193db2dc37e9a7"
+            ],
+            "schema_version": "ge.portfolio-blocker.v1"
+          }
+        ],
+        "wake_condition": {
+          "kind": "evidence_predicate_satisfied",
+          "value": "github-actions://Waterfound/FAE-testnet/run/37531610106 conclusion=success AND head_sha=0c344fb56250d4ce12aed9458d193db2dc37e9a7",
+          "schema_version": "ge.wake-condition.v1"
+        },
+        "checkpoint_ref": "github://Waterfound/Build-Colony/commit/901e976e00a86c696b5fe18fe118edf76c71685b/pilots/system-preservation-001/PROGRAM.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "SP-04-HARDENING-CANDIDATES",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Verify and refine only software-only, reversible, non-live System Preservation hardening candidates derived from the FAE audit.",
+        "active_gate": "bounded-non-live-hardening",
+        "next_action_ref": "action://system-preservation/SP-04-verify-candidates",
+        "source_revision": "0c344fb56250d4ce12aed9458d193db2dc37e9a7",
+        "evidence_required": [
+          "systems_doctrine_candidate_present",
+          "fae_exposure_audit_present",
+          "provider_escape_inventory_present",
+          "stable_identity_recovery_design_present",
+          "preservation_contract_pass"
+        ],
+        "authority_boundary": "Stop before provider/account mutation, protected-material execution, public endpoint topology change, release/mainnet, consensus/economics, or Stability Soak V3 mutation.",
+        "authority_ref": "github://Waterfound/General-Execution/commit/b291be0bfdadf7d20fcce2fd2b81e331e91b5495/authority/system-preservation-authority-20261006-001.json",
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/Systems/commit/1c43b3a41be125ba9b11210faea5839d91e8e90c/architecture/SYSTEM_PRESERVATION.md",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [
+        {
+          "work_id": "SP-05-CROSS-SYSTEM-CLOSURE",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Serialize Build Colony structure, Systems doctrine, Durable Execution evidence and FAE preservation evidence into a terminal ceiling assessment.",
+          "active_gate": "cross-system-preservation-closure",
+          "next_action_ref": "condition://system-preservation/upstream-evidence-complete",
+          "source_revision": "901e976e00a86c696b5fe18fe118edf76c71685b",
+          "evidence_required": [
+            "SP-03_verification_pass",
+            "SP-04_candidate_ceiling_assessed",
+            "durable_runtime_receipt",
+            "remaining_genuine_gates_classified"
+          ],
+          "authority_boundary": "Closure may classify and document only; canonical merges and any consequential live action remain separate authority boundaries.",
+          "authority_ref": "github://Waterfound/General-Execution/commit/b291be0bfdadf7d20fcce2fd2b81e331e91b5495/authority/system-preservation-authority-20261006-001.json",
+          "blockers": [
+            {
+              "kind": "evidence",
+              "detail": "Requires verified SP-03 contract evidence and SP-04 bounded candidate ceiling assessment.",
+              "evidence_refs": [
+                "github-actions://Waterfound/FAE-testnet/run/37531610106",
+                "github://Waterfound/Build-Colony/commit/901e976e00a86c696b5fe18fe118edf76c71685b/pilots/system-preservation-001/PROGRAM.json"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "SP-03=verified AND SP-04=ceiling_assessed",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/Build-Colony/commit/901e976e00a86c696b5fe18fe118edf76c71685b/pilots/system-preservation-001/PROGRAM.json",
+          "schema_version": "ge.portfolio-entry.v1"
+        }
+      ],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
