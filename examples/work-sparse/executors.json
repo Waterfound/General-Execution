@@ -1,0 +1,72 @@
+{
+  "executors": [
+    {
+      "schema_version": "ge.work-sparse-executor-capability.v1",
+      "executor_id": "scheduled_chatgpt",
+      "capabilities": [
+        "read_state",
+        "repo_read",
+        "monitor"
+      ],
+      "cost_rank": 5,
+      "estimated_cost_cents": 0,
+      "requires_work": false,
+      "paid": false,
+      "available": true,
+      "evidence_ref": "chatgpt-task://scheduled-controller",
+      "authority_created": false
+    },
+    {
+      "schema_version": "ge.work-sparse-executor-capability.v1",
+      "executor_id": "github_actions",
+      "capabilities": [
+        "repo_read",
+        "ci_dispatch",
+        "test_execution",
+        "artifact_evidence"
+      ],
+      "cost_rank": 10,
+      "estimated_cost_cents": 0,
+      "requires_work": false,
+      "paid": false,
+      "available": true,
+      "evidence_ref": "github-actions://Waterfound/General-Execution",
+      "authority_created": false
+    },
+    {
+      "schema_version": "ge.work-sparse-executor-capability.v1",
+      "executor_id": "build_colony_runner",
+      "capabilities": [
+        "repo_read",
+        "ci_dispatch",
+        "test_execution",
+        "artifact_evidence",
+        "parallel_candidates"
+      ],
+      "cost_rank": 20,
+      "estimated_cost_cents": 0,
+      "requires_work": false,
+      "paid": false,
+      "available": true,
+      "evidence_ref": "build-colony://runner-pool",
+      "authority_created": false
+    },
+    {
+      "schema_version": "ge.work-sparse-executor-capability.v1",
+      "executor_id": "work",
+      "capabilities": [
+        "repo_read",
+        "browser_ui",
+        "cloud_computer",
+        "multi_app"
+      ],
+      "cost_rank": 100,
+      "estimated_cost_cents": 0,
+      "requires_work": true,
+      "paid": false,
+      "available": true,
+      "evidence_ref": "chatgpt-work://scarce-capability",
+      "authority_created": false
+    }
+  ]
+}
