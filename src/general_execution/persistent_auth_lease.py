@@ -298,6 +298,7 @@ class ProviderAuthPathDecision:
     selected_lease_digest: str | None
     reasons: tuple[str, ...]
     human_interaction_required: bool
+    human_action_ref: str | None = None
     credentials_persisted: bool = False
     cookies_persisted: bool = False
     tokens_persisted: bool = False
@@ -331,6 +332,12 @@ class ProviderAuthPathDecision:
             "execution_triggered",
         ):
             _bool(getattr(self, field), field)
+        if self.human_interaction_required:
+            _nonempty(self.human_action_ref or "", "human_action_ref")
+        elif self.human_action_ref is not None:
+            raise PersistentAuthLeaseError(
+                "non-human auth path cannot carry human_action_ref"
+            )
         if self.credentials_persisted or self.cookies_persisted or self.tokens_persisted:
             raise PersistentAuthLeaseError("auth path cannot persist authentication secrets")
         if self.authority_created:
@@ -394,6 +401,11 @@ def _finalize_auth_path(
         human_interaction_required=(
             disposition == AuthPathDisposition.HUMAN_REAUTH_REQUIRED
         ),
+        human_action_ref=(
+            f"auth://{provider_id}/reauthenticate"
+            if disposition == AuthPathDisposition.HUMAN_REAUTH_REQUIRED
+            else None
+        ),
     )
     digest = sha256_digest(_auth_decision_payload(provisional))
     return ProviderAuthPathDecision(
@@ -403,6 +415,7 @@ def _finalize_auth_path(
         selected_lease_digest=provisional.selected_lease_digest,
         reasons=provisional.reasons,
         human_interaction_required=provisional.human_interaction_required,
+        human_action_ref=provisional.human_action_ref,
         decision_digest=digest,
     )
 
@@ -570,6 +583,7 @@ class ProviderDrainPlan:
     queue_depth: int
     selected_queue_ids: tuple[str, ...]
     human_interaction_required: bool
+    human_action_ref: str | None = None
     credentials_persisted: bool = False
     cookies_persisted: bool = False
     tokens_persisted: bool = False
@@ -601,6 +615,12 @@ class ProviderDrainPlan:
             "execution_triggered",
         ):
             _bool(getattr(self, field), field)
+        if self.human_interaction_required:
+            _nonempty(self.human_action_ref or "", "human_action_ref")
+        elif self.human_action_ref is not None:
+            raise PersistentAuthLeaseError(
+                "non-human drain plan cannot carry human_action_ref"
+            )
         if self.credentials_persisted or self.cookies_persisted or self.tokens_persisted:
             raise PersistentAuthLeaseError("drain plan cannot persist auth secrets")
         if self.authority_created:
@@ -681,6 +701,7 @@ def plan_provider_drain(
         queue_depth=len(relevant),
         selected_queue_ids=selected,
         human_interaction_required=auth.human_interaction_required,
+        human_action_ref=auth.human_action_ref,
     )
     digest = sha256_digest(_drain_payload(provisional))
     return ProviderDrainPlan(
@@ -690,6 +711,7 @@ def plan_provider_drain(
         queue_depth=provisional.queue_depth,
         selected_queue_ids=provisional.selected_queue_ids,
         human_interaction_required=provisional.human_interaction_required,
+        human_action_ref=provisional.human_action_ref,
         plan_digest=digest,
     )
 
