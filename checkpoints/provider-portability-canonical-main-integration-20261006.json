@@ -1,0 +1,56 @@
+{
+  "schema_version": "ge.provider-portability-canonical-integration-checkpoint.v1",
+  "checkpoint_id": "provider-portability-canonical-main-integration-20261006",
+  "verdict": "CANONICAL_MAIN_INTEGRATION_GREEN",
+  "authorization_scope": "Propagate the verified Provider Portability / Semantic Minimization stack through PRs #5/#4, #32/#31 and #22 to repository main branches, with post-merge verification only.",
+  "systems": {
+    "pr_5_merge_commit": "af3418ae21ca7f53ac030fd916c7eb12a05413e9",
+    "pr_4_main_merge_commit": "4a4f0416906d8364dc04997045f525cdef87b90f",
+    "main_tree": "2cc9b83de564660c2708bdd36ae60cdb667d888f",
+    "verified_parent_tree": "2cc9b83de564660c2708bdd36ae60cdb667d888f",
+    "tree_equivalent": true,
+    "post_merge_verification": "STRUCTURAL_EXACT_TREE_PASS"
+  },
+  "build_colony": {
+    "pr_32_merge_commit": "fd5909b3c742882fc70c2dcd4fd41050ef05390e",
+    "pr_31_main_merge_commit": "d224e40f0a2d6d5676acc9026a4da940e90826ff",
+    "main_tree": "59ea50afb6fc9b114875584d699a5345761f6557",
+    "verified_parent_tree": "59ea50afb6fc9b114875584d699a5345761f6557",
+    "tree_equivalent": true,
+    "post_merge_ci_run": 37545259115,
+    "post_merge_remote_pool_run": 37545259085,
+    "post_merge_verification": "PASS"
+  },
+  "general_execution": {
+    "pre_reconcile_main": "6d5cd33907e7277e606a2e331db80a49f9316b9d",
+    "verified_candidate_before_reconcile": "1a259f1fdc3903bf04b9b1f6167dc56a0baca982",
+    "reconciled_pr_head": "e90b30ba2a1dd9bb24dddf068b5431fd20e7f8d8",
+    "reconciled_tree": "04b6f91791c9b6ba07256007bf8de360ee5b36a4",
+    "main_merge_commit": "8cbe6e034789b0c354977095b75f395a7f1f05a7",
+    "main_tree": "04b6f91791c9b6ba07256007bf8de360ee5b36a4",
+    "tree_equivalent_to_verified_reconciled_head": true,
+    "main_integration_gate_run": 37545226337,
+    "durable_terminal_verification_run": 37545226373,
+    "post_merge_verification": "PASS",
+    "existing_waiting_external_repair_preserved": true
+  },
+  "canonical_main_heads": {
+    "Waterfound/Systems": "4a4f0416906d8364dc04997045f525cdef87b90f",
+    "Waterfound/Build-Colony": "d224e40f0a2d6d5676acc9026a4da940e90826ff",
+    "Waterfound/General-Execution": "8cbe6e034789b0c354977095b75f395a7f1f05a7"
+  },
+  "all_authorized_prs_merged": true,
+  "live_activation_performed": false,
+  "runtime_repin_performed": false,
+  "provider_mutation_performed": false,
+  "credential_mutation_performed": false,
+  "secret_creation_or_rotation_performed": false,
+  "new_paid_spend": false,
+  "billing_changed": false,
+  "new_provider_or_resource_created": false,
+  "release_performed": false,
+  "consensus_or_economics_changed": false,
+  "mainnet_changed": false,
+  "authority_expanded": false,
+  "next_genuine_gate": "authority://provider-portability/runtime-repin"
+}
