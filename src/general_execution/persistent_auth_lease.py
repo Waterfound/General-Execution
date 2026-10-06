@@ -16,6 +16,7 @@ AUTH_PATH_SCHEMA = "ge.provider-auth-path-decision.v1"
 QUEUE_ITEM_SCHEMA = "ge.provider-auth-queue-item.v1"
 QUEUE_RECORD_SCHEMA = "ge.provider-auth-queue-record.v1"
 DRAIN_PLAN_SCHEMA = "ge.provider-auth-drain-plan.v1"
+HANDOFF_SCHEMA = "ge.provider-auth-queue-handoff.v1"
 PROTOCOL_VERSION = "0.1.0"
 
 AuthSurface = Literal["connector_api", "cloud_browser"]
@@ -714,6 +715,143 @@ def plan_provider_drain(
         human_action_ref=provisional.human_action_ref,
         plan_digest=digest,
     )
+
+
+@dataclass(frozen=True, slots=True)
+class ProviderAuthQueueHandoff:
+    provider_id: str
+    plan_digest: str
+    auth_decision_digest: str
+    queue_id: str
+    queue_item_digest: str
+    work_item_digest: str
+    authority_ref: str
+    credentials_persisted: bool = False
+    cookies_persisted: bool = False
+    tokens_persisted: bool = False
+    authority_created: bool = False
+    execution_authorized: bool = False
+    protocol_version: str = PROTOCOL_VERSION
+    schema_version: str = HANDOFF_SCHEMA
+    handoff_digest: str = ""
+
+    def __post_init__(self) -> None:
+        _nonempty(self.provider_id, "provider_id")
+        for field in (
+            "plan_digest",
+            "auth_decision_digest",
+            "queue_item_digest",
+            "work_item_digest",
+        ):
+            _digest(getattr(self, field), field)
+        _nonempty(self.queue_id, "queue_id")
+        _nonempty(self.authority_ref, "authority_ref")
+        for field in (
+            "credentials_persisted",
+            "cookies_persisted",
+            "tokens_persisted",
+            "authority_created",
+            "execution_authorized",
+        ):
+            _bool(getattr(self, field), field)
+        if self.credentials_persisted or self.cookies_persisted or self.tokens_persisted:
+            raise PersistentAuthLeaseError("auth handoff cannot persist auth secrets")
+        if self.authority_created:
+            raise PersistentAuthLeaseError("auth handoff cannot create authority")
+        if self.execution_authorized:
+            raise PersistentAuthLeaseError("auth handoff cannot authorize execution")
+
+    @property
+    def digest(self) -> str:
+        return self.handoff_digest
+
+
+def _handoff_payload(handoff: ProviderAuthQueueHandoff) -> dict[str, Any]:
+    payload = _jsonable(handoff)
+    payload.pop("handoff_digest", None)
+    return payload
+
+
+def auth_handoff_to_dict(handoff: ProviderAuthQueueHandoff) -> dict[str, Any]:
+    return {**_handoff_payload(handoff), "handoff_digest": handoff.handoff_digest}
+
+
+def prepare_provider_queue_handoff(
+    plan: ProviderDrainPlan,
+    queued_items: tuple[ProviderAuthQueueItem, ...],
+    *,
+    queue_id: str | None = None,
+):
+    """Bind one auth-approved queue item to the existing Work-Sparse work contract.
+
+    This is a recommendation/admission handoff only. It never dispatches the
+    returned work item or creates execution authority.
+    """
+
+    if plan.disposition != "USE_AUTH" or not plan.selected_queue_ids:
+        raise PersistentAuthLeaseError(
+            "provider queue handoff requires a USE_AUTH plan with selected work"
+        )
+    selected_id = queue_id or plan.selected_queue_ids[0]
+    if selected_id not in plan.selected_queue_ids:
+        raise PersistentAuthLeaseError("queue_id is not selected by drain plan")
+    matches = [item for item in queued_items if item.queue_id == selected_id]
+    if len(matches) != 1:
+        raise PersistentAuthLeaseError("selected provider queue item is missing or duplicated")
+    item = matches[0]
+    if item.provider_id != plan.provider_id:
+        raise PersistentAuthLeaseError("selected queue item provider mismatch")
+
+    from .work_sparse_unattended import UnattendedWorkItem
+
+    work = UnattendedWorkItem(
+        work_id=item.work_id,
+        objective=f"Continue provider-authenticated queued work {item.work_id}",
+        repository=item.repository,
+        source_revision=item.source_revision,
+        authority_ref=item.authority_ref,
+        required_capabilities=item.required_capabilities,
+        requested_actions=item.requested_actions,
+    )
+    provisional = ProviderAuthQueueHandoff(
+        provider_id=item.provider_id,
+        plan_digest=plan.plan_digest,
+        auth_decision_digest=plan.auth_decision_digest,
+        queue_id=item.queue_id,
+        queue_item_digest=item.digest,
+        work_item_digest=work.digest,
+        authority_ref=item.authority_ref,
+    )
+    digest = sha256_digest(_handoff_payload(provisional))
+    handoff = ProviderAuthQueueHandoff(
+        provider_id=provisional.provider_id,
+        plan_digest=provisional.plan_digest,
+        auth_decision_digest=provisional.auth_decision_digest,
+        queue_id=provisional.queue_id,
+        queue_item_digest=provisional.queue_item_digest,
+        work_item_digest=provisional.work_item_digest,
+        authority_ref=provisional.authority_ref,
+        handoff_digest=digest,
+    )
+    return handoff, work
+
+
+def verify_provider_queue_handoff(
+    plan: ProviderDrainPlan,
+    queued_items: tuple[ProviderAuthQueueItem, ...],
+    handoff: dict[str, Any],
+    *,
+    queue_id: str | None = None,
+) -> bool:
+    try:
+        expected, _ = prepare_provider_queue_handoff(
+            plan,
+            queued_items,
+            queue_id=queue_id,
+        )
+    except (PersistentAuthLeaseError, TypeError, ValueError):
+        return False
+    return auth_handoff_to_dict(expected) == handoff
 
 
 def auth_lease_to_dict(lease: ProviderAuthLease) -> dict[str, Any]:
