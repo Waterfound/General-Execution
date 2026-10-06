@@ -1,0 +1,41 @@
+{
+  "schema_version": "ge.provider-portability-live-resources.v1",
+  "activation_id": "provider-portability-live-001",
+  "authority_ref": "authority://waterfound/provider-portability/live-activation-20261006",
+  "runtime_source_revision": "8cbe6e034789b0c354977095b75f395a7f1f05a7",
+  "resources": [
+    {
+      "resource_id": "ga-general-execution",
+      "provider_id": "github",
+      "disposition": "available",
+      "capabilities": ["artifact_evidence","repo_read","test_execution"],
+      "billing_scope_ref": "github-actions://Waterfound/General-Execution",
+      "authority_ref": "authority://waterfound/provider-portability/live-activation-20261006",
+      "admission_digest": "sha256:2bb3df89b9ef952c731dccd85873ed820bddaf81c2471399e05dce5a97b9e215",
+      "evidence_refs": [
+        "github-actions://Waterfound/General-Execution/actions/runs/36826458560",
+        "adapter://general-execution/github-actions-production-v1"
+      ]
+    },
+    {
+      "resource_id": "build-colony-cross-repo",
+      "provider_id": "github",
+      "disposition": "unavailable",
+      "capabilities": ["artifact_evidence","parallel_candidates","repo_read","test_execution"],
+      "billing_scope_ref": "github-actions://Waterfound/Build-Colony",
+      "authority_ref": "authority://waterfound/provider-portability/live-activation-20261006",
+      "admission_digest": "sha256:c5808b9ac34e262de86d8390955d3c10f1739df26a64ea442ed8f395876f9d27",
+      "evidence_refs": [
+        "evidence://eac01/build-colony-cross-repo-credential-capability-gate"
+      ]
+    }
+  ],
+  "excluded_resources": [
+    {
+      "resource_id": "work",
+      "reason": "explicit_work_budget_zero"
+    }
+  ],
+  "max_paid_spend_cents": 0,
+  "authority_created": false
+}
