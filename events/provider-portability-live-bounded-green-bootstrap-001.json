@@ -1,0 +1,96 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "provider-portability-live-bounded-green-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "provider-portability-004",
+      "generation": 0,
+      "active": {
+        "work_id": "PPC-12-LIVE-ACTIVATION",
+        "role": "active",
+        "state": "complete",
+        "objective": "Record bounded Provider Portability live activation over the existing already-authorized GitHub Actions resource with truthful attribution, minimum provider-visible semantics, exact internal lineage and fail-closed routing.",
+        "active_gate": "bounded-live-activation",
+        "next_action_ref": "terminal://provider-portability/live-bounded-green",
+        "source_revision": "8cbe6e034789b0c354977095b75f395a7f1f05a7",
+        "evidence_required": [
+          "live_router_run_37546936003_green",
+          "native_execution_ref_bound",
+          "minimum_provider_visible_semantics_pass",
+          "truthful_attribution_pass",
+          "exact_internal_lineage_pass",
+          "fail_closed_no_eligible_resource_pass",
+          "system_preservation_pass",
+          "continuity_check_receipt_pass"
+        ],
+        "authority_boundary": "Bounded live activation is complete. No provider, credential, billing, identity or resource mutation and no new spend were authorized or performed.",
+        "authority_ref": "authority://waterfound/provider-portability/live-activation-20261006",
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/General-Execution/commit/14ba6e2c2c34fa841f83d2f4306c102af6db45f1/checkpoints/provider-portability-live-bounded-green-20261006.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "PPC-13-LIVE-OBSERVATION",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Observe future bounded Provider Portability receipts read-only and detect drift in resource eligibility, attribution, lineage or authority boundaries.",
+        "active_gate": "bounded-live-observation",
+        "next_action_ref": "action://provider-portability/observe-existing-live-receipts",
+        "source_revision": "8cbe6e034789b0c354977095b75f395a7f1f05a7",
+        "evidence_required": [
+          "existing_live_receipts_only",
+          "no_resource_pool_expansion",
+          "no_provider_or_credential_mutation",
+          "no_paid_spend"
+        ],
+        "authority_boundary": "Read-only observation only; live resource-pool expansion is not implied.",
+        "authority_ref": "authority://waterfound/provider-portability/live-activation-20261006",
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/General-Execution/commit/14ba6e2c2c34fa841f83d2f4306c102af6db45f1/checkpoints/provider-portability-live-bounded-green-20261006.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [
+        {
+          "work_id": "PPC-14-ADDITIONAL-RESOURCE-POOL",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Admit an additional provider-portable live resource only when it independently satisfies existing authority, capability, attribution, evidence and zero-spend boundaries.",
+          "active_gate": "additional-resource-evidence",
+          "next_action_ref": "evidence://provider-portability/additional-resource-eligible",
+          "source_revision": "8cbe6e034789b0c354977095b75f395a7f1f05a7",
+          "evidence_required": [
+            "independently_authorized_resource",
+            "production_adapter_evidence",
+            "truthful_attribution",
+            "no_new_paid_spend",
+            "no_credential_mutation"
+          ],
+          "authority_boundary": "No new account, identity, credential mutation, billing change, provider creation or paid resource is authorized.",
+          "authority_ref": "authority://waterfound/provider-portability/live-activation-20261006",
+          "blockers": [
+            {
+              "kind": "infrastructure",
+              "detail": "The existing Build Colony cross-repository adapter remains unavailable because its previously observed credential/capability gate is unresolved.",
+              "evidence_refs": [
+                "github://Waterfound/General-Execution/evidence/continuous-improvement-intelligence/2026-10-01/eac01/production-executor-adapter-run.json"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "provider-portability-additional-resource-eligible",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/General-Execution/commit/14ba6e2c2c34fa841f83d2f4306c102af6db45f1/checkpoints/provider-portability-live-bounded-green-20261006.json",
+          "schema_version": "ge.portfolio-entry.v1"
+        }
+      ],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
