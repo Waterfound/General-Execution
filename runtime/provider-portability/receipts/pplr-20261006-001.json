@@ -1,0 +1,46 @@
+{
+  "activation_id": "provider-portability-live-001",
+  "activation_status": "executor_accepted",
+  "authority_created": false,
+  "billing_changed": false,
+  "billing_scope_ref": "github-actions://Waterfound/General-Execution",
+  "continuity_check_receipt": "PASS",
+  "credential_mutated": false,
+  "exact_internal_lineage": "PASS",
+  "fail_closed_no_eligible_resource": "PASS",
+  "identity_created": false,
+  "internal_lineage_digest": "sha256:eba469f2624df32cde31ae2ca07192d98111f3892435e951ec56ab5dd0041bb7",
+  "launch_receipt_digest": "sha256:d65e9c206d01119d563992de20b78d2cd54ef7cd3678d3b2795214d7c368218a",
+  "minimum_provider_visible_semantics": "PASS",
+  "native_execution_ref": "github-actions://Waterfound/General-Execution/actions/runs/37546936003",
+  "new_paid_spend_cents": 0,
+  "new_resource_created": false,
+  "provider_actor": "Waterfound",
+  "provider_binding_digest": "sha256:8ab31f757a3f3dd2a7b0ed57fee924afee433497f7f1e3bd77cac8a1207d0c3c",
+  "provider_envelope": {
+    "billing_scope_ref": "github-actions://Waterfound/General-Execution",
+    "input_artifact_digests": [
+      "sha256:79efe6f318883217c69b8ff04bd6b3f4a249fd6e7f6bebb12f4834b95b18b99f"
+    ],
+    "max_runtime_seconds": 300,
+    "output_contract_digest": "sha256:7a14ea04b333d014dcd56f421944d2b582d358e9d6f3ffde27b898b5b266bc10",
+    "protocol_version": "0.1.0",
+    "provider_task_ref": "pt-cc8b40906fd3d29b86fc4362",
+    "required_capabilities": [
+      "test_execution"
+    ],
+    "resource_id": "ga-general-execution",
+    "schema_version": "ge.provider-task-envelope.v1"
+  },
+  "provider_envelope_digest": "sha256:36566e9a9fc23c5e2c9c221e00ac3300c18b9587a5f22e28d5f704dc2efd519b",
+  "provider_mutated": false,
+  "request_id": "pplr-20261006-001",
+  "request_sha256": "sha256:d754080c520723dbde93404635dde5de02726090c54ad6878a70d9618fd0a920",
+  "route_decision_digest": "sha256:cd84317f3501d0fd4f473cc768caf96c3a9178875169fada32b0fe0150c26b89",
+  "runtime_source_revision": "8cbe6e034789b0c354977095b75f395a7f1f05a7",
+  "schema_version": "ge.provider-portability-live-receipt.v1",
+  "selected_provider_id": "github",
+  "selected_resource_id": "ga-general-execution",
+  "system_preservation": "PASS",
+  "truthful_attribution": "PASS"
+}

@@ -1,0 +1,8 @@
+{
+  "authority_created": false,
+  "receipt_ref": "runtime/provider-portability/receipts/pplr-20261006-001.json",
+  "request_id": "pplr-20261006-001",
+  "request_sha256": "sha256:d754080c520723dbde93404635dde5de02726090c54ad6878a70d9618fd0a920",
+  "runtime_source_revision": "8cbe6e034789b0c354977095b75f395a7f1f05a7",
+  "schema_version": "ge.provider-portability-live-processed.v1"
+}
