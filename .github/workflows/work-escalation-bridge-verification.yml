@@ -42,6 +42,29 @@ jobs:
       - name: Focused Work escalation adversarial bank
         run: python -m pytest tests/test_work_escalation_bridge.py -q
 
+      - name: Run restart-safe Work escalation rehearsal
+        run: |
+          python scripts/run_work_escalation_bridge_rehearsal.py --output /tmp/work-escalation-rehearsal
+          cat /tmp/work-escalation-rehearsal/report.json
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/work-escalation-rehearsal/report.json'))
+          assert d['status']=='PASS_NOT_REAL_WORK', d
+          assert d['route_selected_executor']=='work', d
+          assert d['work_required'] is True, d
+          assert d['budget_slot']==1, d
+          assert d['restart_recovered_same_slot'] is True, d
+          assert d['reauth_action_ref']=='auth://vercel/reauthenticate', d
+          assert d['provider_observation_simulated'] is True, d
+          assert d['real_work_launched'] is False, d
+          assert d['authority_created'] is False, d
+          assert d['pre_platform_execution_triggered'] is False, d
+          assert d['terminal_disposition']=='CONTROL_PLANE_PASS__REAL_WORK_PLATFORM_ACTIVATION_CAPABILITY_EXTERNAL_GATE', d
+          docs=Path('docs/work-escalation-bridge.md').read_text()
+          assert 'PLATFORM_ACTIVATION_CAPABILITY_GATE' in docs
+          assert 'The bridge does not itself call or emulate ChatGPT Work.' in docs
+          PY
+
       - name: Full General Execution regression
         run: python -m pytest -q
 
@@ -56,7 +79,7 @@ jobs:
               'durable Work invocation budget exhausted',
               'execution_triggered: bool = False',
               'authority_created: bool = False',
-              'external platform adapter',
+              'external Work adapter',
               'HUMAN_REAUTH_REQUIRED',
               'auth://',
               'SqliteWorkEscalationStore',
