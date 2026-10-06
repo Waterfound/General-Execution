@@ -1,0 +1,39 @@
+{
+  "schema_version": "ge.system-preservation-closure-checkpoint.v1",
+  "checkpoint_id": "system-preservation-v2-closure-20261006",
+  "current_portfolio_id": "system-preservation-low-exposure-002",
+  "current_portfolio_status": "CANDIDATE_SOFTWARE_CEILING_REACHED",
+  "current_runtime_evidence": {
+    "workflow_run": 37532789245,
+    "trigger_commit": "994eefecf3d1f62d32183d86db4bf779d80c273c",
+    "state_digest": "sha256:31ec2a79bf788c884c3d20fd96951314cbe034714332b3c8855c5e3f42f67166",
+    "database_sha256": "sha256:28769359b462c6b5dc0fec6f8540eb257e4cad2a61511018f6086a45aa2a99f5",
+    "event_report_digest": "sha256:7302f9fde2921cc53c2592beb3c5defb1fae283fd1c44f2784339e48dc0442a4",
+    "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+    "human_required": false,
+    "authority_created": false
+  },
+  "supersedes_for_operational_reconstruction": {
+    "portfolio_id": "system-preservation-low-exposure-001",
+    "reason": "v1 bound an obsolete exact FAE candidate and exposed a fail-closed waiting_external transition edge case; its generation-0 state remains historical evidence only",
+    "reconciliation_checkpoint": "checkpoints/system-preservation-v1-reconciliation-20261006.json"
+  },
+  "candidate_evidence": {
+    "systems_branch": "doctrine/system-preservation-low-exposure-001",
+    "systems_closure_revision": "14a82ebdff2be99d177bd011a0a6b835c43f55b9",
+    "build_colony_branch": "colony/system-preservation-001",
+    "build_colony_status_revision": "7ab153fce5a42911cab5fd39cbea7d07d50eb925",
+    "fae_branch": "colony/fae-system-preservation-audit-001",
+    "fae_verified_revision": "799dafcda97003b8d49a91cc098d370a2692bfc0",
+    "fae_evidence_revision": "ca906ba32482dc4567f4f97f1a6554cb5f30e5dc",
+    "fae_ci_run": 37532498425
+  },
+  "remaining_frontiers": {
+    "cross_provider_reconstruction": "EXTERNAL_EVIDENCE",
+    "post_soak_endpoint_review": "CONDITION_WAIT",
+    "canonical_integration": "AUTHORITY_GATE"
+  },
+  "user_action_required_now": false,
+  "stability_soak_v3_mutated": false,
+  "new_spend": false
+}
