@@ -1,0 +1,95 @@
+name: Runtime repin reconstruction smoke
+
+on:
+  push:
+    branches:
+      - runtime/durable-asp-control
+    paths:
+      - ".github/workflows/runtime-repin-reconstruction-smoke.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  reconstruct:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Materialize exact pinned source
+        run: |
+          git fetch origin main
+          git cat-file -e 8cbe6e034789b0c354977095b75f395a7f1f05a7^{commit}
+          git worktree add --detach /tmp/runtime-src 8cbe6e034789b0c354977095b75f395a7f1f05a7
+          cd /tmp/runtime-src
+          python -m pip install -e '.[dev]' --disable-pip-version-check
+          python -m compileall -q src scripts
+      - name: Verify pinned contracts
+        run: |
+          cd /tmp/runtime-src
+          python -m pytest tests/test_persistent_runtime.py tests/test_provider_portability.py -q
+      - name: Reconstruct persisted runtime state read-only
+        run: |
+          base64 --decode runtime/state.sqlite.b64 > /tmp/runtime.db
+          PYTHONPATH=/tmp/runtime-src/src python - <<'PY'
+          import json
+          from general_execution.portfolio_persistence import SqlitePortfolioHeadStore, recover_portfolio_after_restart
+
+          target="8cbe6e034789b0c354977095b75f395a7f1f05a7"
+          manifest=json.load(open("runtime/manifest.json"))
+          processed=json.load(open("runtime/processed/provider-portability-runtime-repin-smoke-bootstrap-001.json"))
+          report=json.load(open("runtime/reports/provider-portability-runtime-repin-smoke-bootstrap-001.json"))
+
+          assert manifest["runtime_source_revision"]==target
+          assert processed["runtime_source_revision"]==target
+          assert manifest["authority_created"] is False
+          assert processed["database_sha256"]==manifest["database_sha256"]==report["database_sha256"]
+          assert processed["event_report_digest"]==manifest["last_event_report_digest"]==report["event_report_digest"]
+          assert report["event_report"]["status"]=="bootstrapped"
+          assert report["event_report"]["human_required"] is False
+
+          store=SqlitePortfolioHeadStore("/tmp/runtime.db")
+
+          smoke, smoke_cp, _=recover_portfolio_after_restart(
+              store,"provider-portability-runtime-repin-smoke-001"
+          )
+          assert smoke.generation==0
+          assert smoke.active.state=="ready"
+          assert smoke.active.source_revision==target
+          assert smoke.active.next_action_ref=="terminal://provider-portability/runtime-repin-smoke-verified"
+          assert smoke_cp is None
+
+          ppc, ppc_cp, _=recover_portfolio_after_restart(
+              store,"provider-portability-002"
+          )
+          assert ppc.generation==0
+          assert ppc.active.state=="human_gate"
+          assert ppc.active.source_revision==target
+          assert ppc.active.next_action_ref=="authority://provider-portability/runtime-repin"
+          assert ppc_cp is None
+
+          print("POST_REPIN_RECONSTRUCTION_PASS")
+          print("smoke_state_digest",smoke.digest)
+          print("ppc_state_digest",ppc.digest)
+          print("database_sha256",manifest["database_sha256"])
+          PY
+      - name: Verify operational boundary remains inert
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          text=Path(".github/workflows/durable-runtime-control.yml").read_text()
+          assert 'PERSISTENT_RUNTIME_REVISION: 8cbe6e034789b0c354977095b75f395a7f1f05a7' in text
+          assert '"events/*.json"' in text
+          assert '"authority/*.json"' not in text
+          assert 'test "$GITHUB_ACTOR" = "Waterfound"' in text
+          assert "persistent_provider_trigger_enabled" in text
+          assert "authority_created" in text
+          assert "production" not in text.lower()
+          assert "release" not in text.lower()
+          print("POST_REPIN_OPERATIONAL_BOUNDARY_PASS")
+          PY
