@@ -1,0 +1,61 @@
+{
+  "schema_version": "ge.system-preservation-integration-preparation-checkpoint.v1",
+  "checkpoint_id": "system-preservation-integration-preparation-20261006",
+  "recorded_at": "2026-10-06T21:30:00Z",
+  "portfolio_id": "system-preservation-low-exposure-002",
+  "portfolio_terminal_state": "CANDIDATE_SOFTWARE_CEILING_REACHED",
+  "durable_state_digest": "sha256:31ec2a79bf788c884c3d20fd96951314cbe034714332b3c8855c5e3f42f67166",
+  "fae_current_exact_head": {
+    "revision": "61550d5f5e99d819ad256295ea050d752b5b6bf2",
+    "workflow_run": 37533762324,
+    "conclusion": "success",
+    "contract": "PASS",
+    "fail_closed_tests": "PASS",
+    "stable_identity_recovery": "PASS",
+    "live_behavior_changed": false,
+    "stability_soak_v3_mutated": false
+  },
+  "draft_integration_candidates": [
+    {
+      "repository": "Waterfound/Systems",
+      "pull_request": 4,
+      "head": "doctrine/system-preservation-low-exposure-001",
+      "draft": true,
+      "merge_authorized": false
+    },
+    {
+      "repository": "Waterfound/Build-Colony",
+      "pull_request": 31,
+      "head": "colony/system-preservation-001",
+      "draft": true,
+      "merge_authorized": false
+    },
+    {
+      "repository": "Waterfound/FAE-testnet",
+      "pull_request": 281,
+      "head": "colony/fae-system-preservation-audit-001",
+      "draft": true,
+      "merge_authorized": false
+    },
+    {
+      "repository": "Waterfound/General-Execution",
+      "pull_request": 21,
+      "head": "repair/durable-waiting-external-metadata-main-001",
+      "draft": true,
+      "merge_authorized": false,
+      "runtime_repin_authorized": false
+    }
+  ],
+  "remaining_frontiers": {
+    "SP-06-CROSS-PROVIDER-RECONSTRUCTION": "EXTERNAL_EVIDENCE",
+    "SP-07-POST-SOAK-ENDPOINT-REVIEW": "CONDITION_WAIT",
+    "SP-08-CANONICAL-INTEGRATION": "AUTHORITY_GATE"
+  },
+  "machine_executable_frontier_remaining_now": false,
+  "user_action_required_now": false,
+  "new_spend": false,
+  "consensus_changed": false,
+  "economics_changed": false,
+  "release_or_mainnet_changed": false,
+  "authority_created": false
+}
