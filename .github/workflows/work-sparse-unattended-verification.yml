@@ -10,6 +10,7 @@ on:
       - tests/test_work_sparse_unattended.py
       - docs/work-sparse-unattended-execution.md
       - examples/work-sparse/**
+      - evidence/work-sparse-unattended/**
       - .github/workflows/work-sparse-unattended-verification.yml
   pull_request:
     paths:
@@ -18,6 +19,7 @@ on:
       - tests/test_work_sparse_unattended.py
       - docs/work-sparse-unattended-execution.md
       - examples/work-sparse/**
+      - evidence/work-sparse-unattended/**
       - .github/workflows/work-sparse-unattended-verification.yml
 
 permissions:
