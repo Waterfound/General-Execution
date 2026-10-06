@@ -1,0 +1,7 @@
+{
+  "schema_version": "ge.provider-portability-live-request.v1",
+  "request_id": "pplr-20261006-001",
+  "required_capabilities": ["test_execution"],
+  "max_runtime_seconds": 300,
+  "dispatch_nonce": "d001"
+}
