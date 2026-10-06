@@ -1,0 +1,58 @@
+{
+  "schema_version": "ge.provider-portability-post-merge-checkpoint.v1",
+  "checkpoint_id": "provider-portability-authorized-pr-merges-20261006",
+  "authorization_scope": "Systems PR #6, Build Colony PR #33 and General Execution PR #23 at the verified heads, plus post-merge verification only.",
+  "merged_pull_requests": [
+    {
+      "repository": "Waterfound/Systems",
+      "pr": 6,
+      "verified_head": "f2aa3615859306ac3807bf902cce17f6ca0f5f9b",
+      "merge_commit": "476dd4acf8a5fbdcbc1a4e0b5b7aeba7373ddb60",
+      "base": "doctrine/abundant-compute-resource-decoupling-001",
+      "post_merge_verification": "STRUCTURAL_BINDING_PASS"
+    },
+    {
+      "repository": "Waterfound/Build-Colony",
+      "pr": 33,
+      "verified_head": "346b14b4c1c3f5b3f28d068c212c23fc70333d44",
+      "merge_commit": "99a9bbbb2212d7046262845b5930e7b7c01369f9",
+      "base": "colony/abundant-compute-resource-decoupling-001",
+      "post_merge_ci_run": 37544498534,
+      "post_merge_remote_pool_run": 37544498571,
+      "post_merge_verification": "PASS"
+    },
+    {
+      "repository": "Waterfound/General-Execution",
+      "pr": 23,
+      "verified_head": "4a76ef3bea3a505df9a9eb6cb4e16e27002dd7b7",
+      "merge_commit": "1a259f1fdc3903bf04b9b1f6167dc56a0baca982",
+      "base": "feature/abundant-compute-resource-decoupling-001",
+      "durable_terminal_verification_run": 37544513486,
+      "main_integration_gate_run": 37544513489,
+      "post_merge_verification": "PASS"
+    }
+  ],
+  "structural_verification": {
+    "systems_merge_contains_only_expected_provider_portability_delta_relative_to_parent": true,
+    "build_colony_merge_contains_only_expected_provider_portability_delta_relative_to_parent": true,
+    "general_execution_merge_contains_only_expected_provider_portability_delta_relative_to_parent": true,
+    "merged_provider_portability_files_match_verified_content": true
+  },
+  "canonical_main_disposition": {
+    "provider_portability_prs_merged_into_parent_candidates": true,
+    "provider_portability_present_on_repository_main": false,
+    "reason": "Parent candidate PRs remain unmerged and were not included in the authorization.",
+    "parent_prs": {
+      "systems": 5,
+      "build_colony": 32,
+      "general_execution": 22
+    },
+    "parent_prs_merge_authorized": false
+  },
+  "runtime_repin_performed": false,
+  "live_activation_performed": false,
+  "provider_mutation_performed": false,
+  "credential_mutation_performed": false,
+  "new_paid_spend": false,
+  "authority_expanded": false
+}
