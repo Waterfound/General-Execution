@@ -83,6 +83,9 @@ jobs:
               'authority_created: bool = False',
               'execution_triggered: bool = False',
               'probe_before_human_reauthentication',
+              'ProviderAuthQueueHandoff',
+              'auth://{provider_id}/reauthenticate',
+              'execution_authorized: bool = False',
               'SqliteProviderAuthStateStore',
           ]
           for item in required:
