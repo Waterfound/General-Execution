@@ -1,0 +1,32 @@
+{
+  "schema_version": "ge.system-preservation-runtime-repair-checkpoint.v1",
+  "checkpoint_id": "system-preservation-waiting-external-repair-20261006",
+  "program_id": "SYSTEM-PRESERVATION-001",
+  "discovered_by": {
+    "portfolio_id": "system-preservation-low-exposure-001",
+    "failed_transition_run": 37532187895,
+    "disposition": "FAIL_CLOSED_NO_STATE_MUTATION"
+  },
+  "candidate": {
+    "repository": "Waterfound/General-Execution",
+    "branch": "repair/durable-waiting-external-metadata-001",
+    "base_runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+    "verified_revision": "efb1c77582fda4c15c704b3b529f8cbd1bab1bbc",
+    "evidence_revision": "bfe35aad0cd795bd72b40f6bd0fa49500d3961ae",
+    "verification_run": 37533395153,
+    "verification_job": 112508145520,
+    "conclusion": "success",
+    "focused_tests": 38,
+    "full_regression_tests": 389,
+    "boundary_audit": "PASS"
+  },
+  "repair_semantics": "When a non-rotating Active transition leaves waiting_external for a non-waiting state, clear stale external blockers and wake_condition. No transition policy or authority semantics change.",
+  "durable_runtime_current_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+  "canonical_runtime_repin_performed": false,
+  "canonical_runtime_repin_authorized": false,
+  "current_portfolio_id": "system-preservation-low-exposure-002",
+  "current_portfolio_state_unchanged": true,
+  "user_action_required_now": false,
+  "next_gate": "AUTHORITY_GATE_FOR_CANONICAL_RUNTIME_INTEGRATION_OR_REPIN",
+  "authority_created": false
+}
