@@ -1,0 +1,103 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "predictive-sovereign-execution-candidate-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "predictive-sovereign-execution-001",
+      "generation": 0,
+      "active": {
+        "work_id": "PSE-08-CANONICAL-INTEGRATION",
+        "role": "active",
+        "state": "human_gate",
+        "objective": "Integrate the verified Predictive & Sovereign Execution candidates into canonical branches only under explicit Waterfound integration approval.",
+        "active_gate": "canonical-integration-approval",
+        "next_action_ref": "authority://predictive-sovereign/canonical-integration",
+        "source_revision": "7c70aca33906cc26e316ac15141018e505eaaa15",
+        "evidence_required": [
+          "systems_pr_7_mergeable",
+          "build_colony_pr_34_mergeable",
+          "general_execution_pr_25_mergeable",
+          "general_execution_verification_green",
+          "build_colony_exact_closure_green",
+          "explicit_waterfound_integration_approval"
+        ],
+        "authority_boundary": "Candidate development and Durable admission are complete. Canonical merges remain separately approval-bound.",
+        "authority_ref": null,
+        "blockers": [
+          {
+            "kind": "authority",
+            "detail": "The three verified candidates are ready and mergeable but canonical integration has not been approved.",
+            "evidence_refs": [
+              "github://Waterfound/Systems/pull/7",
+              "github://Waterfound/Build-Colony/pull/34",
+              "github://Waterfound/General-Execution/pull/25"
+            ],
+            "schema_version": "ge.portfolio-blocker.v1"
+          }
+        ],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/Build-Colony/commit/8ae45f2e02c0bc736ee18fbfe77bfd655659aea0/pilots/predictive-sovereign-execution-001/CLOSURE.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "PSE-09-POST-MERGE-READINESS",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Keep exact post-merge verification, recovery-capsule refresh and gate-forecast refresh prepared without changing canonical state.",
+        "active_gate": "post-merge-readiness",
+        "next_action_ref": "action://predictive-sovereign/post-merge-readiness",
+        "source_revision": "7c70aca33906cc26e316ac15141018e505eaaa15",
+        "evidence_required": [
+          "merged_exact_revisions",
+          "full_regression_green",
+          "recovery_capsule_refreshed",
+          "gate_forecast_refreshed"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/Build-Colony/commit/8ae45f2e02c0bc736ee18fbfe77bfd655659aea0/pilots/predictive-sovereign-execution-001/CLOSURE.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [
+        {
+          "work_id": "PSE-10-RUNTIME-ADOPTION",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Adopt the canonical Predictive & Sovereign Execution implementation in the persistent runtime only after canonical integration and separate runtime approval.",
+          "active_gate": "runtime-adoption-approval",
+          "next_action_ref": "authority://predictive-sovereign/runtime-adoption",
+          "source_revision": "7c70aca33906cc26e316ac15141018e505eaaa15",
+          "evidence_required": [
+            "canonical_integration_complete",
+            "post_merge_verification_green",
+            "explicit_runtime_adoption_approval"
+          ],
+          "authority_boundary": "Persistent runtime adoption remains separately approval-bound.",
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "authority",
+              "detail": "Runtime adoption is not implied by candidate development.",
+              "evidence_refs": [
+                "github://Waterfound/Build-Colony/commit/8ae45f2e02c0bc736ee18fbfe77bfd655659aea0/pilots/predictive-sovereign-execution-001/CLOSURE.json"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "event_received",
+            "value": "authority://predictive-sovereign/runtime-adoption",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/Build-Colony/commit/8ae45f2e02c0bc736ee18fbfe77bfd655659aea0/pilots/predictive-sovereign-execution-001/CLOSURE.json",
+          "schema_version": "ge.portfolio-entry.v1"
+        }
+      ],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
