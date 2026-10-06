@@ -1,0 +1,66 @@
+{
+  "schema_version": "ge.provider-portability-runtime-repin-checkpoint.v1",
+  "checkpoint_id": "provider-portability-runtime-repin-green-20261006",
+  "verdict": "RUNTIME_REPIN_GREEN__LIVE_ROUTING_NOT_ACTIVATED",
+  "authorized_target_source_revision": "8cbe6e034789b0c354977095b75f395a7f1f05a7",
+  "canonical_repin_source_update": {
+    "pull_request": 24,
+    "merge_commit": "981020eee5218a855ea4ae6df5ed41a218b20234",
+    "pre_repin_candidate_verification_run": 37545820764,
+    "pre_repin_candidate_verdict": "PASS",
+    "post_merge_persistent_runtime_verification_run": 37545985604,
+    "post_merge_main_integration_gate_run": 37545985606,
+    "post_merge_durable_terminal_verification_run": 37545985589,
+    "all_post_merge_checks": "PASS"
+  },
+  "operational_repin": {
+    "runtime_branch": "runtime/durable-asp-control",
+    "repin_commit": "efde191d3f578fe94fb4e637c9545e7596dd5a43",
+    "runtime_source_revision": "8cbe6e034789b0c354977095b75f395a7f1f05a7",
+    "atomic_blob_copy_from_verified_main": true
+  },
+  "bounded_smoke": {
+    "event_id": "provider-portability-runtime-repin-smoke-bootstrap-001",
+    "trigger_commit": "fb1516891e48b739dbe0bbb6715b33caa29bb7ef",
+    "workflow_run": 37546109976,
+    "verdict": "PASS",
+    "processed_runtime_source_revision": "8cbe6e034789b0c354977095b75f395a7f1f05a7",
+    "smoke_portfolio_id": "provider-portability-runtime-repin-smoke-001",
+    "smoke_state_digest": "sha256:b0c9e2629e10dd13aa2c435dfdc24cc57363b7dc481fc687d9cc175ad5d87400",
+    "database_sha256": "sha256:fb903988b12765bced819abe213bb38abdecfefe12b59369e3ab4b375fa61970",
+    "event_report_digest": "sha256:4a81aa52dc07731b84f902fa177780f035de6812bfba85fbf366cdecc245d3a5",
+    "human_required": false,
+    "provider_contacted": false,
+    "provider_state_mutated": false
+  },
+  "post_repin_reconstruction": {
+    "workflow_run": 37546192034,
+    "verdict": "PASS",
+    "exact_pinned_contract_tests": "PASS",
+    "smoke_state_reconstructed": true,
+    "provider_portability_002_state_reconstructed": true,
+    "provider_portability_002_state_digest": "sha256:145f567ece248a8c24d05ba54602ba09f4504ce46a493e70b9f6648e8a3c0fbf",
+    "provider_portability_002_authority_state": "human_gate",
+    "provider_portability_002_action_ref": "authority://provider-portability/runtime-repin",
+    "operational_boundary_verdict": "POST_REPIN_OPERATIONAL_BOUNDARY_PASS",
+    "temporary_verifier_removed": true
+  },
+  "preservation": {
+    "authority_boundaries_intact": true,
+    "durable_execution_reconstructible": true,
+    "continuity_check_evidence_intact": true,
+    "system_preservation_intact": true,
+    "authority_created": false
+  },
+  "scope_enforcement": {
+    "live_provider_routing_activated": false,
+    "provider_mutation_performed": false,
+    "credential_mutation_performed": false,
+    "new_paid_spend": false,
+    "resource_created": false,
+    "billing_changed": false,
+    "other_operational_transition_performed": false
+  },
+  "next_genuine_gate": "authority://provider-portability/live-activation",
+  "note": "The durable portfolio was intentionally not transitioned after the repin because the authorization prohibited any other operational change. Future live-activation work must reconcile this checkpoint first."
+}
