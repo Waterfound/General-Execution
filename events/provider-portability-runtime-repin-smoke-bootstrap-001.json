@@ -1,0 +1,46 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "provider-portability-runtime-repin-smoke-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "provider-portability-runtime-repin-smoke-001",
+      "generation": 0,
+      "active": {
+        "work_id": "PPC-REPIN-SMOKE-ACTIVE",
+        "role": "active",
+        "state": "ready",
+        "objective": "Bounded inert smoke proving the persistent runtime executes and persists state under the verified Provider Portability main source pin.",
+        "active_gate": "RUNTIME-REPIN-SMOKE",
+        "next_action_ref": "terminal://provider-portability/runtime-repin-smoke-verified",
+        "source_revision": "8cbe6e034789b0c354977095b75f395a7f1f05a7",
+        "evidence_required": [],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": null,
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "PPC-REPIN-SMOKE-SECONDARY",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Remain inert during the bounded runtime repin smoke.",
+        "active_gate": "INERT",
+        "next_action_ref": "terminal://provider-portability/runtime-repin-smoke-secondary",
+        "source_revision": "8cbe6e034789b0c354977095b75f395a7f1f05a7",
+        "evidence_required": [],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": null,
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
