@@ -1,0 +1,73 @@
+{
+  "schema_version": "ge.resource-access-protocol.v1",
+  "secret_material_allowed": false,
+  "canonical_rule": "remember_route_never_persist_key",
+  "resolution_order": [
+    "resolve_logical_resource_class",
+    "prefer_authorized_connector_or_api",
+    "resolve_exact_target_from_durable_evidence",
+    "classify_authentication_state",
+    "use_authenticated_browser_only_when_required",
+    "persist_receipt_not_credentials",
+    "fail_closed_at_human_authentication_or_authority_gate"
+  ],
+  "resource_classes": [
+    {
+      "alias": "canonical-source",
+      "preferred_route": "github_connector_api",
+      "durable_evidence": ["repository","branch","sha","pull_request","workflow_run"],
+      "human_gate": "connector_reauthorization_if_required"
+    },
+    {
+      "alias": "durable-runtime",
+      "preferred_route": "github_backed_general_execution_runtime",
+      "durable_evidence": ["event","processed_receipt","report","state_digest","database_digest"],
+      "human_gate": "authority_transition_only"
+    },
+    {
+      "alias": "build-colony",
+      "preferred_route": "github_connector_api_and_actions",
+      "durable_evidence": ["profile","manifest","ledger","workflow_run"],
+      "human_gate": "connector_reauthorization_if_required"
+    },
+    {
+      "alias": "vercel-hosting",
+      "preferred_route": "vercel_plugin_api",
+      "fallback": "authenticated_browser_when_api_insufficient",
+      "human_gate": "interactive_provider_authentication_if_required"
+    },
+    {
+      "alias": "render-hosting",
+      "preferred_route": "render_connector_api",
+      "fallback": "authenticated_dashboard",
+      "human_gate": "login_mfa_or_protected_secret_material"
+    },
+    {
+      "alias": "aws-compute",
+      "preferred_route": "aws_connector_api",
+      "human_gate": "login_role_mfa_new_spend_or_privilege_expansion"
+    },
+    {
+      "alias": "local-compute",
+      "preferred_route": "authorized_local_execution_surface",
+      "human_gate": "physical_access_power_or_local_authentication"
+    }
+  ],
+  "session_states": [
+    "CONNECTOR_AVAILABLE",
+    "SESSION_REUSABLE",
+    "REAUTH_REQUIRED",
+    "AUTHORITY_REQUIRED",
+    "UNRESOLVED"
+  ],
+  "invariants": [
+    "credentials_are_never_durable_evidence",
+    "browser_session_is_never_source_of_truth",
+    "connector_availability_does_not_create_authority",
+    "resource_availability_does_not_create_authority",
+    "stealth_does_not_reduce_authorized_internal_reconstructibility",
+    "reauthentication_is_a_human_gate",
+    "new_spend_is_a_separate_authority_gate"
+  ],
+  "authority_created": false
+}
