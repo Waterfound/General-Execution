@@ -1,0 +1,77 @@
+{
+  "schema_version": "ge.provider-portability-live-activation-checkpoint.v1",
+  "checkpoint_id": "provider-portability-live-bounded-green-20261006",
+  "verdict": "BOUNDED_LIVE_ACTIVATION_GREEN",
+  "activation_id": "provider-portability-live-001",
+  "authority_ref": "authority://waterfound/provider-portability/live-activation-20261006",
+  "runtime_source_revision": "8cbe6e034789b0c354977095b75f395a7f1f05a7",
+  "live_resource_pool": {
+    "eligible": [
+      {
+        "resource_id": "ga-general-execution",
+        "provider_id": "github",
+        "billing_scope_ref": "github-actions://Waterfound/General-Execution",
+        "adapter": "general-execution/github-actions-production",
+        "status": "AVAILABLE_AND_LIVE"
+      }
+    ],
+    "unavailable": [
+      {
+        "resource_id": "build-colony-cross-repo",
+        "reason": "existing_cross_repo_credential_capability_gate"
+      }
+    ],
+    "excluded": [
+      {
+        "resource_id": "work",
+        "reason": "explicit_work_budget_zero"
+      }
+    ],
+    "new_resources_created": 0
+  },
+  "live_execution": {
+    "request_id": "pplr-20261006-001",
+    "workflow_run": 37546936003,
+    "native_execution_ref": "github-actions://Waterfound/General-Execution/actions/runs/37546936003",
+    "selected_resource_id": "ga-general-execution",
+    "selected_provider_id": "github",
+    "activation_status": "executor_accepted",
+    "internal_lineage_digest": "sha256:eba469f2624df32cde31ae2ca07192d98111f3892435e951ec56ab5dd0041bb7",
+    "route_decision_digest": "sha256:cd84317f3501d0fd4f473cc768caf96c3a9178875169fada32b0fe0150c26b89",
+    "provider_envelope_digest": "sha256:36566e9a9fc23c5e2c9c221e00ac3300c18b9587a5f22e28d5f704dc2efd519b",
+    "provider_binding_digest": "sha256:8ab31f757a3f3dd2a7b0ed57fee924afee433497f7f1e3bd77cac8a1207d0c3c",
+    "launch_receipt_digest": "sha256:d65e9c206d01119d563992de20b78d2cd54ef7cd3678d3b2795214d7c368218a"
+  },
+  "verified_properties": {
+    "truthful_provider_account_attribution": "PASS",
+    "minimum_provider_visible_semantics": "PASS",
+    "exact_internal_lineage": "PASS",
+    "continuity_check_receipt": "PASS",
+    "system_preservation": "PASS",
+    "fail_closed_when_no_eligible_resource": "PASS",
+    "unavailable_resource_excluded": "PASS",
+    "authority_created_by_resource_availability": false
+  },
+  "provider_visible_envelope": {
+    "provider_task_ref": "pt-cc8b40906fd3d29b86fc4362",
+    "resource_id": "ga-general-execution",
+    "billing_scope_ref": "github-actions://Waterfound/General-Execution",
+    "required_capabilities": ["test_execution"],
+    "input_artifact_digests": ["sha256:79efe6f318883217c69b8ff04bd6b3f4a249fd6e7f6bebb12f4834b95b18b99f"],
+    "output_contract_digest": "sha256:7a14ea04b333d014dcd56f421944d2b582d358e9d6f3ffde27b898b5b266bc10",
+    "max_runtime_seconds": 300
+  },
+  "boundaries": {
+    "provider_mutated": false,
+    "credential_mutated": false,
+    "billing_changed": false,
+    "identity_created": false,
+    "new_paid_spend_cents": 0,
+    "new_provider_created": false,
+    "destructive_infrastructure_created": false,
+    "consensus_or_economics_changed": false,
+    "release_or_mainnet_changed": false
+  },
+  "machine_executable_frontier_remaining_for_activation": false,
+  "human_action_required_now": false
+}
