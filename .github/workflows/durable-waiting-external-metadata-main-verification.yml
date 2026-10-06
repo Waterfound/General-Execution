@@ -1,0 +1,46 @@
+name: Durable waiting-external metadata main repair verification
+
+on:
+  push:
+    branches:
+      - repair/durable-waiting-external-metadata-main-001
+    paths:
+      - "src/general_execution/asp_transition.py"
+      - "tests/test_asp_transition.py"
+      - ".github/workflows/durable-waiting-external-metadata-main-verification.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify-main-repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install
+        run: python -m pip install -e '.[dev]' --disable-pip-version-check
+      - name: Compile
+        run: python -m compileall -q src scripts
+      - name: Focused durable transition regression
+        run: |
+          python -m pytest \
+            tests/test_asp_transition.py \
+            tests/test_resume_tick.py \
+            tests/test_persistent_runtime.py -q
+      - name: Full current-main regression
+        run: python -m pytest -q
+      - name: Audit repair boundary
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          text=Path("src/general_execution/asp_transition.py").read_text()
+          assert 'state.active.state == "waiting_external"' in text
+          assert 'rule.to_state != "waiting_external"' in text
+          assert "blockers=()," in text
+          assert "wake_condition=None," in text
+          print("DURABLE_WAITING_EXTERNAL_METADATA_MAIN_REPAIR_BOUNDARY_PASS")
+          PY
