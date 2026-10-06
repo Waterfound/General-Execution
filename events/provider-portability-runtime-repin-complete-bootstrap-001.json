@@ -1,0 +1,65 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "provider-portability-runtime-repin-complete-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "provider-portability-003",
+      "generation": 0,
+      "active": {
+        "work_id": "PPC-12-LIVE-ACTIVATION",
+        "role": "active",
+        "state": "human_gate",
+        "objective": "Activate Provider Portability in canonical execution paths only under separate explicit Waterfound authority after the persistent runtime repin closed GREEN.",
+        "active_gate": "live-activation-authority",
+        "next_action_ref": "authority://provider-portability/live-activation",
+        "source_revision": "8cbe6e034789b0c354977095b75f395a7f1f05a7",
+        "evidence_required": [
+          "runtime_repin_green",
+          "post_repin_reconstruction_green",
+          "receipts_and_manifest_consistent",
+          "authority_boundaries_preserved",
+          "explicit_waterfound_live_activation_authority"
+        ],
+        "authority_boundary": "Runtime repin is complete. Live provider routing, provider mutation, credential mutation, billing/resource changes and new spend remain separately unauthorized.",
+        "authority_ref": null,
+        "blockers": [
+          {
+            "kind": "authority",
+            "detail": "Live Provider Portability activation requires separate explicit Waterfound authority.",
+            "evidence_refs": [
+              "github://Waterfound/General-Execution/commit/f242273faefd26bb7d4ebbf84a9844265842cce6/checkpoints/provider-portability-runtime-repin-complete-20261006.json"
+            ],
+            "schema_version": "ge.portfolio-blocker.v1"
+          }
+        ],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/General-Execution/commit/f242273faefd26bb7d4ebbf84a9844265842cce6/checkpoints/provider-portability-runtime-repin-complete-20261006.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "PPC-13-INERT-POST-REPIN-OBSERVATION",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Remain inert and preserve reconstruction evidence while live activation is unauthorized.",
+        "active_gate": "inert-observation",
+        "next_action_ref": "action://provider-portability/inert-post-repin-observation",
+        "source_revision": "8cbe6e034789b0c354977095b75f395a7f1f05a7",
+        "evidence_required": [
+          "runtime_source_revision_8cbe6e03",
+          "no_live_provider_routing",
+          "no_provider_or_credential_mutation"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/General-Execution/commit/f242273faefd26bb7d4ebbf84a9844265842cce6/checkpoints/provider-portability-runtime-repin-complete-20261006.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
