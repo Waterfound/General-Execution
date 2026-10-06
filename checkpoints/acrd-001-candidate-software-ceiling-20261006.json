@@ -1,0 +1,77 @@
+{
+  "schema_version": "ge.acrd-closure-checkpoint.v1",
+  "checkpoint_id": "acrd-001-candidate-software-ceiling-20261006",
+  "recorded_at": "2026-10-06T22:03:30Z",
+  "program_id": "ACRD-001",
+  "terminal_verdict": "CANDIDATE_SOFTWARE_CEILING_REACHED__DURABLY_ADMITTED",
+  "build_colony": {
+    "branch": "colony/abundant-compute-resource-decoupling-001",
+    "closure_revision": "7bd1691daccba1635cfe461444f642eb9ef6f5ce",
+    "real_structure_run": 37537532489,
+    "run_id": "bc2-434b4f33c2faabe9",
+    "manifest_digest": "a0737145babccc5311d28e21c9220aefade2888f6c0e80fddf11cfb6acba0cdb",
+    "saturation_revision": "867b4b68cc9bd8eefb9fe6c6477e9a4ce8e8bb92",
+    "saturation_run": 37536982978,
+    "temporal_revision": "e14242dbfbf85c1f12363d83821bb91dedde46db",
+    "temporal_run": 37537258531
+  },
+  "general_execution_candidate": {
+    "branch": "feature/abundant-compute-resource-decoupling-001",
+    "revision": "3f69a07b00ca3972a0861883a323d513b3da4887",
+    "verification_run": 37536516370
+  },
+  "systems_candidate": {
+    "branch": "doctrine/abundant-compute-resource-decoupling-001",
+    "closure_revision": "971fb9d4701100c6d2bec71e2d2372d05681089f"
+  },
+  "durable_execution": {
+    "portfolio_id": "abundant-compute-resource-decoupling-001",
+    "workflow_run": 37537771119,
+    "trigger_commit": "ac29932bc179cd4676ec38fdc5ede6fd1bd03bfc",
+    "persisted_runtime_commit": "f9e73b1ac235a25b9b885cc6f0e147a77b391839",
+    "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+    "state_digest": "sha256:59149bb4a25ff121d62ef3c68e6e0d997430dd9c08c7dd8499a8398f0875ed14",
+    "database_sha256": "sha256:d6239889c45e99e084f1ca0b31b8eebc6c914642dfef165c012c88820777001a",
+    "event_report_digest": "sha256:e043b9de52d0a4cde3a75948367e3c34a9743d93bd16d404d7fc35f3c7e27215",
+    "human_required": false,
+    "authority_created": false
+  },
+  "measured_candidate_rehearsals": {
+    "abundant_saturation": {
+      "admitted_capacity": 8,
+      "assigned_work": 8,
+      "utilization_bp": 10000,
+      "incremental_paid_spend_cents": 0,
+      "shared_state_conflict_serialized": true
+    },
+    "temporal_compression": {
+      "baseline_units": 53,
+      "compressed_units": 33,
+      "saved_units": 20,
+      "compression_bp": 3773,
+      "shared_state_serializations": 1,
+      "incremental_paid_spend_cents": 0
+    }
+  },
+  "draft_pull_requests": [
+    {"repository":"Waterfound/Systems","number":5,"base":"doctrine/system-preservation-low-exposure-001","draft":true,"merge_authorized":false},
+    {"repository":"Waterfound/Build-Colony","number":32,"base":"colony/system-preservation-001","draft":true,"merge_authorized":false},
+    {"repository":"Waterfound/General-Execution","number":22,"base":"main","draft":true,"merge_authorized":false}
+  ],
+  "remaining_frontiers": {
+    "ACRD-07-REAL-RESOURCE-SUBSTRATE": "EXTERNAL_EVIDENCE",
+    "ACRD-08-CANONICAL-INTEGRATION": "AUTHORITY_GATE",
+    "ACRD-09-LIVE-ACTIVATION": "AUTHORITY_GATE_AFTER_INTEGRATION"
+  },
+  "machine_executable_frontier_remaining_under_current_authority": false,
+  "user_action_required_now": false,
+  "continuity_check_preserved": true,
+  "system_preservation_preserved": true,
+  "new_paid_spend": false,
+  "canonical_merge_authorized": false,
+  "runtime_repin_authorized": false,
+  "consensus_changed": false,
+  "economics_changed": false,
+  "release_or_mainnet_changed": false,
+  "authority_created": false
+}
