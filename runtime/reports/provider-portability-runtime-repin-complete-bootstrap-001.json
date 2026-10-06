@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:b072d10f1b23dadf654fb9383226cca8af60d2f7d48dab530102fc207163d179",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "provider-portability-runtime-repin-complete-bootstrap-001",
+    "human_required": true,
+    "operation": "bootstrap",
+    "portfolio_id": "provider-portability-003",
+    "post_generation": 0,
+    "post_state_digest": "sha256:7feb823f29a40529076ae67c9edf8309f2b381facadbb904deaccd6e966519a0",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:7feb823f29a40529076ae67c9edf8309f2b381facadbb904deaccd6e966519a0",
+    "requested_action_ref": "authority://provider-portability/live-activation",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:24e77db48995a46a1800fff0051276cf420df5ce1e3769575d014919d8069e60",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}

@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:b072d10f1b23dadf654fb9383226cca8af60d2f7d48dab530102fc207163d179",
+  "event_id": "provider-portability-runtime-repin-complete-bootstrap-001",
+  "event_report_digest": "sha256:24e77db48995a46a1800fff0051276cf420df5ce1e3769575d014919d8069e60",
+  "operation": "bootstrap",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "8cbe6e034789b0c354977095b75f395a7f1f05a7",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "4fd81aab9377dccc866e748f815f4aa779aab15e"
+}
