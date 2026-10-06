@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:f2f82bb421cca889c7cd9097590587b2838633ecdd3cd6f5bdec7ec9a23f4dea",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "provider-portability-live-bounded-green-bootstrap-001",
+    "human_required": false,
+    "operation": "bootstrap",
+    "portfolio_id": "provider-portability-004",
+    "post_generation": 0,
+    "post_state_digest": "sha256:440d06b491352853187e59eff0eb1279385500898586dcf0df7b6ce85dca7581",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:440d06b491352853187e59eff0eb1279385500898586dcf0df7b6ce85dca7581",
+    "requested_action_ref": "terminal://provider-portability/live-bounded-green",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:466bdc21cdc22a66c2659e8e18d77ffa881e8e926b46fddc989d5be0d5e067be",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
