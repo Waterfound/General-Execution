@@ -1,0 +1,30 @@
+{
+  "schema_version": "ge.resource-access-checkpoint.v1",
+  "checkpoint_id": "resource-access-protocol-20261006",
+  "purpose": "Preserve non-secret reconstruction knowledge for accessing authorized project resources without relying on chat memory.",
+  "candidate_repository": "Waterfound/General-Execution",
+  "candidate_branch": "feature/abundant-compute-resource-decoupling-001",
+  "human_document": {
+    "path": "docs/resource-access-protocol.md",
+    "commit": "ca6318b0fca32cd8c3082257f685c83b18ee7e36"
+  },
+  "machine_document": {
+    "path": "docs/resource-access-protocol.json",
+    "commit": "c7e8c4facd4fd5a72717ef10e6efef3b00d25f82"
+  },
+  "canonical_rule": "remember_route_never_persist_key",
+  "preferred_access_order": [
+    "authorized_connector_or_api",
+    "durable_target_resolution",
+    "authenticated_session_only_if_needed",
+    "human_reauthentication_gate",
+    "human_authority_gate"
+  ],
+  "secret_material_persisted": false,
+  "credential_values_persisted": false,
+  "browser_cookies_persisted": false,
+  "session_tokens_persisted": false,
+  "authority_created": false,
+  "stealth_preserved": true,
+  "continuity_check_reconstructible": true
+}
