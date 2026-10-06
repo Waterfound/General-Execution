@@ -517,6 +517,17 @@ def apply_active_transition(
                         blockers=(),
                         wake_condition=None,
                     )
+                elif (
+                    state.active.state == "waiting_external"
+                    and rule.to_state != "waiting_external"
+                ):
+                    new_active = replace(
+                        state.active,
+                        state=rule.to_state,
+                        next_action_ref=rule.next_action_ref,
+                        blockers=(),
+                        wake_condition=None,
+                    )
                 else:
                     new_active = replace(
                         state.active,
