@@ -8,6 +8,8 @@ from .continuity_check import (
     ConversationEvidence,
     DurableStateEvidence,
     FailureScope,
+    ExecutorActivationDisposition,
+    ExecutorActivationEvidence,
     GateEvidence,
     GateKind,
     LaunchAdmissionEvidence,
@@ -159,5 +161,34 @@ def launch_admission_from_mapping(
         recovery_semantics_exhausted=bool(
             data.get("recovery_semantics_exhausted", False)
         ),
+        detail=str(data["detail"]) if data.get("detail") is not None else None,
+    )
+
+
+def executor_activation_from_mapping(
+    data: Mapping[str, object] | None,
+) -> ExecutorActivationEvidence | None:
+    if data is None:
+        return None
+    return ExecutorActivationEvidence(
+        validated=bool(data.get("validated", False)),
+        workstream_id=str(data["workstream_id"]),
+        disposition=ExecutorActivationDisposition(str(data["disposition"])),
+        activation_ref=str(data["activation_ref"]),
+        launch_receipt_ref=str(data["launch_receipt_ref"]),
+        dispatch_identity=str(data["dispatch_identity"]),
+        repository=str(data["repository"]) if data.get("repository") is not None else None,
+        executor=str(data["executor"]) if data.get("executor") is not None else None,
+        native_execution_ref=(
+            str(data["native_execution_ref"])
+            if data.get("native_execution_ref") is not None
+            else None
+        ),
+        condition_ref=(
+            str(data["condition_ref"])
+            if data.get("condition_ref") is not None
+            else None
+        ),
+        observed_at=str(data["observed_at"]) if data.get("observed_at") is not None else None,
         detail=str(data["detail"]) if data.get("detail") is not None else None,
     )

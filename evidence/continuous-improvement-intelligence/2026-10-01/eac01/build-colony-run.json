@@ -1,0 +1,96 @@
+{
+  "schema_version": "ge.eac01-build-colony-experiment.v1",
+  "experiment_id": "eac01-receipt-bound-executor-activation-001",
+  "date": "2026-10-01",
+  "source_cii": {
+    "repository": "Waterfound/Continuous-Improvement-Intelligence-CII",
+    "pull_request": 22,
+    "candidate_head": "b4fe7e99b77fa908506133cbca71c358e3d6e194",
+    "decision": "ADMIT_FOR_PRE_REGISTERED_EXPERIMENT"
+  },
+  "build_colony": {
+    "repository": "Waterfound/Build-Colony",
+    "canonical_source_revision": "17979869a85c9f5adf2cef2ceb589a07fcef6239",
+    "profile_branch": "colony/eac01-profile-001",
+    "profile_commit": "aff0b440cf9a746fdc2c81bf4fb59c5a3622a933",
+    "launch_branch": "colony-run/eac01-contract-001",
+    "launch_commit": "b4c66121f35376b54fa112ee849a1fbffa9274c3",
+    "remote_intent_id": "bcg-6ad68bdc3f8067ee8efc",
+    "remote_intent_digest": "ab8542bda17d118fbda4523ab488a10da8ee0ba3ff950c72b53d6a53d0f97ce2",
+    "remote_runner_run_id": 36820125162,
+    "remote_runner_result": "SUCCESS",
+    "remote_runner_artifact_id": 11142544842,
+    "remote_runner_artifact_digest": "sha256:a9d5978dc11a3b4444c5992ba5086a0d4c1a9a36b05685e2a37d85514685efc4",
+    "companion_ci_run_id": 36820125167,
+    "companion_ci_result": "SUCCESS",
+    "remote_pool_ci_run_id": 36820125158,
+    "remote_pool_ci_result": "SUCCESS"
+  },
+  "target_candidate": {
+    "repository": "Waterfound/General-Execution",
+    "base_revision": "ff510496136c0c35fa377f6962750f1fdfb84b8e",
+    "branch": "build-colony/eac01-receipt-bound-executor-activation-001",
+    "verified_pre_evidence_head": "01473ce9372e7b6921333791c90b509679a9805e",
+    "verification_run_id": 36821003191,
+    "verification_result": "SUCCESS",
+    "verification_matrix": [
+      "Python 3.11",
+      "Python 3.12",
+      "Python 3.13"
+    ],
+    "verified_steps": [
+      "install",
+      "compile",
+      "focused ELG-01 + EAC-01 + Continuity Check matrix",
+      "full General Execution regression"
+    ]
+  },
+  "implemented_contract": {
+    "input": "validated ELG-01 ADMITTED receipt",
+    "durable_pre_side_effect_state": "activation_unknown",
+    "idempotency_key": "dispatch_identity",
+    "outcomes": [
+      "EXECUTOR_ACCEPTED",
+      "CONDITION_WAIT",
+      "FAILED_ACTIVATION"
+    ],
+    "executor_accepted_requires_native_execution_ref": true,
+    "authority_created": false,
+    "continuity_check_actuation": false
+  },
+  "pre_registered_cases": {
+    "admitted_available_executor": "PASS_REFERENCE_ADAPTER",
+    "exact_replay_no_duplicate": "PASS_REFERENCE_ADAPTER",
+    "crash_before_native_call": "PASS_REFERENCE_ADAPTER",
+    "crash_after_native_side_effect_before_persistence": "PASS_REFERENCE_ADAPTER",
+    "human_gate_zero_invocation": "PASS_REFERENCE_ADAPTER",
+    "failed_before_launch_zero_invocation": "PASS_REFERENCE_ADAPTER",
+    "executor_unavailable_after_admission": "PASS_REFERENCE_ADAPTER",
+    "activation_evidence_continuity_projection": "PASS"
+  },
+  "hard_success_criteria": {
+    "manual_transport_steps_for_already_authorized_activation": {
+      "reference_adapter_experiment": 0,
+      "production_executor_adapters": "NOT_YET_PROVEN"
+    },
+    "duplicate_native_launches": 0,
+    "authority_violations": 0,
+    "false_executing_claims": 0,
+    "all_activation_outcomes_bound_to_dispatch_identity": true
+  },
+  "authority_boundary": {
+    "new_authority_created": false,
+    "production_build_colony_activation_enabled": false,
+    "project_assurance_activation_enabled": false,
+    "paid_provider_execution": false,
+    "continuity_check_remains_read_only": true,
+    "fae_consensus_economics_release_activation_mainnet_changes": false
+  },
+  "residual_gate": {
+    "class": "EXECUTOR_ADAPTER_EVIDENCE_GATE",
+    "description": "The provider-neutral EAC-01 contract and reference adapter experiment are green. A real production executor adapter must independently prove idempotent dispatch_identity consumption and native evidence binding before zero-human-transport behavior can be claimed for live Build Colony or Project Assurance workstreams.",
+    "human_required": false,
+    "broader_next_frontier_autonomy_admitted": false
+  },
+  "status": "CANDIDATE_CONTRACT_EXPERIMENT_GREEN__PRODUCTION_EXECUTOR_ADAPTER_NOT_YET_PROVEN"
+}

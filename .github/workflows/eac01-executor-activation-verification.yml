@@ -1,0 +1,54 @@
+name: EAC-01 executor activation verification
+
+on:
+  push:
+    branches:
+      - "build-colony/eac01-receipt-bound-executor-activation-001"
+    paths:
+      - "src/general_execution/executor_activation.py"
+      - "tests/test_executor_activation.py"
+      - "tests/test_executor_activation_continuity.py"
+      - "src/general_execution/continuity_check.py"
+      - "src/general_execution/continuity_adapters.py"
+      - "scripts/run_continuity_check.py"
+      - "src/general_execution/__init__.py"
+      - "docs/executor-activation.md"
+      - ".github/workflows/eac01-executor-activation-verification.yml"
+      - "evidence/continuous-improvement-intelligence/2026-10-01/eac01/**"
+  pull_request:
+    paths:
+      - "src/general_execution/executor_activation.py"
+      - "tests/test_executor_activation.py"
+      - "tests/test_executor_activation_continuity.py"
+      - "src/general_execution/continuity_check.py"
+      - "src/general_execution/continuity_adapters.py"
+      - "scripts/run_continuity_check.py"
+      - "src/general_execution/__init__.py"
+      - "docs/executor-activation.md"
+      - ".github/workflows/eac01-executor-activation-verification.yml"
+      - "evidence/continuous-improvement-intelligence/2026-10-01/eac01/**"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install
+        run: python -m pip install -e '.[dev]' --disable-pip-version-check
+      - name: Compile
+        run: python -m compileall -q src tests
+      - name: Focused EAC-01 contract and adversarial matrix
+        run: python -m pytest tests/test_execution_launch_admission.py tests/test_executor_activation.py tests/test_executor_activation_continuity.py -q
+      - name: Full regression
+        run: python -m pytest -q
