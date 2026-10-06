@@ -1,3 +1,4 @@
+from dataclasses import replace
 import json
 
 import pytest
@@ -71,7 +72,7 @@ def test_provider_visible_envelope_excludes_internal_semantics():
     ):
         assert forbidden not in payload
     assert "tenant://provider-a/authorized" in payload
-    assert verify_provider_binding(internal, envelope, binding)
+    assert verify_provider_binding(internal, envelope, binding, resource("a", "provider-a"))
 
 
 def test_dispatch_nonce_changes_external_task_ref_without_changing_internal_lineage():
@@ -161,5 +162,41 @@ def test_binding_detects_envelope_substitution():
         dispatch_nonce="attempt-001",
         max_runtime_seconds=900,
     )
-    assert verify_provider_binding(internal, envelope, binding)
-    assert not verify_provider_binding(internal, other, binding)
+    assert verify_provider_binding(internal, envelope, binding, resource("a", "provider-a"))
+    assert not verify_provider_binding(internal, other, binding, resource("a", "provider-a"))
+
+
+def test_binding_detects_provider_or_authority_substitution():
+    internal = lineage()
+    res = resource("a", "provider-a")
+    envelope, binding = build_provider_task_envelope(
+        internal,
+        res,
+        dispatch_nonce="attempt-001",
+        max_runtime_seconds=900,
+    )
+    assert verify_provider_binding(internal, envelope, binding, res)
+    wrong_provider = replace(binding, provider_id="provider-x")
+    wrong_authority = replace(binding, authority_ref="authority://other")
+    assert not verify_provider_binding(internal, envelope, wrong_provider, res)
+    assert not verify_provider_binding(internal, envelope, wrong_authority, res)
+
+
+def test_provider_visible_envelope_has_only_required_field_set():
+    envelope, _ = build_provider_task_envelope(
+        lineage(),
+        resource("a", "provider-a"),
+        dispatch_nonce="attempt-001",
+        max_runtime_seconds=900,
+    )
+    assert set(provider_visible_dict(envelope)) == {
+        "provider_task_ref",
+        "resource_id",
+        "billing_scope_ref",
+        "required_capabilities",
+        "input_artifact_digests",
+        "output_contract_digest",
+        "max_runtime_seconds",
+        "protocol_version",
+        "schema_version",
+    }
