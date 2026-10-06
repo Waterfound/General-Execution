@@ -1,0 +1,49 @@
+{
+  "schema_version": "ge.durable-waiting-external-metadata-repair-evidence.v1",
+  "evidence_id": "DURABLE-WAITING-EXTERNAL-METADATA-REPAIR-001",
+  "observed_incident": {
+    "source_portfolio": "system-preservation-low-exposure-001",
+    "failed_runtime_run": 37532187895,
+    "failure_class": "ACTIVE_WAIT_METADATA_RETENTION_ON_NONROTATING_EXIT",
+    "first_divergence": "A non-rotating transition from waiting_external retained wake_condition/blockers while targeting failed, violating PortfolioEntry invariants.",
+    "state_mutated": false
+  },
+  "repair": {
+    "base_runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+    "branch": "repair/durable-waiting-external-metadata-001",
+    "verified_candidate_revision": "efb1c77582fda4c15c704b3b529f8cbd1bab1bbc",
+    "implementation": "Clear blockers and wake_condition only when Active is leaving waiting_external for a non-waiting target; preserve existing human_gate and rotating transition semantics.",
+    "changed_behavior_scope": "non-rotating Active transition from waiting_external to any state other than waiting_external",
+    "policy_semantics_changed": false,
+    "authority_semantics_changed": false,
+    "persistence_format_changed": false,
+    "runtime_state_mutated": false
+  },
+  "verification": {
+    "workflow_run": 37533395153,
+    "job_id": 112508145520,
+    "conclusion": "success",
+    "python": "3.13.16",
+    "focused_tests": 38,
+    "full_regression_tests": 389,
+    "compile": "PASS",
+    "focused_regression": "PASS",
+    "full_regression": "PASS",
+    "boundary_audit": "DURABLE_WAITING_EXTERNAL_METADATA_REPAIR_BOUNDARY_PASS"
+  },
+  "compare_to_pinned_runtime": {
+    "base": "a27a558d4ed0e28d96c3fec408212353d0077060",
+    "status": "ahead",
+    "ahead_by": 3,
+    "behind_by": 0,
+    "changed_paths": [
+      ".github/workflows/durable-waiting-external-metadata-verification.yml",
+      "src/general_execution/asp_transition.py",
+      "tests/test_asp_transition.py"
+    ]
+  },
+  "terminal_verdict": "VERIFIED_CANDIDATE__CANONICAL_RUNTIME_REPIN_NOT_AUTHORIZED",
+  "canonical_merge_authorized": false,
+  "canonical_runtime_repin_authorized": false,
+  "authority_created": false
+}
