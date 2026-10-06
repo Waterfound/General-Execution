@@ -1,0 +1,29 @@
+name: Provider Portability Verification
+
+on:
+  push:
+    branches:
+      - feature/provider-portability-001
+    paths:
+      - "src/general_execution/provider_portability.py"
+      - "tests/test_provider_portability.py"
+      - "docs/provider-portability.md"
+      - ".github/workflows/provider-portability-verification.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m pip install -e '.[dev]'
+      - name: Focused provider portability contract
+        run: python -m pytest tests/test_provider_portability.py -q
+      - name: Full regression
+        run: python -m pytest -q
