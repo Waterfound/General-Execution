@@ -1,0 +1,98 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "provider-portability-canonical-green-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "provider-portability-002",
+      "generation": 0,
+      "active": {
+        "work_id": "PPC-09-RUNTIME-REPIN",
+        "role": "active",
+        "state": "human_gate",
+        "objective": "Repin the canonical persistent General Execution runtime to the exact verified canonical main revision only under separate explicit Waterfound authority.",
+        "active_gate": "runtime-repin-authority",
+        "next_action_ref": "authority://provider-portability/runtime-repin",
+        "source_revision": "8cbe6e034789b0c354977095b75f395a7f1f05a7",
+        "evidence_required": [
+          "canonical_main_integration_green",
+          "exact_main_sha_8cbe6e034789b0c354977095b75f395a7f1f05a7",
+          "explicit_waterfound_runtime_repin_authority"
+        ],
+        "authority_boundary": "Canonical main integration is complete. Runtime repin remains separately unauthorized. No live provider routing, provider mutation, credential mutation or paid spend is implied.",
+        "authority_ref": null,
+        "blockers": [
+          {
+            "kind": "authority",
+            "detail": "Runtime repin requires separate explicit Waterfound authority after canonical main integration.",
+            "evidence_refs": [
+              "github://Waterfound/General-Execution/commit/44c07e88cb015c2746a2f759527a3e4cfbe2b418/checkpoints/provider-portability-canonical-main-integration-20261006.json"
+            ],
+            "schema_version": "ge.portfolio-blocker.v1"
+          }
+        ],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/General-Execution/commit/44c07e88cb015c2746a2f759527a3e4cfbe2b418/checkpoints/provider-portability-canonical-main-integration-20261006.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "PPC-10-LIVE-ACTIVATION-READINESS",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Maintain a non-activating verification plan for Provider Portability after any future runtime repin.",
+        "active_gate": "post-repin-readiness",
+        "next_action_ref": "action://provider-portability/post-repin-readiness",
+        "source_revision": "8cbe6e034789b0c354977095b75f395a7f1f05a7",
+        "evidence_required": [
+          "runtime_repin_complete",
+          "runtime_smoke_green",
+          "authority_boundaries_green",
+          "no_live_activation_without_authority"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/General-Execution/commit/44c07e88cb015c2746a2f759527a3e4cfbe2b418/checkpoints/provider-portability-canonical-main-integration-20261006.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [
+        {
+          "work_id": "PPC-11-LIVE-ACTIVATION",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Activate Provider Portability in canonical execution paths only after runtime repin, exact verification and separate explicit live-activation authority.",
+          "active_gate": "live-activation-authority",
+          "next_action_ref": "authority://provider-portability/live-activation",
+          "source_revision": "8cbe6e034789b0c354977095b75f395a7f1f05a7",
+          "evidence_required": [
+            "runtime_repin_complete",
+            "post_repin_verification_green",
+            "explicit_waterfound_live_activation_authority"
+          ],
+          "authority_boundary": "Live activation is not authorized by canonical integration.",
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "authority",
+              "detail": "No live provider routing, provider mutation, credential mutation or paid resource creation is authorized.",
+              "evidence_refs": [
+                "github://Waterfound/General-Execution/commit/44c07e88cb015c2746a2f759527a3e4cfbe2b418/checkpoints/provider-portability-canonical-main-integration-20261006.json"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "event_received",
+            "value": "authority://provider-portability/live-activation",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/General-Execution/commit/44c07e88cb015c2746a2f759527a3e4cfbe2b418/checkpoints/provider-portability-canonical-main-integration-20261006.json",
+          "schema_version": "ge.portfolio-entry.v1"
+        }
+      ],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
