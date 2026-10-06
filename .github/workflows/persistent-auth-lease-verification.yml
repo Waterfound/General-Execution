@@ -9,6 +9,7 @@ on:
       - tests/test_persistent_auth_lease.py
       - scripts/run_persistent_auth_lease_rehearsal.py
       - docs/persistent-auth-lease.md
+      - evidence/durable-execution/2026-10-06/persistent-auth-lease-candidate.json
       - .github/workflows/persistent-auth-lease-verification.yml
   pull_request:
     paths:
@@ -16,6 +17,7 @@ on:
       - tests/test_persistent_auth_lease.py
       - scripts/run_persistent_auth_lease_rehearsal.py
       - docs/persistent-auth-lease.md
+      - evidence/durable-execution/2026-10-06/persistent-auth-lease-candidate.json
       - .github/workflows/persistent-auth-lease-verification.yml
 
 permissions:
