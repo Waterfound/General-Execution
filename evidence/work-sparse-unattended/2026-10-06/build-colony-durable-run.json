@@ -1,0 +1,106 @@
+{
+  "schema_version": "ge.work-sparse-unattended-run.v1",
+  "date": "2026-10-06",
+  "repository": "Waterfound/General-Execution",
+  "branch": "build-colony/work-sparse-unattended-001",
+  "stacked_on": {
+    "pr": 16,
+    "head": "c3df65a6ea16d29e758d2432f2661182ecbf9870",
+    "reason": "EAC-01 remains the native activation boundary; this candidate only selects the preferred next admission target."
+  },
+  "verified_candidate_before_evidence": "58eb60260abce836649f5145c4470487cec91131",
+  "pull_request": 17,
+  "implementation": {
+    "module": "src/general_execution/work_sparse_unattended.py",
+    "cli": "scripts/run_work_sparse_controller.py",
+    "tests": "tests/test_work_sparse_unattended.py",
+    "docs": "docs/work-sparse-unattended-execution.md",
+    "authority_fixture": "examples/work-sparse/authority-envelope.json",
+    "executor_fixture": "examples/work-sparse/executors.json",
+    "core_rule": "prefer cheapest admissible non-Work executor; Work is scarce capability only",
+    "authority_created": false,
+    "execution_triggered": false
+  },
+  "real_verification": {
+    "push_run": 37427372394,
+    "pull_request_run": 37427475267,
+    "conclusion": "SUCCESS",
+    "full_general_execution_regression": "SUCCESS",
+    "non_work_default_proof": {
+      "work_item": "WS-DEMO-CI",
+      "expected_executor": "github_actions",
+      "work_required": false
+    },
+    "work_zero_budget_proof": {
+      "work_item": "WS-DEMO-BROWSER",
+      "expected_disposition": "CONDITION_WAIT",
+      "max_work_invocations": 0
+    }
+  },
+  "scheduled_controller": {
+    "enabled": true,
+    "cadence": "hourly condition watch",
+    "max_state_changing_transitions_per_tick": 1,
+    "work_default": "DISALLOWED_WITHOUT_SEPARATE_EXPLICIT_BUDGET",
+    "paid_spend_default_cents": 0,
+    "notify_only_on": [
+      "genuine HUMAN_GATE",
+      "material terminal closure"
+    ],
+    "silent_on": [
+      "ongoing execution",
+      "no admissible progress",
+      "no material change"
+    ]
+  },
+  "authority_envelope": {
+    "repositories": [
+      "Waterfound/General-Execution",
+      "Waterfound/Build-Colony",
+      "Waterfound/FAE-testnet"
+    ],
+    "allowed_actions": [
+      "read_state",
+      "inspect_ci",
+      "run_tests",
+      "open_draft_pr",
+      "persist_evidence",
+      "bounded_retry",
+      "run_diagnostic",
+      "run_assurance"
+    ],
+    "forbidden_without_fresh_authority": [
+      "merge_main",
+      "release",
+      "mainnet",
+      "consensus_change",
+      "economics_change",
+      "paid_spend",
+      "credential_change",
+      "destructive_action",
+      "physical_hardware"
+    ],
+    "work_invocations_default": 0,
+    "paid_spend_cents_default": 0,
+    "authority_created": false
+  },
+  "durable_runtime_observation": {
+    "branch": "runtime/durable-asp-control",
+    "observed_head": "61e5876873b8fb4fef8ef810758d3301182da916",
+    "manifest_last_event_id": "fae-stability-soak-v3-preflight-bootstrap-001",
+    "persistent_provider_trigger_enabled": true,
+    "authority_created": false
+  },
+  "boundaries": {
+    "pr16_merged": false,
+    "pr17_merged": false,
+    "pr30_merged": false,
+    "main_modified": false,
+    "release_performed": false,
+    "paid_spend_authorized": false,
+    "work_invocation_authorized_by_controller": false,
+    "consensus_or_economics_changed": false,
+    "physical_hardware_action": false
+  },
+  "terminal_disposition": "WORK_SPARSE_UNATTENDED_CANDIDATE_GREEN__SCHEDULED_CONTROLLER_ENABLED__STACKED_INTEGRATION_GATE"
+}

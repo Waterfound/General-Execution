@@ -1,0 +1,34 @@
+{
+  "schema_version": "ge.work-sparse-authority-envelope.v1",
+  "envelope_id": "waterfound-work-sparse-unattended-001",
+  "authority_ref": "authority://waterfound/work-sparse-unattended-001",
+  "allowed_repositories": [
+    "Waterfound/General-Execution",
+    "Waterfound/Build-Colony",
+    "Waterfound/FAE-testnet"
+  ],
+  "allowed_actions": [
+    "read_state",
+    "inspect_ci",
+    "run_tests",
+    "open_draft_pr",
+    "persist_evidence",
+    "bounded_retry",
+    "run_diagnostic",
+    "run_assurance"
+  ],
+  "forbidden_actions": [
+    "merge_main",
+    "release",
+    "mainnet",
+    "consensus_change",
+    "economics_change",
+    "paid_spend",
+    "credential_change",
+    "destructive_action",
+    "physical_hardware"
+  ],
+  "max_work_invocations": 0,
+  "max_paid_spend_cents": 0,
+  "authority_created": false
+}

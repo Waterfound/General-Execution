@@ -1,0 +1,15 @@
+{
+  "schema_version": "ge.work-sparse-work-item.v1",
+  "work_id": "WS-DEMO-BROWSER",
+  "objective": "Represent a task that truly requires browser UI capability",
+  "repository": "Waterfound/General-Execution",
+  "source_revision": "candidate-demo",
+  "authority_ref": "authority://waterfound/work-sparse-unattended-001",
+  "required_capabilities": [
+    "browser_ui"
+  ],
+  "requested_actions": [
+    "read_state"
+  ],
+  "existing_execution_ref": null
+}
