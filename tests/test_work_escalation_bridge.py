@@ -349,10 +349,10 @@ def test_human_reauth_gate_uses_provider_action_ref_and_preserves_queue_lineage(
     "secret_field",
     ["credentials_persisted", "cookies_persisted", "tokens_persisted"],
 )
-def test_platform_observation_refuses_secret_persistence(secret_field):
+def test_platform_observation_refuses_secret_persistence(secret_field, tmp_path):
     *_, auth, request = prepared_request()
     _, _, receipt = admitted_receipt(request, auth)
-    state = SqliteWorkEscalationStore(":memory:").reserve(request)
+    state = SqliteWorkEscalationStore(tmp_path / "work.sqlite").reserve(request)
     platform_request = prepare_work_platform_activation_request(state, receipt)
     values = dict(
         platform_request_id=platform_request.platform_request_id,
@@ -440,7 +440,7 @@ def test_wait_or_reauth_observation_is_not_misrepresented_as_eac_execution(tmp_p
         )
 
 
-def test_unavailable_work_activation_capability_fails_before_platform_request():
+def test_unavailable_work_activation_capability_fails_before_platform_request(tmp_path):
     *_, auth, request = prepared_request()
     capability = work_executor_capability(available=False)
     order = build_work_launch_order(request, auth, capability)
@@ -450,5 +450,6 @@ def test_unavailable_work_activation_capability_fails_before_platform_request():
         authenticated_actor="Waterfound",
     ).receipt
     assert receipt.disposition == "FAILED_BEFORE_LAUNCH"
-    state = WorkEscalationState = None
-    del state
+    state = SqliteWorkEscalationStore(tmp_path / "work.sqlite").reserve(request)
+    with pytest.raises(WorkEscalationError, match="requires ADMITTED"):
+        prepare_work_platform_activation_request(state, receipt)
