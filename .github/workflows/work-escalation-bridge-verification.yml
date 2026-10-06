@@ -60,9 +60,6 @@ jobs:
           assert d['authority_created'] is False, d
           assert d['pre_platform_execution_triggered'] is False, d
           assert d['terminal_disposition']=='CONTROL_PLANE_PASS__REAL_WORK_PLATFORM_ACTIVATION_CAPABILITY_EXTERNAL_GATE', d
-          docs=Path('docs/work-escalation-bridge.md').read_text()
-          assert 'PLATFORM_ACTIVATION_CAPABILITY_GATE' in docs
-          assert 'The bridge does not itself call or emulate ChatGPT Work.' in docs
           PY
 
       - name: Full General Execution regression
@@ -87,4 +84,7 @@ jobs:
           ]
           for item in required:
               assert item in module, item
+          docs=Path('docs/work-escalation-bridge.md').read_text()
+          assert 'PLATFORM_ACTIVATION_CAPABILITY_GATE' in docs
+          assert 'The bridge does not itself call or emulate ChatGPT Work.' in docs
           PY
