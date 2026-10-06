@@ -658,3 +658,53 @@ __all__.extend([
     "prepare_executor_activation",
     "serialize_activation_state",
 ])
+
+
+# Receipt-bound Work escalation bridge. This binds Work-Sparse selection to
+# durable budget/admission identity and external provider evidence; it does not
+# launch Work or create authority by itself.
+from .work_escalation_bridge import (
+    AUTHORITY_SCHEMA as WORK_INVOCATION_AUTHORITY_SCHEMA,
+    PLATFORM_OBSERVATION_SCHEMA as WORK_PLATFORM_OBSERVATION_SCHEMA,
+    PLATFORM_REQUEST_SCHEMA as WORK_PLATFORM_REQUEST_SCHEMA,
+    PROTOCOL_VERSION as WORK_ESCALATION_PROTOCOL_VERSION,
+    REQUEST_SCHEMA as WORK_ESCALATION_REQUEST_SCHEMA,
+    STATE_SCHEMA as WORK_ESCALATION_STATE_SCHEMA,
+    ExternalWorkExecutorActivationAdapter,
+    SqliteWorkEscalationStore,
+    WorkEscalationBudgetExhausted,
+    WorkEscalationError,
+    WorkEscalationRequest,
+    WorkEscalationState,
+    WorkInvocationAuthority,
+    WorkPlatformActivationRequest,
+    WorkPlatformObservation,
+    build_work_launch_order,
+    prepare_work_escalation_request,
+    prepare_work_platform_activation_request,
+    record_work_platform_observation,
+    work_executor_capability,
+)
+
+__all__.extend([
+    "WORK_INVOCATION_AUTHORITY_SCHEMA",
+    "WORK_PLATFORM_OBSERVATION_SCHEMA",
+    "WORK_PLATFORM_REQUEST_SCHEMA",
+    "WORK_ESCALATION_PROTOCOL_VERSION",
+    "WORK_ESCALATION_REQUEST_SCHEMA",
+    "WORK_ESCALATION_STATE_SCHEMA",
+    "ExternalWorkExecutorActivationAdapter",
+    "SqliteWorkEscalationStore",
+    "WorkEscalationBudgetExhausted",
+    "WorkEscalationError",
+    "WorkEscalationRequest",
+    "WorkEscalationState",
+    "WorkInvocationAuthority",
+    "WorkPlatformActivationRequest",
+    "WorkPlatformObservation",
+    "build_work_launch_order",
+    "prepare_work_escalation_request",
+    "prepare_work_platform_activation_request",
+    "record_work_platform_observation",
+    "work_executor_capability",
+])
