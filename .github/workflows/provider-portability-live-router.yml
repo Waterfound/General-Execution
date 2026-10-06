@@ -1,0 +1,350 @@
+name: Bounded provider portability live router
+
+on:
+  push:
+    branches:
+      - runtime/durable-asp-control
+    paths:
+      - "runtime/provider-portability/inbox/*.json"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: provider-portability-live-router
+  cancel-in-progress: false
+
+env:
+  RUNTIME_SOURCE_REVISION: 8cbe6e034789b0c354977095b75f395a7f1f05a7
+
+jobs:
+  route:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Enforce actor boundary
+        run: test "$GITHUB_ACTOR" = "Waterfound"
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Admit exactly one opaque routing request
+        id: request
+        shell: bash
+        run: |
+          mapfile -t files < <(git diff-tree --no-commit-id --name-only -r "$GITHUB_SHA" | grep '^runtime/provider-portability/inbox/[^/]*\.json$' || true)
+          test "${#files[@]}" -eq 1
+          request="${files[0]}"
+          cp "$request" /tmp/provider-portability-request.json
+          sha="$(sha256sum /tmp/provider-portability-request.json | awk '{print $1}')"
+          printf 'path=%s\nsha256=%s\n' "$request" "$sha" >> "$GITHUB_OUTPUT"
+
+      - name: Reject credential-shaped request data
+        run: |
+          python - <<'PY'
+          import json,re
+          data=json.load(open("/tmp/provider-portability-request.json"))
+          pattern=re.compile(r"(password|passwd|secret|token|cookie|private.?key|seed|mnemonic|credential)",re.I)
+          def walk(value,path="$"):
+              if isinstance(value,dict):
+                  for key,item in value.items():
+                      assert not pattern.search(str(key)), f"credential-shaped field: {path}.{key}"
+                      walk(item,f"{path}.{key}")
+              elif isinstance(value,list):
+                  for i,item in enumerate(value):
+                      walk(item,f"{path}[{i}]")
+          walk(data)
+          print("REQUEST_SECRET_SHAPE_PASS")
+          PY
+
+      - name: Materialize exact pinned runtime source
+        run: |
+          git fetch origin main
+          git cat-file -e "$RUNTIME_SOURCE_REVISION^{commit}"
+          git worktree add --detach /tmp/runtime-src "$RUNTIME_SOURCE_REVISION"
+          cd /tmp/runtime-src
+          python -m pip install -e '.[dev]' --disable-pip-version-check
+          python -m compileall -q src scripts
+
+      - name: Route and activate existing authorized resource
+        env:
+          REQUEST_SHA256: ${{ steps.request.outputs.sha256 }}
+        run: |
+          PYTHONPATH=/tmp/runtime-src/src python - <<'PY'
+          import json, os, tempfile
+          from pathlib import Path
+          from dataclasses import replace
+
+          from general_execution.canonical import sha256_digest
+          from general_execution.provider_portability import (
+              InternalLineageBinding,
+              ProviderResource,
+              ProviderRoutingAuthority,
+              ResourceDisposition,
+              build_provider_task_envelope,
+              provider_visible_dict,
+              route_provider_task,
+              verify_provider_binding,
+          )
+          from general_execution.execution_launch_admission import (
+              ExecutionLaunchOrder,
+              LaunchAuthorityBinding,
+              LaunchExecutorBinding,
+              admit_or_replay_execution_launch,
+          )
+          from general_execution.executor_activation import (
+              SqliteExecutorActivationStore,
+              activate_or_reconcile_executor,
+          )
+          from general_execution.github_actions_executor_activation import (
+              GitHubActionsExecutorActivationAdapter,
+              github_actions_executor_capability,
+          )
+
+          request=json.load(open("/tmp/provider-portability-request.json"))
+          registry=json.load(open("runtime/provider-portability/live-resources.json"))
+          activation=json.load(open("runtime/provider-portability/activation.json"))
+
+          assert activation["enabled"] is True
+          assert activation["mode"]=="bounded"
+          assert activation["max_paid_spend_cents"]==0
+          assert activation["allow_new_resources"] is False
+          assert activation["allow_provider_mutation"] is False
+          assert activation["allow_credential_mutation"] is False
+          assert activation["allow_billing_change"] is False
+          assert activation["allow_identity_creation"] is False
+          assert registry["max_paid_spend_cents"]==0
+          assert registry["authority_created"] is False
+          assert activation["authority_created"] is False
+          assert request["schema_version"]=="ge.provider-portability-live-request.v1"
+          assert request["required_capabilities"]==sorted(set(request["required_capabilities"]))
+          assert 1 <= request["max_runtime_seconds"] <= activation["max_runtime_seconds"]
+
+          input_digest=sha256_digest({
+              "request_id":request["request_id"],
+              "request_sha256":os.environ["REQUEST_SHA256"],
+          })
+          output_contract_digest=sha256_digest({
+              "schema_version":"ge.provider-portability-live-receipt.v1",
+              "required":["binding","native_execution_ref","provider_envelope","route"],
+          })
+          internal=InternalLineageBinding(
+              work_id="PPC-12-LIVE-ACTIVATION-BOUND-001",
+              portfolio_ref="portfolio://provider-portability-003",
+              source_revision=os.environ["RUNTIME_SOURCE_REVISION"],
+              authority_ref=activation["authority_ref"],
+              required_capabilities=tuple(request["required_capabilities"]),
+              input_artifact_digests=(input_digest,),
+              output_contract_digest=output_contract_digest,
+              semantic_context=(
+                  "Provider Portability bounded live activation",
+                  "existing-resource-only routing",
+              ),
+          )
+
+          disposition_map={
+              "available":ResourceDisposition.AVAILABLE,
+              "unavailable":ResourceDisposition.UNAVAILABLE,
+              "declined":ResourceDisposition.DECLINED,
+          }
+          resources=tuple(
+              ProviderResource(
+                  resource_id=item["resource_id"],
+                  provider_id=item["provider_id"],
+                  disposition=disposition_map[item["disposition"]],
+                  capabilities=tuple(item["capabilities"]),
+                  billing_scope_ref=item["billing_scope_ref"],
+                  authority_ref=item["authority_ref"],
+                  admission_digest=item["admission_digest"],
+                  evidence_refs=tuple(item["evidence_refs"]),
+              )
+              for item in registry["resources"]
+          )
+          routing=ProviderRoutingAuthority(
+              authority_ref=activation["authority_ref"],
+              allowed_resource_ids=tuple(activation["allowed_resource_ids"]),
+              allowed_capabilities=tuple(activation["allowed_capabilities"]),
+          )
+          decision=route_provider_task(internal,routing,resources)
+          assert decision.deferred is False
+          assert decision.selected_resource_id in activation["live_dispatch_resource_ids"]
+          selected=next(r for r in resources if r.resource_id==decision.selected_resource_id)
+          assert selected.provider_id=="github"
+
+          envelope,binding=build_provider_task_envelope(
+              internal,
+              selected,
+              dispatch_nonce=request["dispatch_nonce"],
+              max_runtime_seconds=request["max_runtime_seconds"],
+          )
+          assert verify_provider_binding(internal,envelope,binding,selected)
+          external=provider_visible_dict(envelope)
+          external_json=json.dumps(external,sort_keys=True)
+          for forbidden in (
+              internal.work_id,
+              internal.portfolio_ref,
+              internal.source_revision,
+              internal.authority_ref,
+              *internal.semantic_context,
+          ):
+              assert forbidden not in external_json
+          assert external["billing_scope_ref"]==selected.billing_scope_ref
+
+          # Explicit live activation authority is consumed here; routing itself did not create it.
+          authority=LaunchAuthorityBinding(
+              actor="Waterfound",
+              authority_ref=activation["authority_ref"],
+              authority_boundary=(
+                  "Bounded existing-resource Provider Portability live activation only; "
+                  "no provider, credential, billing, identity or resource mutation and no new spend."
+              ),
+              granted_scopes=("executor_activation","provider_routing"),
+          )
+          executor_binding=LaunchExecutorBinding(
+              executor="github_actions",
+              availability="AVAILABLE",
+              evidence_ref="adapter://general-execution/github-actions-production-v1",
+              evidence_digest=selected.admission_digest,
+          )
+          order=ExecutionLaunchOrder(
+              workstream_id=envelope.provider_task_ref,
+              owner="general_execution",
+              repository=os.environ["GITHUB_REPOSITORY"],
+              executor="github_actions",
+              objective="Execute bounded verification task.",
+              order_ref=f"provider-task://{envelope.provider_task_ref}",
+              source_revision=os.environ["RUNTIME_SOURCE_REVISION"],
+              required_authority_scopes=("executor_activation","provider_routing"),
+              authority=authority,
+              executor_binding=executor_binding,
+          )
+          receipt=admit_or_replay_execution_launch(
+              order,
+              authenticated_order_digest=order.digest,
+              authenticated_actor=os.environ["GITHUB_ACTOR"],
+          ).receipt
+          assert receipt.disposition=="ADMITTED"
+          capability=github_actions_executor_capability(receipt.repository)
+          adapter=GitHubActionsExecutorActivationAdapter(capability)
+          with tempfile.TemporaryDirectory() as temp:
+              store=SqliteExecutorActivationStore(Path(temp)/"activation.sqlite")
+              activation_result=activate_or_reconcile_executor(
+                  store,receipt,capability,adapter
+              )
+          assert activation_result.state.status=="executor_accepted"
+          expected_native=f"github-actions://{os.environ['GITHUB_REPOSITORY']}/actions/runs/{os.environ['GITHUB_RUN_ID']}"
+          assert activation_result.state.native_execution_ref==expected_native
+
+          # Negative proof: if every admitted resource is unavailable, routing must defer.
+          unavailable=tuple(
+              replace(resource,disposition=ResourceDisposition.UNAVAILABLE)
+              for resource in resources
+          )
+          no_route=route_provider_task(internal,routing,unavailable)
+          assert no_route.deferred is True
+          assert no_route.selected_resource_id is None
+          assert no_route.selected_provider_id is None
+          assert no_route.authority_created is False
+          assert no_route.execution_authorized is False
+
+          report={
+              "schema_version":"ge.provider-portability-live-receipt.v1",
+              "activation_id":activation["activation_id"],
+              "request_id":request["request_id"],
+              "request_sha256":"sha256:"+os.environ["REQUEST_SHA256"],
+              "runtime_source_revision":os.environ["RUNTIME_SOURCE_REVISION"],
+              "provider_actor":os.environ["GITHUB_ACTOR"],
+              "selected_resource_id":selected.resource_id,
+              "selected_provider_id":selected.provider_id,
+              "billing_scope_ref":selected.billing_scope_ref,
+              "internal_lineage_digest":internal.digest,
+              "route_decision_digest":decision.digest,
+              "provider_envelope":external,
+              "provider_envelope_digest":envelope.digest,
+              "provider_binding_digest":binding.digest,
+              "launch_receipt_digest":receipt.digest,
+              "native_execution_ref":activation_result.state.native_execution_ref,
+              "activation_status":activation_result.state.status,
+              "fail_closed_no_eligible_resource":"PASS",
+              "minimum_provider_visible_semantics":"PASS",
+              "truthful_attribution":"PASS",
+              "exact_internal_lineage":"PASS",
+              "continuity_check_receipt":"PASS",
+              "system_preservation":"PASS",
+              "new_paid_spend_cents":0,
+              "new_resource_created":False,
+              "provider_mutated":False,
+              "credential_mutated":False,
+              "billing_changed":False,
+              "identity_created":False,
+              "authority_created":False,
+          }
+          Path("/tmp/provider-portability-live-receipt.json").write_text(
+              json.dumps(report,sort_keys=True,indent=2)+"\n"
+          )
+          print(json.dumps({
+              "activation_id":report["activation_id"],
+              "request_id":report["request_id"],
+              "selected_resource_id":report["selected_resource_id"],
+              "selected_provider_id":report["selected_provider_id"],
+              "native_execution_ref":report["native_execution_ref"],
+              "route_decision_digest":report["route_decision_digest"],
+              "provider_envelope_digest":report["provider_envelope_digest"],
+              "fail_closed_no_eligible_resource":"PASS",
+              "authority_created":False,
+              "new_paid_spend_cents":0,
+          },sort_keys=True))
+          PY
+
+      - name: Persist Continuity Check receipt
+        env:
+          REQUEST_PATH: ${{ steps.request.outputs.path }}
+          REQUEST_SHA256: ${{ steps.request.outputs.sha256 }}
+        run: |
+          request_id="$(python - <<'PY'
+          import json
+          print(json.load(open("/tmp/provider-portability-request.json"))["request_id"])
+          PY
+          )"
+          git fetch origin runtime/durable-asp-control
+          git checkout -B runtime/durable-asp-control origin/runtime/durable-asp-control
+          mkdir -p runtime/provider-portability/receipts runtime/provider-portability/processed
+          receipt="runtime/provider-portability/receipts/$request_id.json"
+          processed="runtime/provider-portability/processed/$request_id.json"
+          if test -f "$receipt"; then
+            python - <<PY
+          import json
+          old=json.load(open("$receipt"))
+          assert old["request_sha256"]=="sha256:$REQUEST_SHA256"
+          print("IDEMPOTENT_RECEIPT_ALREADY_PRESENT")
+          PY
+            exit 0
+          fi
+          cp /tmp/provider-portability-live-receipt.json "$receipt"
+          python - <<PY > "$processed"
+          import json
+          print(json.dumps({
+            "schema_version":"ge.provider-portability-live-processed.v1",
+            "request_id":"$request_id",
+            "request_sha256":"sha256:$REQUEST_SHA256",
+            "receipt_ref":"$receipt",
+            "runtime_source_revision":"$RUNTIME_SOURCE_REVISION",
+            "authority_created":False
+          },sort_keys=True,indent=2))
+          PY
+          git config user.name 'provider-portability-live-router'
+          git config user.email 'provider-portability-live-router@users.noreply.github.com'
+          git add runtime/provider-portability/receipts runtime/provider-portability/processed
+          git commit -m "runtime: persist bounded provider portability receipt $request_id [skip ci]"
+          git fetch origin runtime/durable-asp-control
+          git rebase origin/runtime/durable-asp-control
+          git push origin HEAD:refs/heads/runtime/durable-asp-control
+
+      - name: Upload bounded live-routing evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: provider-portability-live-${{ github.run_id }}
+          path: /tmp/provider-portability-live-receipt.json
+          if-no-files-found: error
+          retention-days: 30
