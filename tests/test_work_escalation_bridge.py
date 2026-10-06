@@ -22,6 +22,10 @@ from general_execution.work_escalation_bridge import (
     prepare_work_platform_activation_request,
     record_work_platform_observation,
     work_executor_capability,
+    work_platform_activation_request_from_dict,
+    work_platform_activation_request_to_dict,
+    work_platform_observation_from_dict,
+    work_platform_observation_to_dict,
 )
 from general_execution.work_sparse_unattended import (
     ControllerUsage,
@@ -453,3 +457,34 @@ def test_unavailable_work_activation_capability_fails_before_platform_request(tm
     state = SqliteWorkEscalationStore(tmp_path / "work.sqlite").reserve(request)
     with pytest.raises(WorkEscalationError, match="requires ADMITTED"):
         prepare_work_platform_activation_request(state, receipt)
+
+
+def test_work_platform_wire_contracts_round_trip_exactly(tmp_path):
+    *_, auth, request = prepared_request()
+    _, _, receipt = admitted_receipt(request, auth)
+    state = SqliteWorkEscalationStore(tmp_path / "work.sqlite").reserve(request)
+    platform_request = prepare_work_platform_activation_request(state, receipt)
+    request_doc = work_platform_activation_request_to_dict(platform_request)
+    assert work_platform_activation_request_from_dict(request_doc) == platform_request
+
+    observation = accepted_observation(platform_request)
+    observation_doc = work_platform_observation_to_dict(observation)
+    assert work_platform_observation_from_dict(observation_doc) == observation
+
+
+def test_work_platform_wire_contracts_reject_unknown_fields(tmp_path):
+    *_, auth, request = prepared_request()
+    _, _, receipt = admitted_receipt(request, auth)
+    state = SqliteWorkEscalationStore(tmp_path / "work.sqlite").reserve(request)
+    platform_request = prepare_work_platform_activation_request(state, receipt)
+
+    request_doc = work_platform_activation_request_to_dict(platform_request)
+    request_doc["secret"] = "forbidden"
+    with pytest.raises(WorkEscalationError, match="fields mismatch"):
+        work_platform_activation_request_from_dict(request_doc)
+
+    observation = accepted_observation(platform_request)
+    observation_doc = work_platform_observation_to_dict(observation)
+    observation_doc["unexpected"] = True
+    with pytest.raises(WorkEscalationError, match="fields mismatch"):
+        work_platform_observation_from_dict(observation_doc)
