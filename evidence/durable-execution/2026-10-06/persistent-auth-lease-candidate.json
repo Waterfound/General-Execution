@@ -1,0 +1,128 @@
+{
+  "schema_version": "ge.persistent-auth-lease-candidate-evidence.v1",
+  "date": "2026-10-06",
+  "workstream": "PERSISTENT-AUTH-LEASE-PROVIDER-QUEUE",
+  "repository": "Waterfound/General-Execution",
+  "branch": "build-colony/persistent-auth-lease-001",
+  "dependency_chain": {
+    "eac01_pr": 16,
+    "eac01_head": "c3df65a6ea16d29e758d2432f2661182ecbf9870",
+    "work_sparse_pr": 17,
+    "work_sparse_head": "20ba2e0ad12c2c3d7bcd6c4c2efd780431d866b6"
+  },
+  "build_colony_frontier": {
+    "repository": "Waterfound/Build-Colony",
+    "branch": "research/persistent-auth-lease-001",
+    "final_study_head": "4db2710d2e2378c361bb7bf26e3453ef6af6a91e",
+    "mode": "frontier",
+    "decision_digest": "85821e385dc00015c9a62b3e61a2048572278c2495b7584514fffb72d6fff481",
+    "selected_candidate_id": "candidate-b-auth-lease-queue",
+    "selected_utility_bp": 8790,
+    "alternatives": {
+      "candidate-a-browser-keepalive": 3975,
+      "candidate-c-secret-persistence": 3075
+    },
+    "authority_created": false,
+    "execution_authorized": false,
+    "ci_run_id": 37430181321,
+    "ci_conclusion": "success",
+    "remote_pool_ci_run_id": 37430181311,
+    "remote_pool_ci_conclusion": "success"
+  },
+  "implementation": {
+    "candidate_verified_head": "4e6ede063fd3da236761454b9783e79c0f61d6d3",
+    "verification_workflow_closeout_commit": "40ebd2c704450415645b0981977e1127a2f271fd",
+    "module": "src/general_execution/persistent_auth_lease.py",
+    "tests": "tests/test_persistent_auth_lease.py",
+    "rehearsal": "scripts/run_persistent_auth_lease_rehearsal.py",
+    "documentation": "docs/persistent-auth-lease.md"
+  },
+  "behavior_proven": {
+    "auth_states": [
+      "AUTH_AVAILABLE",
+      "AUTH_SUSPECT",
+      "HUMAN_REAUTH_REQUIRED"
+    ],
+    "auth_surfaces": [
+      "connector_api",
+      "cloud_browser"
+    ],
+    "connector_first": true,
+    "reuse_existing_browser_session": true,
+    "stale_evidence_probes_before_human_reauth": true,
+    "explicit_rejection_or_challenge_required_for_human_reauth": true,
+    "consolidated_provider_human_gate": true,
+    "human_action_ref": "auth://<provider>/reauthenticate",
+    "one_login_can_unlock_multiple_queued_tasks": true,
+    "restart_safe_auth_and_queue_state": true,
+    "exact_queue_to_work_sparse_handoff": true,
+    "work_sparse_non_work_preference_preserved": true,
+    "work_requires_separate_explicit_budget": true,
+    "credentials_persisted": false,
+    "cookies_persisted": false,
+    "tokens_persisted": false,
+    "keepalive_attempted": false,
+    "provider_expiry_bypassed": false,
+    "authority_created": false,
+    "execution_triggered": false,
+    "execution_authorized": false
+  },
+  "provider_backed_verification": {
+    "run_id": 37430375889,
+    "job_id": 112159588827,
+    "conclusion": "success",
+    "focused_adversarial_bank": "success",
+    "restart_safe_rehearsal": "success",
+    "full_general_execution_regression": "success",
+    "static_auth_authority_audit": "success",
+    "artifact": {
+      "id": 11397070943,
+      "name": "persistent-auth-lease-rehearsal",
+      "digest": "sha256:ca4a83b63c296cdd8ab56ccd9ae9e8e3b56255fa6b603a52abfd0740334b850b"
+    },
+    "rehearsal_report": {
+      "status": "PASS_NOT_ACTIVATED",
+      "provider": "vercel",
+      "initial_human_gate_queue_depth": 3,
+      "one_login_unlocked_queue_ids": [
+        "q1",
+        "q2",
+        "q3"
+      ],
+      "restart_recovered_queue_ids": [
+        "q2",
+        "q3"
+      ],
+      "connector_preferred_after_available": true,
+      "final_human_gate_queue_depth": 1,
+      "credentials_persisted": false,
+      "cookies_persisted": false,
+      "tokens_persisted": false,
+      "keepalive_attempted": false,
+      "provider_expiry_bypassed": false,
+      "authority_created": false,
+      "execution_triggered": false
+    }
+  },
+  "boundaries": {
+    "no_real_provider_login_performed": true,
+    "no_cloud_browser_session_mutated": true,
+    "no_credentials_created_or_changed": true,
+    "no_paid_spend": true,
+    "no_merge": true,
+    "no_release": true,
+    "no_mainnet": true,
+    "no_consensus_or_economics_change": true,
+    "no_physical_hardware_action": true
+  },
+  "integration_gate": {
+    "status": "STACKED_INTEGRATION_AUTHORITY_REQUIRED",
+    "required_order": [
+      "PR #16 EAC-01",
+      "PR #17 Work-Sparse Unattended",
+      "Persistent Auth Lease candidate"
+    ],
+    "note": "Candidate is technically green but remains non-canonical until its stacked dependencies and this candidate receive explicit integration authority."
+  },
+  "terminal_disposition": "PERSISTENT_AUTH_LEASE_CANDIDATE_GREEN__AWAITING_STACKED_INTEGRATION_AUTHORITY"
+}
