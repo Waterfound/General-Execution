@@ -3,7 +3,8 @@ name: Persistent runtime verification
 on:
   push:
     branches:
-      - feature/durable-asp-portfolio-state
+      - main
+      - feature/durable-authority-canonicalization-20260927
     paths:
       - src/general_execution/persistent_runtime.py
       - scripts/run_persistent_runtime_event.py
@@ -56,7 +57,7 @@ jobs:
           assert "production" not in text.lower()
           assert "release" not in text.lower()
           assert "__PINNED_RUNTIME_REVISION__" not in text
-          assert "0ee552364eae07cd23b94da4cb4fa9c4cac23763" in text
+          assert "8cbe6e034789b0c354977095b75f395a7f1f05a7" in text
           PY
       - name: Full regression
         run: python -m pytest -q
