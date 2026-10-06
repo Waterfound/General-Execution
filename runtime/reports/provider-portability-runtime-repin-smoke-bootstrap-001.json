@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:fb903988b12765bced819abe213bb38abdecfefe12b59369e3ab4b375fa61970",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "provider-portability-runtime-repin-smoke-bootstrap-001",
+    "human_required": false,
+    "operation": "bootstrap",
+    "portfolio_id": "provider-portability-runtime-repin-smoke-001",
+    "post_generation": 0,
+    "post_state_digest": "sha256:b0c9e2629e10dd13aa2c435dfdc24cc57363b7dc481fc687d9cc175ad5d87400",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:b0c9e2629e10dd13aa2c435dfdc24cc57363b7dc481fc687d9cc175ad5d87400",
+    "requested_action_ref": "terminal://provider-portability/runtime-repin-smoke-verified",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:4a81aa52dc07731b84f902fa177780f035de6812bfba85fbf366cdecc245d3a5",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}

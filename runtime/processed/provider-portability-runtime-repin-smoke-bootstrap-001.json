@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:fb903988b12765bced819abe213bb38abdecfefe12b59369e3ab4b375fa61970",
+  "event_id": "provider-portability-runtime-repin-smoke-bootstrap-001",
+  "event_report_digest": "sha256:4a81aa52dc07731b84f902fa177780f035de6812bfba85fbf366cdecc245d3a5",
+  "operation": "bootstrap",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "8cbe6e034789b0c354977095b75f395a7f1f05a7",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "fb1516891e48b739dbe0bbb6715b33caa29bb7ef"
+}
