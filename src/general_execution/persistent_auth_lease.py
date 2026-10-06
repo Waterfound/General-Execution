@@ -356,6 +356,28 @@ def auth_path_to_dict(decision: ProviderAuthPathDecision) -> dict[str, Any]:
     }
 
 
+def verify_auth_path_decision(
+    provider_id: str,
+    leases: tuple[ProviderAuthLease, ...],
+    decision: dict[str, Any],
+    *,
+    now: str | None = None,
+    evidence_stale_after_seconds: int | None = None,
+) -> bool:
+    try:
+        expected = auth_path_to_dict(
+            select_provider_auth_path(
+                provider_id,
+                leases,
+                now=now,
+                evidence_stale_after_seconds=evidence_stale_after_seconds,
+            )
+        )
+    except (PersistentAuthLeaseError, TypeError, ValueError):
+        return False
+    return expected == decision
+
+
 def _finalize_auth_path(
     *,
     provider_id: str,
@@ -599,6 +621,32 @@ def _drain_payload(plan: ProviderDrainPlan) -> dict[str, Any]:
 
 def drain_plan_to_dict(plan: ProviderDrainPlan) -> dict[str, Any]:
     return {**_drain_payload(plan), "plan_digest": plan.plan_digest}
+
+
+def verify_provider_drain_plan(
+    provider_id: str,
+    leases: tuple[ProviderAuthLease, ...],
+    queued_items: tuple[ProviderAuthQueueItem, ...],
+    plan: dict[str, Any],
+    *,
+    max_items: int = 1,
+    now: str | None = None,
+    evidence_stale_after_seconds: int | None = None,
+) -> bool:
+    try:
+        expected = drain_plan_to_dict(
+            plan_provider_drain(
+                provider_id,
+                leases,
+                queued_items,
+                max_items=max_items,
+                now=now,
+                evidence_stale_after_seconds=evidence_stale_after_seconds,
+            )
+        )
+    except (PersistentAuthLeaseError, TypeError, ValueError):
+        return False
+    return expected == plan
 
 
 def plan_provider_drain(
