@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:3abfec2223ec80310e6d48539744f3d17bba57cceb789b5510fa7f6d9c709bc1",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "provider-portability-candidate-bootstrap-001",
+    "human_required": true,
+    "operation": "bootstrap",
+    "portfolio_id": "provider-portability-001",
+    "post_generation": 0,
+    "post_state_digest": "sha256:aa9d62bd12da4293b3401d9e049e3823c41fdabb593ca6cc2f1d667ba39157eb",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:aa9d62bd12da4293b3401d9e049e3823c41fdabb593ca6cc2f1d667ba39157eb",
+    "requested_action_ref": "authority://provider-portability/canonical-integration",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:a90b88c521dbeea8eef2e91a43232eddc877ee096c54a7d8ce372232444d028b",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
