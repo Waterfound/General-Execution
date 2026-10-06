@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:d40b3ff9222677dc219444964f406b6de85aa94b139303082cfd2464cade4043",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "system-preservation-bootstrap-001",
+    "human_required": false,
+    "operation": "bootstrap",
+    "portfolio_id": "system-preservation-low-exposure-001",
+    "post_generation": 0,
+    "post_state_digest": "sha256:5aed83c5412be79910c14c899d124dc08d676754321469faf4a43bda44a13e77",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:5aed83c5412be79910c14c899d124dc08d676754321469faf4a43bda44a13e77",
+    "requested_action_ref": "condition://system-preservation/fae-contract-ci-pass",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:7b598dae560fe7805f235ef616092d90012f68f383ea2232282ba6aab68a86f6",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}

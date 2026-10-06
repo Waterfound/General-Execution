@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:d40b3ff9222677dc219444964f406b6de85aa94b139303082cfd2464cade4043",
+  "event_id": "system-preservation-bootstrap-001",
+  "event_report_digest": "sha256:7b598dae560fe7805f235ef616092d90012f68f383ea2232282ba6aab68a86f6",
+  "operation": "bootstrap",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "fe6c7b3fa7489711d87c030b49d79fb11a0e3f63"
+}
