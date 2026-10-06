@@ -11,11 +11,14 @@ from general_execution.persistent_auth_lease import (
     apply_auth_observation,
     auth_path_to_dict,
     drain_plan_to_dict,
+    auth_handoff_to_dict,
     initialize_auth_lease,
     plan_provider_drain,
+    prepare_provider_queue_handoff,
     select_provider_auth_path,
     verify_auth_path_decision,
     verify_provider_drain_plan,
+    verify_provider_queue_handoff,
 )
 
 
@@ -103,6 +106,7 @@ def test_rejection_requires_human_then_new_success_reuses_same_lease_lineage():
     decision = select_provider_auth_path("vercel", (rejected,))
     assert decision.disposition == "HUMAN_REAUTH_REQUIRED"
     assert decision.human_interaction_required
+    assert decision.human_action_ref == "auth://vercel/reauthenticate"
 
     recovered = apply_auth_observation(
         rejected,
@@ -160,6 +164,7 @@ def test_no_auth_evidence_consolidates_to_one_human_gate_for_provider_queue():
     assert plan.queue_depth == 3
     assert plan.selected_queue_ids == ()
     assert plan.human_interaction_required
+    assert plan.human_action_ref == "auth://vercel/reauthenticate"
 
 
 def test_one_human_login_unlocks_ordered_batch_drain():
@@ -317,3 +322,55 @@ def test_human_gate_requires_explicit_provider_rejection_not_age_alone():
     )
     assert decision.disposition == "PROBE_AUTH"
     assert not decision.human_interaction_required
+
+
+def test_auth_approved_queue_handoff_binds_exact_work_sparse_item():
+    lease = initialize_auth_lease(observation())
+    items = (
+        queue_item("q1", priority=10),
+        queue_item("q2", priority=20),
+    )
+    plan = plan_provider_drain("vercel", (lease,), items, max_items=2)
+    handoff, work = prepare_provider_queue_handoff(plan, items, queue_id="q2")
+    document = auth_handoff_to_dict(handoff)
+
+    assert handoff.queue_id == "q2"
+    assert handoff.queue_item_digest == items[1].digest
+    assert handoff.work_item_digest == work.digest
+    assert handoff.authority_ref == items[1].authority_ref
+    assert work.work_id == items[1].work_id
+    assert work.repository == items[1].repository
+    assert work.requested_actions == items[1].requested_actions
+    assert work.required_capabilities == items[1].required_capabilities
+    assert not handoff.authority_created
+    assert not handoff.execution_authorized
+    assert verify_provider_queue_handoff(
+        plan,
+        items,
+        document,
+        queue_id="q2",
+    )
+
+
+def test_auth_queue_handoff_rejects_unselected_or_tampered_work():
+    lease = initialize_auth_lease(observation())
+    items = (
+        queue_item("q1", priority=10),
+        queue_item("q2", priority=20),
+    )
+    plan = plan_provider_drain("vercel", (lease,), items, max_items=1)
+    with pytest.raises(PersistentAuthLeaseError):
+        prepare_provider_queue_handoff(plan, items, queue_id="q2")
+
+    handoff, _ = prepare_provider_queue_handoff(plan, items)
+    tampered = auth_handoff_to_dict(handoff)
+    tampered["authority_ref"] = "authority://invented"
+    assert not verify_provider_queue_handoff(plan, items, tampered)
+
+
+def test_human_gate_plan_cannot_be_handed_to_work_sparse():
+    items = (queue_item("q1"),)
+    plan = plan_provider_drain("vercel", (), items)
+    assert plan.disposition == "HUMAN_REAUTH_REQUIRED"
+    with pytest.raises(PersistentAuthLeaseError):
+        prepare_provider_queue_handoff(plan, items)
