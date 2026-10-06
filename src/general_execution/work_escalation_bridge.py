@@ -106,6 +106,18 @@ def _time(value: str, field: str) -> str:
     return raw
 
 
+def _exact(data: Any, expected: set[str], label: str) -> dict[str, Any]:
+    if not isinstance(data, dict):
+        raise WorkEscalationError(f"{label} must be an object")
+    actual = set(data)
+    if actual != expected:
+        raise WorkEscalationError(
+            f"{label} fields mismatch: missing={sorted(expected-actual)} "
+            f"unknown={sorted(actual-expected)}"
+        )
+    return data
+
+
 @dataclass(frozen=True, slots=True)
 class WorkInvocationAuthority:
     actor: str
@@ -584,6 +596,41 @@ class WorkPlatformActivationRequest:
         return sha256_digest(self)
 
 
+def work_platform_activation_request_to_dict(
+    request: WorkPlatformActivationRequest,
+) -> dict[str, Any]:
+    return json.loads(canonical_json(request))
+
+
+def work_platform_activation_request_from_dict(
+    data: Any,
+) -> WorkPlatformActivationRequest:
+    obj = _exact(
+        data,
+        {
+            "work_request_id",
+            "work_request_digest",
+            "reservation_digest",
+            "slot_index",
+            "launch_receipt_id",
+            "launch_receipt_digest",
+            "dispatch_identity",
+            "repository",
+            "source_revision",
+            "authority_ref",
+            "objective",
+            "execution_triggered",
+            "authority_created",
+            "schema_version",
+        },
+        "Work platform activation request",
+    )
+    try:
+        return WorkPlatformActivationRequest(**obj)
+    except (TypeError, ValueError) as exc:
+        raise WorkEscalationError("invalid Work platform activation request") from exc
+
+
 def build_work_launch_order(
     request: WorkEscalationRequest,
     authority: WorkInvocationAuthority,
@@ -708,6 +755,40 @@ class WorkPlatformObservation:
     @property
     def digest(self) -> str:
         return sha256_digest(self)
+
+
+def work_platform_observation_to_dict(
+    observation: WorkPlatformObservation,
+) -> dict[str, Any]:
+    return json.loads(canonical_json(observation))
+
+
+def work_platform_observation_from_dict(data: Any) -> WorkPlatformObservation:
+    obj = _exact(
+        data,
+        {
+            "platform_request_id",
+            "platform_request_digest",
+            "dispatch_identity",
+            "outcome",
+            "observed_at",
+            "evidence_ref",
+            "evidence_digest",
+            "native_execution_ref",
+            "condition_ref",
+            "failure_reason",
+            "credentials_persisted",
+            "cookies_persisted",
+            "tokens_persisted",
+            "authority_created",
+            "schema_version",
+        },
+        "Work platform observation",
+    )
+    try:
+        return WorkPlatformObservation(**obj)
+    except (TypeError, ValueError) as exc:
+        raise WorkEscalationError("invalid Work platform observation") from exc
 
 
 def record_work_platform_observation(
