@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:9bf13bcf14bfff606c09ef70bb6d1de4df3bb42bf08f0c42f963358d37dd3483",
+  "event_id": "predictive-sovereign-execution-candidate-bootstrap-001",
+  "event_report_digest": "sha256:724ab10911bb7c5c049abdd91a8980cea6e2d73ab765b5d76ef209f47f84a499",
+  "operation": "bootstrap",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "8cbe6e034789b0c354977095b75f395a7f1f05a7",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "6b66768e8a1121ba5b56f0594193055a05629503"
+}

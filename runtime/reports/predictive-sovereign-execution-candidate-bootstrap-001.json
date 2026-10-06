@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:9bf13bcf14bfff606c09ef70bb6d1de4df3bb42bf08f0c42f963358d37dd3483",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "predictive-sovereign-execution-candidate-bootstrap-001",
+    "human_required": true,
+    "operation": "bootstrap",
+    "portfolio_id": "predictive-sovereign-execution-001",
+    "post_generation": 0,
+    "post_state_digest": "sha256:fd2300d6ceb35d3c228da54e3c7d96a83d8d8d70962f61b7700bbefa2fa3bc0d",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:fd2300d6ceb35d3c228da54e3c7d96a83d8d8d70962f61b7700bbefa2fa3bc0d",
+    "requested_action_ref": "authority://predictive-sovereign/canonical-integration",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:724ab10911bb7c5c049abdd91a8980cea6e2d73ab765b5d76ef209f47f84a499",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
