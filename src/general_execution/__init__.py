@@ -684,6 +684,10 @@ from .work_escalation_bridge import (
     prepare_work_platform_activation_request,
     record_work_platform_observation,
     work_executor_capability,
+    work_platform_activation_request_from_dict,
+    work_platform_activation_request_to_dict,
+    work_platform_observation_from_dict,
+    work_platform_observation_to_dict,
 )
 
 __all__.extend([
@@ -707,4 +711,8 @@ __all__.extend([
     "prepare_work_platform_activation_request",
     "record_work_platform_observation",
     "work_executor_capability",
+    "work_platform_activation_request_from_dict",
+    "work_platform_activation_request_to_dict",
+    "work_platform_observation_from_dict",
+    "work_platform_observation_to_dict",
 ])
