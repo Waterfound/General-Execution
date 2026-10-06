@@ -1,0 +1,53 @@
+{
+  "schema_version": "ge.durable-waiting-external-metadata-main-repair-evidence.v1",
+  "evidence_id": "DURABLE-WAITING-EXTERNAL-METADATA-MAIN-REPAIR-001",
+  "incident_ref": {
+    "durable_runtime_run": 37532187895,
+    "state_mutated": false,
+    "class": "ACTIVE_WAIT_METADATA_RETENTION_ON_NONROTATING_EXIT"
+  },
+  "base": {
+    "branch": "main",
+    "revision": "8999b47cf3bd0276bf8feda24d3022f4d270e510",
+    "relation_to_current_runtime_pin": {
+      "runtime_pin": "a27a558d4ed0e28d96c3fec408212353d0077060",
+      "commits_ahead": 161,
+      "asp_transition_blob_unchanged_before_repair": true,
+      "test_asp_transition_blob_unchanged_before_repair": true
+    }
+  },
+  "repair": {
+    "branch": "repair/durable-waiting-external-metadata-main-001",
+    "verified_revision": "114cde320060d33997a731d0ae47e6c5e7879f99",
+    "semantics": "Clear blockers and wake_condition only when a non-rotating Active transition leaves waiting_external for a non-waiting target.",
+    "policy_semantics_changed": false,
+    "authority_semantics_changed": false,
+    "persistence_format_changed": false
+  },
+  "verification": {
+    "workflow_run": 37533734836,
+    "job_id": 112509292095,
+    "conclusion": "success",
+    "python": "3.13.15",
+    "focused_tests": 38,
+    "full_regression_tests": 564,
+    "compile": "PASS",
+    "focused_regression": "PASS",
+    "full_current_main_regression": "PASS",
+    "boundary_audit": "DURABLE_WAITING_EXTERNAL_METADATA_MAIN_REPAIR_BOUNDARY_PASS"
+  },
+  "compare_to_current_main": {
+    "base": "8999b47cf3bd0276bf8feda24d3022f4d270e510",
+    "ahead_by": 3,
+    "behind_by": 0,
+    "changed_paths": [
+      ".github/workflows/durable-waiting-external-metadata-main-verification.yml",
+      "src/general_execution/asp_transition.py",
+      "tests/test_asp_transition.py"
+    ]
+  },
+  "terminal_verdict": "VERIFIED_CURRENT_MAIN_CANDIDATE__INTEGRATION_AND_RUNTIME_REPIN_REQUIRE_SEPARATE_AUTHORITY",
+  "canonical_merge_authorized": false,
+  "runtime_repin_authorized": false,
+  "authority_created": false
+}
