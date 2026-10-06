@@ -1,0 +1,36 @@
+{
+  "schema_version": "ge.system-preservation-reconciliation.v1",
+  "checkpoint_id": "system-preservation-v1-reconciliation-20261006",
+  "portfolio_id": "system-preservation-low-exposure-001",
+  "bootstrap": {
+    "trigger_commit": "fe6c7b3fa7489711d87c030b49d79fb11a0e3f63",
+    "workflow_run": 37531759280,
+    "conclusion": "success",
+    "generation": 0,
+    "state_digest": "sha256:5aed83c5412be79910c14c899d124dc08d676754321469faf4a43bda44a13e77",
+    "database_sha256": "sha256:d40b3ff9222677dc219444964f406b6de85aa94b139303082cfd2464cade4043"
+  },
+  "non_committed_attempts": [
+    {
+      "kind": "human_authority_bridge",
+      "commit": "b291be0bfdadf7d20fcce2fd2b81e331e91b5495",
+      "workflow_run": 37531666088,
+      "conclusion": "failure",
+      "first_divergence": "documentary authority record used a schema other than ge.human-authority-event.v1",
+      "state_mutated": false,
+      "disposition": "INTERFACE_MISMATCH__NOT_AUTHORITY_DENIAL"
+    },
+    {
+      "kind": "portfolio_transition",
+      "commit": "0606e2bcb13fd05c7c557a98445e351e4048652c",
+      "workflow_run": 37532187895,
+      "conclusion": "failure",
+      "first_divergence": "non-rotating transition from waiting_external retained the Active wake_condition while targeting failed, violating PortfolioState invariants",
+      "state_mutated": false,
+      "disposition": "RUNTIME_EDGE_CASE__DO_NOT_PATCH_IN_THIS_FRONTIER"
+    }
+  ],
+  "durable_truth": "Portfolio v1 remains generation 0 exactly as bootstrapped. Failed attempts are retained as evidence and did not commit a state transition.",
+  "next_disposition": "SUPERSEDE_WITH_EXACT_V2_PORTFOLIO_AFTER_CORRECTED_CANDIDATE_VERIFICATION",
+  "authority_created": false
+}
