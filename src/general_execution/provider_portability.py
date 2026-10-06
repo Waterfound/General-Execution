@@ -364,10 +364,21 @@ def verify_provider_binding(
     lineage: InternalLineageBinding,
     envelope: ProviderTaskEnvelope,
     binding: ProviderEnvelopeBinding,
+    resource: ProviderResource | None = None,
 ) -> bool:
-    return (
+    base = (
         binding.internal_lineage_digest == lineage.digest
         and binding.provider_envelope_digest == envelope.digest
         and binding.provider_task_ref == envelope.provider_task_ref
         and binding.resource_id == envelope.resource_id
+    )
+    if not base:
+        return False
+    if resource is None:
+        return True
+    return (
+        resource.resource_id == binding.resource_id
+        and resource.provider_id == binding.provider_id
+        and resource.authority_ref == binding.authority_ref
+        and resource.billing_scope_ref == envelope.billing_scope_ref
     )
