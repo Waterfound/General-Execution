@@ -134,3 +134,14 @@ def test_duplicate_resource_identity_is_rejected():
     same = offer("included", ResourceEconomics.INCLUDED_ALLOWANCE)
     with pytest.raises(AbundantResourceError):
         admit_abundant_resources(envelope(), (same, same))
+
+
+def test_empty_offer_set_is_valid_zero_abundance_state():
+    decision = admit_abundant_resources(envelope(), ())
+    assert decision.admitted_resource_ids == ()
+    assert decision.admitted_resource_digests == ()
+    assert decision.rejected == ()
+    assert decision.admitted_parallelism == 0
+    assert decision.incremental_paid_spend_cents == 0
+    assert decision.authority_created is False
+    assert decision.execution_triggered is False
