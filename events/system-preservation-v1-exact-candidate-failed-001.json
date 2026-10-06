@@ -1,0 +1,70 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "system-preservation-v1-exact-candidate-failed-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "system-preservation-v1-exact-candidate-failure",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-close-obsolete-exact-candidate",
+          "from_state": "waiting_external",
+          "event": "fatal_failure",
+          "to_state": "failed",
+          "next_action_ref": "terminal://system-preservation/v1-exact-candidate-failed",
+          "effect": "none",
+          "required_evidence": [
+            "exact_ci_failure"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-push",
+      "event_kind": "durable-transition",
+      "portfolio_id": "system-preservation-low-exposure-001",
+      "policy_digest": "sha256:a7eb41667eccd218f332ad921f4e9c156d345d607663580da12b89703c5a7f81",
+      "transition_event": "fatal_failure"
+    },
+    "trigger": {
+      "source": "github-push",
+      "event_id": "system-preservation-v1-exact-candidate-failed-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:19b425a5d1c0c55bfd3629a35d0bdf0df69571a02895e967a49b292a4097a5ee",
+      "observation_digest": "sha256:8902c8e72c177a601dac48ceb55f5c13e5c908b7a0f600f0eedd6eee2cecc994",
+      "admission_ref": "github://runtime/durable-asp-control/system-preservation-v1-exact-candidate-failed-001"
+    },
+    "observation": {
+      "portfolio_id": "system-preservation-low-exposure-001",
+      "expected_generation": 0,
+      "expected_state_digest": "sha256:5aed83c5412be79910c14c899d124dc08d676754321469faf4a43bda44a13e77",
+      "policy_digest": "sha256:a7eb41667eccd218f332ad921f4e9c156d345d607663580da12b89703c5a7f81",
+      "event": "fatal_failure",
+      "evidence": [
+        {
+          "kind": "exact_ci_failure",
+          "locator": "github://Waterfound/FAE-testnet/actions/runs/37531610106",
+          "digest": "sha256:19b425a5d1c0c55bfd3629a35d0bdf0df69571a02895e967a49b292a4097a5ee",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "github://Waterfound/FAE-testnet/commit/0c344fb56250d4ce12aed9458d193db2dc37e9a7",
+      "observed_at": "2026-10-06T21:07:42Z",
+      "summary": "The exact SP-03 candidate bound into durable portfolio v1 failed its negative-test harness. The exposure validator itself passed, but the candidate verification contract was not GREEN; v1 is closed as failed and superseded by a corrected exact candidate.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/actions/runs/37531610106",
+        "github://Waterfound/FAE-testnet/commit/0c344fb56250d4ce12aed9458d193db2dc37e9a7"
+      ],
+      "uncertainties": [],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
