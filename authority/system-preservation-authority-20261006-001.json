@@ -1,0 +1,27 @@
+{
+  "schema_version": "ge.system-preservation-authority-receipt.v1",
+  "authority_id": "system-preservation-authority-20261006-001",
+  "recorded_at": "2026-10-06T21:08:00Z",
+  "source": "Waterfound explicit authorization in Standard Chat on 2026-10-06",
+  "approved_action_ref": "authority://system-preservation/structure-build-colony-and-durable-execute",
+  "approved_scope": [
+    "structure System Preservation / Low-Exposure Architecture with Build Colony",
+    "use Durable Execution across every admissible frontier",
+    "create isolated candidate branches and non-secret evidence",
+    "perform read-only exposure and recovery audits",
+    "prepare and verify software-only reversible non-live hardening candidates"
+  ],
+  "prohibitions": [
+    "merge candidate branches to canonical main without separate authority",
+    "create new spending or use paid provider fallback",
+    "activate production or mainnet",
+    "change consensus or economics",
+    "publish a release",
+    "perform destructive infrastructure mutation",
+    "change repository visibility",
+    "disclose, rotate, or persist new credential material merely for this program",
+    "mutate Stability Soak V3 frozen source, five-service topology, node identities, or T0"
+  ],
+  "build_colony_program_ref": "github://Waterfound/Build-Colony/commit/901e976e00a86c696b5fe18fe118edf76c71685b/pilots/system-preservation-001/PROGRAM.json",
+  "authority_created": false
+}
