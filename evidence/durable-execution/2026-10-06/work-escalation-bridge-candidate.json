@@ -1,0 +1,118 @@
+{
+  "schema_version": "ge.work-escalation-bridge-candidate-evidence.v1",
+  "date": "2026-10-06",
+  "workstream": "WORK-ESCALATION-BRIDGE",
+  "repository": "Waterfound/General-Execution",
+  "branch": "build-colony/work-escalation-bridge-001",
+  "dependency_chain": {
+    "eac01_pr": 16,
+    "work_sparse_pr": 17,
+    "persistent_auth_lease_pr": 18,
+    "base_head": "e1e2d4d17b5c20d9a7fcfed8a5ab63aa989232dd"
+  },
+  "build_colony_frontier": {
+    "repository": "Waterfound/Build-Colony",
+    "branch": "research/work-escalation-bridge-001",
+    "final_study_head": "77fc4875fba3b08ac4d739a8c0f184c5a7b151d2",
+    "mode": "frontier",
+    "decision_digest": "869a478b1f1a182640910d4578d54b4ad3e8779d5fb367b31d5f40510b052cf1",
+    "selected_candidate_id": "candidate-b-eac-work-bridge",
+    "selected_utility_bp": 8790,
+    "alternatives": {
+      "candidate-a-direct-work-trigger": 4442,
+      "candidate-c-generic-work-daemon": 3530
+    },
+    "authority_created": false,
+    "execution_authorized": false,
+    "ci_run_id": 37496727897,
+    "ci_conclusion": "success",
+    "remote_pool_ci_run_id": 37496727816,
+    "remote_pool_ci_conclusion": "success"
+  },
+  "implementation": {
+    "candidate_verified_head": "938ca207699a5715029810e176959cc9b648cf82",
+    "module": "src/general_execution/work_escalation_bridge.py",
+    "tests": "tests/test_work_escalation_bridge.py",
+    "rehearsal": "scripts/run_work_escalation_bridge_rehearsal.py",
+    "documentation": "docs/work-escalation-bridge.md",
+    "public_api": "src/general_execution/__init__.py"
+  },
+  "behavior_proven": {
+    "work_sparse_work_selection_bound": true,
+    "explicit_work_invocation_authority_required": true,
+    "explicit_executor_activation_scope_required": true,
+    "durable_atomic_work_budget_reservation": true,
+    "deterministic_request_replay_same_budget_slot": true,
+    "budget_oversubscription_fail_closed": true,
+    "pre_platform_launch_identity_materialized": true,
+    "elg01_admitted_receipt_bound": true,
+    "eac01_dispatch_identity_bound": true,
+    "strict_platform_request_wire_contract": true,
+    "strict_platform_observation_wire_contract": true,
+    "platform_wait_does_not_claim_execution": true,
+    "human_reauth_action_ref_preserved": true,
+    "human_reauth_can_resume_same_lineage": true,
+    "provider_accepted_native_ref_binds_to_eac01": true,
+    "eac01_replay_does_not_duplicate_native_execution": true,
+    "credentials_persisted": false,
+    "cookies_persisted": false,
+    "tokens_persisted": false,
+    "authority_created": false,
+    "execution_triggered_before_provider": false
+  },
+  "provider_backed_verification": {
+    "run_id": 37498192743,
+    "job_id": 112388045843,
+    "conclusion": "success",
+    "focused_adversarial_bank": "success",
+    "restart_safe_rehearsal": "success",
+    "full_general_execution_regression": "success",
+    "static_authority_execution_audit": "success",
+    "artifact": {
+      "id": 11428586687,
+      "name": "work-escalation-bridge-rehearsal",
+      "digest": "sha256:afc6ad8171045fe18a6ca0d884310ac54ac5db2974d40376863857f3881a9620"
+    },
+    "rehearsal_report": {
+      "status": "PASS_NOT_REAL_WORK",
+      "route_selected_executor": "work",
+      "budget_slot": 1,
+      "restart_recovered_same_slot": true,
+      "reauth_action_ref": "auth://vercel/reauthenticate",
+      "provider_observation_simulated": true,
+      "real_work_launched": false,
+      "authority_created": false,
+      "pre_platform_execution_triggered": false,
+      "terminal_disposition": "CONTROL_PLANE_PASS__REAL_WORK_PLATFORM_ACTIVATION_CAPABILITY_EXTERNAL_GATE"
+    }
+  },
+  "platform_boundary": {
+    "real_work_platform_activation_primitive_available_to_this_controller": false,
+    "work_platform_activation_request_ready": true,
+    "external_adapter_contract_ready": true,
+    "native_execution_must_not_be_claimed_without_provider_observation": true,
+    "gate": "REAL_WORK_PLATFORM_ACTIVATION_CAPABILITY_EXTERNAL_GATE"
+  },
+  "boundaries": {
+    "no_real_work_launched": true,
+    "no_work_budget_authority_granted": true,
+    "active_unattended_work_budget_remains_zero": true,
+    "no_credentials_created_or_changed": true,
+    "no_paid_spend": true,
+    "no_merge": true,
+    "no_release": true,
+    "no_mainnet": true,
+    "no_consensus_or_economics_change": true,
+    "no_physical_hardware_action": true
+  },
+  "integration_gate": {
+    "status": "STACKED_INTEGRATION_AUTHORITY_REQUIRED",
+    "required_order": [
+      "PR #16 EAC-01",
+      "PR #17 Work-Sparse Unattended",
+      "PR #18 Persistent Auth Lease",
+      "Work Escalation Bridge candidate"
+    ]
+  },
+  "terminal_disposition": "WORK_ESCALATION_BRIDGE_CANDIDATE_GREEN__REAL_WORK_PLATFORM_ACTIVATION_CAPABILITY_EXTERNAL_GATE__AWAITING_STACKED_INTEGRATION_AUTHORITY"
+}
