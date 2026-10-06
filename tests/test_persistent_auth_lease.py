@@ -3,6 +3,12 @@ import copy
 import pytest
 
 from general_execution.canonical import sha256_digest
+from general_execution.work_sparse_unattended import (
+    ControllerUsage,
+    ExecutorCapability,
+    UnattendedAuthorityEnvelope,
+    decide_work_sparse_route,
+)
 from general_execution.persistent_auth_lease import (
     ProviderAuthObservation,
     ProviderAuthQueueItem,
@@ -51,6 +57,8 @@ def queue_item(
     provider="vercel",
     priority=100,
     work_id=None,
+    requested_actions=("read_state",),
+    required_capabilities=("browser_ui",),
 ):
     return ProviderAuthQueueItem(
         queue_id=queue_id,
@@ -59,8 +67,8 @@ def queue_item(
         repository="Waterfound/FAE-testnet",
         authority_ref="authority://waterfound/work-sparse-unattended-001",
         source_revision="candidate-sha",
-        requested_actions=("read_state",),
-        required_capabilities=("browser_ui",),
+        requested_actions=tuple(requested_actions),
+        required_capabilities=tuple(required_capabilities),
         priority=priority,
     )
 
@@ -374,3 +382,85 @@ def test_human_gate_plan_cannot_be_handed_to_work_sparse():
     assert plan.disposition == "HUMAN_REAUTH_REQUIRED"
     with pytest.raises(PersistentAuthLeaseError):
         prepare_provider_queue_handoff(plan, items)
+
+
+def test_post_login_handoff_flows_into_work_sparse_without_work_when_api_executor_fits():
+    lease = initialize_auth_lease(observation(surface="connector_api"))
+    item = queue_item(
+        "q-api",
+        requested_actions=("inspect_ci", "run_tests"),
+        required_capabilities=("repo_read", "ci_dispatch"),
+    )
+    plan = plan_provider_drain("vercel", (lease,), (item,), max_items=1)
+    handoff, routed_work = prepare_provider_queue_handoff(plan, (item,))
+
+    envelope = UnattendedAuthorityEnvelope(
+        envelope_id="auth-composition",
+        authority_ref=item.authority_ref,
+        allowed_repositories=("Waterfound/FAE-testnet",),
+        allowed_actions=("inspect_ci", "run_tests"),
+        forbidden_actions=("merge_main", "release"),
+        max_work_invocations=0,
+        max_paid_spend_cents=0,
+    )
+    executors = (
+        ExecutorCapability(
+            executor_id="github_actions",
+            capabilities=("repo_read", "ci_dispatch"),
+            cost_rank=10,
+            evidence_ref="evidence://github-actions",
+        ),
+        ExecutorCapability(
+            executor_id="work",
+            capabilities=("repo_read", "ci_dispatch", "browser_ui"),
+            cost_rank=1,
+            requires_work=True,
+            evidence_ref="evidence://work",
+        ),
+    )
+    decision = decide_work_sparse_route(
+        envelope,
+        routed_work,
+        executors,
+        ControllerUsage(),
+    )
+    assert handoff.execution_authorized is False
+    assert decision.disposition == "DISPATCH"
+    assert decision.selected_executor_id == "github_actions"
+    assert decision.work_required is False
+    assert decision.execution_triggered is False
+
+
+def test_post_login_handoff_can_select_work_only_with_explicit_work_budget():
+    lease = initialize_auth_lease(observation(surface="cloud_browser"))
+    item = queue_item("q-browser")
+    plan = plan_provider_drain("vercel", (lease,), (item,), max_items=1)
+    _, routed_work = prepare_provider_queue_handoff(plan, (item,))
+
+    envelope = UnattendedAuthorityEnvelope(
+        envelope_id="auth-work-composition",
+        authority_ref=item.authority_ref,
+        allowed_repositories=("Waterfound/FAE-testnet",),
+        allowed_actions=("read_state",),
+        forbidden_actions=("merge_main", "release"),
+        max_work_invocations=1,
+        max_paid_spend_cents=0,
+    )
+    decision = decide_work_sparse_route(
+        envelope,
+        routed_work,
+        (
+            ExecutorCapability(
+                executor_id="work",
+                capabilities=("browser_ui",),
+                cost_rank=100,
+                requires_work=True,
+                evidence_ref="evidence://work",
+            ),
+        ),
+        ControllerUsage(work_invocations_used=0),
+    )
+    assert decision.disposition == "DISPATCH"
+    assert decision.selected_executor_id == "work"
+    assert decision.work_required is True
+    assert decision.execution_triggered is False
