@@ -1,0 +1,103 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "abundant-compute-resource-decoupling-premise-green-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "abundant-compute-resource-decoupling-002",
+      "generation": 0,
+      "active": {
+        "work_id": "ACRD-08-CANONICAL-INTEGRATION",
+        "role": "active",
+        "state": "human_gate",
+        "objective": "Integrate the now-GREEN ACRD doctrine and software candidates into canonical branches only under explicit Waterfound merge authority.",
+        "active_gate": "canonical-integration-authority",
+        "next_action_ref": "authority://acrd/canonical-integration",
+        "source_revision": "e1b1f021de8bd817dfa5928ab6451730f27530d1",
+        "evidence_required": [
+          "ACRD_07_PREMISE_GREEN",
+          "systems_pr_5_mergeable",
+          "build_colony_pr_32_mergeable",
+          "general_execution_pr_22_mergeable",
+          "latest_base_reconciliation",
+          "explicit_waterfound_merge_authority"
+        ],
+        "authority_boundary": "Canonical integration of Systems PR #5, Build Colony PR #32 and General Execution PR #22 requires explicit Waterfound authority. No merge is implied by the GREEN premise verdict.",
+        "authority_ref": null,
+        "blockers": [
+          {
+            "kind": "authority",
+            "detail": "Candidate integration is technically prepared and mergeable, but canonical merge authority has not been granted.",
+            "evidence_refs": [
+              "github://Waterfound/Systems/pull/5",
+              "github://Waterfound/Build-Colony/pull/32",
+              "github://Waterfound/General-Execution/pull/22"
+            ],
+            "schema_version": "ge.portfolio-blocker.v1"
+          }
+        ],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/Build-Colony/commit/adaa5c7d950c15ef09f4e34d4951fde535cd1b1b/pilots/abundant-compute-resource-decoupling-001/ACRD_07_PREMISE_VERDICT.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "ACRD-09-LIVE-ACTIVATION-READINESS",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Maintain a non-activating post-merge validation plan for abundant-resource routing and Temporal Compression so live activation can be evaluated immediately after any future canonical integration.",
+        "active_gate": "post-merge-readiness-plan",
+        "next_action_ref": "action://acrd/live-activation-readiness",
+        "source_revision": "e1b1f021de8bd817dfa5928ab6451730f27530d1",
+        "evidence_required": [
+          "candidate_contracts_green",
+          "zero_abundance_fallback_green",
+          "post_merge_exact_source_required",
+          "no_live_activation_before_authority"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/Build-Colony/commit/adaa5c7d950c15ef09f4e34d4951fde535cd1b1b/pilots/abundant-compute-resource-decoupling-001/ACRD_07_PREMISE_VERDICT.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [
+        {
+          "work_id": "ACRD-10-LIVE-ACTIVATION",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Activate abundant-resource routing or Temporal Compression in canonical execution paths only after canonical integration and separate explicit live-activation authority.",
+          "active_gate": "live-activation-authority",
+          "next_action_ref": "authority://acrd/live-activation",
+          "source_revision": "e1b1f021de8bd817dfa5928ab6451730f27530d1",
+          "evidence_required": [
+            "canonical_integration_complete",
+            "post_merge_verification_green",
+            "explicit_waterfound_live_activation_authority"
+          ],
+          "authority_boundary": "Live activation is a separate Waterfound authority decision after canonical integration.",
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "authority",
+              "detail": "No live routing, runtime repin, provider mutation or paid fallback is authorized by the premise verdict.",
+              "evidence_refs": [
+                "github://Waterfound/Build-Colony/commit/adaa5c7d950c15ef09f4e34d4951fde535cd1b1b/pilots/abundant-compute-resource-decoupling-001/ACRD_07_PREMISE_VERDICT.json"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "event_received",
+            "value": "authority://acrd/live-activation",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/Build-Colony/commit/adaa5c7d950c15ef09f4e34d4951fde535cd1b1b/pilots/abundant-compute-resource-decoupling-001/ACRD_07_PREMISE_VERDICT.json",
+          "schema_version": "ge.portfolio-entry.v1"
+        }
+      ],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
