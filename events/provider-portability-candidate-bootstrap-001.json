@@ -1,0 +1,103 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "provider-portability-candidate-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "provider-portability-001",
+      "generation": 0,
+      "active": {
+        "work_id": "PPC-06-CANONICAL-INTEGRATION",
+        "role": "active",
+        "state": "human_gate",
+        "objective": "Integrate the verified Provider Portability candidate into canonical branches only under explicit Waterfound integration authority.",
+        "active_gate": "canonical-integration-authority",
+        "next_action_ref": "authority://provider-portability/canonical-integration",
+        "source_revision": "346b14b4c1c3f5b3f28d068c212c23fc70333d44",
+        "evidence_required": [
+          "systems_pr_6_mergeable",
+          "build_colony_pr_33_mergeable",
+          "general_execution_pr_23_mergeable",
+          "general_execution_exact_verification_green",
+          "build_colony_exact_closure_green",
+          "explicit_waterfound_integration_authority"
+        ],
+        "authority_boundary": "Canonical integration of Systems PR #6, Build Colony PR #33 and General Execution PR #23 requires explicit Waterfound authority.",
+        "authority_ref": null,
+        "blockers": [
+          {
+            "kind": "authority",
+            "detail": "All candidate branches are verified and mergeable, but canonical integration authority has not been granted.",
+            "evidence_refs": [
+              "github://Waterfound/Systems/pull/6",
+              "github://Waterfound/Build-Colony/pull/33",
+              "github://Waterfound/General-Execution/pull/23"
+            ],
+            "schema_version": "ge.portfolio-blocker.v1"
+          }
+        ],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/Build-Colony/commit/346b14b4c1c3f5b3f28d068c212c23fc70333d44/pilots/provider-portability-001/CLOSURE.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "PPC-07-POST-MERGE-READINESS",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Prepare post-merge exact-source verification requirements without activating live provider routing.",
+        "active_gate": "post-merge-verification-plan",
+        "next_action_ref": "action://provider-portability/post-merge-readiness",
+        "source_revision": "346b14b4c1c3f5b3f28d068c212c23fc70333d44",
+        "evidence_required": [
+          "exact_merged_revisions",
+          "combined_regression_green",
+          "provider_portability_contract_green",
+          "no_runtime_repin_without_authority"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/Build-Colony/commit/346b14b4c1c3f5b3f28d068c212c23fc70333d44/pilots/provider-portability-001/CLOSURE.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [
+        {
+          "work_id": "PPC-08-LIVE-ACTIVATION",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Activate provider-portable routing in canonical execution paths only after integration, exact-source verification and separate Waterfound live-activation authority.",
+          "active_gate": "live-activation-authority",
+          "next_action_ref": "authority://provider-portability/live-activation",
+          "source_revision": "346b14b4c1c3f5b3f28d068c212c23fc70333d44",
+          "evidence_required": [
+            "canonical_integration_complete",
+            "post_merge_verification_green",
+            "explicit_waterfound_live_activation_authority"
+          ],
+          "authority_boundary": "Live routing activation is a separate Waterfound authority decision after canonical integration.",
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "authority",
+              "detail": "No live routing, runtime repin, provider mutation, credential mutation or paid resource creation is authorized by candidate closure.",
+              "evidence_refs": [
+                "github://Waterfound/Build-Colony/commit/346b14b4c1c3f5b3f28d068c212c23fc70333d44/pilots/provider-portability-001/CLOSURE.json"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "event_received",
+            "value": "authority://provider-portability/live-activation",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/Build-Colony/commit/346b14b4c1c3f5b3f28d068c212c23fc70333d44/pilots/provider-portability-001/CLOSURE.json",
+          "schema_version": "ge.portfolio-entry.v1"
+        }
+      ],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
