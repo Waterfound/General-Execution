@@ -1,0 +1,29 @@
+name: Abundant Resource Admission Verification
+
+on:
+  push:
+    branches:
+      - feature/abundant-compute-resource-decoupling-001
+    paths:
+      - "src/general_execution/abundant_resource.py"
+      - "tests/test_abundant_resource.py"
+      - "docs/abundant-resource-admission.md"
+      - ".github/workflows/abundant-resource-admission-verification.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m pip install -e '.[dev]'
+      - name: Focused contract
+        run: python -m pytest tests/test_abundant_resource.py -q
+      - name: Full regression
+        run: python -m pytest -q
