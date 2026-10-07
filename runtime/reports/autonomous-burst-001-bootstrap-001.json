@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:c4d4550cdddd36d57565d95d5257c0fcd3a5eb8f8bd25f612ece1c83e2d41d77",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "autonomous-burst-001-bootstrap-001",
+    "human_required": false,
+    "operation": "bootstrap",
+    "portfolio_id": "autonomous-burst-001",
+    "post_generation": 0,
+    "post_state_digest": "sha256:aa6a5938c7dfb4a244c55184e19286ad1d8c5f87fd3112a3881f2f0919e54760",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:aa6a5938c7dfb4a244c55184e19286ad1d8c5f87fd3112a3881f2f0919e54760",
+    "requested_action_ref": "github://Waterfound/Red-Team/pull/22",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:e4ff1ebf91a405f2bd28bcd767f289532d0692a42d126965564e17315dd1efaf",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}

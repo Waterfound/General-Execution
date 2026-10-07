@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:c4d4550cdddd36d57565d95d5257c0fcd3a5eb8f8bd25f612ece1c83e2d41d77",
+  "event_id": "autonomous-burst-001-bootstrap-001",
+  "event_report_digest": "sha256:e4ff1ebf91a405f2bd28bcd767f289532d0692a42d126965564e17315dd1efaf",
+  "operation": "bootstrap",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "62e4edb7b8ba9571a05b954cf0f82cf3299a6d4a",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "3b1650be34fff2e36aeb0e57f6f7cf8af4b44dfa"
+}
