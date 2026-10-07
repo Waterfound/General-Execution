@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Waterfound/General-Execution/schemas/canonical-constitution-v1.schema.json",
+  "title": "General Execution Canonical Constitution Gate v1",
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "workstream_id",
+        "subject_digest",
+        "disposition",
+        "basis_refs",
+        "reason",
+        "assessor",
+        "assessment_ref",
+        "constitution_id",
+        "constitution_repository",
+        "constitution_revision",
+        "constitution_artifact_path",
+        "schema_version"
+      ],
+      "properties": {
+        "workstream_id": {"type": "string", "minLength": 1},
+        "subject_digest": {"$ref": "#/$defs/sha256"},
+        "disposition": {
+          "enum": ["OUT_OF_SCOPE", "COMPATIBLE", "INTERPRETATION_REQUIRED", "INCOMPATIBLE"]
+        },
+        "basis_refs": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "reason": {"type": "string", "minLength": 1},
+        "assessor": {"type": "string", "minLength": 1},
+        "assessment_ref": {"type": "string", "minLength": 1},
+        "constitution_id": {"const": "catechism-catholic-church-john-paul-ii"},
+        "constitution_repository": {"const": "Waterfound/Systems"},
+        "constitution_revision": {"const": "913fc1e6b7fd20eac789b60abd684f168bd8a29d"},
+        "constitution_artifact_path": {"const": "constitution/canonical-constitution.v1.json"},
+        "schema_version": {"const": "ge.canonical-constitution-assessment.v1"}
+      }
+    }
+  }
+}

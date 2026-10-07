@@ -13,6 +13,10 @@ General Execution performs bounded work that another system has already authoriz
 
 > **Execution consumes authority. It does not create authority.**
 
+> **The Canonical Constitution constrains authority; authority constrains autonomy.**
+
+For matters of faith and morals, system-level Full Autonomy is constitutionally governed by the Catechism of the Catholic Church identity canonically frozen in `Waterfound/Systems`. General Execution binds that constitutional assessment to the exact execution-order digest before ordinary authority/executor admission. See [Canonical Constitution Gate](docs/canonical-constitution.md).
+
 ```text
 ExecutionSpec
   -> deterministic plan
