@@ -1,0 +1,74 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "autonomous-burst-native-runtime-001-canonical-integration-gate-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "autonomous-burst-native-runtime-001-v1",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-canonical-integration-authority",
+          "from_state": "verifying",
+          "event": "authority_required",
+          "to_state": "human_gate",
+          "next_action_ref": "authority://autonomous-burst-native-runtime/canonical-integration",
+          "effect": "stop_human_gate",
+          "required_evidence": [
+            "ab_nra_candidate_closure"
+          ],
+          "authority_mode": "human_required",
+          "authority_boundary": "AB-NRA-001 native persistent-runtime adoption candidate is fully verified. Explicit Waterfound authorization is required before canonical integration of the verified General Execution, Systems, Red-Team and Build-Colony candidates. This gate does not authorize persistent runtime repin, live native burst-host activation, provider or credential mutation, new paid spend, release, consensus/economics changes, or mainnet.",
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-push",
+      "event_kind": "durable-transition",
+      "portfolio_id": "autonomous-burst-native-runtime-001",
+      "policy_digest": "sha256:66a39aeb0611b495234d474508a9564892fde428cada3bb500ccb24255122961",
+      "transition_event": "authority_required"
+    },
+    "trigger": {
+      "source": "github-push",
+      "event_id": "autonomous-burst-native-runtime-001-canonical-integration-gate-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:4005d3db2f1b8551b347ebaac4be384e262c0a9e106402ce9599bd275e92aaca",
+      "observation_digest": "sha256:9939b0c963dbf6c53601314fd192d7d9a9093873c374da22c96ba5207f524adf",
+      "admission_ref": "github://runtime/durable-asp-control/autonomous-burst-native-runtime-001-canonical-integration-gate-001"
+    },
+    "observation": {
+      "portfolio_id": "autonomous-burst-native-runtime-001",
+      "expected_generation": 0,
+      "expected_state_digest": "sha256:9cf308f86a4d1f894ec0b15aea3554d5c55eb3dcaf436bc199327fd4f65353fe",
+      "policy_digest": "sha256:66a39aeb0611b495234d474508a9564892fde428cada3bb500ccb24255122961",
+      "event": "authority_required",
+      "evidence": [
+        {
+          "kind": "ab_nra_candidate_closure",
+          "locator": "github://Waterfound/Build-Colony/commit/4222ae071b18fcb145094b8d658f2683226fd01c/pilots/autonomous-burst-native-runtime-001/CLOSURE.json",
+          "digest": "sha256:2f0e4aa6529d2e367191a8a6e3b0f0379effbbd651da7a2065b2fb2bf9758a36",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "runtime://autonomous-burst-native-runtime-001/stop-at-canonical-integration",
+      "observed_at": "2026-10-07T06:33:00Z",
+      "summary": "AB-NRA-001 candidate development, verification, Systems doctrine, independent Project Assurance, integrated rehearsal and durable bootstrap are complete. Stop before canonical integration; live persistent-runtime repin/native-host activation remains a separate later gate.",
+      "canonical_refs": [
+        "github://Waterfound/General-Execution/pull/36/commit/112d6c65423112fe65da3181c29fcfb9f8fb1762",
+        "github://Waterfound/Systems/pull/18/commit/5b9fb415d64ebdf288130dbf0a7f0e4d7425fec5",
+        "github://Waterfound/Red-Team/pull/23/commit/83d44eee14c7f4d232b1da73466834e1c7e5ce24",
+        "github://Waterfound/Build-Colony/pull/39/commit/4222ae071b18fcb145094b8d658f2683226fd01c",
+        "github-actions://Waterfound/Red-Team/actions/runs/37581913055",
+        "github-actions://Waterfound/Build-Colony/actions/runs/37582029466"
+      ],
+      "uncertainties": [],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
