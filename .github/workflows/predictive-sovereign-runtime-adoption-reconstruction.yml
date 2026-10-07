@@ -1,0 +1,103 @@
+name: Predictive Sovereign runtime adoption reconstruction
+
+on:
+  push:
+    branches:
+      - runtime/durable-asp-control
+    paths:
+      - ".github/workflows/predictive-sovereign-runtime-adoption-reconstruction.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  reconstruct:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Materialize exact adopted source
+        run: |
+          git cat-file -e "62e4edb7b8ba9571a05b954cf0f82cf3299a6d4a^{commit}"
+          git worktree add --detach /tmp/runtime-src 62e4edb7b8ba9571a05b954cf0f82cf3299a6d4a
+          cd /tmp/runtime-src
+          python -m pip install -e '.[dev]' --disable-pip-version-check
+          python -m compileall -q src scripts
+
+      - name: Decode durable state
+        run: |
+          base64 --decode runtime/state.sqlite.b64 > /tmp/runtime.db
+
+      - name: Reconstruct portfolios and receipts
+        run: |
+          PYTHONPATH=/tmp/runtime-src/src python - <<'PY'
+          import json
+          from pathlib import Path
+          from general_execution.portfolio_persistence import SqlitePortfolioHeadStore, recover_portfolio_after_restart
+
+          manifest=json.loads(Path("runtime/manifest.json").read_text())
+          assert manifest["runtime_source_revision"]=="62e4edb7b8ba9571a05b954cf0f82cf3299a6d4a"
+          assert manifest["last_event_id"]=="predictive-sovereign-runtime-adoption-smoke-bootstrap-002"
+
+          processed=json.loads(Path("runtime/processed/predictive-sovereign-runtime-adoption-smoke-bootstrap-002.json").read_text())
+          report=json.loads(Path("runtime/reports/predictive-sovereign-runtime-adoption-smoke-bootstrap-002.json").read_text())
+          assert processed["runtime_source_revision"]=="62e4edb7b8ba9571a05b954cf0f82cf3299a6d4a"
+          assert processed["database_sha256"]==manifest["database_sha256"]
+          assert processed["event_report_digest"]==manifest["last_event_report_digest"]
+          assert report["event_report_digest"]==processed["event_report_digest"]
+
+          store=SqlitePortfolioHeadStore("/tmp/runtime.db")
+
+          old_state, old_checkpoint, _ = recover_portfolio_after_restart(
+              store,"predictive-sovereign-execution-002"
+          )
+          assert old_state.active.state=="human_gate"
+          assert old_state.active.next_action_ref=="authority://predictive-sovereign/runtime-adoption"
+          assert old_state.active.source_revision=="62e4edb7b8ba9571a05b954cf0f82cf3299a6d4a"
+          assert old_checkpoint is None
+
+          smoke_state, smoke_checkpoint, _ = recover_portfolio_after_restart(
+              store,"predictive-sovereign-runtime-adoption-smoke-002"
+          )
+          assert smoke_state.active.state=="complete"
+          assert smoke_state.active.next_action_ref=="state://predictive-sovereign/runtime-adopted"
+          assert smoke_state.active.source_revision=="62e4edb7b8ba9571a05b954cf0f82cf3299a6d4a"
+          assert smoke_state.secondary is not None
+          assert smoke_state.secondary.state=="ready"
+          assert smoke_checkpoint is None
+
+          print("PSE_RUNTIME_ADOPTION_RECONSTRUCTION_PASS")
+          print("OLD_STATE_DIGEST",old_state.digest)
+          print("SMOKE_STATE_DIGEST",smoke_state.digest)
+          print("DATABASE_SHA256",manifest["database_sha256"])
+          PY
+
+      - name: Verify operational boundaries remain narrow
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          runtime=Path(".github/workflows/durable-runtime-control.yml").read_text()
+          human=Path(".github/workflows/durable-human-authority.yml").read_text()
+          assert "PERSISTENT_RUNTIME_REVISION: 62e4edb7b8ba9571a05b954cf0f82cf3299a6d4a" in runtime
+          assert '"events/*.json"' in runtime
+          assert 'test "$GITHUB_ACTOR" = "Waterfound"' in runtime
+          assert "cancel-in-progress: false" in runtime
+          assert "persistent_provider_trigger_enabled" in runtime
+          assert "authority_created" in runtime
+          assert "branches:\n      - main" not in runtime
+          assert "production" not in runtime.lower()
+          assert "release" not in runtime.lower()
+          assert "a27a558d4ed0e28d96c3fec408212353d0077060" in human
+          print("PSE_RUNTIME_ADOPTION_BOUNDARY_PASS")
+          PY
+
+      - name: Focused adopted-source contracts
+        run: |
+          cd /tmp/runtime-src
+          python -m pytest             tests/test_persistent_runtime.py             tests/test_predictive_sovereign_execution.py             tests/test_continuity_check.py             tests/test_provider_portability.py -q
