@@ -16,7 +16,7 @@ concurrency:
 
 env:
   RUNTIME_BRANCH: runtime/durable-asp-control
-  PERSISTENT_RUNTIME_REVISION: 62e4edb7b8ba9571a05b954cf0f82cf3299a6d4a
+  PERSISTENT_RUNTIME_REVISION: f60c90cd349a2a190e00daed671d4602c1a1e73c
 
 jobs:
   consume-event:
@@ -104,7 +104,7 @@ jobs:
       - name: Prepare pinned verified runtime source
         if: env.already_processed != 'true'
         run: |
-          test "$PERSISTENT_RUNTIME_REVISION" = "62e4edb7b8ba9571a05b954cf0f82cf3299a6d4a"
+          test "$PERSISTENT_RUNTIME_REVISION" = "f60c90cd349a2a190e00daed671d4602c1a1e73c"
           git cat-file -e "$PERSISTENT_RUNTIME_REVISION^{commit}"
           git worktree add --detach /tmp/runtime-src "$PERSISTENT_RUNTIME_REVISION"
           cd /tmp/runtime-src
