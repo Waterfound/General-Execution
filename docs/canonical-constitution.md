@@ -5,11 +5,13 @@
 General Execution is bound to the Waterfound system Canonical Constitution at:
 
 - repository: `Waterfound/Systems`
-- revision: `913fc1e6b7fd20eac789b60abd684f168bd8a29d`
+- revision: `83cf114d080c0bdb14f51b69efd753fa685ea434`
 - artifact: `constitution/canonical-constitution.v1.json`
 - identity: `catechism-catholic-church-john-paul-ii`
 
 That artifact adopts the **Catechism of the Catholic Church promulgated by Saint John Paul II** as the Canonical Constitution of the Waterfound system family for matters of faith and morals.
+
+The pinned constitutional artifact represents the current official constitutional text as the Latin typical-edition base plus formally promulgated amendments already reconciled by Systems, including the 2018 revision of Catechism paragraph 2267. General Execution does not independently reinterpret that amendment; it consumes the exact canonical Systems revision.
 
 General Execution does not interpret or replace the Magisterium. It enforces the admission consequence of an evidence-bound constitutional assessment.
 
