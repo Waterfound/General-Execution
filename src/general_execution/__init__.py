@@ -716,3 +716,45 @@ __all__.extend([
     "work_platform_observation_from_dict",
     "work_platform_observation_to_dict",
 ])
+
+
+# Canonical Constitution gate. This binds consequential autonomous launch
+# admission to the Catechism-based canonical constitutional identity in
+# Waterfound/Systems and never creates execution authority by itself.
+from .canonical_constitution import (
+    ADMISSION_SCHEMA as CANONICAL_CONSTITUTION_ADMISSION_SCHEMA,
+    ASSESSMENT_SCHEMA as CANONICAL_CONSTITUTION_ASSESSMENT_SCHEMA,
+    CANONICAL_CONSTITUTION_ARTIFACT_PATH,
+    CANONICAL_CONSTITUTION_ID,
+    CANONICAL_CONSTITUTION_REPOSITORY,
+    CANONICAL_CONSTITUTION_REVISION,
+    CanonicalConstitutionError,
+    ConstitutionalAdmissionReceipt,
+    ConstitutionalAssessment,
+    ConstitutionallyGovernedLaunchResult,
+    admit_constitutional_assessment,
+    admit_constitutionally_governed_launch,
+    constitutional_admission_receipt_from_dict,
+    constitutional_admission_receipt_to_dict,
+    constitutional_assessment_from_dict,
+    constitutional_assessment_to_dict,
+)
+
+__all__.extend([
+    "CANONICAL_CONSTITUTION_ADMISSION_SCHEMA",
+    "CANONICAL_CONSTITUTION_ASSESSMENT_SCHEMA",
+    "CANONICAL_CONSTITUTION_ARTIFACT_PATH",
+    "CANONICAL_CONSTITUTION_ID",
+    "CANONICAL_CONSTITUTION_REPOSITORY",
+    "CANONICAL_CONSTITUTION_REVISION",
+    "CanonicalConstitutionError",
+    "ConstitutionalAdmissionReceipt",
+    "ConstitutionalAssessment",
+    "ConstitutionallyGovernedLaunchResult",
+    "admit_constitutional_assessment",
+    "admit_constitutionally_governed_launch",
+    "constitutional_admission_receipt_from_dict",
+    "constitutional_admission_receipt_to_dict",
+    "constitutional_assessment_from_dict",
+    "constitutional_assessment_to_dict",
+])
