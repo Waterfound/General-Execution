@@ -1,0 +1,37 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "predictive-sovereign-runtime-adoption-smoke-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "predictive-sovereign-runtime-adoption-smoke-001",
+      "generation": 0,
+      "active": {
+        "work_id": "PSE-RUNTIME-SMOKE-001",
+        "role": "active",
+        "state": "complete",
+        "objective": "Bounded inert smoke proving the persistent runtime can consume, persist and reconstruct state using the canonical Predictive & Sovereign Execution source.",
+        "active_gate": "runtime-smoke-complete",
+        "next_action_ref": "state://predictive-sovereign/runtime-adopted",
+        "source_revision": "62e4edb7b8ba9571a05b954cf0f82cf3299a6d4a",
+        "evidence_required": [
+          "event_consumed",
+          "sqlite_persisted",
+          "manifest_updated",
+          "receipt_emitted",
+          "no_external_provider_action"
+        ],
+        "authority_boundary": "Smoke is inert and local to durable state; it performs no provider, credential, billing, resource, release or mainnet change.",
+        "authority_ref": "authority://predictive-sovereign/runtime-adoption",
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": null,
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": null,
+      "passive": [],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
