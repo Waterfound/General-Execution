@@ -1,0 +1,67 @@
+{
+  "schema_version": "ge.human-authority-event.v1",
+  "event_id": "autonomous-burst-native-runtime-001-canonical-integration-authority-reconcile-002",
+  "approved_action_ref": "authority://autonomous-burst-native-runtime/canonical-integration",
+  "approved_at": "2026-10-07T06:58:44Z",
+  "policy": {
+    "policy_id": "autonomous-burst-native-runtime-001-canonical-integration-authority-reconciliation-v2",
+    "revision": "1",
+    "rules": [
+      {
+        "rule_id": "01-authorized-canonical-integration-reconciled",
+        "from_state": "human_gate",
+        "event": "verification_passed",
+        "to_state": "complete",
+        "next_action_ref": "action://autonomous-burst-native-runtime-001/canonical-integration-reconciled",
+        "effect": "none",
+        "required_evidence": [
+          "human_authority_recorded"
+        ],
+        "authority_mode": "preauthorized_required",
+        "authority_boundary": "AB-NRA-001 native persistent-runtime adoption candidate is fully verified. Explicit Waterfound authorization is required before canonical integration of the verified General Execution, Systems, Red-Team and Build-Colony candidates. This gate does not authorize persistent runtime repin, live native burst-host activation, provider or credential mutation, new paid spend, release, consensus/economics changes, or mainnet.",
+        "schema_version": "ge.transition-rule.v1"
+      }
+    ],
+    "default_disposition": "stop",
+    "schema_version": "ge.transition-policy.v1"
+  },
+  "observation": {
+    "portfolio_id": "autonomous-burst-native-runtime-001",
+    "expected_generation": 1,
+    "expected_state_digest": "sha256:9171b875839c9f9707e2499968e3ab8e9014b7bb01e60da739e1b820e4271328",
+    "policy_digest": "sha256:0188d12054ddbcbe0299517420c936ac746b921ac88e28effd44438358a25306",
+    "event": "verification_passed",
+    "evidence": [
+      {
+        "kind": "human_authority_recorded",
+        "locator": "authority://waterfound/chat/2026-10-07/ab-nra-001-canonical-integration",
+        "digest": "sha256:8cfd20f812e56664eb17073fadae848ef74e72d1ed0dc4d3ac26286a5e9fe497",
+        "schema_version": "ge.checkpoint-evidence.v1"
+      }
+    ],
+    "action_ref": "runtime://autonomous-burst-native-runtime-001/reconcile-canonical-integration",
+    "observed_at": "2026-10-07T06:58:44Z",
+    "summary": "Waterfound explicitly authorized AB-NRA-001 canonical integration for the exact verified candidate heads and Durable post-merge reconciliation. All four exact candidates are canonically merged with GREEN post-merge verification. Persistent runtime repin and live native host activation remain separately unauthorized.",
+    "canonical_refs": [
+      "github://Waterfound/General-Execution/pull/36/head/112d6c65423112fe65da3181c29fcfb9f8fb1762",
+      "github://Waterfound/General-Execution/commit/f60c90cd349a2a190e00daed671d4602c1a1e73c",
+      "github-actions://Waterfound/General-Execution/actions/runs/37584248927",
+      "github-actions://Waterfound/General-Execution/actions/runs/37584248922",
+      "github-actions://Waterfound/General-Execution/actions/runs/37584248940",
+      "github://Waterfound/Systems/pull/18/head/5b9fb415d64ebdf288130dbf0a7f0e4d7425fec5",
+      "github://Waterfound/Systems/commit/2170e2aa45883bed05599b0cf895cff7354294c7",
+      "github-actions://Waterfound/Systems/actions/runs/37584263775",
+      "github://Waterfound/Red-Team/pull/23/head/83d44eee14c7f4d232b1da73466834e1c7e5ce24",
+      "github://Waterfound/Red-Team/commit/559a15ad98a8af20e7892961d9abe3f41365b389",
+      "github-actions://Waterfound/Red-Team/actions/runs/37584286258",
+      "github://Waterfound/Build-Colony/pull/39/head/29c56d04e5c0fedb750f5f98ccb0cbc32cf1ec01",
+      "github://Waterfound/Build-Colony/commit/b2b163851c1b91a2427a8d659af5d920f05b0256",
+      "github-actions://Waterfound/Build-Colony/actions/runs/37584303186",
+      "github-actions://Waterfound/Build-Colony/actions/runs/37584303194"
+    ],
+    "uncertainties": [],
+    "wake_admission": null,
+    "authority_grant": null,
+    "schema_version": "ge.resume-tick-observation.v1"
+  }
+}
