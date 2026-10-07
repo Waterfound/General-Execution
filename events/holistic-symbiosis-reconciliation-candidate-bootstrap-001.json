@@ -1,0 +1,145 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "holistic-symbiosis-reconciliation-candidate-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "holistic-symbiosis-reconciliation-001",
+      "generation": 0,
+      "active": {
+        "work_id": "HSR-09-CANONICAL-INTEGRATION",
+        "role": "active",
+        "state": "human_gate",
+        "objective": "Integrate the verified Holistic Systems Integration & Symbiosis Reconciliation candidates into their canonical parent/main branches only under explicit Waterfound authority.",
+        "active_gate": "canonical-integration-authority",
+        "next_action_ref": "authority://holistic-symbiosis/canonical-integration",
+        "source_revision": "cfacbb14b61051784738e61940833cf4a6426c0e",
+        "evidence_required": [
+          "general_execution_pr_27_mergeable_and_green",
+          "systems_pr_8_mergeable_and_green",
+          "sie_pr_3_mergeable_and_green",
+          "red_team_pr_20_mergeable_and_green",
+          "build_colony_pr_35_mergeable_and_green",
+          "fae_pr_281_mergeable_and_green",
+          "full_holistic_symbiosis_candidate_pass",
+          "explicit_waterfound_canonical_integration_authority"
+        ],
+        "authority_boundary": "Candidate engineering, assurance, operational-controller composition and Durable admission are complete. Canonical merges, FAE preservation integration, Project Assurance target-pin maintenance and runtime repin remain separately authority-bound.",
+        "authority_ref": null,
+        "blockers": [
+          {
+            "kind": "authority",
+            "detail": "Canonical integration of the verified HSR candidate set requires explicit Waterfound authority.",
+            "evidence_refs": [
+              "github://Waterfound/General-Execution/pull/27",
+              "github://Waterfound/Systems/pull/8",
+              "github://Waterfound/System-Interoperability-Envelope/pull/3",
+              "github://Waterfound/Red-Team/pull/20",
+              "github://Waterfound/Build-Colony/pull/35",
+              "github://Waterfound/FAE-testnet/pull/281",
+              "github://Waterfound/Build-Colony/commit/039def3f4b2969dc60d718ec2f4f39b169cb4792/pilots/holistic-symbiosis-reconciliation-001/CLOSURE.json"
+            ],
+            "schema_version": "ge.portfolio-blocker.v1"
+          }
+        ],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/Build-Colony/commit/039def3f4b2969dc60d718ec2f4f39b169cb4792/pilots/holistic-symbiosis-reconciliation-001/CLOSURE.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "HSR-10-POST-MERGE-READINESS",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Keep exact post-merge verification, SIE provenance rebind, recovery-capsule refresh, gate-forecast refresh and runtime-adoption plan prepared without changing canonical state.",
+        "active_gate": "post-merge-readiness",
+        "next_action_ref": "action://holistic-symbiosis/post-merge-readiness",
+        "source_revision": "cfacbb14b61051784738e61940833cf4a6426c0e",
+        "evidence_required": [
+          "exact_merged_revisions",
+          "general_execution_full_regression_green",
+          "build_colony_exact_tree_green",
+          "systems_and_sie_structural_equivalence",
+          "fae_preservation_post_merge_green",
+          "recovery_capsule_refreshed",
+          "gate_forecast_refreshed"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/Build-Colony/commit/039def3f4b2969dc60d718ec2f4f39b169cb4792/pilots/holistic-symbiosis-reconciliation-001/CLOSURE.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [
+        {
+          "work_id": "HSR-11-RUNTIME-ADOPTION",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Adopt the canonical HSR General Execution composition in the persistent runtime only after exact canonical integration and separate runtime authority.",
+          "active_gate": "runtime-adoption-authority",
+          "next_action_ref": "authority://holistic-symbiosis/runtime-adoption",
+          "source_revision": "cfacbb14b61051784738e61940833cf4a6426c0e",
+          "evidence_required": [
+            "canonical_integration_complete",
+            "post_merge_verification_green",
+            "explicit_waterfound_runtime_adoption_authority"
+          ],
+          "authority_boundary": "Persistent runtime adoption is not implied by HSR candidate development or canonical merge authority.",
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "authority",
+              "detail": "Runtime adoption requires separate explicit Waterfound authority after canonical HSR integration.",
+              "evidence_refs": [
+                "github://Waterfound/Build-Colony/commit/039def3f4b2969dc60d718ec2f4f39b169cb4792/pilots/holistic-symbiosis-reconciliation-001/CLOSURE.json"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "event_received",
+            "value": "authority://holistic-symbiosis/runtime-adoption",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/Build-Colony/commit/039def3f4b2969dc60d718ec2f4f39b169cb4792/pilots/holistic-symbiosis-reconciliation-001/CLOSURE.json",
+          "schema_version": "ge.portfolio-entry.v1"
+        },
+        {
+          "work_id": "HSR-12-ASSURANCE-TARGET-PIN",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Review and maintain the Project Assurance FAE target pin only after exact FAE System Preservation canonical integration and separate explicit target-maintenance authority.",
+          "active_gate": "assurance-target-pin-authority",
+          "next_action_ref": "authority://holistic-symbiosis/assurance-target-pin",
+          "source_revision": "7b7208c215612d314742a55b5fa093bac2065d9d",
+          "evidence_required": [
+            "fae_pr_281_canonical_integration",
+            "post_merge_fae_assurance_green",
+            "explicit_waterfound_target_pin_authority"
+          ],
+          "authority_boundary": "Project Assurance target pin remains manual-explicit-only.",
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "authority",
+              "detail": "Target-pin maintenance requires explicit Waterfound review after FAE integration.",
+              "evidence_refs": [
+                "github-actions://Waterfound/Red-Team/actions/runs/37554333959"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "event_received",
+            "value": "authority://holistic-symbiosis/assurance-target-pin",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github-actions://Waterfound/Red-Team/actions/runs/37554333959",
+          "schema_version": "ge.portfolio-entry.v1"
+        }
+      ],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
