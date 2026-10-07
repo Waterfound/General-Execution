@@ -6,6 +6,7 @@ on:
       - runtime/durable-asp-control
     paths:
       - "launch-orders/*.json"
+      - "constitutional-assessments/*.json"
 
 permissions:
   contents: write
@@ -16,7 +17,7 @@ concurrency:
 
 env:
   RUNTIME_BRANCH: runtime/durable-asp-control
-  LAUNCH_ADMISSION_REVISION: 33432d39328a7b0720dbf3f07674576acfe3a00c
+  LAUNCH_ADMISSION_REVISION: c87d3bb64259840a3f7b4354107a3f6b3cbc0eb7
 
 jobs:
   admit-launch:
@@ -39,28 +40,43 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.sha }}
 
-      - name: Admit exactly one immutable launch order
+      - name: Admit exactly one immutable launch order plus constitutional assessment
         id: order
         shell: bash
         run: |
           set -euo pipefail
-          git diff-tree --no-commit-id --name-status -r "$GITHUB_SHA" -- 'launch-orders/*.json' > /tmp/launch-order-changes.txt
+          git diff-tree --no-commit-id --name-status -r "$GITHUB_SHA" -- 'launch-orders/*.json' 'constitutional-assessments/*.json' > /tmp/constitutional-launch-changes.txt
           python - <<'PY'
           import json, os, pathlib, re
-          rows=[line.strip().split("\t",1) for line in pathlib.Path("/tmp/launch-order-changes.txt").read_text().splitlines() if line.strip()]
-          assert len(rows)==1, f"expected exactly one launch order, got {rows}"
-          status,path=rows[0]
-          assert status=="A", f"launch order must be immutable create-only, got {status}"
-          assert path.startswith("launch-orders/") and path.endswith(".json")
-          data=json.loads(pathlib.Path(path).read_text())
-          workstream=data.get("workstream_id")
+          rows=[line.strip().split("\t",1) for line in pathlib.Path("/tmp/constitutional-launch-changes.txt").read_text().splitlines() if line.strip()]
+          assert len(rows)==2, f"expected one launch order and one constitutional assessment, got {rows}"
+          by_kind={}
+          for status,path in rows:
+              assert status=="A", f"constitutional launch artifacts must be immutable create-only, got {status}:{path}"
+              if path.startswith("launch-orders/") and path.endswith(".json"):
+                  kind="order"
+              elif path.startswith("constitutional-assessments/") and path.endswith(".json"):
+                  kind="assessment"
+              else:
+                  raise AssertionError(f"unexpected constitutional launch artifact: {path}")
+              assert kind not in by_kind, f"duplicate {kind} artifact"
+              by_kind[kind]=path
+          assert set(by_kind)=={"order","assessment"}, by_kind
+
+          order=json.loads(pathlib.Path(by_kind["order"]).read_text())
+          assessment=json.loads(pathlib.Path(by_kind["assessment"]).read_text())
+          workstream=order.get("workstream_id")
           assert isinstance(workstream,str) and re.fullmatch(r"[A-Za-z0-9._:-]{1,160}",workstream)
+          assert assessment.get("workstream_id")==workstream, "constitutional assessment workstream mismatch"
           if os.environ["GITHUB_ACTOR"]=="github-actions[bot]":
-              assert data.get("required_authority_scopes")==[], "bot launch orders may not consume authority in ELG-01 v1"
-              assert data.get("authority") is None, "bot launch orders may not carry authority in ELG-01 v1"
-          pathlib.Path("/tmp/launch-order.json").write_bytes(pathlib.Path(path).read_bytes())
+              assert order.get("required_authority_scopes")==[], "bot launch orders may not consume authority in ELG-01 v1"
+              assert order.get("authority") is None, "bot launch orders may not carry authority in ELG-01 v1"
+
+          pathlib.Path("/tmp/launch-order.json").write_bytes(pathlib.Path(by_kind["order"]).read_bytes())
+          pathlib.Path("/tmp/constitutional-assessment.json").write_bytes(pathlib.Path(by_kind["assessment"]).read_bytes())
           with open(os.environ["GITHUB_OUTPUT"],"a") as out:
-              out.write(f"path={path}\n")
+              out.write(f"path={by_kind['order']}\n")
+              out.write(f"assessment_path={by_kind['assessment']}\n")
               out.write(f"workstream={workstream}\n")
           PY
 
@@ -69,7 +85,6 @@ jobs:
         run: |
           python - <<'PY'
           import json,pathlib
-          data=json.loads(pathlib.Path("/tmp/launch-order.json").read_text())
           forbidden=("secret","password","token","credential","private_key","private-key","api_key","api-key")
           def walk(value,path="$"):
               if isinstance(value,dict):
@@ -80,7 +95,8 @@ jobs:
               elif isinstance(value,list):
                   for index,child in enumerate(value):
                       walk(child,f"{path}[{index}]")
-          walk(data)
+          for filename in ("/tmp/launch-order.json","/tmp/constitutional-assessment.json"):
+              walk(json.loads(pathlib.Path(filename).read_text()), filename)
           PY
 
       - uses: actions/setup-python@v5
@@ -91,25 +107,29 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          git fetch --no-tags origin main
           git cat-file -e "$LAUNCH_ADMISSION_REVISION^{commit}"
+          git merge-base --is-ancestor "$LAUNCH_ADMISSION_REVISION" origin/main
           git worktree add --detach /tmp/launch-src "$LAUNCH_ADMISSION_REVISION"
           cd /tmp/launch-src
           python -m pip install -e '.[dev]' --disable-pip-version-check
           python -m compileall -q src scripts
-          python -m pytest tests/test_execution_launch_admission.py -q
+          python -m pytest tests/test_execution_launch_admission.py tests/test_canonical_constitution.py tests/test_constitutional_launch_host.py -q
 
       - name: Authenticate order and derive durable identity
         id: identity
         shell: bash
         run: |
           set -euo pipefail
-          digest="$(PYTHONPATH=/tmp/launch-src/src python /tmp/launch-src/scripts/run_execution_launch_admission.py --order /tmp/launch-order.json --authenticated-actor "$GITHUB_ACTOR" --print-order-digest)"
+          digest="$(PYTHONPATH=/tmp/launch-src/src python /tmp/launch-src/scripts/run_constitutional_launch_admission.py --order /tmp/launch-order.json --print-order-digest)"
           python - "$digest" <<'PY'
           import hashlib,json,os,sys
           from pathlib import Path
-          data=json.loads(Path("/tmp/launch-order.json").read_text())
+          order=json.loads(Path("/tmp/launch-order.json").read_text())
+          assessment=json.loads(Path("/tmp/constitutional-assessment.json").read_text())
           digest=sys.argv[1]
-          key=hashlib.sha256(data["workstream_id"].encode()).hexdigest()[:24]
+          assert assessment.get("subject_digest")==digest, "constitutional assessment does not bind exact order digest"
+          key=hashlib.sha256(order["workstream_id"].encode()).hexdigest()[:24]
           with open(os.environ["GITHUB_OUTPUT"],"a") as out:
               out.write(f"order_digest={digest}\n")
               out.write(f"workstream_key={key}\n")
@@ -142,44 +162,62 @@ jobs:
             echo "existing=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Materialize deterministic immutable receipt
+      - name: Materialize deterministic constitutional and launch receipts
         shell: bash
         run: |
           set -euo pipefail
           args=(
             --order /tmp/launch-order.json
+            --constitutional-assessment /tmp/constitutional-assessment.json
             --authenticated-actor "$GITHUB_ACTOR"
             --authenticated-order-digest "${{ steps.identity.outputs.order_digest }}"
-            --receipt-out /tmp/launch-receipt.json
+            --constitutional-receipt-out /tmp/constitutional-receipt.json
+            --launch-receipt-out /tmp/launch-receipt.json
             --result-out /tmp/launch-result.json
           )
           if test "${{ steps.replay.outputs.existing }}" = "true"; then
-            args+=(--existing-receipt /tmp/existing-launch-receipt.json)
+            args+=(--existing-launch-receipt /tmp/existing-launch-receipt.json)
           fi
-          PYTHONPATH=/tmp/launch-src/src python /tmp/launch-src/scripts/run_execution_launch_admission.py "${args[@]}"
+          PYTHONPATH=/tmp/launch-src/src python /tmp/launch-src/scripts/run_constitutional_launch_admission.py "${args[@]}"
+          cat /tmp/constitutional-receipt.json
           cat /tmp/launch-result.json
 
-      - name: Persist receipt and workstream binding
+      - name: Persist constitutional evidence and admitted launch binding
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p runtime/launch-admission/{receipts,results,workstreams}
+          mkdir -p runtime/constitutional-admission/{receipts,results} runtime/launch-admission/{receipts,workstreams}
           python - "${{ steps.identity.outputs.workstream_key }}" <<'PY'
           import json,pathlib,sys
           order=json.loads(pathlib.Path("/tmp/launch-order.json").read_text())
-          receipt=json.loads(pathlib.Path("/tmp/launch-receipt.json").read_text())
+          constitutional=json.loads(pathlib.Path("/tmp/constitutional-receipt.json").read_text())
           result=json.loads(pathlib.Path("/tmp/launch-result.json").read_text())
           key=sys.argv[1]
+
+          constitutional_path=f"runtime/constitutional-admission/receipts/{constitutional['receipt_id']}.json"
+          result_path=f"runtime/constitutional-admission/results/{result['order_id']}.json"
+          pathlib.Path(constitutional_path).write_text(json.dumps(constitutional,sort_keys=True,indent=2)+"\n")
+          pathlib.Path(result_path).write_text(json.dumps(result,sort_keys=True,indent=2)+"\n")
+
+          launch_path=pathlib.Path("/tmp/launch-receipt.json")
+          if not launch_path.exists():
+              assert result["constitutional_gate_passed"] is False
+              assert result["launch_admission_materialized"] is False
+              raise SystemExit(0)
+
+          receipt=json.loads(launch_path.read_text())
           receipt_path=f"runtime/launch-admission/receipts/{receipt['receipt_id']}.json"
-          result_path=f"runtime/launch-admission/results/{receipt['order_id']}.json"
           marker_path=f"runtime/launch-admission/workstreams/{key}.json"
           pathlib.Path(receipt_path).write_text(json.dumps(receipt,sort_keys=True,indent=2)+"\n")
-          pathlib.Path(result_path).write_text(json.dumps(result,sort_keys=True,indent=2)+"\n")
           marker={
-              "schema_version":"ge.execution-launch-workstream-binding.v1",
+              "schema_version":"ge.constitutionally-governed-workstream-binding.v1",
               "workstream_id":order["workstream_id"],
               "order_id":receipt["order_id"],
               "order_digest":receipt["order_digest"],
+              "constitutional_receipt_id":constitutional["receipt_id"],
+              "constitutional_receipt_path":constitutional_path,
+              "constitutional_disposition":constitutional["constitutional_disposition"],
+              "constitutional_gate_passed":constitutional["constitutional_gate_passed"],
               "receipt_id":receipt["receipt_id"],
               "receipt_path":receipt_path,
               "disposition":receipt["disposition"],
@@ -204,7 +242,7 @@ jobs:
           test "$(git rev-parse "origin/$RUNTIME_BRANCH")" = "$(cat /tmp/runtime-start.txt)"
           git config user.name "durable-launch-admission"
           git config user.email "durable-launch-admission@users.noreply.github.com"
-          git add runtime/launch-admission/
+          git add runtime/constitutional-admission/ runtime/launch-admission/
           git diff --cached --quiet && exit 0
           git commit -m "runtime: admit execution launch ${{ steps.order.outputs.workstream }} [skip ci]"
           git push origin "HEAD:refs/heads/$RUNTIME_BRANCH"
@@ -216,6 +254,8 @@ jobs:
           name: execution-launch-admission-${{ github.run_id }}
           path: |
             /tmp/launch-order.json
+            /tmp/constitutional-assessment.json
+            /tmp/constitutional-receipt.json
             /tmp/launch-receipt.json
             /tmp/launch-result.json
           if-no-files-found: warn
