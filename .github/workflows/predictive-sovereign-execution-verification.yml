@@ -1,0 +1,33 @@
+name: Predictive Sovereign Execution Verification
+
+on:
+  push:
+    branches:
+      - feature/predictive-sovereign-execution-wave-001
+    paths:
+      - "src/general_execution/predictive_sovereign_execution.py"
+      - "tests/test_predictive_sovereign_execution.py"
+      - "docs/predictive-sovereign-execution.md"
+      - ".github/workflows/predictive-sovereign-execution-verification.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m pip install -e '.[dev]' --disable-pip-version-check
+      - name: Compile
+        run: python -m compileall -q src
+      - name: Focused predictive sovereign contracts
+        run: python -m pytest tests/test_predictive_sovereign_execution.py -q
+      - name: Continuity and authority regression
+        run: python -m pytest tests/test_continuity_check.py tests/test_persistent_runtime.py tests/test_provider_portability.py -q
+      - name: Full regression
+        run: python -m pytest -q
