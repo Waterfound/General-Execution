@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:5765977c3610be716274aac3f48e9d24d7fc34f2233d2bf3e8ef407866dc24bf",
+  "event_report": {
+    "checkpoint_digest": "sha256:c077b4def2d0d9b475dff8f65179da34b64491f025df93cb91d94821d4d7e3e2",
+    "event_id": "autonomous-burst-native-runtime-001-canonical-integration-gate-001",
+    "human_required": true,
+    "operation": "transition",
+    "portfolio_id": "autonomous-burst-native-runtime-001",
+    "post_generation": 1,
+    "post_state_digest": "sha256:9171b875839c9f9707e2499968e3ab8e9014b7bb01e60da739e1b820e4271328",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:9cf308f86a4d1f894ec0b15aea3554d5c55eb3dcaf436bc199327fd4f65353fe",
+    "requested_action_ref": "authority://autonomous-burst-native-runtime/canonical-integration",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "committed"
+  },
+  "event_report_digest": "sha256:b39253688147e3fc23b5ba07b4d49ad49e3c175a41a786568ab1e046c578d544",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
