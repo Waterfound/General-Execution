@@ -119,6 +119,11 @@ def normalize_liveness_mapping(data: Mapping[str, object]) -> LivenessProjection
         raise AssertionError(provider_obs.kind)
 
     recovery_exhausted = observations[-1].kind is LivenessKind.RECOVERY_EXHAUSTED
+    if recovery_exhausted:
+        provider_state = "UNKNOWN"
+        failure_scope = "NONE"
+        detail = observations[-1].detail or "bounded recovery semantics exhausted"
+
     progress_kinds = {
         LivenessKind.STARTED,
         LivenessKind.HEARTBEAT,
@@ -136,7 +141,7 @@ def normalize_liveness_mapping(data: Mapping[str, object]) -> LivenessProjection
     provider = {
         "provider": provider_name,
         "state": provider_state,
-        "observed_at": provider_obs.observed_at if provider_obs else observations[-1].observed_at,
+        "observed_at": observations[-1].observed_at if recovery_exhausted else (provider_obs.observed_at if provider_obs else observations[-1].observed_at),
         "subject_revision": source_revision,
         "failure_scope": failure_scope,
         "detail": detail,
