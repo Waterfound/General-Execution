@@ -1,0 +1,76 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "autonomous-burst-001-canonical-integration-gate-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "autonomous-burst-001-v1",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-canonical-integration-authority",
+          "from_state": "running",
+          "event": "authority_required",
+          "to_state": "human_gate",
+          "next_action_ref": "authority://autonomous-burst/canonical-integration",
+          "effect": "stop_human_gate",
+          "required_evidence": [
+            "ab_program_technical_closure"
+          ],
+          "authority_mode": "human_required",
+          "authority_boundary": "AB-001 has reached its machine-admissible candidate software ceiling. Explicit Waterfound authorization is required before canonical integration of the verified General Execution, Systems, Red-Team and Build-Colony candidates. This gate does not authorize persistent-runtime repin/native burst-host activation, provider or credential mutation, new paid spend, release, consensus/economics changes, or mainnet.",
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-push",
+      "event_kind": "durable-transition",
+      "portfolio_id": "autonomous-burst-001",
+      "policy_digest": "sha256:dc439c6413a097f3c0b7b5049498aeeb8cdc8b704cc50dcfcb0ed9d828f64885",
+      "transition_event": "authority_required"
+    },
+    "trigger": {
+      "source": "github-push",
+      "event_id": "autonomous-burst-001-canonical-integration-gate-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:6546d38a36c9cee439819e43f0ab8ad8386dcc3d80b9a3e234c494c6e7bc26c4",
+      "observation_digest": "sha256:04702ca269ff5dab9743c2b7dbbce2008bb8471ff88cc2f4505c4a94705d123c",
+      "admission_ref": "github://runtime/durable-asp-control/autonomous-burst-001-canonical-integration-gate-001"
+    },
+    "observation": {
+      "portfolio_id": "autonomous-burst-001",
+      "expected_generation": 0,
+      "expected_state_digest": "sha256:aa6a5938c7dfb4a244c55184e19286ad1d8c5f87fd3112a3881f2f0919e54760",
+      "policy_digest": "sha256:dc439c6413a097f3c0b7b5049498aeeb8cdc8b704cc50dcfcb0ed9d828f64885",
+      "event": "authority_required",
+      "evidence": [
+        {
+          "kind": "ab_program_technical_closure",
+          "locator": "github://Waterfound/Build-Colony/commit/15da025c94e83dc889d73a7aaaa142bdee88f81d/pilots/autonomous-burst-001/CLOSURE.json",
+          "digest": "sha256:6546d38a36c9cee439819e43f0ab8ad8386dcc3d80b9a3e234c494c6e7bc26c4",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "authority://autonomous-burst/canonical-integration",
+      "observed_at": "2026-10-07T05:03:00Z",
+      "summary": "AB-001 Build Colony structure, General Execution candidate verification, Systems doctrine verification, independent Project Assurance, integrated rehearsal and Durable bootstrap are complete. Stop before canonical integration; native persistent-runtime burst-host adoption remains a separate later gate.",
+      "canonical_refs": [
+        "github://Waterfound/General-Execution/pull/34/commit/348edece2eb3f32fa2cf982cc5685a2dede06185",
+        "github://Waterfound/Systems/pull/17/commit/82dce3bd343cc48f89290cf9153ecca81fcdebed",
+        "github://Waterfound/Red-Team/pull/22/commit/d7d5f15e261928244da3af6645af1ea9b6ce4e09",
+        "github://Waterfound/Build-Colony/pull/37/commit/15da025c94e83dc889d73a7aaaa142bdee88f81d",
+        "github-actions://Waterfound/General-Execution/actions/runs/37573483893",
+        "github-actions://Waterfound/Systems/actions/runs/37573628875",
+        "github-actions://Waterfound/Red-Team/actions/runs/37573939811",
+        "github-actions://Waterfound/Build-Colony/actions/runs/37574083443"
+      ],
+      "uncertainties": [],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
