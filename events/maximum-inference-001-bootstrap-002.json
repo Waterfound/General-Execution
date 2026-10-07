@@ -1,0 +1,109 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "maximum-inference-001-bootstrap-002",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "maximum-inference-001",
+      "generation": 0,
+      "active": {
+        "work_id": "MI-07-CANONICAL-INTEGRATION",
+        "role": "active",
+        "state": "human_gate",
+        "objective": "Integrate the verified Maximum Inference candidates only after explicit Waterfound canonical integration authority and exact-head reconciliation.",
+        "active_gate": "canonical-integration-approval",
+        "next_action_ref": "authority://maximum-inference/canonical-integration",
+        "source_revision": "32d738823c5a4e95555bebee07fe8cf3dffa26fe",
+        "evidence_required": [
+          "general_execution_pr37_exact_candidate_green",
+          "systems_pr19_exact_candidate_green",
+          "project_assurance_pr24_mi001_green",
+          "build_colony_pr40_exact_closure_green",
+          "explicit_waterfound_integration_approval"
+        ],
+        "authority_boundary": "Canonical integration of MI-001 requires explicit Waterfound approval. Candidate development does not authorize physical tests, persistent runtime repin, provider or credential mutation, new paid spend, release, consensus or economics changes, or mainnet actions.",
+        "authority_ref": null,
+        "blockers": [
+          {
+            "kind": "authority",
+            "detail": "All MI-001 candidate software and assurance work is GREEN; canonical integration remains separately human-gated.",
+            "evidence_refs": [
+              "github://Waterfound/General-Execution/pull/37/commit/7c074d6ada60a330885083f7ff70e707e27ffa7b",
+              "github://Waterfound/Systems/pull/19/commit/52ba15e0bd58f31484d5c49c7abb55a49feaa84c",
+              "github://Waterfound/Red-Team/pull/24/commit/78bf800dc8537b64f3716e49a8b05fce48a39359",
+              "github://Waterfound/Build-Colony/pull/40/commit/32d738823c5a4e95555bebee07fe8cf3dffa26fe",
+              "github-actions://Waterfound/Build-Colony/actions/runs/37697695634",
+              "github-actions://Waterfound/Build-Colony/actions/runs/37697695629",
+              "github-actions://Waterfound/Build-Colony/actions/runs/37697695594",
+              "github-actions://Waterfound/Build-Colony/actions/runs/37697700565"
+            ],
+            "schema_version": "ge.portfolio-blocker.v1"
+          }
+        ],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/Build-Colony/commit/32d738823c5a4e95555bebee07fe8cf3dffa26fe/pilots/maximum-inference-001/CLOSURE.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "MI-08-UNATTENDED-READINESS",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Continue read-only exact-head reconciliation, verification observation and post-integration readiness preparation while the canonical integration gate remains closed.",
+        "active_gate": "unattended-readiness",
+        "next_action_ref": "action://maximum-inference/unattended-readiness",
+        "source_revision": "32d738823c5a4e95555bebee07fe8cf3dffa26fe",
+        "evidence_required": [
+          "candidate_heads_observed_without_mutation",
+          "verification_status_reconciled",
+          "post_integration_verification_recipe_prepared",
+          "authority_boundary_unchanged"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/Build-Colony/commit/32d738823c5a4e95555bebee07fe8cf3dffa26fe/pilots/maximum-inference-001/CLOSURE.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [
+        {
+          "work_id": "MI-09-PHYSICAL-EVIDENCE",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Keep physical evidence outside execution until a concrete Robust Premise case survives Maximum Inference and separate physical-action authority exists where required.",
+          "active_gate": "robust-premise-physical-evidence",
+          "next_action_ref": "authority://maximum-inference/physical-evidence",
+          "source_revision": "7c074d6ada60a330885083f7ff70e707e27ffa7b",
+          "evidence_required": [
+            "specific_test_case_bound",
+            "maximum_inference_strict_ready",
+            "material_reality_gap_survives",
+            "residual_information_gain_threshold_met",
+            "physical_action_authority_if_required"
+          ],
+          "authority_boundary": "Maximum Inference can justify a physical test but cannot dispatch one. Physical evidence remains separately observed and authority-bound.",
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "authority",
+              "detail": "No concrete physical test is authorized by MI-001 system adoption.",
+              "evidence_refs": [
+                "github://Waterfound/Build-Colony/pull/40/commit/32d738823c5a4e95555bebee07fe8cf3dffa26fe"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "event_received",
+            "value": "robust-premise://maximum-inference/specific-test-case",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/Build-Colony/commit/32d738823c5a4e95555bebee07fe8cf3dffa26fe/pilots/maximum-inference-001/CLOSURE.json",
+          "schema_version": "ge.portfolio-entry.v1"
+        }
+      ],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
