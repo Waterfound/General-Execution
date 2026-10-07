@@ -9,10 +9,16 @@ on:
       - "src/general_execution/continuity_check.py"
       - "src/general_execution/continuity_adapters.py"
       - "scripts/run_execution_launch_admission.py"
+      - "scripts/run_constitutional_launch_admission.py"
       - "scripts/run_continuity_check.py"
       - "schemas/execution-launch-admission-v1.schema.json"
+      - "schemas/canonical-constitution-v1.schema.json"
       - "docs/execution-launch-admission.md"
+      - "docs/canonical-constitution.md"
+      - "src/general_execution/canonical_constitution.py"
       - "tests/test_execution_launch_admission.py"
+      - "tests/test_canonical_constitution.py"
+      - "tests/test_constitutional_launch_host.py"
       - "evidence/continuous-improvement-intelligence/2026-09-29/execution-launch-gap/**"
       - ".github/workflows/execution-launch-admission-verification.yml"
       - ".github/workflows/durable-launch-admission.yml"
@@ -24,10 +30,16 @@ on:
       - "src/general_execution/continuity_check.py"
       - "src/general_execution/continuity_adapters.py"
       - "scripts/run_execution_launch_admission.py"
+      - "scripts/run_constitutional_launch_admission.py"
       - "scripts/run_continuity_check.py"
       - "schemas/execution-launch-admission-v1.schema.json"
+      - "schemas/canonical-constitution-v1.schema.json"
       - "docs/execution-launch-admission.md"
+      - "docs/canonical-constitution.md"
+      - "src/general_execution/canonical_constitution.py"
       - "tests/test_execution_launch_admission.py"
+      - "tests/test_canonical_constitution.py"
+      - "tests/test_constitutional_launch_host.py"
       - "evidence/continuous-improvement-intelligence/2026-09-29/execution-launch-gap/**"
       - ".github/workflows/execution-launch-admission-verification.yml"
 
@@ -50,8 +62,8 @@ jobs:
           python -m pip install -e '.[dev]' --disable-pip-version-check
           python -m compileall -q src scripts
 
-      - name: Focused ELG-01 adversarial and replay bank
-        run: python -m pytest tests/test_execution_launch_admission.py -q
+      - name: Focused ELG-01 and canonical-constitution adversarial bank
+        run: python -m pytest tests/test_execution_launch_admission.py tests/test_canonical_constitution.py tests/test_constitutional_launch_host.py -q
 
       - name: Full regression
         run: python -m pytest -q
@@ -86,10 +98,13 @@ jobs:
           required_host=[
               "runtime/durable-asp-control",
               '"launch-orders/*.json"',
-              "33432d39328a7b0720dbf3f07674576acfe3a00c",
+              '"constitutional-assessments/*.json"',
+              "c87d3bb64259840a3f7b4354107a3f6b3cbc0eb7",
               "group: durable-asp-persistent-runtime",
               "cancel-in-progress: false",
-              "launch order must be immutable create-only",
+              "expected one launch order and one constitutional assessment",
+              "run_constitutional_launch_admission.py",
+              "runtime/constitutional-admission/",
               "runtime/launch-admission/workstreams/",
               "authority_created",
               "execution_triggered",
