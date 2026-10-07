@@ -209,3 +209,5 @@ def test_durable_runtime_workflow_requires_paired_constitutional_assessment():
     assert "runtime/constitutional-admission/" in workflow
     assert "constitutional_gate_passed" in workflow
     assert "ge.constitutionally-governed-workstream-binding.v1" in workflow
+    assert 'git fetch --no-tags origin main' in workflow
+    assert 'git merge-base --is-ancestor "$LAUNCH_ADMISSION_REVISION" origin/main' in workflow
