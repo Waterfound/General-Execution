@@ -107,7 +107,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          git fetch --no-tags origin main
           git cat-file -e "$LAUNCH_ADMISSION_REVISION^{commit}"
+          git merge-base --is-ancestor "$LAUNCH_ADMISSION_REVISION" origin/main
           git worktree add --detach /tmp/launch-src "$LAUNCH_ADMISSION_REVISION"
           cd /tmp/launch-src
           python -m pip install -e '.[dev]' --disable-pip-version-check
