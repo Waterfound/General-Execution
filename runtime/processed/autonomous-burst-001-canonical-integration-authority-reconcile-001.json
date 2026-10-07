@@ -1,0 +1,12 @@
+{
+  "authority_grant_digest": "sha256:65f018b52c1d00674b1b79a16d08fc8bf6c6a05c0d231b22a9443deeec0e0e25",
+  "authority_receipt_digest": "sha256:c410cd74ccb55409a5ddff7a7b2d3387c1ed600ad2bb01faa28367f459d5b907",
+  "authority_ref": "github://Waterfound/General-Execution/commit/b9bbefca72b63f0772a8ce3de3f3e8171a71a3ac/authority/autonomous-burst-001-canonical-integration-authority-reconcile-001.json",
+  "database_sha256": "sha256:9f7dfd0f0caa09c04d47c1badeb789ca0a02aef5e02aa558a6051d63f3f49896",
+  "event_id": "autonomous-burst-001-canonical-integration-authority-reconcile-001",
+  "execution_report_digest": "sha256:ae17af96d7762d63e169692b9be7bf60afca42f1aa5796d913efd6d00185e886",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
+  "schema_version": "ge.human-authority-processed-event.v1",
+  "trigger_commit": "b9bbefca72b63f0772a8ce3de3f3e8171a71a3ac"
+}

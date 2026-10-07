@@ -1,0 +1,41 @@
+{
+  "authority_grant_digest": "sha256:65f018b52c1d00674b1b79a16d08fc8bf6c6a05c0d231b22a9443deeec0e0e25",
+  "authority_receipt": {
+    "approved_action_ref": "authority://autonomous-burst/canonical-integration",
+    "approved_at": "2026-10-07T06:08:00Z",
+    "authority_boundary": "AB-001 has reached its machine-admissible candidate software ceiling. Explicit Waterfound authorization is required before canonical integration of the verified General Execution, Systems, Red-Team and Build-Colony candidates. This gate does not authorize persistent-runtime repin/native burst-host activation, provider or credential mutation, new paid spend, release, consensus/economics changes, or mainnet.",
+    "authority_ref": "github://Waterfound/General-Execution/commit/b9bbefca72b63f0772a8ce3de3f3e8171a71a3ac/authority/autonomous-burst-001-canonical-integration-authority-reconcile-001.json",
+    "event_id": "autonomous-burst-001-canonical-integration-authority-reconcile-001",
+    "expected_generation": 1,
+    "expected_state_digest": "sha256:0f85bf907916c898c81619ff85635d34649137da87d4d218c40254eff57e4fac",
+    "policy_digest": "sha256:f9eee13f747f3780f21ee2db6d46dcbadd27173c724449d746a60c060952b236",
+    "portfolio_id": "autonomous-burst-001",
+    "provider_actor": "Waterfound",
+    "rule_digest": "sha256:c6bb4b6ab7d4facf604766687733ff90a944926bc7a58d6233b8caa257d311e3",
+    "schema_version": "ge.human-authority-receipt.v1"
+  },
+  "authority_receipt_digest": "sha256:c410cd74ccb55409a5ddff7a7b2d3387c1ed600ad2bb01faa28367f459d5b907",
+  "authority_ref": "github://Waterfound/General-Execution/commit/b9bbefca72b63f0772a8ce3de3f3e8171a71a3ac/authority/autonomous-burst-001-canonical-integration-authority-reconcile-001.json",
+  "database_sha256": "sha256:9f7dfd0f0caa09c04d47c1badeb789ca0a02aef5e02aa558a6051d63f3f49896",
+  "event_id": "autonomous-burst-001-canonical-integration-authority-reconcile-001",
+  "execution_report_digest": "sha256:ae17af96d7762d63e169692b9be7bf60afca42f1aa5796d913efd6d00185e886",
+  "observation_digest": "sha256:06a1c4e89718512f37c8f0049c29a3dbb0abfe3a1c566ffe0697e699655a8bc3",
+  "provider_actor": "Waterfound",
+  "schema_version": "ge.human-authority-execution.v1",
+  "tick": {
+    "checkpoint_digest": "sha256:3c2fd6e9e05836c5adec500ee1b33ff252f7ff5530179cda62010b5586949f01",
+    "disposition": "committed",
+    "human_required": false,
+    "observation_digest": "sha256:06a1c4e89718512f37c8f0049c29a3dbb0abfe3a1c566ffe0697e699655a8bc3",
+    "portfolio_id": "autonomous-burst-001",
+    "post_generation": 2,
+    "post_state_digest": "sha256:2bcb03aeb6e7d988fa23413372c85e3b0b3db79708653a25b927609925ac0a34",
+    "pre_generation": 1,
+    "pre_state_digest": "sha256:0f85bf907916c898c81619ff85635d34649137da87d4d218c40254eff57e4fac",
+    "recovery_report_digest": "sha256:1aca84b86838e10e563ed5ca035643c6ac5f953b1b20d11ebfcb7fc67afc979e",
+    "requested_action_ref": null,
+    "requested_work_id": null,
+    "schema_version": "ge.resume-tick-result.v1",
+    "transition_result_digest": "sha256:6e3d26a98fefd5c22c6ba1c63ada2e3013484d328a91bc2ce58ec43a7acfe612"
+  }
+}
