@@ -1,0 +1,35 @@
+name: MI-001 General Execution Verification
+
+on:
+  push:
+    branches:
+      - colony/maximum-inference-ge-001
+    paths:
+      - "src/general_execution/maximum_inference.py"
+      - "tests/test_maximum_inference.py"
+      - "docs/maximum-inference.md"
+      - ".github/workflows/maximum-inference-verification.yml"
+  pull_request:
+    paths:
+      - "src/general_execution/maximum_inference.py"
+      - "tests/test_maximum_inference.py"
+      - "docs/maximum-inference.md"
+      - ".github/workflows/maximum-inference-verification.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m pip install -e .[dev]
+      - run: python -m pytest -q tests/test_maximum_inference.py
+      - run: python -m pytest -q tests/test_predictive_sovereign_execution.py
+      - run: python -m compileall -q src
+      - run: python -m pytest -q
