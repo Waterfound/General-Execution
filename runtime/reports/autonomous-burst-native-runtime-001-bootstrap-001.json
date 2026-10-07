@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:8d68f82c88652f84284eeb2c45f85de2b65cfbe1df9f3069966c8ddb920dcb16",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "autonomous-burst-native-runtime-001-bootstrap-001",
+    "human_required": false,
+    "operation": "bootstrap",
+    "portfolio_id": "autonomous-burst-native-runtime-001",
+    "post_generation": 0,
+    "post_state_digest": "sha256:9cf308f86a4d1f894ec0b15aea3554d5c55eb3dcaf436bc199327fd4f65353fe",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:9cf308f86a4d1f894ec0b15aea3554d5c55eb3dcaf436bc199327fd4f65353fe",
+    "requested_action_ref": "github://Waterfound/Build-Colony/commit/4222ae071b18fcb145094b8d658f2683226fd01c/pilots/autonomous-burst-native-runtime-001/CLOSURE.json",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:7190f72d3fba276116dab98b052af5246262e6bc57c61f6546286548c77aa595",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
