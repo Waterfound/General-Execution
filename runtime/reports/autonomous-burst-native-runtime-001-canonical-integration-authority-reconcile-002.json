@@ -1,0 +1,41 @@
+{
+  "authority_grant_digest": "sha256:e81931ec13e30f1f20963da763bf535be4dab1d6c6d59db78ae90b34cb36787c",
+  "authority_receipt": {
+    "approved_action_ref": "authority://autonomous-burst-native-runtime/canonical-integration",
+    "approved_at": "2026-10-07T06:58:44Z",
+    "authority_boundary": "AB-NRA-001 native persistent-runtime adoption candidate is fully verified. Explicit Waterfound authorization is required before canonical integration of the verified General Execution, Systems, Red-Team and Build-Colony candidates. This gate does not authorize persistent runtime repin, live native burst-host activation, provider or credential mutation, new paid spend, release, consensus/economics changes, or mainnet.",
+    "authority_ref": "github://Waterfound/General-Execution/commit/5b77c8f4fa3661057fcdc5d6aad939bcc62e77fa/authority/autonomous-burst-native-runtime-001-canonical-integration-authority-reconcile-002.json",
+    "event_id": "autonomous-burst-native-runtime-001-canonical-integration-authority-reconcile-002",
+    "expected_generation": 1,
+    "expected_state_digest": "sha256:9171b875839c9f9707e2499968e3ab8e9014b7bb01e60da739e1b820e4271328",
+    "policy_digest": "sha256:0188d12054ddbcbe0299517420c936ac746b921ac88e28effd44438358a25306",
+    "portfolio_id": "autonomous-burst-native-runtime-001",
+    "provider_actor": "Waterfound",
+    "rule_digest": "sha256:9b13f6aa5c54167dedf8b056d51dbbd15de04dc01dfd2bb6e1f34f73bc4fe825",
+    "schema_version": "ge.human-authority-receipt.v1"
+  },
+  "authority_receipt_digest": "sha256:0c5c93fb49023ed42c6537f18ca4a97c451d204b0559169cdc70fb7deb7e58a3",
+  "authority_ref": "github://Waterfound/General-Execution/commit/5b77c8f4fa3661057fcdc5d6aad939bcc62e77fa/authority/autonomous-burst-native-runtime-001-canonical-integration-authority-reconcile-002.json",
+  "database_sha256": "sha256:7484ffe7d212e5731ad700d2e6830c449d223a4a894d7c1cfd079cb9d613bdd4",
+  "event_id": "autonomous-burst-native-runtime-001-canonical-integration-authority-reconcile-002",
+  "execution_report_digest": "sha256:bca4ddfa6c21f5321da497b2239cbdd91b061a4e538e8fdcbcdbe1ee7f064937",
+  "observation_digest": "sha256:f7eb8dc791498d0323be36b9f941f9b49cc4891a93b7fd71894bc77d6f1a7536",
+  "provider_actor": "Waterfound",
+  "schema_version": "ge.human-authority-execution.v1",
+  "tick": {
+    "checkpoint_digest": "sha256:625dad479362d677496602b9752f973ce492e9769c3351f112cdceda4e1d2456",
+    "disposition": "committed",
+    "human_required": false,
+    "observation_digest": "sha256:f7eb8dc791498d0323be36b9f941f9b49cc4891a93b7fd71894bc77d6f1a7536",
+    "portfolio_id": "autonomous-burst-native-runtime-001",
+    "post_generation": 2,
+    "post_state_digest": "sha256:9bf3238e4b9a3c5970aa36d4242b235c2f2f9b446acd23405c8cee1299c22428",
+    "pre_generation": 1,
+    "pre_state_digest": "sha256:9171b875839c9f9707e2499968e3ab8e9014b7bb01e60da739e1b820e4271328",
+    "recovery_report_digest": "sha256:d95472de5545735d218655d223c077ea5dba4897b7c367b752c7903d52ccf64e",
+    "requested_action_ref": null,
+    "requested_work_id": null,
+    "schema_version": "ge.resume-tick-result.v1",
+    "transition_result_digest": "sha256:a2953dc423aac93f69a408c65935b2df1b0d094687a9526e86bd7105efa15bd9"
+  }
+}

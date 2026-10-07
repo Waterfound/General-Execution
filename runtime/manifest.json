@@ -1,11 +1,11 @@
 {
   "authority_created": false,
-  "database_sha256": "sha256:5765977c3610be716274aac3f48e9d24d7fc34f2233d2bf3e8ef407866dc24bf",
-  "last_event_id": "autonomous-burst-native-runtime-001-canonical-integration-gate-001",
-  "last_event_report_digest": "sha256:b39253688147e3fc23b5ba07b4d49ad49e3c175a41a786568ab1e046c578d544",
-  "last_operation": "transition",
-  "last_trigger_commit": "772bff7b41facd9d9bebf6f074b15bfb0ab3c30f",
+  "database_sha256": "sha256:7484ffe7d212e5731ad700d2e6830c449d223a4a894d7c1cfd079cb9d613bdd4",
+  "last_event_id": "autonomous-burst-native-runtime-001-canonical-integration-authority-reconcile-002",
+  "last_event_report_digest": "sha256:bca4ddfa6c21f5321da497b2239cbdd91b061a4e538e8fdcbcdbe1ee7f064937",
+  "last_operation": "human_authority",
+  "last_trigger_commit": "5b77c8f4fa3661057fcdc5d6aad939bcc62e77fa",
   "persistent_provider_trigger_enabled": true,
-  "runtime_source_revision": "62e4edb7b8ba9571a05b954cf0f82cf3299a6d4a",
+  "runtime_source_revision": "a27a558d4ed0e28d96c3fec408212353d0077060",
   "schema_version": "ge.persistent-runtime-manifest.v1"
 }
