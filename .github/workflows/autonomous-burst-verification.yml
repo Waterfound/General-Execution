@@ -1,0 +1,53 @@
+name: Autonomous Burst verification
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "src/general_execution/autonomous_burst.py"
+      - "tests/test_autonomous_burst.py"
+      - "scripts/run_autonomous_burst_rehearsal.py"
+      - "docs/autonomous-burst.md"
+      - "src/general_execution/__init__.py"
+      - ".github/workflows/autonomous-burst-verification.yml"
+  push:
+    branches:
+      - build-colony/autonomous-burst-001
+    paths:
+      - "src/general_execution/autonomous_burst.py"
+      - "tests/test_autonomous_burst.py"
+      - "scripts/run_autonomous_burst_rehearsal.py"
+      - "docs/autonomous-burst.md"
+      - "src/general_execution/__init__.py"
+      - ".github/workflows/autonomous-burst-verification.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify-autonomous-burst:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m pip install -e '.[dev]' --disable-pip-version-check
+      - run: python -m compileall -q src scripts
+      - run: python -m pytest -q tests/test_autonomous_burst.py tests/test_resume_tick.py tests/test_persistent_runtime.py tests/test_continuity_check.py
+      - run: python scripts/run_autonomous_burst_rehearsal.py
+      - name: Preserve atomic runtime boundary
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          burst=Path("src/general_execution/autonomous_burst.py").read_text()
+          runtime=Path(".github/workflows/durable-runtime-control.yml").read_text()
+          cc=Path("docs/continuity-check.md").read_text()
+          assert "execute_one" in burst
+          assert "fresh observation" in burst
+          assert "Consume at most one admitted transition" in runtime
+          assert "It may not push, merge, dispatch, retry, restart Durable Execution" in cc
+          assert "heartbeat_fallback_seconds must be >= 900" in burst
+          PY
