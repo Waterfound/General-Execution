@@ -758,3 +758,42 @@ __all__.extend([
     "constitutional_assessment_from_dict",
     "constitutional_assessment_to_dict",
 ])
+
+
+# AB-001: bounded event-driven continuation above atomic Durable Execution ticks.
+# This layer never creates authority and Continuity Check remains read-only.
+from .autonomous_burst import (
+    BURST_FOLLOWUP_SCHEMA,
+    BURST_OBSERVATION_SCHEMA,
+    BURST_POLICY_SCHEMA,
+    BURST_RESULT_SCHEMA,
+    BURST_TRANSITION_RECEIPT_SCHEMA,
+    BURST_TRIGGER_SCHEMA,
+    AutonomousBurstError,
+    AutonomousBurstFollowup,
+    AutonomousBurstObservation,
+    AutonomousBurstPolicy,
+    AutonomousBurstResult,
+    AutonomousBurstTransitionReceipt,
+    AutonomousBurstTrigger,
+    plan_async_followup,
+    run_autonomous_burst,
+)
+
+__all__.extend([
+    "BURST_FOLLOWUP_SCHEMA",
+    "BURST_OBSERVATION_SCHEMA",
+    "BURST_POLICY_SCHEMA",
+    "BURST_RESULT_SCHEMA",
+    "BURST_TRANSITION_RECEIPT_SCHEMA",
+    "BURST_TRIGGER_SCHEMA",
+    "AutonomousBurstError",
+    "AutonomousBurstFollowup",
+    "AutonomousBurstObservation",
+    "AutonomousBurstPolicy",
+    "AutonomousBurstResult",
+    "AutonomousBurstTransitionReceipt",
+    "AutonomousBurstTrigger",
+    "plan_async_followup",
+    "run_autonomous_burst",
+])
