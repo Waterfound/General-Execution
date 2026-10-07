@@ -1,0 +1,94 @@
+{
+  "schema_version": "ge.maximum-inference-postcanonical-reconciliation.v1",
+  "program_id": "MI-001",
+  "status": "CANONICALLY_INTEGRATED_POSTMERGE_VERIFIED",
+  "observed_at": "2026-10-07T23:25:00Z",
+  "authority": {
+    "source": "Waterfound explicit canonical integration authorization in chat on 2026-10-07",
+    "scope": [
+      "General Execution PR #37 exact head 7c074d6ada60a330885083f7ff70e707e27ffa7b",
+      "Systems PR #19 exact head 52ba15e0bd58f31484d5c49c7abb55a49feaa84c",
+      "Red-Team PR #24 exact head 78bf800dc8537b64f3716e49a8b05fce48a39359",
+      "Build Colony PR #40 exact head 270ddaf75e968d9047cd46d946eef66beb586819",
+      "exact-head reconciliation and GREEN verification immediately before each integration",
+      "Durable reconciliation after merge"
+    ],
+    "not_authorized": [
+      "physical test",
+      "persistent runtime repin",
+      "provider mutation",
+      "credential mutation",
+      "new paid spend",
+      "release",
+      "consensus or economics change",
+      "mainnet"
+    ]
+  },
+  "canonical_merges": {
+    "general_execution": {
+      "pull_request": 37,
+      "candidate_revision": "7c074d6ada60a330885083f7ff70e707e27ffa7b",
+      "merge_commit": "2d5a62254790b32cad459c00d4b4c7d9abf2e9f7",
+      "postmerge_runs": [
+        37702220276,
+        37702220174,
+        37702220164
+      ],
+      "postmerge_status": "GREEN"
+    },
+    "systems": {
+      "pull_request": 19,
+      "candidate_revision": "52ba15e0bd58f31484d5c49c7abb55a49feaa84c",
+      "merge_commit": "b08e62882c9a8025684bbe3d353a6a66c0c8eb3b",
+      "postmerge_runs": [
+        37702244308
+      ],
+      "postmerge_status": "GREEN"
+    },
+    "project_assurance": {
+      "pull_request": 24,
+      "candidate_revision": "78bf800dc8537b64f3716e49a8b05fce48a39359",
+      "merge_commit": "9e5801f21f7625aedcaf2e2119615246e71d943e",
+      "postmerge_runs": [
+        37702270410
+      ],
+      "postmerge_status": "GREEN"
+    },
+    "build_colony": {
+      "pull_request": 40,
+      "candidate_revision": "270ddaf75e968d9047cd46d946eef66beb586819",
+      "merge_commit": "ecee59550a515a677e69fa5fa6879ed60d9a0e48",
+      "postmerge_runs": [
+        37702301812,
+        37702301808
+      ],
+      "postmerge_status": "GREEN"
+    }
+  },
+  "durable_reconciliation": {
+    "preintegration_portfolio_id": "maximum-inference-001",
+    "preintegration_bootstrap_event": "maximum-inference-001-bootstrap-002",
+    "preintegration_state_digest": "sha256:3e252932fbce2143e1b4f21cb7153be885099f7afa960df78308d4f35731ca90",
+    "preintegration_generation": 0,
+    "bootstrap_anomaly": "The generation-zero portfolio was bootstrapped directly in human_gate, which intentionally creates no checkpoint; therefore the Human Authority Bridge cannot consume that historical gate. The state is preserved as historical evidence and is not rewritten.",
+    "resolution": "Create a separate postcanonical Durable portfolio bound to the verified canonical merge commits. Treat the earlier generation-zero gate as superseded for operational interpretation by this reconciliation, without deleting or mutating historical evidence.",
+    "authority_created": false
+  },
+  "architectural_result": {
+    "classification": "ROBUST_PREMISE_SUB_PILLAR",
+    "core_loop": "Robust Premise -> Maximum Inference -> Robust Premise -> Physical Test",
+    "predictive_sovereign_execution": "REUSED_INFERENCE_SUBSTRATE",
+    "simulation_can_claim_empirical_validation": false,
+    "maximum_inference_can_dispatch_physical_test": false
+  },
+  "forbidden_or_ungranted_actions": [
+    "physical test",
+    "persistent runtime repin",
+    "provider mutation",
+    "credential mutation",
+    "new paid spend",
+    "release",
+    "consensus or economics change",
+    "mainnet"
+  ]
+}
