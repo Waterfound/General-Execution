@@ -1,0 +1,32 @@
+name: GOP General Execution Verification
+
+on:
+  push:
+    branches:
+      - colony/governed-operator-plane-ge-001
+    paths:
+      - "src/general_execution/liveness_evidence.py"
+      - "src/general_execution/operator_plane.py"
+      - "scripts/run_continuity_check.py"
+      - "scripts/run_operator_plane.py"
+      - "tests/test_liveness_evidence.py"
+      - "tests/test_operator_plane.py"
+      - "docs/governed-operator-plane*.md"
+      - ".github/workflows/governed-operator-plane-verification.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m pip install -e .[dev]
+      - run: python -m pytest -q tests/test_liveness_evidence.py
+      - run: python -m compileall -q src scripts
+      - run: python -m pytest -q
