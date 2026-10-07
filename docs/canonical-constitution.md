@@ -78,3 +78,24 @@ ExecutionLaunchOrder
 ```
 
 `admit_execution_launch_order` remains the lower-level ELG-01 primitive. System-level Full Autonomy must use the constitutionally governed composition when a consequential autonomous action is being admitted.
+
+## Durable Full Autonomy launch host
+
+The persistent launch host applies this rule mechanically.
+
+A new durable launch must be created atomically as exactly two immutable inputs in the same runtime commit:
+
+- `launch-orders/<id>.json`;
+- `constitutional-assessments/<id>.json`.
+
+The assessment must bind the exact launch-order digest. The host rejects missing, duplicated, mutable or mismatched pairs before ordinary launch admission.
+
+The durable evidence split is deliberate:
+
+- every valid constitutional assessment produces a receipt under `runtime/constitutional-admission/`;
+- only `OUT_OF_SCOPE` or `COMPATIBLE` can materialize an ELG-01 receipt and workstream binding under `runtime/launch-admission/`;
+- `INTERPRETATION_REQUIRED` persists the constitutional stop but creates no launch receipt, launch ID or dispatch identity;
+- `INCOMPATIBLE` persists rejection evidence but creates no launch receipt, launch ID or dispatch identity.
+
+The launch host remains fail-closed and does not itself determine doctrine. The assessment producer remains responsible for evidence-bound substantive classification.
+
