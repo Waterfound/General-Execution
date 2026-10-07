@@ -198,3 +198,14 @@ def test_changed_order_invalidates_assessment(tmp_path):
     assert "does not bind the exact execution order" in completed.stderr
     assert not constitutional_receipt.exists()
     assert not result_path.exists()
+
+
+def test_durable_runtime_workflow_requires_paired_constitutional_assessment():
+    workflow = (ROOT / ".github" / "workflows" / "durable-launch-admission.yml").read_text()
+    assert '"constitutional-assessments/*.json"' in workflow
+    assert "expected one launch order and one constitutional assessment" in workflow
+    assert "run_constitutional_launch_admission.py" in workflow
+    assert "--constitutional-assessment /tmp/constitutional-assessment.json" in workflow
+    assert "runtime/constitutional-admission/" in workflow
+    assert "constitutional_gate_passed" in workflow
+    assert "ge.constitutionally-governed-workstream-binding.v1" in workflow
