@@ -1,0 +1,114 @@
+{
+  "schema_version": "ge.holistic-symbiosis-canonical-checkpoint.v1",
+  "checkpoint_id": "holistic-symbiosis-canonical-green-20261007",
+  "verdict": "FULL_HOLISTIC_SYMBIOSIS_CANONICAL_GREEN",
+  "canonical_revisions": {
+    "general_execution": "299549f2af4222e9ac81beacdaa24da6d8fef55c",
+    "systems": "271cd1d3293ebab0d6c1f169c1f3494af3a399f1",
+    "system_interoperability_envelope": "8bc44605c01684373916273c70d1c6c816c26978",
+    "red_team_project_assurance": "9ffdc02d98416869cac8c4a577afb402dee40c9b",
+    "build_colony": "0930f9f30a5246fa2dc665022852bad191f822f2",
+    "fae": "e87a5010975a9a88c361a3334d245bbd5cd17691"
+  },
+  "post_merge_verification": {
+    "general_execution_main_integration_gate": 37555460253,
+    "general_execution_durable_terminal_verification": 37555460246,
+    "build_colony_ci": 37555491517,
+    "build_colony_remote_pool": 37555491551,
+    "red_team_main_assurance": 37555484371,
+    "fae_public_code_security": 37555498978,
+    "fae_cross_lab_integration": 37555499010,
+    "fae_verify_canonical_source": 37555498998,
+    "fae_codeql": 37555499098,
+    "sie_post_merge_provenance": 37555644933,
+    "fae_post_merge_target_evolution": 37555720670
+  },
+  "equivalence": {
+    "general_execution_candidate_tree_equal_main_tree": true,
+    "systems_candidate_tree_equal_main_tree": true,
+    "sie_candidate_tree_equal_main_tree": true,
+    "red_team_candidate_tree_equal_main_tree": true,
+    "build_colony_candidate_tree_equal_main_tree": true,
+    "fae_candidate_files_preserved_exactly": true,
+    "fae_main_drift_was_disjoint_from_system_preservation_candidate": true,
+    "sie_contexts_bind_current_canonical_revisions": true
+  },
+  "recovery_capsule": {
+    "capsule_id": "hsr-001-canonical-recovery-20261007",
+    "source_refs": [
+      "github://Waterfound/General-Execution/commit/299549f2af4222e9ac81beacdaa24da6d8fef55c",
+      "github://Waterfound/Systems/commit/271cd1d3293ebab0d6c1f169c1f3494af3a399f1",
+      "github://Waterfound/System-Interoperability-Envelope/commit/8bc44605c01684373916273c70d1c6c816c26978",
+      "github://Waterfound/Red-Team/commit/9ffdc02d98416869cac8c4a577afb402dee40c9b",
+      "github://Waterfound/Build-Colony/commit/0930f9f30a5246fa2dc665022852bad191f822f2",
+      "github://Waterfound/FAE-testnet/commit/e87a5010975a9a88c361a3334d245bbd5cd17691"
+    ],
+    "durable_state_digests": [
+      "sha256:b9b46dab791b6239bd15371b3391d6df64959f7488e77e3124c838333f5da0d5"
+    ],
+    "authority_refs": [
+      "authority://waterfound/holistic-symbiosis/canonical-integration"
+    ],
+    "resource_aliases": [
+      "canonical-source",
+      "durable-runtime",
+      "build-colony",
+      "github-actions"
+    ],
+    "reconstruction_steps": [
+      "resolve exact canonical source refs",
+      "restore durable SQLite from runtime/durable-asp-control",
+      "verify database and event-report digests",
+      "reconstruct holistic-symbiosis portfolio",
+      "resolve current SIE contexts and Project Assurance target pin",
+      "resume only inside existing explicit authority"
+    ],
+    "verification_predicates": [
+      "all authorized canonical merges preserve verified candidate content",
+      "SIE contexts bind current General Execution and Build Colony canonical revisions",
+      "FAE canonical main remains Project Assurance healthy",
+      "persistent runtime remains at its pre-HSR pin until separately authorized",
+      "Project Assurance target pin remains unchanged until separately authorized"
+    ],
+    "secret_material_persisted": false,
+    "authority_created": false,
+    "schema_version": "ge.sovereign-recovery-capsule.v1",
+    "capsule_digest": "sha256:fa93934c804a32ba1f488f35b1cbbb0c1d36bbfd16a5e86af30cf158d80086b1"
+  },
+  "gate_forecast": {
+    "advisory_only": true,
+    "authority_created": false,
+    "ordered": [
+      {
+        "distance": 1,
+        "gate_ref": "authority://holistic-symbiosis/runtime-adoption",
+        "kind": "HUMAN_AUTHORITY",
+        "dependency_ref": "General Execution persistent runtime",
+        "evidence_basis": [
+          "general_execution_main_299549f2af4222e9ac81beacdaa24da6d8fef55c",
+          "persistent_runtime_pin_62e4edb7b8ba9571a05b954cf0f82cf3299a6d4a"
+        ]
+      },
+      {
+        "distance": 1,
+        "gate_ref": "authority://project-assurance/fae-target-pin-maintenance",
+        "kind": "HUMAN_AUTHORITY",
+        "dependency_ref": "FAE Project Assurance target pin",
+        "evidence_basis": [
+          "fae_main_e87a5010975a9a88c361a3334d245bbd5cd17691",
+          "target_evolution_run_37555720670",
+          "eligible_for_explicit_target_pin_review"
+        ]
+      }
+    ]
+  },
+  "current_boundaries": {
+    "persistent_runtime_source_revision": "62e4edb7b8ba9571a05b954cf0f82cf3299a6d4a",
+    "project_assurance_target_pin": "bfa0909dc3495cdad72abb70fd461c708ee35b8c",
+    "runtime_repin_performed": false,
+    "project_assurance_target_pin_changed": false,
+    "provider_or_credential_change_performed": false,
+    "new_paid_spend_cents": 0,
+    "release_or_mainnet_performed": false
+  }
+}
