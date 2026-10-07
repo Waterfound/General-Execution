@@ -1,0 +1,66 @@
+name: AB-NRA-001 Native Runtime Verification
+
+on:
+  push:
+    branches:
+      - build-colony/autonomous-burst-native-runtime-001
+    paths:
+      - "src/general_execution/persistent_burst_host.py"
+      - "scripts/run_persistent_runtime_burst.py"
+      - "tests/test_persistent_burst_host.py"
+      - "docs/autonomous-burst-native-runtime.md"
+      - "runtime-candidates/durable-runtime-burst-host.yml"
+      - ".github/workflows/autonomous-burst-native-runtime-verification.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "src/general_execution/persistent_burst_host.py"
+      - "scripts/run_persistent_runtime_burst.py"
+      - "tests/test_persistent_burst_host.py"
+      - "docs/autonomous-burst-native-runtime.md"
+      - "runtime-candidates/durable-runtime-burst-host.yml"
+      - ".github/workflows/autonomous-burst-native-runtime-verification.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify-native-runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m pip install -e '.[dev]' --disable-pip-version-check
+      - run: python -m compileall -q src scripts
+      - name: Focused atomic/native host regression
+        run: |
+          python -m pytest -q \
+            tests/test_persistent_burst_host.py \
+            tests/test_persistent_runtime.py \
+            tests/test_autonomous_burst.py \
+            tests/test_resume_tick.py
+      - name: Verify candidate host is inert and exact-pinned
+        run: |
+          test -f runtime-candidates/durable-runtime-burst-host.yml
+          test ! -f .github/workflows/durable-runtime-burst-host.yml
+          test "$(git hash-object .github/workflows/durable-runtime-control.yml)" = "4b52daf1687ea80f26888dcf8a1470c8725010ad"
+          grep -F "NATIVE_BURST_RUNTIME_REVISION: 590ef646883e408b4632ea4177f7229d9fe0ac5b" runtime-candidates/durable-runtime-burst-host.yml
+          grep -F "group: durable-asp-persistent-runtime" runtime-candidates/durable-runtime-burst-host.yml
+          grep -F 'test "$GITHUB_ACTOR" = "Waterfound"' runtime-candidates/durable-runtime-burst-host.yml
+          grep -F "runtime-candidates/" docs/autonomous-burst-native-runtime.md
+      - name: Prove no authority transport was added
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          text=Path("runtime-candidates/durable-runtime-burst-host.yml").read_text()
+          assert "authority/*.json" not in text
+          assert "bursts/*.json" in text
+          host=Path("src/general_execution/persistent_burst_host.py").read_text()
+          assert "cannot create authority" in host
+          assert "process_persistent_runtime_event" in host
+          assert "Fresh durable recovery" in host
+          PY
