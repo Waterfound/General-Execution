@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:9a23913b1a582b430100f76877329ce8717022236f39b3c5441a71eb36f82d2c",
+  "event_id": "governed-operator-plane-bootstrap-001",
+  "event_report_digest": "sha256:dff6432dbb80a7b3daf8952bf21c6f079333afafb0d20a99d7e62d1b4e558ae6",
+  "operation": "bootstrap",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "62e4edb7b8ba9571a05b954cf0f82cf3299a6d4a",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "77654ee6b36bd8e81b5c1370c52ba75cf32cb0aa"
+}

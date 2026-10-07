@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:9a23913b1a582b430100f76877329ce8717022236f39b3c5441a71eb36f82d2c",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "governed-operator-plane-bootstrap-001",
+    "human_required": false,
+    "operation": "bootstrap",
+    "portfolio_id": "governed-operator-plane-001",
+    "post_generation": 0,
+    "post_state_digest": "sha256:aea882042e15c53903a1e4eb318b7f696b8084cd01aaa8e2e6e4fa6447c4c95d",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:aea882042e15c53903a1e4eb318b7f696b8084cd01aaa8e2e6e4fa6447c4c95d",
+    "requested_action_ref": "build-colony://GOP-001/operator-plane-contract",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:dff6432dbb80a7b3daf8952bf21c6f079333afafb0d20a99d7e62d1b4e558ae6",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
