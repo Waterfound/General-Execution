@@ -1,0 +1,57 @@
+{
+  "schema_version": "ge.human-authority-event.v1",
+  "event_id": "autonomous-burst-001-canonical-integration-authority-reconcile-001",
+  "approved_action_ref": "authority://autonomous-burst/canonical-integration",
+  "approved_at": "2026-10-07T06:08:00Z",
+  "policy": {
+    "policy_id": "autonomous-burst-001-canonical-integration-authority-reconciliation",
+    "revision": "1",
+    "rules": [
+      {
+        "rule_id": "01-authorized-canonical-integration-reconciled",
+        "from_state": "human_gate",
+        "event": "verification_passed",
+        "to_state": "complete",
+        "next_action_ref": "action://autonomous-burst-001/canonical-integration-reconciled",
+        "effect": "none",
+        "required_evidence": [
+          "human_authority_recorded"
+        ],
+        "authority_mode": "preauthorized_required",
+        "authority_boundary": "AB-001 has reached its machine-admissible candidate software ceiling. Explicit Waterfound authorization is required before canonical integration of the verified General Execution, Systems, Red-Team and Build-Colony candidates. This gate does not authorize persistent-runtime repin/native burst-host activation, provider or credential mutation, new paid spend, release, consensus/economics changes, or mainnet.",
+        "schema_version": "ge.transition-rule.v1"
+      }
+    ],
+    "default_disposition": "stop",
+    "schema_version": "ge.transition-policy.v1"
+  },
+  "observation": {
+    "portfolio_id": "autonomous-burst-001",
+    "expected_generation": 1,
+    "expected_state_digest": "sha256:0f85bf907916c898c81619ff85635d34649137da87d4d218c40254eff57e4fac",
+    "policy_digest": "sha256:f9eee13f747f3780f21ee2db6d46dcbadd27173c724449d746a60c060952b236",
+    "event": "verification_passed",
+    "evidence": [
+      {
+        "kind": "human_authority_recorded",
+        "locator": "authority://waterfound/chat/2026-10-07/ab-001-canonical-integration-reconciliation",
+        "digest": "sha256:08d2fa8800d6eaa3a8c2ff0c0fd0517e02bc55e09fbef1085e8ff1ae0875604c",
+        "schema_version": "ge.checkpoint-evidence.v1"
+      }
+    ],
+    "action_ref": "runtime://autonomous-burst-001/reconcile-canonical-integration",
+    "observed_at": "2026-10-07T06:08:00Z",
+    "summary": "Waterfound explicitly authorized present-time durable reconciliation of the already-observed AB-001 canonical integrations and exact Build Colony PR #38 reconciliation. No retroactive authority is inferred. Native persistent-runtime Autonomous Burst adoption remains separately unauthorized.",
+    "canonical_refs": [
+      "github://Waterfound/General-Execution/commit/11f747f005a3aa0301ad63d07e45248dc7438cb6",
+      "github://Waterfound/Systems/commit/44323aaee097ee5561ed6ecf7c79381d139ab347",
+      "github://Waterfound/Red-Team/commit/6a6286d483ddb89f3f8c15ec520ddac22f17b48f",
+      "github://Waterfound/Build-Colony/commit/8254222ac98fffbbe01e7b5811c3a3b91e634bd6",
+      "github://Waterfound/Build-Colony/commit/be483f1a88b471c70d82557826c3fc0eb797a1f3"
+    ],
+    "uncertainties": [],
+    "wake_admission": null,
+    "authority_grant": null,
+    "schema_version": "ge.resume-tick-observation.v1"
+  }
+}
