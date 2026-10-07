@@ -1,0 +1,189 @@
+name: Durable ASP native Autonomous Burst host
+
+# CANDIDATE ONLY.
+# This file is deliberately stored under runtime-candidates/, not .github/workflows/.
+# Activation requires a separate Waterfound authority gate and exact repin.
+
+on:
+  push:
+    branches:
+      - runtime/durable-asp-control
+    paths:
+      - "bursts/*.json"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: durable-asp-persistent-runtime
+  cancel-in-progress: false
+
+env:
+  RUNTIME_BRANCH: runtime/durable-asp-control
+  NATIVE_BURST_RUNTIME_REVISION: 590ef646883e408b4632ea4177f7229d9fe0ac5b
+
+jobs:
+  consume-burst:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Enforce host boundary
+        run: |
+          test "$GITHUB_ACTOR" = "Waterfound"
+          test "$GITHUB_REF_NAME" = "$RUNTIME_BRANCH"
+          test "$GITHUB_REF" = "refs/heads/$RUNTIME_BRANCH"
+
+      - name: Checkout burst trigger commit
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.sha }}
+
+      - name: Admit exactly one immutable burst manifest
+        id: burst
+        run: |
+          git diff-tree --no-commit-id --name-status -r "$GITHUB_SHA" -- 'bursts/*.json' > /tmp/burst-changes.txt
+          python - <<'PY'
+          import json, os, pathlib
+          rows=[line.strip().split("\t",1) for line in pathlib.Path("/tmp/burst-changes.txt").read_text().splitlines() if line.strip()]
+          assert len(rows)==1, f"expected exactly one burst manifest, got {rows}"
+          status,path=rows[0]
+          assert status=="A", f"burst manifest must be immutable create-only, got {status}"
+          assert path.startswith("bursts/") and path.endswith(".json")
+          raw=os.popen(f"git show {os.environ['GITHUB_SHA']}:{path}").read()
+          data=json.loads(raw)
+          assert data.get("schema_version")=="ge.persistent-burst-manifest.v1"
+          burst_id=data.get("burst_id")
+          assert isinstance(burst_id,str) and burst_id and all(c.isalnum() or c in "._-" for c in burst_id)
+          assert len(burst_id)<=120
+          pathlib.Path("/tmp/burst-manifest.json").write_text(raw)
+          with open(os.environ["GITHUB_OUTPUT"],"a") as out:
+              out.write(f"burst_id={burst_id}\n")
+          PY
+
+      - name: Materialize exact immutable event bundle from trigger commit
+        run: |
+          rm -rf /tmp/burst-bundle
+          mkdir -p /tmp/burst-bundle
+          python - <<'PY'
+          import hashlib,json,os,pathlib,subprocess
+          data=json.loads(pathlib.Path("/tmp/burst-manifest.json").read_text())
+          refs=data["event_refs"]
+          assert 1 <= len(refs) <= 32
+          for ref in refs:
+              path=ref["path"]
+              assert path.startswith("burst-events/") and path.endswith(".json")
+              assert ".." not in pathlib.PurePosixPath(path).parts
+              raw=subprocess.check_output(["git","show",f"{os.environ['GITHUB_SHA']}:{path}"])
+              digest="sha256:"+hashlib.sha256(raw).hexdigest()
+              assert digest==ref["content_digest"], (path,digest,ref["content_digest"])
+              dest=pathlib.Path("/tmp/burst-bundle")/path
+              dest.parent.mkdir(parents=True,exist_ok=True)
+              dest.write_bytes(raw)
+          PY
+
+      - name: Move to latest durable runtime state
+        run: |
+          git fetch origin "$RUNTIME_BRANCH" main
+          git checkout -B "$RUNTIME_BRANCH" "origin/$RUNTIME_BRANCH"
+          if test -f "runtime/processed-bursts/${{ steps.burst.outputs.burst_id }}.json"; then
+            echo "already_processed=true" >> "$GITHUB_ENV"
+          else
+            echo "already_processed=false" >> "$GITHUB_ENV"
+          fi
+
+      - name: Setup Python
+        if: env.already_processed != 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Prepare pinned verified native burst source
+        if: env.already_processed != 'true'
+        run: |
+          test "$NATIVE_BURST_RUNTIME_REVISION" = "590ef646883e408b4632ea4177f7229d9fe0ac5b"
+          git cat-file -e "$NATIVE_BURST_RUNTIME_REVISION^{commit}"
+          git merge-base --is-ancestor "$NATIVE_BURST_RUNTIME_REVISION" origin/main
+          git worktree add --detach /tmp/native-burst-src "$NATIVE_BURST_RUNTIME_REVISION"
+          cd /tmp/native-burst-src
+          python -m pip install -e '.[dev]' --disable-pip-version-check
+          python -m compileall -q src scripts
+
+      - name: Restore durable SQLite state
+        if: env.already_processed != 'true'
+        run: |
+          rm -f /tmp/durable-runtime.db
+          test -f runtime/state.sqlite.b64
+          base64 --decode runtime/state.sqlite.b64 > /tmp/durable-runtime.db
+
+      - name: Consume bounded native Autonomous Burst
+        if: env.already_processed != 'true'
+        run: |
+          cd /tmp/native-burst-src
+          python scripts/run_persistent_runtime_burst.py \
+            --manifest /tmp/burst-manifest.json \
+            --events-root /tmp/burst-bundle \
+            --database /tmp/durable-runtime.db \
+            --report /tmp/native-burst-report.json
+
+      - name: Persist durable state and burst evidence
+        if: env.already_processed != 'true'
+        run: |
+          mkdir -p runtime/burst-reports runtime/processed-bursts
+          base64 -w 0 /tmp/durable-runtime.db > runtime/state.sqlite.b64
+          printf '\n' >> runtime/state.sqlite.b64
+          cp /tmp/native-burst-report.json "runtime/burst-reports/${{ steps.burst.outputs.burst_id }}.json"
+          python - <<'PY'
+          import hashlib,json,os,pathlib
+          report=json.loads(pathlib.Path("/tmp/native-burst-report.json").read_text())
+          db=pathlib.Path("/tmp/durable-runtime.db").read_bytes()
+          db_digest="sha256:"+hashlib.sha256(db).hexdigest()
+          assert report["database_sha256"]==db_digest
+          burst=report["burst_report"]
+          burst_id=burst["burst_id"]
+          processed={
+              "schema_version":"ge.persistent-burst-processed.v1",
+              "burst_id":burst_id,
+              "trigger_commit":os.environ["GITHUB_SHA"],
+              "provider_actor":os.environ["GITHUB_ACTOR"],
+              "burst_report_digest":report["burst_report_digest"],
+              "database_sha256":db_digest,
+              "runtime_source_revision":os.environ["NATIVE_BURST_RUNTIME_REVISION"],
+              "authority_created":False,
+          }
+          manifest={
+              "schema_version":"ge.persistent-runtime-manifest.v1",
+              "last_event_id":burst_id,
+              "last_operation":"autonomous_burst",
+              "last_trigger_commit":os.environ["GITHUB_SHA"],
+              "last_event_report_digest":report["burst_report_digest"],
+              "database_sha256":db_digest,
+              "runtime_source_revision":os.environ["NATIVE_BURST_RUNTIME_REVISION"],
+              "persistent_provider_trigger_enabled":True,
+              "authority_created":False,
+          }
+          pathlib.Path(f"runtime/processed-bursts/{burst_id}.json").write_text(json.dumps(processed,sort_keys=True,indent=2)+"\n")
+          pathlib.Path("runtime/manifest.json").write_text(json.dumps(manifest,sort_keys=True,indent=2)+"\n")
+          PY
+
+      - name: Commit durable state only to runtime branch
+        if: env.already_processed != 'true'
+        run: |
+          git config user.name "durable-asp-runtime"
+          git config user.email "durable-asp-runtime@users.noreply.github.com"
+          git add runtime/
+          git diff --cached --quiet && exit 0
+          git commit -m "runtime: consume burst ${{ steps.burst.outputs.burst_id }} [skip ci]"
+          git fetch origin "$RUNTIME_BRANCH"
+          git rebase "origin/$RUNTIME_BRANCH"
+          test "$(git branch --show-current)" = "$RUNTIME_BRANCH"
+          git push origin "HEAD:refs/heads/$RUNTIME_BRANCH"
+
+      - name: Upload native burst evidence
+        if: env.already_processed != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: durable-native-burst-${{ steps.burst.outputs.burst_id }}-${{ github.run_id }}
+          path: /tmp/native-burst-report.json
+          if-no-files-found: error
+          retention-days: 30
