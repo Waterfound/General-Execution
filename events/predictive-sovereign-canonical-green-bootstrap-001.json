@@ -1,0 +1,65 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "predictive-sovereign-canonical-green-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "predictive-sovereign-execution-002",
+      "generation": 0,
+      "active": {
+        "work_id": "PSE-11-RUNTIME-ADOPTION",
+        "role": "active",
+        "state": "human_gate",
+        "objective": "Adopt the canonical Predictive & Sovereign Execution implementation in the persistent runtime only under separate explicit Waterfound approval.",
+        "active_gate": "runtime-adoption-approval",
+        "next_action_ref": "authority://predictive-sovereign/runtime-adoption",
+        "source_revision": "62e4edb7b8ba9571a05b954cf0f82cf3299a6d4a",
+        "evidence_required": [
+          "canonical_main_integration_green",
+          "exact_general_execution_main_62e4edb7b8ba9571a05b954cf0f82cf3299a6d4a",
+          "post_merge_verification_green",
+          "explicit_waterfound_runtime_adoption_approval"
+        ],
+        "authority_boundary": "Canonical integration is complete. Persistent runtime adoption remains separately approval-bound and no runtime repin is implied.",
+        "authority_ref": null,
+        "blockers": [
+          {
+            "kind": "authority",
+            "detail": "Persistent runtime adoption requires separate explicit Waterfound approval.",
+            "evidence_refs": [
+              "github://Waterfound/General-Execution/commit/9a01f83c234d0e903ac7b45d98f2519cbc0c39b8/checkpoints/predictive-sovereign-canonical-main-green-20261006.json"
+            ],
+            "schema_version": "ge.portfolio-blocker.v1"
+          }
+        ],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/General-Execution/commit/9a01f83c234d0e903ac7b45d98f2519cbc0c39b8/checkpoints/predictive-sovereign-canonical-main-green-20261006.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "PSE-12-POST-INTEGRATION-READINESS",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Keep post-integration runtime verification, recovery refresh and gate forecast prepared without changing the persistent runtime.",
+        "active_gate": "runtime-readiness",
+        "next_action_ref": "action://predictive-sovereign/runtime-readiness",
+        "source_revision": "62e4edb7b8ba9571a05b954cf0f82cf3299a6d4a",
+        "evidence_required": [
+          "runtime_source_reconciliation",
+          "recovery_capsule_refresh",
+          "gate_forecast_refresh",
+          "bounded_smoke_plan"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/General-Execution/commit/9a01f83c234d0e903ac7b45d98f2519cbc0c39b8/checkpoints/predictive-sovereign-canonical-main-green-20261006.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
