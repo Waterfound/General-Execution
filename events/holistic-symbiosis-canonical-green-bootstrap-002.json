@@ -1,0 +1,101 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "holistic-symbiosis-canonical-green-bootstrap-002",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "holistic-symbiosis-reconciliation-002",
+      "generation": 0,
+      "active": {
+        "work_id": "HSR-09-RUNTIME-ADOPTION",
+        "role": "active",
+        "state": "human_gate",
+        "objective": "Adopt the canonical HSR-001 General Execution composition in the persistent runtime only under separate explicit Waterfound approval.",
+        "active_gate": "runtime-adoption-approval",
+        "next_action_ref": "authority://holistic-symbiosis/runtime-adoption",
+        "source_revision": "299549f2af4222e9ac81beacdaa24da6d8fef55c",
+        "evidence_required": [
+          "canonical_hsr_integration_green",
+          "post_merge_verification_green",
+          "recovery_capsule_current",
+          "explicit_waterfound_runtime_adoption_approval"
+        ],
+        "authority_boundary": "HSR canonical integration is complete; persistent runtime remains deliberately pinned to 62e4edb7b8ba9571a05b954cf0f82cf3299a6d4a until separately approved.",
+        "authority_ref": null,
+        "blockers": [
+          {
+            "kind": "authority",
+            "detail": "Persistent runtime adoption requires separate explicit Waterfound approval.",
+            "evidence_refs": [
+              "github://Waterfound/General-Execution/commit/609d36f017625b33d285f03fcd9434ad4ca34b02/checkpoints/holistic-symbiosis-canonical-green-20261007.json"
+            ],
+            "schema_version": "ge.portfolio-blocker.v1"
+          }
+        ],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/General-Execution/commit/609d36f017625b33d285f03fcd9434ad4ca34b02/checkpoints/holistic-symbiosis-canonical-green-20261007.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "HSR-10-READ-ONLY-OBSERVATION",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Observe HSR receipts, current SIE provenance, Project Assurance evidence and recovery/gate forecast without changing authority-bound state.",
+        "active_gate": "read-only-observation",
+        "next_action_ref": "observe://holistic-symbiosis/canonical",
+        "source_revision": "299549f2af4222e9ac81beacdaa24da6d8fef55c",
+        "evidence_required": [
+          "runtime_manifest",
+          "canonical_checkpoint",
+          "sie_current_contexts",
+          "project_assurance_target_evolution"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/General-Execution/commit/609d36f017625b33d285f03fcd9434ad4ca34b02/checkpoints/holistic-symbiosis-canonical-green-20261007.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [
+        {
+          "work_id": "HSR-11-FAE-ASSURANCE-TARGET-MAINTENANCE",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Maintain the Project Assurance FAE target pin only after separate explicit Waterfound approval.",
+          "active_gate": "target-pin-maintenance-approval",
+          "next_action_ref": "authority://project-assurance/fae-target-pin-maintenance",
+          "source_revision": "e87a5010975a9a88c361a3334d245bbd5cd17691",
+          "evidence_required": [
+            "target_evolution_run_37555720670_green",
+            "candidate_healthy",
+            "eligible_for_explicit_target_pin_review",
+            "explicit_waterfound_target_pin_maintenance_approval"
+          ],
+          "authority_boundary": "Project Assurance target pin remains bfa0909dc3495cdad72abb70fd461c708ee35b8c until separately approved.",
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "authority",
+              "detail": "Target-pin maintenance is manual-explicit-only and requires separate Waterfound approval.",
+              "evidence_refs": [
+                "github-actions://Waterfound/Red-Team/actions/runs/37555720670",
+                "github://Waterfound/General-Execution/commit/609d36f017625b33d285f03fcd9434ad4ca34b02/checkpoints/holistic-symbiosis-canonical-green-20261007.json"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "event_received",
+            "value": "authority://project-assurance/fae-target-pin-maintenance",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/General-Execution/commit/609d36f017625b33d285f03fcd9434ad4ca34b02/checkpoints/holistic-symbiosis-canonical-green-20261007.json",
+          "schema_version": "ge.portfolio-entry.v1"
+        }
+      ],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
