@@ -1,0 +1,56 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "autonomous-burst-native-runtime-001-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "autonomous-burst-native-runtime-001",
+      "generation": 0,
+      "active": {
+        "work_id": "NRA-07-INTEGRATED-CLOSURE",
+        "role": "active",
+        "state": "verifying",
+        "objective": "Bind the verified AB-NRA-001 native persistent-runtime adoption candidate and stop before canonical integration and live runtime promotion.",
+        "active_gate": "nra-closure",
+        "next_action_ref": "github://Waterfound/Build-Colony/commit/4222ae071b18fcb145094b8d658f2683226fd01c/pilots/autonomous-burst-native-runtime-001/CLOSURE.json",
+        "source_revision": "4222ae071b18fcb145094b8d658f2683226fd01c",
+        "evidence_required": [
+          "general_execution_pr36_exact_candidate_green",
+          "systems_pr18_exact_candidate_green",
+          "project_assurance_16_of_16_green",
+          "integrated_rehearsal_green",
+          "live_runtime_unchanged"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github-actions://Waterfound/Build-Colony/actions/runs/37582029466",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "NRA-08-RUNTIME-PROMOTION",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Remain dormant until candidate canonical integration is authorized and complete; live runtime repin/activation requires a separate later Waterfound authority gate.",
+        "active_gate": "nra-runtime-promotion",
+        "next_action_ref": "authority://autonomous-burst-native-runtime/promotion",
+        "source_revision": "112d6c65423112fe65da3181c29fcfb9f8fb1762",
+        "evidence_required": [
+          "canonical_candidate_integration_authorized_and_complete",
+          "exact_canonical_general_execution_revision",
+          "explicit_runtime_repin_activation_authority"
+        ],
+        "authority_boundary": "Native Autonomous Burst runtime promotion is separately human-gated and not authorized by candidate development.",
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/Build-Colony/commit/4222ae071b18fcb145094b8d658f2683226fd01c/pilots/autonomous-burst-native-runtime-001/CLOSURE.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
