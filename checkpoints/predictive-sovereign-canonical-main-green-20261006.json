@@ -1,0 +1,39 @@
+{
+  "schema_version": "ge.predictive-sovereign-canonical-integration-checkpoint.v1",
+  "checkpoint_id": "predictive-sovereign-canonical-main-green-20261006",
+  "verdict": "CANONICAL_MAIN_INTEGRATION_GREEN",
+  "systems": {
+    "pull_request": 7,
+    "candidate_revision": "71ef41aedc6f1fe766c3476493e83bd0b75cb9fd",
+    "main_merge_commit": "766da46cf2b9dc35d5566dca614f5b0bad9683e5",
+    "tree_sha": "69100d201b002f10062ad78cb1e0630fe52662bf",
+    "candidate_tree_equal_main_tree": true
+  },
+  "build_colony": {
+    "pull_request": 34,
+    "candidate_revision": "8ae45f2e02c0bc736ee18fbfe77bfd655659aea0",
+    "main_merge_commit": "29e95d1f3ff11428eff928e5d5b32d07d0a2dd43",
+    "tree_sha": "97aaa1283dd12231ca1e780ee8f5befaeeed2bba",
+    "candidate_tree_equal_main_tree": true,
+    "post_merge_ci_run": 37549865239,
+    "post_merge_remote_pool_run": 37549865267,
+    "post_merge_verification": "PASS"
+  },
+  "general_execution": {
+    "pull_request": 25,
+    "candidate_revision": "7c70aca33906cc26e316ac15141018e505eaaa15",
+    "main_merge_commit": "62e4edb7b8ba9571a05b954cf0f82cf3299a6d4a",
+    "tree_sha": "ab43547dafdb51005a5ca13c253c2739f4b28dee",
+    "candidate_tree_equal_main_tree": true,
+    "post_merge_main_integration_gate_run": 37549871598,
+    "post_merge_durable_terminal_verification_run": 37549871608,
+    "post_merge_verification": "PASS"
+  },
+  "all_authorized_pull_requests_merged": true,
+  "runtime_adoption_performed": false,
+  "runtime_repin_performed": false,
+  "provider_or_credential_change_performed": false,
+  "new_paid_spend_cents": 0,
+  "release_or_mainnet_performed": false,
+  "next_genuine_gate": "authority://predictive-sovereign/runtime-adoption"
+}
