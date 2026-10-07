@@ -1,0 +1,58 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "predictive-sovereign-runtime-adoption-complete-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "predictive-sovereign-execution-003",
+      "generation": 0,
+      "active": {
+        "work_id": "PSE-13-RUNTIME-ADOPTED",
+        "role": "active",
+        "state": "complete",
+        "objective": "Record canonical Predictive & Sovereign Execution as adopted by the persistent General Execution runtime after bounded smoke and reconstruction verification.",
+        "active_gate": "runtime-adoption-complete",
+        "next_action_ref": "state://predictive-sovereign/runtime-adopted-green",
+        "source_revision": "62e4edb7b8ba9571a05b954cf0f82cf3299a6d4a",
+        "evidence_required": [
+          "repin_candidate_green",
+          "repin_control_merged",
+          "bounded_smoke_green",
+          "state_reconstruction_green",
+          "receipts_consistent",
+          "continuity_check_reconstructible"
+        ],
+        "authority_boundary": "Runtime adoption is complete. No provider, credential, billing, resource, release or mainnet changes are authorized by this state.",
+        "authority_ref": "authority://predictive-sovereign/runtime-adoption",
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/General-Execution/commit/416509fc3a1864963dce344d739a9ec209b1e313/checkpoints/predictive-sovereign-runtime-adoption-green-20261007.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "PSE-14-READ-ONLY-OBSERVATION",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Observe predictive precomputation, recovery, forecast, verification and substitution receipts without widening authority.",
+        "active_gate": "read-only-observation",
+        "next_action_ref": "observe://predictive-sovereign/runtime",
+        "source_revision": "62e4edb7b8ba9571a05b954cf0f82cf3299a6d4a",
+        "evidence_required": [
+          "runtime_manifest",
+          "durable_receipts",
+          "gate_forecast_evidence",
+          "recovery_capsule_evidence"
+        ],
+        "authority_boundary": null,
+        "authority_ref": "authority://predictive-sovereign/runtime-adoption",
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/General-Execution/commit/416509fc3a1864963dce344d739a9ec209b1e313/checkpoints/predictive-sovereign-runtime-adoption-green-20261007.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
