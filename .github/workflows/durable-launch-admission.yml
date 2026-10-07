@@ -17,7 +17,7 @@ concurrency:
 
 env:
   RUNTIME_BRANCH: runtime/durable-asp-control
-  LAUNCH_ADMISSION_REVISION: 33432d39328a7b0720dbf3f07674576acfe3a00c
+  LAUNCH_ADMISSION_REVISION: c87d3bb64259840a3f7b4354107a3f6b3cbc0eb7
 
 jobs:
   admit-launch:
