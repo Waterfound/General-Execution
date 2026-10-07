@@ -257,7 +257,8 @@ def test_wall_clock_lease_bounds_burst():
     )
     assert result.disposition == "lease_exhausted"
     assert result.stop_reason == "BURST_WALL_CLOCK_LEASE_EXHAUSTED"
-    assert result.final_generation == 1
+    assert result.final_generation == 2
+    assert len(result.transition_receipts) == 2
 
 
 def test_continuity_check_is_input_only_and_must_agree_with_normalized_status():
