@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:7c308d8cd3278cca6d05677139cff957a170fcaa942f4f7260cb126017a8aeb3",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "maximum-inference-001-bootstrap-002",
+    "human_required": true,
+    "operation": "bootstrap",
+    "portfolio_id": "maximum-inference-001",
+    "post_generation": 0,
+    "post_state_digest": "sha256:3e252932fbce2143e1b4f21cb7153be885099f7afa960df78308d4f35731ca90",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:3e252932fbce2143e1b4f21cb7153be885099f7afa960df78308d4f35731ca90",
+    "requested_action_ref": "authority://maximum-inference/canonical-integration",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:a0b4c10ef4cb41336ebed2d50c6db43396d3c15a726eedbbad2d30b344def774",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
