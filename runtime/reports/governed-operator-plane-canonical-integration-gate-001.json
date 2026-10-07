@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:c37600443610416a03e089094fbba090da6fadf259aec83a062afb9e39ea3932",
+  "event_report": {
+    "checkpoint_digest": "sha256:aaf15325350f5addbc91883be47d1d28081ff533c700c7a00bbf8d02d671a139",
+    "event_id": "governed-operator-plane-canonical-integration-gate-001",
+    "human_required": true,
+    "operation": "transition",
+    "portfolio_id": "governed-operator-plane-001",
+    "post_generation": 1,
+    "post_state_digest": "sha256:4cafc890eacbdf6cf675a42189d4f271ee633f07cca03cc5f0452c65941b0f9a",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:aea882042e15c53903a1e4eb318b7f696b8084cd01aaa8e2e6e4fa6447c4c95d",
+    "requested_action_ref": "github://Waterfound/Build-Colony/pull/36",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "committed"
+  },
+  "event_report_digest": "sha256:7c6f453ba2eb78b544851531a9e2f67ac18272e241d289e3a0eea898e7bbaf5e",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}

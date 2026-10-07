@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:c37600443610416a03e089094fbba090da6fadf259aec83a062afb9e39ea3932",
+  "event_id": "governed-operator-plane-canonical-integration-gate-001",
+  "event_report_digest": "sha256:7c6f453ba2eb78b544851531a9e2f67ac18272e241d289e3a0eea898e7bbaf5e",
+  "operation": "transition",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "62e4edb7b8ba9571a05b954cf0f82cf3299a6d4a",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "433bc287a7ae33e3a77edbb0360c5106d15b24f7"
+}

@@ -1,10 +1,10 @@
 {
   "authority_created": false,
-  "database_sha256": "sha256:9a23913b1a582b430100f76877329ce8717022236f39b3c5441a71eb36f82d2c",
-  "last_event_id": "governed-operator-plane-bootstrap-001",
-  "last_event_report_digest": "sha256:dff6432dbb80a7b3daf8952bf21c6f079333afafb0d20a99d7e62d1b4e558ae6",
-  "last_operation": "bootstrap",
-  "last_trigger_commit": "77654ee6b36bd8e81b5c1370c52ba75cf32cb0aa",
+  "database_sha256": "sha256:c37600443610416a03e089094fbba090da6fadf259aec83a062afb9e39ea3932",
+  "last_event_id": "governed-operator-plane-canonical-integration-gate-001",
+  "last_event_report_digest": "sha256:7c6f453ba2eb78b544851531a9e2f67ac18272e241d289e3a0eea898e7bbaf5e",
+  "last_operation": "transition",
+  "last_trigger_commit": "433bc287a7ae33e3a77edbb0360c5106d15b24f7",
   "persistent_provider_trigger_enabled": true,
   "runtime_source_revision": "62e4edb7b8ba9571a05b954cf0f82cf3299a6d4a",
   "schema_version": "ge.persistent-runtime-manifest.v1"
