@@ -2,6 +2,18 @@
 
 ELG-01 is a narrow General Execution contract at the boundary immediately before an executor-native launch.
 
+## Canonical constitutional precondition
+
+ELG-01 remains the low-level authority/executor admission primitive. The **system-level canonical launch path** is constitutionally governed before ELG-01.
+
+For consequential autonomous work, `admit_constitutionally_governed_launch` requires a `ConstitutionalAssessment` bound to the exact `ExecutionLaunchOrder.digest` and to the canonical Catechism constitutional revision in `Waterfound/Systems`.
+
+- `OUT_OF_SCOPE` and `COMPATIBLE` may continue to ELG-01.
+- `INTERPRETATION_REQUIRED` stops before launch.
+- `INCOMPATIBLE` is rejected before launch and is not converted into an ordinary human authority override.
+
+See [Canonical Constitution Gate](canonical-constitution.md).
+
 It exists to make one state transition observable:
 
 ```text
