@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:7dc5e097bdbe1aec35c319333dc41f5c5d091ac6cf954b72dae6975de103ab80",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "predictive-sovereign-canonical-green-bootstrap-001",
+    "human_required": true,
+    "operation": "bootstrap",
+    "portfolio_id": "predictive-sovereign-execution-002",
+    "post_generation": 0,
+    "post_state_digest": "sha256:1e25cce7825f3324ff7244b8854cda5953c135197658cd8c28ab5cf6f0c73f83",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:1e25cce7825f3324ff7244b8854cda5953c135197658cd8c28ab5cf6f0c73f83",
+    "requested_action_ref": "authority://predictive-sovereign/runtime-adoption",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:1d32578e0941b22c32cf7dc8f7b6d8c4a5eb5e0c11f3c45a760f3f5fc725ec73",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}

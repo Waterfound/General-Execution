@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:7dc5e097bdbe1aec35c319333dc41f5c5d091ac6cf954b72dae6975de103ab80",
+  "event_id": "predictive-sovereign-canonical-green-bootstrap-001",
+  "event_report_digest": "sha256:1d32578e0941b22c32cf7dc8f7b6d8c4a5eb5e0c11f3c45a760f3f5fc725ec73",
+  "operation": "bootstrap",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "8cbe6e034789b0c354977095b75f395a7f1f05a7",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "f0c7ea52b8140f38a1201cb1577eb24e27090de9"
+}
