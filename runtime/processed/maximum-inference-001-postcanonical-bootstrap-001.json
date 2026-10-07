@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:86469cdc34b97d42d21893d697690eea1c4c2d6bae3279aa538c698e4cc2bb6d",
+  "event_id": "maximum-inference-001-postcanonical-bootstrap-001",
+  "event_report_digest": "sha256:1e61c4efe02885abcaf537d8603060ce09199dd588c0371ede1c88807ef0e1fc",
+  "operation": "bootstrap",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "f60c90cd349a2a190e00daed671d4602c1a1e73c",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "8857bb91836bd5ffd19d33fd31fdb4270cdb2f86"
+}

@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:86469cdc34b97d42d21893d697690eea1c4c2d6bae3279aa538c698e4cc2bb6d",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "maximum-inference-001-postcanonical-bootstrap-001",
+    "human_required": false,
+    "operation": "bootstrap",
+    "portfolio_id": "maximum-inference-001-postcanonical",
+    "post_generation": 0,
+    "post_state_digest": "sha256:1b43aab1bd6a43dd98d6a38ea13e2f04dc1adfa6c89f7ea1e4423b79ff93a616",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:1b43aab1bd6a43dd98d6a38ea13e2f04dc1adfa6c89f7ea1e4423b79ff93a616",
+    "requested_action_ref": "action://maximum-inference/postcanonical-closed",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:1e61c4efe02885abcaf537d8603060ce09199dd588c0371ede1c88807ef0e1fc",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
