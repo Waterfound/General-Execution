@@ -18,7 +18,7 @@ ADMISSION_SCHEMA = "ge.canonical-constitution-admission.v1"
 
 CANONICAL_CONSTITUTION_ID = "catechism-catholic-church-john-paul-ii"
 CANONICAL_CONSTITUTION_REPOSITORY = "Waterfound/Systems"
-CANONICAL_CONSTITUTION_REVISION = "913fc1e6b7fd20eac789b60abd684f168bd8a29d"
+CANONICAL_CONSTITUTION_REVISION = "83cf114d080c0bdb14f51b69efd753fa685ea434"
 CANONICAL_CONSTITUTION_ARTIFACT_PATH = "constitution/canonical-constitution.v1.json"
 
 ConstitutionalDisposition = Literal[
