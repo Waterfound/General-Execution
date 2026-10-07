@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:14b127b9f3126c87551e2fbe25c969596011e24c6ca918c8352dcb1a6c832f01",
+  "event_id": "predictive-sovereign-runtime-adoption-smoke-bootstrap-002",
+  "event_report_digest": "sha256:4d350a940c25d0a27487c72a5dc15e7228e15976dac1a77e7598e92edf483d0f",
+  "operation": "bootstrap",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "62e4edb7b8ba9571a05b954cf0f82cf3299a6d4a",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "cf4c6e513d975cf8a5a32f22bdc2b93ec8f3f789"
+}
