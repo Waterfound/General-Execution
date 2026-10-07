@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:298ce414614f5c4109d8e65dfe1da84b1b88c5b76b8f5fe15c143356e49a13b4",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "holistic-symbiosis-canonical-green-bootstrap-002",
+    "human_required": true,
+    "operation": "bootstrap",
+    "portfolio_id": "holistic-symbiosis-reconciliation-002",
+    "post_generation": 0,
+    "post_state_digest": "sha256:3cf71745312c0338b56d8f13533e02170b257b0cd90798850cc2faec5d3cf545",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:3cf71745312c0338b56d8f13533e02170b257b0cd90798850cc2faec5d3cf545",
+    "requested_action_ref": "authority://holistic-symbiosis/runtime-adoption",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:657ad47122909dc52fd6f4268c713e2c086e6034876b270f274af6f232a6fda9",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}

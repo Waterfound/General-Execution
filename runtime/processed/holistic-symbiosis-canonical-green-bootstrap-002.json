@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:298ce414614f5c4109d8e65dfe1da84b1b88c5b76b8f5fe15c143356e49a13b4",
+  "event_id": "holistic-symbiosis-canonical-green-bootstrap-002",
+  "event_report_digest": "sha256:657ad47122909dc52fd6f4268c713e2c086e6034876b270f274af6f232a6fda9",
+  "operation": "bootstrap",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "62e4edb7b8ba9571a05b954cf0f82cf3299a6d4a",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "2b9d2061b6ff015776529b45ac75b67908899f63"
+}
