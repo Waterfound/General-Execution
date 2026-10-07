@@ -1,0 +1,79 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "governed-operator-plane-canonical-integration-gate-001",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "governed-operator-plane-001-v1",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-canonical-integration-authority",
+          "from_state": "ready",
+          "event": "authority_required",
+          "to_state": "human_gate",
+          "next_action_ref": "github://Waterfound/Build-Colony/pull/36",
+          "effect": "stop_human_gate",
+          "required_evidence": [
+            "gop_program_technical_closure"
+          ],
+          "authority_mode": "human_required",
+          "authority_boundary": "Explicit Waterfound authorization is required before canonical integration of GOP-001 candidate PRs #28 (General Execution), #9 (Systems), #21 (Red Team), and #36 (Build Colony). This gate does not authorize runtime repin, provider or credential mutation, new paid spend, release, consensus or economics changes, or mainnet actions.",
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-push",
+      "event_kind": "durable-transition",
+      "portfolio_id": "governed-operator-plane-001",
+      "policy_digest": "sha256:ff674f5498d8cea48b408f8a3ef63126e75359eb77968ee79f83b37cc3a23a18",
+      "transition_event": "authority_required"
+    },
+    "trigger": {
+      "source": "github-push",
+      "event_id": "governed-operator-plane-canonical-integration-gate-001",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:fbcd4c3884d5a4c5e2fd6b3ce18c49c6f976fc137ebe1a5784144444445ce8c1",
+      "observation_digest": "sha256:4255c9c864e5f2b199d60b058e74626e459fda60d8952dc28a52cd796178a17a",
+      "admission_ref": "github://runtime/durable-asp-control/governed-operator-plane-canonical-integration-gate-001"
+    },
+    "observation": {
+      "portfolio_id": "governed-operator-plane-001",
+      "expected_generation": 0,
+      "expected_state_digest": "sha256:aea882042e15c53903a1e4eb318b7f696b8084cd01aaa8e2e6e4fa6447c4c95d",
+      "policy_digest": "sha256:ff674f5498d8cea48b408f8a3ef63126e75359eb77968ee79f83b37cc3a23a18",
+      "event": "authority_required",
+      "evidence": [
+        {
+          "kind": "gop_program_technical_closure",
+          "locator": "github://Waterfound/Build-Colony/commit/a9a38fef9274b6ddee1cafa1a912373707e094d9/pilots/governed-operator-plane-001/CLOSURE.json",
+          "digest": "sha256:2bddaa29cac3951e1b315a6f1e251d88bc95d868af3f27161cfce9b0ba5fc421",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "github://Waterfound/Build-Colony/pull/36",
+      "observed_at": "2026-10-07T02:11:00Z",
+      "summary": "GOP-001 technical work is closed across Build Colony, General Execution, Systems and independent Project Assurance. Exact candidates and final Build Colony CI are GREEN; stop before canonical integration pending explicit Waterfound authority.",
+      "canonical_refs": [
+        "github://Waterfound/Build-Colony/pull/36/commit/a9a38fef9274b6ddee1cafa1a912373707e094d9",
+        "github://Waterfound/General-Execution/pull/28/commit/d1ded05c52e183a69f6a64a70845c91105078d8c",
+        "github://Waterfound/Systems/pull/9/commit/0b1cd5393d288f5f1bc06a696cd699c8542d56eb",
+        "github://Waterfound/Red-Team/pull/21/commit/ea75cd30bab17b3fe889ed9534262e6bbb47da43",
+        "github-actions://Waterfound/Build-Colony/actions/runs/37560359227",
+        "github-actions://Waterfound/Build-Colony/actions/runs/37560551725",
+        "github-actions://Waterfound/Build-Colony/actions/runs/37560555411",
+        "github-actions://Waterfound/General-Execution/actions/runs/37559679239",
+        "github-actions://Waterfound/Systems/actions/runs/37559902734",
+        "github-actions://Waterfound/Red-Team/actions/runs/37560247218",
+        "github-actions://Waterfound/Red-Team/actions/runs/37560247383"
+      ],
+      "uncertainties": [],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
