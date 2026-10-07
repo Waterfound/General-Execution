@@ -1,0 +1,46 @@
+{
+  "schema_version": "ge.predictive-sovereign-runtime-adoption-checkpoint.v1",
+  "checkpoint_id": "predictive-sovereign-runtime-adoption-green-20261007",
+  "verdict": "RUNTIME_ADOPTION_GREEN",
+  "canonical_source": {
+    "verified_runtime_source_revision": "62e4edb7b8ba9571a05b954cf0f82cf3299a6d4a",
+    "repin_control_pull_request": 26,
+    "repin_control_merge_commit": "b24b46ecd6b1a6fa91511ecdf1d422a3060ff04d",
+    "candidate_verification_run": 37551114065,
+    "candidate_verification": "PASS",
+    "main_integration_gate_run": 37551202975,
+    "durable_terminal_verification_run": 37551202887
+  },
+  "smoke": {
+    "first_attempt_run": 37551331306,
+    "first_attempt_disposition": "FIXTURE_SCHEMA_ERROR__SECONDARY_ENTRY_WAS_NULL",
+    "runtime_source_materialized_before_failure": true,
+    "corrected_attempt_run": 37551388835,
+    "corrected_event": "predictive-sovereign-runtime-adoption-smoke-bootstrap-002",
+    "status": "PASS",
+    "state_digest": "sha256:0198cb131c209f49f4f6398753e6f67095bfa7d48ac70c9efa6ac1ac64cb0089",
+    "database_sha256": "sha256:14b127b9f3126c87551e2fbe25c969596011e24c6ca918c8352dcb1a6c832f01",
+    "event_report_digest": "sha256:4d350a940c25d0a27487c72a5dc15e7228e15976dac1a77e7598e92edf483d0f"
+  },
+  "reconstruction": {
+    "workflow_run": 37551486163,
+    "status": "PASS",
+    "previous_pse_state_digest": "sha256:1e25cce7825f3324ff7244b8854cda5953c135197658cd8c28ab5cf6f0c73f83",
+    "smoke_state_digest": "sha256:0198cb131c209f49f4f6398753e6f67095bfa7d48ac70c9efa6ac1ac64cb0089",
+    "database_sha256": "sha256:14b127b9f3126c87551e2fbe25c969596011e24c6ca918c8352dcb1a6c832f01",
+    "receipts_consistent": true,
+    "manifest_consistent": true,
+    "continuity_check_reconstructible": true
+  },
+  "boundaries": {
+    "persistent_runtime_pin_updated": true,
+    "human_authority_runtime_pin_unchanged": true,
+    "provider_mutation_performed": false,
+    "credential_mutation_performed": false,
+    "new_paid_spend_cents": 0,
+    "resource_creation_performed": false,
+    "billing_changed": false,
+    "release_or_mainnet_performed": false
+  },
+  "human_action_required_now": false
+}
