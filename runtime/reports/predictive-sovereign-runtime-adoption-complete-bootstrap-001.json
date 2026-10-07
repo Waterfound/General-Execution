@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:8d904ab1af94db47d9a64eb8ca953b4795b0bca084d3fa20c9137b23fa78033c",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "predictive-sovereign-runtime-adoption-complete-bootstrap-001",
+    "human_required": false,
+    "operation": "bootstrap",
+    "portfolio_id": "predictive-sovereign-execution-003",
+    "post_generation": 0,
+    "post_state_digest": "sha256:52664cd0c1ab00c5a8ae6af2dacbc3b74604f997316ce8c6f2afda8bc9c5ac5b",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:52664cd0c1ab00c5a8ae6af2dacbc3b74604f997316ce8c6f2afda8bc9c5ac5b",
+    "requested_action_ref": "state://predictive-sovereign/runtime-adopted-green",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:b8fb6b492a1606f17ef4616809209331a0ef189343542ded934b584eec901d2f",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
