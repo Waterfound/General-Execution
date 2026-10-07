@@ -17,6 +17,7 @@ from general_execution.continuity_adapters import (
     repository_from_mapping,
 )
 from general_execution.continuity_check import ContinuitySnapshot, inspect_continuity, render_report
+from general_execution.liveness_evidence import apply_liveness_to_snapshot_mapping
 
 
 def main() -> int:
@@ -25,6 +26,7 @@ def main() -> int:
     parser.add_argument("--format", choices=("text", "json"), default="text")
     args = parser.parse_args()
     data = json.loads(Path(args.input).read_text(encoding="utf-8"))
+    data = apply_liveness_to_snapshot_mapping(data)
     snapshot = ContinuitySnapshot(
         checked_at=str(data["checked_at"]),
         query=str(data["query"]),
