@@ -1,0 +1,221 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "governed-operator-plane-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "governed-operator-plane-001",
+      "generation": 0,
+      "active": {
+        "work_id": "GOP-01-CONTRACT",
+        "role": "active",
+        "state": "ready",
+        "objective": "Freeze and evidence the read-only Governed Operator Plane contract from Build Colony run bc2-6d85ca23dba43f23.",
+        "active_gate": "gop-contract",
+        "next_action_ref": "build-colony://GOP-001/operator-plane-contract",
+        "source_revision": "35326abd4e5897cafeb53449d9a253bb7ecf693b",
+        "evidence_required": [
+          "build_colony_run_bc2_6d85ca23dba43f23",
+          "manifest_a86307cec75c5bd37f4e92d3add7c202a9091697a2ff3deba7206aeba79d98fe",
+          "read_only_authority_ceiling",
+          "owner_preservation_contract"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github-actions://Waterfound/Build-Colony/actions/runs/37559186209",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "GOP-03-LIVENESS",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Harden provider-neutral liveness evidence for Continuity Check after the GOP read-only contract is frozen.",
+        "active_gate": "continuity-liveness",
+        "next_action_ref": "github://Waterfound/General-Execution/frontier/governed-operator-plane-liveness",
+        "source_revision": "299549f2af4222e9ac81beacdaa24da6d8fef55c",
+        "evidence_required": [
+          "gop_contract_green",
+          "liveness_evidence_contract",
+          "continuity_read_only_preserved",
+          "full_regression_green"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github-actions://Waterfound/Build-Colony/actions/runs/37559186209",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [
+        {
+          "work_id": "GOP-02-GE-READ-MODEL",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Implement the provider-neutral read-only operator projection after liveness serialization releases the General Execution repository.",
+          "active_gate": "ge-operator-read-model",
+          "next_action_ref": "github://Waterfound/General-Execution/frontier/governed-operator-plane-read-model",
+          "source_revision": "299549f2af4222e9ac81beacdaa24da6d8fef55c",
+          "evidence_required": [
+            "gop_contract_green",
+            "continuity_liveness_green",
+            "read_model_tests_green"
+          ],
+          "authority_boundary": null,
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "evidence",
+              "detail": "Build Colony serialized the General Execution read-model behind continuity liveness because both share the General Execution repository resource.",
+              "evidence_refs": [
+                "github-actions://Waterfound/Build-Colony/actions/runs/37559186209"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "continuity_liveness_green",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github-actions://Waterfound/Build-Colony/actions/runs/37559186209",
+          "schema_version": "ge.portfolio-entry.v1"
+        },
+        {
+          "work_id": "GOP-04-SYSTEMS",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Reconcile Systems doctrine only after General Execution liveness and read-model candidates are verified.",
+          "active_gate": "systems-gop-doctrine",
+          "next_action_ref": "github://Waterfound/Systems/frontier/governed-operator-plane-doctrine",
+          "source_revision": "271cd1d3293ebab0d6c1f169c1f3494af3a399f1",
+          "evidence_required": [
+            "continuity_liveness_green",
+            "ge_operator_read_model_green"
+          ],
+          "authority_boundary": null,
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "evidence",
+              "detail": "Systems doctrine depends on exact verified General Execution candidates.",
+              "evidence_refs": [
+                "github-actions://Waterfound/Build-Colony/actions/runs/37559186209"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "ge_operator_read_model_green",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github-actions://Waterfound/Build-Colony/actions/runs/37559186209",
+          "schema_version": "ge.portfolio-entry.v1"
+        },
+        {
+          "work_id": "GOP-05-RED-TEAM",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Run independent read-only Project Assurance against exact General Execution and Systems GOP candidates.",
+          "active_gate": "gop-project-assurance",
+          "next_action_ref": "github://Waterfound/Red-Team/frontier/governed-operator-plane-assurance",
+          "source_revision": "9ffdc02d98416869cac8c4a577afb402dee40c9b",
+          "evidence_required": [
+            "ge_candidate_exact",
+            "systems_candidate_exact",
+            "adversarial_assurance_green"
+          ],
+          "authority_boundary": null,
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "evidence",
+              "detail": "Red Team must bind exact post-implementation candidate revisions before assurance.",
+              "evidence_refs": [
+                "github-actions://Waterfound/Build-Colony/actions/runs/37559186209"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "systems_gop_doctrine_green",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github-actions://Waterfound/Build-Colony/actions/runs/37559186209",
+          "schema_version": "ge.portfolio-entry.v1"
+        },
+        {
+          "work_id": "GOP-06-REHEARSAL",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Run integrated read-only operator-plane rehearsal after Project Assurance.",
+          "active_gate": "gop-integrated-rehearsal",
+          "next_action_ref": "build-colony://GOP-001/integrated-operator-plane-rehearsal",
+          "source_revision": "35326abd4e5897cafeb53449d9a253bb7ecf693b",
+          "evidence_required": [
+            "project_assurance_green",
+            "candidate_provenance_bound",
+            "authority_unchanged"
+          ],
+          "authority_boundary": null,
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "evidence",
+              "detail": "Integrated rehearsal waits for independent Project Assurance.",
+              "evidence_refs": [
+                "github-actions://Waterfound/Build-Colony/actions/runs/37559186209"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "gop_project_assurance_green",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github-actions://Waterfound/Build-Colony/actions/runs/37559186209",
+          "schema_version": "ge.portfolio-entry.v1"
+        },
+        {
+          "work_id": "GOP-07-CLOSURE",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Serialize GOP-001 candidate closure and any remaining genuine authority/external gates.",
+          "active_gate": "gop-closure",
+          "next_action_ref": "build-colony://GOP-001/closure",
+          "source_revision": "35326abd4e5897cafeb53449d9a253bb7ecf693b",
+          "evidence_required": [
+            "integrated_rehearsal_green",
+            "all_candidate_refs_bound",
+            "remaining_gates_classified"
+          ],
+          "authority_boundary": null,
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "evidence",
+              "detail": "Closure waits for the integrated rehearsal.",
+              "evidence_refs": [
+                "github-actions://Waterfound/Build-Colony/actions/runs/37559186209"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "gop_integrated_rehearsal_green",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github-actions://Waterfound/Build-Colony/actions/runs/37559186209",
+          "schema_version": "ge.portfolio-entry.v1"
+        }
+      ],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
