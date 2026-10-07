@@ -40,7 +40,7 @@
         "assessment_ref": {"type": "string", "minLength": 1},
         "constitution_id": {"const": "catechism-catholic-church-john-paul-ii"},
         "constitution_repository": {"const": "Waterfound/Systems"},
-        "constitution_revision": {"const": "913fc1e6b7fd20eac789b60abd684f168bd8a29d"},
+        "constitution_revision": {"const": "83cf114d080c0bdb14f51b69efd753fa685ea434"},
         "constitution_artifact_path": {"const": "constitution/canonical-constitution.v1.json"},
         "schema_version": {"const": "ge.canonical-constitution-assessment.v1"}
       }
