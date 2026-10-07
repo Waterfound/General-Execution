@@ -1,0 +1,93 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "maximum-inference-001-postcanonical-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "maximum-inference-001-postcanonical",
+      "generation": 0,
+      "active": {
+        "work_id": "MI-PC-01-CANONICAL-INTEGRATION",
+        "role": "active",
+        "state": "complete",
+        "objective": "Record MI-001 canonical integration as complete and post-merge verified across all four owner repositories.",
+        "active_gate": "postcanonical-closure",
+        "next_action_ref": "action://maximum-inference/postcanonical-closed",
+        "source_revision": "ecee59550a515a677e69fa5fa6879ed60d9a0e48",
+        "evidence_required": [
+          "general_execution_merge_2d5a62254790b32cad459c00d4b4c7d9abf2e9f7",
+          "systems_merge_b08e62882c9a8025684bbe3d353a6a66c0c8eb3b",
+          "project_assurance_merge_9e5801f21f7625aedcaf2e2119615246e71d943e",
+          "build_colony_merge_ecee59550a515a677e69fa5fa6879ed60d9a0e48",
+          "postmerge_checks_green",
+          "authority_boundaries_preserved"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/General-Execution/commit/d1b7f34e7a71117b24e52fb454897ddac5b06958/runtime/maximum-inference/POSTCANONICAL_RECONCILIATION.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "MI-PC-02-FUTURE-CASE-READINESS",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Remain structurally ready to instantiate Maximum Inference when Robust Premise supplies a concrete future physical-test case; no standalone execution is implied.",
+        "active_gate": "future-robust-premise-case",
+        "next_action_ref": "condition://maximum-inference/concrete-test-case",
+        "source_revision": "2d5a62254790b32cad459c00d4b4c7d9abf2e9f7",
+        "evidence_required": [
+          "specific_robust_premise_case",
+          "explicit_residual_uncertainty",
+          "inference_substrate_available"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/General-Execution/commit/d1b7f34e7a71117b24e52fb454897ddac5b06958/runtime/maximum-inference/POSTCANONICAL_RECONCILIATION.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [
+        {
+          "work_id": "MI-PC-03-PHYSICAL-EVIDENCE",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Keep physical evidence outside execution until a specific Robust Premise case survives Maximum Inference and any required physical-action authority exists.",
+          "active_gate": "physical-evidence",
+          "next_action_ref": "authority://maximum-inference/physical-evidence",
+          "source_revision": "2d5a62254790b32cad459c00d4b4c7d9abf2e9f7",
+          "evidence_required": [
+            "specific_test_case_bound",
+            "maximum_inference_strict_ready",
+            "material_reality_gap_survives",
+            "residual_information_gain_threshold_met",
+            "physical_action_authority_if_required"
+          ],
+          "authority_boundary": "Maximum Inference can justify a physical test but cannot dispatch one. Physical evidence remains separately observed and authority-bound.",
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "authority",
+              "detail": "Canonical MI-001 integration does not authorize any concrete physical test.",
+              "evidence_refs": [
+                "github://Waterfound/General-Execution/commit/d1b7f34e7a71117b24e52fb454897ddac5b06958/runtime/maximum-inference/POSTCANONICAL_RECONCILIATION.json"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "event_received",
+            "value": "robust-premise://maximum-inference/specific-test-case",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/General-Execution/commit/d1b7f34e7a71117b24e52fb454897ddac5b06958/runtime/maximum-inference/POSTCANONICAL_RECONCILIATION.json",
+          "schema_version": "ge.portfolio-entry.v1"
+        }
+      ],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
