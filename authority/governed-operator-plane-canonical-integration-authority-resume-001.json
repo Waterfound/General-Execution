@@ -1,0 +1,59 @@
+{
+  "schema_version": "ge.human-authority-event.v1",
+  "event_id": "governed-operator-plane-canonical-integration-authority-resume-001",
+  "approved_action_ref": "github://Waterfound/Build-Colony/pull/36",
+  "approved_at": "2026-10-07T02:46:00Z",
+  "policy": {
+    "policy_id": "governed-operator-plane-001-canonical-integration-resume",
+    "revision": "1",
+    "rules": [
+      {
+        "rule_id": "01-authorized-canonical-integration-complete",
+        "from_state": "human_gate",
+        "event": "verification_passed",
+        "to_state": "complete",
+        "next_action_ref": "action://governed-operator-plane-001/canonical-integration-closed",
+        "effect": "none",
+        "required_evidence": [
+          "human_authority_recorded"
+        ],
+        "authority_mode": "preauthorized_required",
+        "authority_boundary": "Explicit Waterfound authorization is required before canonical integration of GOP-001 candidate PRs #28 (General Execution), #9 (Systems), #21 (Red Team), and #36 (Build Colony). This gate does not authorize runtime repin, provider or credential mutation, new paid spend, release, consensus or economics changes, or mainnet actions.",
+        "schema_version": "ge.transition-rule.v1"
+      }
+    ],
+    "default_disposition": "stop",
+    "schema_version": "ge.transition-policy.v1"
+  },
+  "observation": {
+    "portfolio_id": "governed-operator-plane-001",
+    "expected_generation": 1,
+    "expected_state_digest": "sha256:4cafc890eacbdf6cf675a42189d4f271ee633f07cca03cc5f0452c65941b0f9a",
+    "policy_digest": "sha256:29e8a902e5bdb48fbe505347c1a9362f649bd5c8f91ef987afc66376c3b9736c",
+    "event": "verification_passed",
+    "evidence": [
+      {
+        "kind": "human_authority_recorded",
+        "locator": "runtime://governed-operator-plane-001/authorized-canonical-integration",
+        "digest": "sha256:040d886613b9ce86854ed3d15b78577cbea3bd624227615b5a1789f7eadb5e0d",
+        "schema_version": "ge.checkpoint-evidence.v1"
+      }
+    ],
+    "action_ref": "runtime://governed-operator-plane-001/close-after-authorized-canonical-integration",
+    "observed_at": "2026-10-07T03:02:00Z",
+    "summary": "Waterfound explicitly authorized the bounded GOP-001 canonical integration. PRs #28, #9, #21 and #36 were revalidated, reconciled where required, canonically merged, and post-merge identities verified. Close the durable human gate without runtime repin or adjacent authority.",
+    "canonical_refs": [
+      "github://Waterfound/General-Execution/commit/6f4820b3de853cede2bd5e69d81b22e79990f5d0",
+      "github://Waterfound/Systems/commit/29a07733470413da96624bcb3c32ace586329955",
+      "github://Waterfound/Red-Team/commit/f285c117e31e69c02df9bb9f250b34e37ab74fb1",
+      "github://Waterfound/Build-Colony/commit/f7646733fe75c5a332ded9987f28c23766269218",
+      "github://Waterfound/Build-Colony/commit/f7646733fe75c5a332ded9987f28c23766269218/pilots/governed-operator-plane-001/CLOSURE.json",
+      "github-actions://Waterfound/Red-Team/actions/runs/37564260800",
+      "github-actions://Waterfound/Build-Colony/actions/runs/37564716558"
+    ],
+    "uncertainties": [],
+    "wake_admission": null,
+    "authority_grant": null,
+    "schema_version": "ge.resume-tick-observation.v1"
+  }
+}
