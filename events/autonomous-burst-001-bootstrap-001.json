@@ -1,0 +1,122 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "autonomous-burst-001-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "autonomous-burst-001",
+      "generation": 0,
+      "active": {
+        "work_id": "AB-06-ASSURANCE",
+        "role": "active",
+        "state": "running",
+        "objective": "Complete independent Project Assurance against the exact General Execution and Systems Autonomous Burst candidates.",
+        "active_gate": "ab-assurance",
+        "next_action_ref": "github://Waterfound/Red-Team/pull/22",
+        "source_revision": "9f8f280b4f2588df4a7f318cb6733b653c85b65a",
+        "evidence_required": [
+          "general_execution_pr34_exact_candidate_green",
+          "systems_pr17_exact_candidate_green",
+          "autonomous_burst_adversarial_assurance_green"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github-actions://Waterfound/Red-Team/actions/runs/37573718280",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "AB-05-SYSTEMS",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Preserve and reverify the Systems Autonomous Burst doctrine candidate while assurance is running; do not merge it.",
+        "active_gate": "ab-systems",
+        "next_action_ref": "github://Waterfound/Systems/pull/17",
+        "source_revision": "82dce3bd343cc48f89290cf9153ecca81fcdebed",
+        "evidence_required": [
+          "systems_pr17_candidate_exact",
+          "canonical_constitution_verification_green",
+          "no_main_merge"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github-actions://Waterfound/Systems/actions/runs/37573628875",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [
+        {
+          "work_id": "AB-07-REHEARSAL",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Run the integrated Autonomous Burst rehearsal after exact-candidate Project Assurance is GREEN.",
+          "active_gate": "ab-rehearsal",
+          "next_action_ref": "build-colony://AB-001/integrated-rehearsal",
+          "source_revision": "1ad68fe9f74a63fac3146f20547c49db9007731a",
+          "evidence_required": [
+            "project_assurance_green",
+            "general_execution_candidate_green",
+            "systems_candidate_green"
+          ],
+          "authority_boundary": null,
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "evidence",
+              "detail": "Integrated rehearsal waits for independent Project Assurance on the exact candidates.",
+              "evidence_refs": [
+                "github://Waterfound/Red-Team/pull/22",
+                "github-actions://Waterfound/Red-Team/actions/runs/37573718280"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "autonomous_burst_project_assurance_green",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/Build-Colony/commit/1ad68fe9f74a63fac3146f20547c49db9007731a/pilots/autonomous-burst-001/EVIDENCE.json",
+          "schema_version": "ge.portfolio-entry.v1"
+        },
+        {
+          "work_id": "AB-08-DURABLE-CLOSURE",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Serialize AB-001 candidate closure and stop at canonical integration/runtime-adoption authority gates.",
+          "active_gate": "ab-closure",
+          "next_action_ref": "build-colony://AB-001/closure",
+          "source_revision": "1ad68fe9f74a63fac3146f20547c49db9007731a",
+          "evidence_required": [
+            "integrated_rehearsal_green",
+            "all_exact_candidate_refs_bound",
+            "remaining_authority_gates_classified"
+          ],
+          "authority_boundary": null,
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "evidence",
+              "detail": "Durable closure waits for the integrated rehearsal.",
+              "evidence_refs": [
+                "github://Waterfound/Build-Colony/commit/1ad68fe9f74a63fac3146f20547c49db9007731a"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "autonomous_burst_integrated_rehearsal_green",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/Build-Colony/commit/1ad68fe9f74a63fac3146f20547c49db9007731a/pilots/autonomous-burst-001/EVIDENCE.json",
+          "schema_version": "ge.portfolio-entry.v1"
+        }
+      ],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
