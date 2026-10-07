@@ -1,0 +1,33 @@
+name: Holistic Symbiosis Composition Verification
+
+on:
+  push:
+    branches:
+      - feature/holistic-symbiosis-composition-001
+    paths:
+      - "src/general_execution/holistic_symbiosis.py"
+      - "tests/test_holistic_symbiosis.py"
+      - "docs/holistic-symbiosis.md"
+      - ".github/workflows/holistic-symbiosis-verification.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m pip install -e '.[dev]' --disable-pip-version-check
+      - run: python -m compileall -q src
+      - name: Focused composition contracts
+        run: python -m pytest tests/test_holistic_symbiosis.py -q
+      - name: Component contract regression
+        run: |
+          python -m pytest             tests/test_work_sparse_unattended.py             tests/test_predictive_sovereign_execution.py             tests/test_provider_portability.py             tests/test_continuity_check.py             tests/test_persistent_runtime.py -q
+      - name: Full regression
+        run: python -m pytest -q
