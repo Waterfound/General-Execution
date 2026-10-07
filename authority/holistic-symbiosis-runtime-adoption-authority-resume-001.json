@@ -1,0 +1,48 @@
+{
+  "schema_version": "ge.human-authority-event.v1",
+  "event_id": "holistic-symbiosis-runtime-adoption-authority-resume-001",
+  "approved_action_ref": "authority://holistic-symbiosis/runtime-adoption",
+  "approved_at": "2026-10-07T02:04:00Z",
+  "policy": {
+    "policy_id": "holistic-symbiosis-runtime-adoption-authority-resume",
+    "revision": "1",
+    "rules": [{
+      "rule_id": "01-authorized-hsr-runtime-adoption",
+      "from_state": "human_gate",
+      "event": "verification_passed",
+      "to_state": "rework",
+      "next_action_ref": "action://holistic-symbiosis/runtime-adoption-reconcile",
+      "effect": "none",
+      "required_evidence": ["human_authority_recorded","canonical_hsr_integration_green","post_merge_verification_green","recovery_capsule_current"],
+      "authority_mode": "preauthorized_required",
+      "authority_boundary": "Adopt the canonical HSR-001 composition in the persistent General Execution runtime, limited to repin/reconciliation to the already-verified canonical state; preserve existing authorities and do not expand authority for providers or credentials, new paid spend, release, or mainnet.",
+      "schema_version": "ge.transition-rule.v1"
+    }],
+    "default_disposition": "stop",
+    "schema_version": "ge.transition-policy.v1"
+  },
+  "observation": {
+    "portfolio_id": "holistic-symbiosis-reconciliation-002",
+    "expected_generation": 0,
+    "expected_state_digest": "sha256:b9b46dab791b6239bd15371b3391d6df64959f7488e77e3124c838333f5da0d5",
+    "policy_digest": "sha256:96c17d2af7b86e6c81d88f036fcfd105e79847a630e8bd997724847292c2d34c",
+    "event": "verification_passed",
+    "evidence": [{
+      "kind": "human_authority_recorded",
+      "locator": "runtime://holistic-symbiosis-reconciliation-002/waterfound-explicit-runtime-adoption-authorization",
+      "digest": "sha256:8ac16736f6e48b10f00d222a7d4b5eb453459ba92c77c3bd3943ec799e6455b6",
+      "schema_version": "ge.checkpoint-evidence.v1"
+    }],
+    "action_ref": "runtime://holistic-symbiosis-reconciliation-002/resume-runtime-adoption",
+    "observed_at": "2026-10-07T02:04:00Z",
+    "summary": "Waterfound explicitly authorizes persistent General Execution runtime adoption of the already-verified canonical HSR-001 composition, limited to repin and reconciliation while preserving all existing authority boundaries.",
+    "canonical_refs": [
+      "github://Waterfound/General-Execution/blob/runtime/durable-asp-control/checkpoints/holistic-symbiosis-canonical-green-20261007.json",
+      "authority://holistic-symbiosis/runtime-adoption"
+    ],
+    "uncertainties": [],
+    "wake_admission": null,
+    "authority_grant": null,
+    "schema_version": "ge.resume-tick-observation.v1"
+  }
+}
