@@ -1,0 +1,41 @@
+{
+  "authority_grant_digest": "sha256:57547afbaf7c2d4bd4edd6ba35ee63fa132d4415eee55ed1c37bf867bb92a2c2",
+  "authority_receipt": {
+    "approved_action_ref": "github://Waterfound/Build-Colony/pull/36",
+    "approved_at": "2026-10-07T02:46:00Z",
+    "authority_boundary": "Explicit Waterfound authorization is required before canonical integration of GOP-001 candidate PRs #28 (General Execution), #9 (Systems), #21 (Red Team), and #36 (Build Colony). This gate does not authorize runtime repin, provider or credential mutation, new paid spend, release, consensus or economics changes, or mainnet actions.",
+    "authority_ref": "github://Waterfound/General-Execution/commit/82a3b5edd899bee64f285f7568fe250f47171028/authority/governed-operator-plane-canonical-integration-authority-resume-001.json",
+    "event_id": "governed-operator-plane-canonical-integration-authority-resume-001",
+    "expected_generation": 1,
+    "expected_state_digest": "sha256:4cafc890eacbdf6cf675a42189d4f271ee633f07cca03cc5f0452c65941b0f9a",
+    "policy_digest": "sha256:29e8a902e5bdb48fbe505347c1a9362f649bd5c8f91ef987afc66376c3b9736c",
+    "portfolio_id": "governed-operator-plane-001",
+    "provider_actor": "Waterfound",
+    "rule_digest": "sha256:b4f30592e84addab6214da16485981ce941d1937fb35e89c31ec8eef539319e2",
+    "schema_version": "ge.human-authority-receipt.v1"
+  },
+  "authority_receipt_digest": "sha256:4096e199ac33c50896f92bea18d208cb9f6a74a7db1f10a06cd1213471e58b14",
+  "authority_ref": "github://Waterfound/General-Execution/commit/82a3b5edd899bee64f285f7568fe250f47171028/authority/governed-operator-plane-canonical-integration-authority-resume-001.json",
+  "database_sha256": "sha256:60f8770d7d487d30e8d13f916df2c18c8b38d6ba0a07363e855b7176a30ee7ba",
+  "event_id": "governed-operator-plane-canonical-integration-authority-resume-001",
+  "execution_report_digest": "sha256:d36625d7e85d9e699620a12c2bc7202fae023380629de116a16987ff15c69f2d",
+  "observation_digest": "sha256:c1a700f69b34d7b76dad94beb99a77aec87fdbe944bda64fd8f0038be16c3586",
+  "provider_actor": "Waterfound",
+  "schema_version": "ge.human-authority-execution.v1",
+  "tick": {
+    "checkpoint_digest": "sha256:4702946340cbd484017c7a0bb741fab221ee72d5ec5144d1600cd2f4c93a0b4d",
+    "disposition": "committed",
+    "human_required": false,
+    "observation_digest": "sha256:c1a700f69b34d7b76dad94beb99a77aec87fdbe944bda64fd8f0038be16c3586",
+    "portfolio_id": "governed-operator-plane-001",
+    "post_generation": 2,
+    "post_state_digest": "sha256:301f151f86cf10d8067620e8304f8e4846d60b880d2399bcff906721fd21b53a",
+    "pre_generation": 1,
+    "pre_state_digest": "sha256:4cafc890eacbdf6cf675a42189d4f271ee633f07cca03cc5f0452c65941b0f9a",
+    "recovery_report_digest": "sha256:b81674bab7e97d5ec4a7b4542856b52889268a4c94114437fbd9446b9226f637",
+    "requested_action_ref": null,
+    "requested_work_id": null,
+    "schema_version": "ge.resume-tick-result.v1",
+    "transition_result_digest": "sha256:6b2bed59b45e0b3b6eb03d8acdc5baab5a177dfed484e432de88b5e531277a06"
+  }
+}
