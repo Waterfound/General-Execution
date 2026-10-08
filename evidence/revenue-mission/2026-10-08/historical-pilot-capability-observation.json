@@ -1,0 +1,57 @@
+{
+  "schema_version": "wrm.t1.historical-capability-observation.v1",
+  "status": "CAPABILITY_ONLY_NOT_ECONOMIC_VALUE_PROOF",
+  "source_repository": "Waterfound/General-Execution",
+  "source_main_revision": "143af0aae8a2131a8590437cad9ee282bede8f29",
+  "source_report": "evidence/durable-execution/2026-09-27/unattended-pilot-live-report.json",
+  "source_validation": "evidence/durable-execution/2026-09-27/unattended-pilot-live-validation.json",
+  "recorded_report_digest": "sha256:af7fa8aeef5b9703b140d5d77e387cedbcd8d9b2afe736ee5e745e839546129d",
+  "provider_run_id": "36329375324",
+  "provider_conclusion": "success",
+  "verified_report_status": "PASS_STOPPED_AT_HUMAN_GATE",
+  "observed_capability": {
+    "machine_state_transitions": 5,
+    "process_invocations": 8,
+    "chat_context_required": false,
+    "authority_stop": true,
+    "human_required": true,
+    "real_provider_trigger_observed": true,
+    "bounded_unattended_execution_observed": true
+  },
+  "value_proof_observation": {
+    "workflow_id": "durable-asp-live-pilot-2026-09-27-001",
+    "representative_workflow_class": "bounded-provider-triggered-pilot-not-customer-representative",
+    "intent_timestamp": null,
+    "terminal_timestamp": null,
+    "terminal_state": "HUMAN_GATE",
+    "machine_state_transitions": 5,
+    "process_invocations": 8,
+    "human_interventions_requested": null,
+    "human_interventions_genuinely_required": null,
+    "observable_human_active_minutes": null,
+    "retries": null,
+    "rework_events": null,
+    "recovery_events": null,
+    "provenance_items_expected": null,
+    "provenance_items_present": null,
+    "autonomous_resolutions": null,
+    "resolution_opportunities": null,
+    "evidence_refs": [
+      "evidence/durable-execution/2026-09-27/unattended-pilot-live-report.json",
+      "evidence/durable-execution/2026-09-27/unattended-pilot-live-validation.json"
+    ]
+  },
+  "derived_value_claims": {
+    "operator_hours_saved": null,
+    "approvals_eliminated": null,
+    "mission_completion_latency_reduced": null,
+    "coordination_tax_removed": null,
+    "recovery_improvement": null,
+    "avoidable_rework_reduced": null,
+    "monetary_risk_reduction": null,
+    "roi": null,
+    "willingness_to_pay": null
+  },
+  "comparability": "NO_NATURAL_COMPARATOR_OBSERVED",
+  "caveat": "Historical capability evidence; no newly executed workflow or independent source re-attestation."
+}
