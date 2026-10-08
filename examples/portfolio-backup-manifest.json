@@ -1,0 +1,29 @@
+{
+  "schema": "waterfound.portfolio-backup-manifest.v1",
+  "policy": {
+    "mirror_max_age_minutes": 60,
+    "immutable_snapshot_max_age_hours": 24,
+    "clean_restore_rehearsal_max_age_days": 7,
+    "freshness_failure_state": "BACKUP_DEGRADED"
+  },
+  "repositories": [
+    {"id":"Waterfound/FAE-testnet","source":"https://github.com/Waterfound/FAE-testnet.git","class":"FAE","critical":true},
+    {"id":"Waterfound/FAE-Development-Documentation","source":"ssh://git@github.com/Waterfound/FAE-Development-Documentation.git","class":"FAE","critical":true},
+    {"id":"Waterfound/Systems","source":"ssh://git@github.com/Waterfound/Systems.git","class":"SYSTEMS_REVENUE","critical":true},
+    {"id":"Waterfound/General-Execution","source":"ssh://git@github.com/Waterfound/General-Execution.git","class":"SYSTEMS_REVENUE","critical":true},
+    {"id":"Waterfound/Build-Colony","source":"ssh://git@github.com/Waterfound/Build-Colony.git","class":"SYSTEMS","critical":true},
+    {"id":"Waterfound/Diagnostic-Intelligence-DI","source":"ssh://git@github.com/Waterfound/Diagnostic-Intelligence-DI.git","class":"SYSTEMS","critical":true},
+    {"id":"Waterfound/Continuous-Improvement-Intelligence-CII","source":"ssh://git@github.com/Waterfound/Continuous-Improvement-Intelligence-CII.git","class":"SYSTEMS","critical":true},
+    {"id":"Waterfound/Red-Team","source":"ssh://git@github.com/Waterfound/Red-Team.git","class":"SYSTEMS","critical":true},
+    {"id":"Waterfound/System-Interoperability-Envelope","source":"ssh://git@github.com/Waterfound/System-Interoperability-Envelope.git","class":"SYSTEMS","critical":true}
+  ],
+  "terminal_criteria": [
+    "provider-native automatic mirror cadence <= 60 minutes",
+    "freshness watchdog fails closed when last verified mirror age > 60 minutes",
+    "immutable versioned snapshot <= 24 hours old",
+    "clean-room restore proof <= 7 days old",
+    "machine-readable recovery capsule present",
+    "routine operation requires no Waterfound action"
+  ],
+  "excluded_from_backup": ["passwords","MFA values","cookies","bearer tokens","API keys","private wallet keys","seed phrases"]
+}
