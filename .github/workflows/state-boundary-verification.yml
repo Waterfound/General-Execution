@@ -44,3 +44,10 @@ jobs:
           python tools/verify_durable_snapshot.py \
             --state-b64 "$RUNNER_TEMP/state.sqlite.b64" \
             --manifest "$RUNNER_TEMP/manifest.json"
+      - name: Verify shadow transport form recovery
+        run: |
+          cp "$RUNNER_TEMP/state.sqlite.b64" "$RUNNER_TEMP/state-shadow.sqlite.b64"
+          printf '\n' >> "$RUNNER_TEMP/state-shadow.sqlite.b64"
+          python tools/verify_durable_snapshot.py \
+            --state-b64 "$RUNNER_TEMP/state-shadow.sqlite.b64" \
+            --manifest "$RUNNER_TEMP/manifest.json"
