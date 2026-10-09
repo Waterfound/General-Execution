@@ -68,15 +68,19 @@ A known capacity exhaustion must not be downgraded to an unexplained workload or
 
 ## Executor substitution
 
-Execution Protocol composes existing owners rather than replacing them:
+The public engine composes generic selection contracts rather than requiring knowledge of the private system registry.
 
-1. **Work-Sparse** preserves cheapest-admissible-executor preference.
-2. **PSE Capability Substitution** requires the same evidence predicate and minimum evidence quality.
-3. **Provider Portability** selects only already-authorized available provider resources when a provider route is required.
-4. **General Execution** remains the execution composition/admission surface.
-5. **Durable Execution** persists the admitted execution and its receipts.
+Its input is a **minimal capability projection** containing only opaque candidate aliases, opaque capability identifiers, execution capability, deterministic cost rank, and digests binding the projection to one private registry revision and authority context.
 
-General Execution is not itself compute. If GitHub Actions is unavailable, General Execution may route through another already-authorized executor only when that executor can satisfy the same evidence predicate.
+The engine may then compose:
+
+1. cheapest-admissible-executor preference;
+2. evidence-equivalent capability substitution;
+3. provider-resource routing when a provider route is required;
+4. an existing execution admission surface;
+5. a persistent execution owner.
+
+The public engine is not itself compute. If a preferred executor is unavailable, another already-authorized executor may be selected only when it satisfies the same evidence predicate.
 
 ## Terminal dispositions
 
@@ -104,15 +108,15 @@ The existing launch/admission owner remains responsible for real activation.
 
 Suppose the evidence predicate is “run the deterministic verification suite with equivalent inputs, environment requirements and output assertions.”
 
-If GitHub Actions is known to be exhausted:
+If one GitHub Actions resource class is known to be exhausted:
 
 ```text
-github_actions
+private_repo_actions
   resource = UNAVAILABLE
   cause = CAPACITY
   cause_code = included_minutes_exhausted
 
-connector/local/provider-neutral candidate
+public_repo_standard_runner / connector / local / provider-neutral candidate
   resource = AVAILABLE
   same evidence predicate = YES
   authority = already active
@@ -128,22 +132,37 @@ If the candidate method proves a weaker proposition, lacks required environment 
 => CONDITION_WAIT / HUMAN_GATE as appropriate
 ```
 
-## Relationship to other systems
+## Public mechanism / private intelligence
 
-Execution Protocol does not change ownership:
+The public engine deliberately does not require a full internal system inventory.
 
-- Total Systems Steward owns protocol invocation and portfolio-level choice.
-- Build Colony structures bounded engineering work.
-- Work-Sparse owns executor preference.
-- PSE owns evidence-equivalent capability substitution.
-- Provider Portability owns provider-resource routing.
-- General Execution owns bounded execution composition/admission.
-- Durable Execution owns persistent execution state.
-- Project Assurance independently challenges high-value claims.
-- Continuity Check remains read-only.
+A private authority domain may keep real system identities, rich capability semantics, dependency topology, fallback policy, authority ceilings and planning rationale private, then emit a task-scoped projection such as:
+
+```text
+projection_id
+opaque_candidate_id
+opaque_capability_ids
+execution_capable
+cost_rank
+authority_ref_digest
+registry_revision_digest
+```
+
+All candidates supplied for one decision must bind the same projection, registry revision and authority digest. Mixed projections fail closed.
+
+The public result contains only the opaque aliases it was given. It cannot reconstruct the private registry or create new candidate identities.
 
 ## Core invariant
 
 > **Before declaring execution unavailable, resolve the cause of unavailability and attempt every evidence-equivalent admissible executor.**
 
 This rule never permits weakening the evidence predicate, widening authority, creating paid spend, changing credentials, bypassing provider controls, or treating an advisory result as observed execution.
+
+
+## Resource scope
+
+Capacity observations are scoped to the concrete executor/resource class.
+
+For example, exhaustion of included minutes for private-repository GitHub-hosted runners does not imply that every GitHub Actions execution path is unavailable. A public-repository standard runner may remain admissible under GitHub's public-repository runner policy.
+
+The protocol therefore rejects global statements such as `github_actions = unavailable` when the evidence only proves a narrower resource class is exhausted. Resource observations should be as specific as the available evidence permits.
