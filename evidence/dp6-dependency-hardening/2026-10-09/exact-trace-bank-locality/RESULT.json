@@ -1,0 +1,122 @@
+{
+  "schema_version":"fae.dp6.exact-trace-bank-locality-stress.v1",
+  "program_id":"DP6-EXACT-TRACE-BANK-LOCALITY-001",
+  "date":"2026-10-09",
+  "authority":{
+    "candidate_research_only":true,
+    "dp6_changed":false,
+    "consensus_changed":false,
+    "physical_execution":false,
+    "provider_or_credential_mutation":false,
+    "paid_spend_usd":0,
+    "release":false,
+    "mainnet":false
+  },
+  "source_binding":{
+    "repository":"Waterfound/FAE-testnet",
+    "ref":"evidence/fae-dp6-rp-b3-t2-20260930",
+    "ref_head":"7a041df798d2d3d623fa77a1ae58a07caa5a6b1a",
+    "path":"labs/asic-f2-pre-go/hls/fae_dp6_hls.cpp",
+    "blob_sha1":"ea1ab21fbf359adc35955c42ea8e137707c37b6d",
+    "canonical_vector":"nonce=1200",
+    "canonical_vector_pass":true
+  },
+  "execution":{
+    "mode":"local bounded read-only machine execution under the General Execution authority boundary",
+    "execution_engine":"compiled C++17 exact-semantics trace harness",
+    "github_actions_consumed":0,
+    "canonical_harness_sha256":"10471669e7b0965bf3a9f3bc187d70f9e61c225df7e641442445d2d4abf400ed",
+    "canonical_result_sha256":"4c0af6cbde232629caab33d23edf3c5c786743d33d60bffc64071e74c44193cb",
+    "diverse_harness_sha256":"d472d5e5905bafb41a6da37756c2f053e29ed03cb7f64fc3728492db670c915d",
+    "diverse_result_sha256":"6ae3aecd34680d7a5728ccd050f8879dc399de1195e76dff38e325692ddf379f"
+  },
+  "stress_scope":{
+    "runs":[
+      {
+        "id":"CANONICAL_TEMPLATE_16",
+        "nonces":16,
+        "mandatory_rw5_addresses":16777216,
+        "description":"16 exact traces for canonical template, nonces 1200..1215"
+      },
+      {
+        "id":"DIVERSE_INPUTS_16",
+        "nonces":16,
+        "mandatory_rw5_addresses":16777216,
+        "description":"one canonical vector plus 15 deterministic independent hdr/task/prev/height/nonce variants"
+      }
+    ],
+    "mapping_family":{
+      "candidate_functions_per_search":408,
+      "granularities_bytes":[32,64,128,256],
+      "bank_counts":[16,32,64,128,256],
+      "families":["linear low-bit interleave","xor-fold interleave across low/high line bits"],
+      "selection_control":"candidate selection on first four traces; evaluation on disjoint 12-trace holdout"
+    }
+  },
+  "mandatory_rw5_findings":{
+    "canonical_template":{
+      "linear64_B64":{"max_bank_relative_deviation":0.00596619,"same_bank_probability":0.01566374},
+      "xor64_B64":{"max_bank_relative_deviation":0.00450897,"same_bank_probability":0.01560456},
+      "same_4k_page_probability":0.0000147820,
+      "cross_nonce_same_step_bank_collision_B64":0.01561364,
+      "lag_collision_ratio_to_random_B64":{"min":0.99743296,"max":1.00274688}
+    },
+    "diverse_inputs":{
+      "linear64_B64":{"max_bank_relative_deviation":0.00539780,"same_bank_probability":0.01563299},
+      "xor64_B64":{"max_bank_relative_deviation":0.00571442,"same_bank_probability":0.01563078},
+      "same_4k_page_probability":0.0000151396,
+      "cross_nonce_same_step_bank_collision_B64":0.01561086,
+      "lag_collision_ratio_to_random_B64":{"min":0.99802880,"max":1.00342592}
+    },
+    "random_same_bank_baseline_B64":0.015625,
+    "random_same_4k_page_baseline":0.0000152587890625,
+    "interpretation":"Mandatory RW5 addressing remains close to a random bank/page baseline across representative linear/xor mappings, lags, cross-nonce comparison, and a second diverse-input corpus."
+  },
+  "extra_rw5_findings":{
+    "real_opcode_specific_bank_skew_observed":true,
+    "examples_xor64_B64":{
+      "opcode_9_max_relative_deviation":0.23010034,
+      "opcode_10_max_relative_deviation":0.13485420,
+      "opcode_12_max_relative_deviation":0.11502115,
+      "opcode_30_max_relative_deviation":0.08042673
+    },
+    "combined_mandatory_plus_extra":{
+      "canonical_template":{"xor64_B64_max_relative_deviation":0.01046965,"linear64_B64_max_relative_deviation":0.00979820},
+      "diverse_inputs":{"xor64_B64_max_relative_deviation":0.01358305,"linear64_B64_max_relative_deviation":0.01142930}
+    },
+    "interpretation":"Some optional opcode address formulas have measurable bank skew, but the mandatory stream dominates and the combined exact RW5 access population remains near-balanced under representative mappings."
+  },
+  "fixed_64_bank_cross_validation":{
+    "canonical_template":{
+      "combined_worst_selected_holdout_max_relative_deviation":0.01649988,
+      "combined_best_selected_holdout_max_relative_deviation":0.01192334,
+      "derived_hot_bank_load_ratio_headroom":0.00452262
+    },
+    "diverse_inputs":{
+      "combined_worst_selected_holdout_max_relative_deviation":0.01400421,
+      "combined_best_selected_holdout_max_relative_deviation":0.01276141,
+      "derived_hot_bank_load_ratio_headroom":0.00122714
+    },
+    "warning":"These structural ratios are not throughput, work/W, or work/$ gains. They only bound the observed mapping-sensitive hottest-bank load difference inside the modeled family."
+  },
+  "row_locality":{
+    "canonical_combined_rw5_xor64_B64_row_hit_probability":0.0000063478,
+    "diverse_combined_rw5_xor64_B64_row_hit_probability":0.0000068363,
+    "interpretation":"No material row-buffer locality signal was observed in the modeled 2 KiB-per-bank row abstraction."
+  },
+  "red_team_conclusion":{
+    "multiple_testing_control":"PASS: train-selected anomalies were re-evaluated on disjoint holdout traces",
+    "input_diversity_control":"PASS: result reproduced under deterministic diverse hdr/task/prev/height/nonce inputs",
+    "extra_opcode_skew":"REAL_BUT_NOT_MATERIAL_IN_COMBINED_TRACE",
+    "universal_vendor_mapping_claim":false,
+    "terminal_verdict":"NO_MATERIAL_BANK_LOCALITY_EXPLOIT_FOUND_IN_MODELED_MAPPING_FAMILY__VENDOR_SPECIFIC_PHYSICAL_MAPPING_REMAINS_EXTERNAL"
+  },
+  "decision":{
+    "change_dp6_now":false,
+    "add_address_whitening_now":false,
+    "increase_memory_or_reads_now":false,
+    "software_inference_residual":"CLOSED_FOR_GENERIC_BANK_LOCALITY_SWEEPS",
+    "reopen_only_if":"a concrete controller/bank mapping or physical specialized implementation demonstrates repeatable material locality advantage",
+    "terminal_verdict":"PRESERVE_CURRENT_DP6__BANK_LOCALITY_SOFTWARE_FRONTIER_CLOSED_NO_MATERIAL_EXPLOIT_FOUND"
+  }
+}
