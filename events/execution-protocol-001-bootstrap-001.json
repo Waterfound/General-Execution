@@ -1,0 +1,106 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "execution-protocol-001-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "execution-protocol-001",
+      "generation": 0,
+      "active": {
+        "work_id": "EP-08-PRIVATE-VERIFICATION",
+        "role": "active",
+        "state": "waiting_external",
+        "objective": "Complete private Systems, Project Assurance and Build Colony runtime verification when private runner capacity returns or an already-authorized evidence-equivalent executor becomes available.",
+        "active_gate": "private-runtime-verification-capacity",
+        "next_action_ref": "condition://execution-protocol/private-verification-capacity",
+        "source_revision": "c2f0c78a021b66f212a31666e9448a629ee77441",
+        "evidence_required": [
+          "public_general_execution_engine_green",
+          "private_systems_runtime_verification",
+          "private_project_assurance_runtime_verification",
+          "private_build_colony_runtime_verification",
+          "privacy_projection_boundary_preserved"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [
+          {
+            "kind": "infrastructure",
+            "detail": "Private-repository GitHub-hosted runner capacity is exhausted at 2000/2000 included minutes; current private jobs terminate with zero executed steps.",
+            "evidence_refs": [
+              "github-actions://Waterfound/Systems/actions/runs/37886442111",
+              "github-actions://Waterfound/Build-Colony/actions/runs/37886275647",
+              "github-actions://Waterfound/General-Execution/actions/runs/37886492305"
+            ],
+            "schema_version": "ge.portfolio-blocker.v1"
+          }
+        ],
+        "wake_condition": {
+          "kind": "evidence_predicate_satisfied",
+          "value": "private_actions_capacity_available_or_equivalent_executor",
+          "schema_version": "ge.wake-condition.v1"
+        },
+        "checkpoint_ref": "github://Waterfound/Build-Colony/commit/c2f0c78a021b66f212a31666e9448a629ee77441/pilots/execution-protocol-001/CLOSURE.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "EP-09-POSTCAPACITY-RECONCILIATION",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Prepare exact-head reconciliation and final promotion evidence immediately after private runtime verification becomes admissible.",
+        "active_gate": "postcapacity-reconciliation",
+        "next_action_ref": "action://execution-protocol/postcapacity-reconciliation",
+        "source_revision": "2ec0da25f1e98c00bdf9e19b338cb7542bb14a71",
+        "evidence_required": [
+          "exact_candidate_heads",
+          "resource_scoped_verification_receipts",
+          "public_private_projection_integrity",
+          "no_authority_expansion"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/Build-Colony/commit/c2f0c78a021b66f212a31666e9448a629ee77441/pilots/execution-protocol-001/CLOSURE.json",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [
+        {
+          "work_id": "EP-10-CANONICAL-INTEGRATION",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Keep canonical integration closed until private verification is complete and Waterfound separately authorizes exact candidate integration.",
+          "active_gate": "canonical-integration-authority",
+          "next_action_ref": "authority://execution-protocol/canonical-integration",
+          "source_revision": "c2f0c78a021b66f212a31666e9448a629ee77441",
+          "evidence_required": [
+            "private_runtime_verification_green",
+            "exact_final_candidate_heads",
+            "explicit_waterfound_integration_authority"
+          ],
+          "authority_boundary": "Canonical integration requires separate explicit Waterfound authority and exact-head GREEN reconciliation.",
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "authority",
+              "detail": "EP-001 canonical integration is not authorized by candidate development authority.",
+              "evidence_refs": [
+                "github://Waterfound/Build-Colony/commit/c2f0c78a021b66f212a31666e9448a629ee77441/pilots/execution-protocol-001/CLOSURE.json"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "event_received",
+            "value": "authority://execution-protocol/canonical-integration",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/Build-Colony/commit/c2f0c78a021b66f212a31666e9448a629ee77441/pilots/execution-protocol-001/CLOSURE.json",
+          "schema_version": "ge.portfolio-entry.v1"
+        }
+      ],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
