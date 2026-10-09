@@ -100,6 +100,16 @@ class GitStatePlaneTransport:
         self._receipt = receipt
         return receipt, payload
 
+    def stage_text(self, relative_path: str, content: str) -> None:
+        if self._head is None:
+            raise GitStatePlaneTransportError("load must precede staging")
+        path = Path(relative_path)
+        if path.is_absolute() or ".." in path.parts or not path.parts:
+            raise GitStatePlaneTransportError("private artifact path must be safe and relative")
+        target = self.checkout / self.root / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(content)
+
     def commit(
         self,
         payload: bytes,
