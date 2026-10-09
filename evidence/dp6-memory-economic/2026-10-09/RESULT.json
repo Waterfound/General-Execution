@@ -1,0 +1,77 @@
+{
+  "schema_version": "fae.dp6.memory-economic-one-machine.result.v1",
+  "program_id": "DP6-MEMORY-ECONOMIC-ONE-MACHINE-001",
+  "date": "2026-10-09",
+  "execution": {
+    "class": "REAL_MACHINE_SIDE_DETERMINISTIC_RECONCILIATION",
+    "general_execution_revision": "143af0aae8a2131a8590437cad9ee282bede8f29",
+    "github_actions_consumed": 0,
+    "paid_spend_usd": 0,
+    "provider_or_credential_mutation": false
+  },
+  "inputs": {
+    "rp_b3_t3_head": "3f55d70af643a08896862702290a5ec94534ad3f",
+    "exact_trace_bank_locality_head": "de4260effbc626708df780272109c3a5a2ade59f",
+    "calibration_digest": "sha256:e80c35dd312acb242bfe50a1c81f02bc148c4174ce68094c6d2aca1e5ef50bb3",
+    "maximum_inference_envelope_digest": "sha256:0d96d018776f89dde2301b33055d70d06c9de764fe0d384108168b7047358417",
+    "maximum_inference_assessment_digest": "sha256:c9875e2b827c8de5b795bcd358c0ade7479d4660425d19e9a6cf0a520352e3af"
+  },
+  "findings": {
+    "memory_capacity_cost_moat": {
+      "status": "NOT_SUFFICIENT_AS_STANDALONE_SAFETY_ARGUMENT",
+      "reason": "A current 36GB HBM3E placement holds 134 frozen 256 MiB DP6 contexts. Public market reporting puts the memory stack cost at a level that does not itself force specialist work/USD below the precommitted 3x/5x thresholds.",
+      "warning": "This does not prove a complete ASIC is cheap or fast."
+    },
+    "bulk_bandwidth": {
+      "status": "NOT_DECISIVE_AS_DEFENSE",
+      "reason": "Official >1.2 TB/s HBM3E capability leaves attacker-favorable bandwidth-only ceilings well above household baseline; random dependent latency and complete-system economics remain decisive."
+    },
+    "bank_locality": {
+      "status": "GENERIC_SOFTWARE_HYPOTHESIS_CLOSED",
+      "reason": "Exact frozen trace stress found no material exploitable generic bank/interleave locality in the modeled family."
+    },
+    "coupled_latency_hiding_suppression": {
+      "status": "PRESERVED_AS_KEY_DP6_DESIGN_INVARIANT",
+      "reason": "The defensible barrier is the coupling of mandatory memory-carried dependency with 256 MiB private residency, not memory capacity or bandwidth alone."
+    },
+    "public_source_cost_calibration": {
+      "status": "MATERIAL_INFORMATION_GAIN_REACHED_CEILING",
+      "reason": "Public HBM pricing, technology capacity/bandwidth and industry design-cost sensitivities narrow the envelope but cannot supply complete specialized BOM/PPA/power/throughput."
+    },
+    "safe_memory_economic_bound": {
+      "status": "NOT_PROVEN",
+      "reason": "Complete exact-path specialist LCVW and compatible representative home-device median remain absent."
+    }
+  },
+  "red_team": {
+    "attacker_favorable_interpretation": "A competent attacker may use HBM/GDDR/DDR full-state memory, many resident contexts, shared fixed-function compute and custom controllers. Current public evidence does not conditionally exclude >=5x both work/W and work/USD.",
+    "defender_favorable_interpretation": "High HBM prices, controller/package costs, random-access latency, RW5 compute and NRE may still keep the complete specialist below WARN/COLLAPSE; none is currently bounded strongly enough to prove that outcome.",
+    "terminal": "NEITHER_COLLAPSE_NOR_SAFETY_PROVEN__CAPACITY_COST_ALONE_REMOVED_AS_DEFENSE"
+  },
+  "maximum_inference": {
+    "further_one_machine_public_source_information_gain_bp": 400,
+    "minimum_information_gain_bp": 1000,
+    "disposition": "RETURN_TO_ROBUST_PREMISE_REVIEW",
+    "external_exact_specialist_lcvw_information_gain": "HIGH",
+    "physical_execution_triggered": false
+  },
+  "remaining_exact_gate": {
+    "id": "SPECIALIST_LCVW_AND_REPRESENTATIVE_MEDIAN",
+    "minimum_evidence": [
+      "exact frozen DP6 parity-correct sustained specialized work/s",
+      "complete-system specialist wall power",
+      "all-in specialist system cost or auditable BOM/NRE/yield/volume interval",
+      "compatible representative home-device median work/W and work/USD"
+    ],
+    "routine_waterfound_steps": 0,
+    "classification": "EXTERNAL_EVIDENCE_GATE"
+  },
+  "decision": {
+    "change_dp6_now": false,
+    "reopen_asic_lab_now": false,
+    "repeat_generic_public_source_modeling": false,
+    "preserve_current_dp6": true,
+    "poW_design_confidence_can_reach_100_from_one_machine_only": false
+  },
+  "terminal_verdict": "ONE_MACHINE_CEILING_REACHED__MEMORY_CAPACITY_COST_MOAT_NOT_SUFFICIENT__EXACT_PATH_SPECIALIST_LCVW_REMAINS_EXTERNAL"
+}
