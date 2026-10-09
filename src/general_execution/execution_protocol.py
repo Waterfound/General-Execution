@@ -465,6 +465,23 @@ def decide_execution_protocol(
             authority_ref=request.authority_ref,
         )
 
+    if request.existing_execution_ref is not None:
+        return ExecutionProtocolDecision(
+            request_id=request.request_id,
+            invocation_mode=mode,
+            disposition=ProtocolDisposition.OBSERVE_EXISTING,
+            selected_system_ids=selected_ids,
+            selected_executor_id=None,
+            selected_resource_id=None,
+            uncovered_system_capabilities=(),
+            resource_findings=(),
+            rejected_executors=(),
+            route_digest=None,
+            evidence_predicate_preserved=True,
+            reasons=(f"existing_execution:{request.existing_execution_ref}",),
+            authority_ref=request.authority_ref,
+        )
+
     eligible_executors, findings, rejected = _resolve_executors(
         predicate=request.evidence_predicate,
         executors=executors,
