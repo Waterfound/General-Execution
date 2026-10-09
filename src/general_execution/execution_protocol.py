@@ -144,6 +144,9 @@ class ExecutionProtocolRequest:
     required_capability_ids: tuple[str, ...]
     repository: str
     authority_ref: str
+    projection_id: str | None = None
+    registry_revision_digest: str | None = None
+    authority_ref_digest: str | None = None
     required_executor_capabilities: tuple[str, ...] = ()
     requested_actions: tuple[str, ...] = ()
     requires_observed_evidence: bool = False
@@ -158,6 +161,20 @@ class ExecutionProtocolRequest:
         for field in ("request_id", "objective", "evidence_predicate", "repository", "authority_ref"):
             _nonempty(getattr(self, field), field)
         _unique(self.required_capability_ids, "required_capability_ids")
+        if self.required_capability_ids:
+            for field in ("projection_id", "registry_revision_digest", "authority_ref_digest"):
+                value = getattr(self, field)
+                if value is None:
+                    raise ExecutionProtocolError(f"{field} is required when capability selection is requested")
+                _nonempty(value, field)
+            for field in ("registry_revision_digest", "authority_ref_digest"):
+                value = getattr(self, field)
+                if value is None or not value.startswith("sha256:") or len(value) != 71:
+                    raise ExecutionProtocolError(f"{field} must be sha256:<64-hex>")
+                try:
+                    int(value[7:], 16)
+                except ValueError as exc:
+                    raise ExecutionProtocolError(f"{field} must contain hexadecimal digest") from exc
         _unique(self.required_executor_capabilities, "required_executor_capabilities")
         _unique(self.requested_actions, "requested_actions")
         for field in ("requires_observed_evidence", "requires_state_change", "advisory_allowed"):
@@ -262,6 +279,10 @@ def decision_to_dict(decision: ExecutionProtocolDecision) -> dict[str, Any]:
 def _select_candidates(
     required_capabilities: tuple[str, ...],
     candidates: tuple[CapabilityProjection, ...],
+    *,
+    expected_projection_id: str | None,
+    expected_registry_revision_digest: str | None,
+    expected_authority_ref_digest: str | None,
 ) -> tuple[tuple[CapabilityProjection, ...], tuple[str, ...]]:
     required = set(required_capabilities)
     if not required:
@@ -275,6 +296,12 @@ def _select_candidates(
     authority_digests = {item.authority_ref_digest for item in candidates}
     if len(projection_ids) != 1 or len(registry_digests) != 1 or len(authority_digests) != 1:
         raise ExecutionProtocolError("capability candidates must come from one bound projection")
+    if (
+        projection_ids != {expected_projection_id}
+        or registry_digests != {expected_registry_revision_digest}
+        or authority_digests != {expected_authority_ref_digest}
+    ):
+        raise ExecutionProtocolError("capability projection does not match request binding")
 
     covering: list[tuple[CapabilityProjection, ...]] = []
     for size in range(1, len(candidates) + 1):
@@ -413,6 +440,9 @@ def decide_execution_protocol(
     selected_candidates, uncovered = _select_candidates(
         request.required_capability_ids,
         candidates,
+        expected_projection_id=request.projection_id,
+        expected_registry_revision_digest=request.registry_revision_digest,
+        expected_authority_ref_digest=request.authority_ref_digest,
     )
     mode = _mode_for(request, selected_candidates)
     selected_ids = tuple(item.candidate_id for item in selected_candidates)
