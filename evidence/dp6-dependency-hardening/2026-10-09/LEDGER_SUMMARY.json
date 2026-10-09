@@ -1,0 +1,72 @@
+{
+  "schema_version": "ge.execution-ledger.v1",
+  "head": "sha256:e3efe56f99421011a56e9a6ff40103615f6db7b0b86c510b618420bf623c1811",
+  "event_count": 13,
+  "event_chain": [
+    [
+      "GE_SESSION_STARTED",
+      "dependency-quality",
+      "sha256:cc65411a8ddfb9c0c037da33c77d25736feae1b9cc019f4c10b98bdf9cc9ad7d"
+    ],
+    [
+      "GE_RESULT_SUBMITTED",
+      "dependency-quality",
+      "sha256:b4636a4fa1975ab08054af2e4d7949265b0e5e8e66d7277af577ef52d4772698"
+    ],
+    [
+      "GE_SESSION_STARTED",
+      "bank-locality",
+      "sha256:29f792848027496cda535ef984d3817d878381cd16e1b16e2608b82a39b4bfbc"
+    ],
+    [
+      "GE_RESULT_SUBMITTED",
+      "bank-locality",
+      "sha256:f70d5e0ca29e20d5c449f97646e99c7119e099ff00e80d3f3fbb99ad93b90ace"
+    ],
+    [
+      "GE_SESSION_STARTED",
+      "address-unpredictability",
+      "sha256:49c43bbb6e77a45403f1616eb43f1179dfab3dac25d2b642bb8c46934875b828"
+    ],
+    [
+      "GE_RESULT_SUBMITTED",
+      "address-unpredictability",
+      "sha256:acf3abc0b993be68202dcd74f0f7b1bfee0ff6f8548fe95589f4ebcad30635fe"
+    ],
+    [
+      "GE_SESSION_STARTED",
+      "precomputation-resistance",
+      "sha256:90245dbb4e37b9de45e4bf39b91988fe248e79f59f9316ad1da1669881bc87f9"
+    ],
+    [
+      "GE_RESULT_SUBMITTED",
+      "precomputation-resistance",
+      "sha256:3671f173e93de3bbbbbda79808bebd776a52ba8a6072ec07582e77df1092de4f"
+    ],
+    [
+      "GE_SESSION_STARTED",
+      "specialized-escape-routes",
+      "sha256:40ed6b1382845b4f2796089574b04f063b53f62780d9a43f0d758d41dc822dcd"
+    ],
+    [
+      "GE_RESULT_SUBMITTED",
+      "specialized-escape-routes",
+      "sha256:30566c6e3442b16fc693d97bf76b59a2642d9d9828daebc908c6b86cc604bc88"
+    ],
+    [
+      "RED_TEAM_COMPLETED",
+      "NO_MATERIAL_ALGORITHM_CHANGE_JUSTIFIED",
+      "sha256:00fcf2e958cd6da54170eec34c2464c56506f460cb2c722f7998e44e513de084"
+    ],
+    [
+      "CII_SCREEN_COMPLETED",
+      "NO_IMPLEMENTATION_ADMITTED",
+      "sha256:e88f75347c7edecc91bf8e2c70b023b2b9f082578ee16633ef68cdf35b37a244"
+    ],
+    [
+      "MAXIMUM_INFERENCE_COMPLETED",
+      "RETURN_TO_ROBUST_PREMISE_REVIEW",
+      "sha256:e3efe56f99421011a56e9a6ff40103615f6db7b0b86c510b618420bf623c1811"
+    ]
+  ]
+}
