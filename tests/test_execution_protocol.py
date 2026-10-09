@@ -16,14 +16,17 @@ from general_execution.work_sparse_unattended import (
     UnattendedAuthorityEnvelope,
 )
 
-AUTH = "authority://waterfound/execution-protocol-001"
+AUTH = "authority://example/execution-protocol"\nREG = "sha256:" + "1" * 64\nAUTH_DIGEST = "sha256:" + "2" * 64\nPROJ = "projection://ep/example"
 PRED = "verification://same-predicate"
 
 
-def system(system_id, capabilities, *, cost=1, execution=False):
+def system(candidate_id, capabilities, *, cost=1, execution=False):
     return SystemCapability(
-        system_id=system_id,
-        capabilities=tuple(capabilities),
+        candidate_id=candidate_id,
+        capability_ids=tuple(capabilities),
+        projection_id=PROJ,
+        registry_revision_digest=REG,
+        authority_ref_digest=AUTH_DIGEST,
         cost_rank=cost,
         execution_capable=execution,
     )
@@ -34,7 +37,7 @@ def request(**overrides):
         request_id="EP-CASE-1",
         objective="Verify candidate without weakening evidence",
         evidence_predicate=PRED,
-        required_system_capabilities=("system_selection", "execution_composition"),
+        required_system_capabilities=("cap-select", "exec-compose"),
         repository="Waterfound/General-Execution",
         authority_ref=AUTH,
         required_executor_capabilities=("repo_read", "test_execution"),
@@ -98,9 +101,9 @@ def exhausted_actions():
 
 
 SYSTEMS = (
-    system("total-systems-steward", ("system_selection",), cost=0),
-    system("general-execution", ("execution_composition",), cost=0, execution=True),
-    system("pse", ("capability_substitution",), cost=1),
+    system("candidate-a", ("cap-select",), cost=0),
+    system("candidate-b", ("exec-compose",), cost=0, execution=True),
+    system("candidate-c", ("substitute",), cost=1),
 )
 
 
@@ -125,7 +128,7 @@ def test_no_system_mode_is_explicit():
 def test_advisory_mode_is_distinct_from_real_run():
     decision = decide_execution_protocol(
         request=request(
-            required_system_capabilities=("system_selection",),
+            required_system_capabilities=("cap-select",),
             required_executor_capabilities=(),
             requested_actions=(),
             requires_observed_evidence=False,
@@ -136,7 +139,7 @@ def test_advisory_mode_is_distinct_from_real_run():
     )
     assert decision.invocation_mode is InvocationMode.ADVISORY
     assert decision.disposition is ProtocolDisposition.ADVISORY_READY
-    assert decision.selected_system_ids == ("total-systems-steward",)
+    assert decision.selected_system_ids == ("candidate-a",)
     assert decision.selected_executor_id is None
 
 
@@ -150,7 +153,7 @@ def test_multiple_systems_produce_composed_real_run():
         method_profiles=(profile("connector_api"),),
     )
     assert decision.invocation_mode is InvocationMode.COMPOSED_REAL_RUN
-    assert decision.selected_system_ids == ("general-execution", "total-systems-steward")
+    assert decision.selected_system_ids == ("candidate-a", "candidate-b")
     assert decision.disposition is ProtocolDisposition.READY_FOR_EXISTING_ADMISSION
     assert decision.selected_executor_id == "connector_api"
     assert decision.evidence_predicate_preserved
@@ -161,9 +164,9 @@ def test_actions_capacity_exhaustion_selects_equivalent_zero_cost_alternative():
     decision = decide_execution_protocol(
         request=request(
             required_system_capabilities=(
-                "system_selection",
-                "execution_composition",
-                "capability_substitution",
+                "cap-select",
+                "exec-compose",
+                "substitute",
             ),
         ),
         systems=SYSTEMS,
@@ -198,9 +201,9 @@ def test_actions_capacity_exhaustion_waits_only_when_no_equivalent_alternative_e
     decision = decide_execution_protocol(
         request=request(
             required_system_capabilities=(
-                "system_selection",
-                "execution_composition",
-                "capability_substitution",
+                "cap-select",
+                "exec-compose",
+                "substitute",
             ),
         ),
         systems=SYSTEMS,
@@ -272,3 +275,38 @@ def test_uncovered_system_capability_fails_closed():
     )
     assert decision.disposition is ProtocolDisposition.CONDITION_WAIT
     assert decision.uncovered_system_capabilities == ("unknown_system_capability",)
+
+
+def test_public_projection_rejects_internal_identity_disclosure():
+    with pytest.raises(ExecutionProtocolError, match="cannot disclose internal identity"):
+        SystemCapability(
+            candidate_id="candidate-a",
+            capability_ids=("cap-select",),
+            projection_id=PROJ,
+            registry_revision_digest=REG,
+            authority_ref_digest=AUTH_DIGEST,
+            internal_identity_disclosed=True,
+        )
+
+
+def test_candidates_from_mixed_private_registry_projections_fail_closed():
+    mixed = (
+        system("candidate-a", ("cap-select",), cost=0),
+        SystemCapability(
+            candidate_id="candidate-b",
+            capability_ids=("exec-compose",),
+            projection_id="projection://other",
+            registry_revision_digest="sha256:" + "3" * 64,
+            authority_ref_digest=AUTH_DIGEST,
+            execution_capable=True,
+        ),
+    )
+    with pytest.raises(ExecutionProtocolError, match="one bound projection"):
+        decide_execution_protocol(
+            request=request(),
+            systems=mixed,
+            envelope=envelope(),
+            executors=(),
+            resource_observations=(),
+            method_profiles=(),
+        )
