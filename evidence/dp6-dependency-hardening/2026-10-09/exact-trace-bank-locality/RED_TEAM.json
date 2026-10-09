@@ -1,0 +1,15 @@
+{
+  "schema_version":"fae.dp6.bank-locality-red-team.v1",
+  "program_id":"DP6-EXACT-TRACE-BANK-LOCALITY-001-RT",
+  "attacks":[
+    {"id":"RT1_EXACTNESS","challenge":"surrogate trace may hide real DP6 structure","result":"SURVIVED","evidence":"frozen HLS semantics replayed and canonical nonce-1200 mh/transcript/final vector matched exactly"},
+    {"id":"RT2_NONCE_OVERFIT","challenge":"16 adjacent nonces may accidentally look uniform","result":"SURVIVED","evidence":"second 16-trace corpus varies hdr/task/prev/height/nonce deterministically and reproduces the bank/locality result"},
+    {"id":"RT3_MAPPING_CHERRY_PICK","challenge":"chosen bank functions may hide an exploitable mapping","result":"SURVIVED_WITH_BOUNDARY","evidence":"408 linear/xor interleave functions over 32/64/128/256-byte granularities and 16..256 banks; train selection followed by disjoint holdout evaluation"},
+    {"id":"RT4_OPTIONAL_OPCODE_SKEW","challenge":"optional RW5 memory opcodes show non-uniform bank occupancy","result":"REAL_BUT_NOT_MATERIAL","evidence":"opcode-specific skew exists, but combined mandatory+extra traces remain near-balanced and fixed-64-bank mapping-sensitive hottest-bank load headroom is about 0.45% canonical and 0.12% diverse holdout"},
+    {"id":"RT5_TEMPORAL_LOCALITY","challenge":"global occupancy may hide exploitable short-lag locality","result":"SURVIVED","evidence":"B64 bank-collision ratios for lags 1..1024 stay within about 0.35% of random baseline; row-hit and same-page probabilities remain extremely small"},
+    {"id":"RT6_CROSS_CONTEXT_CORRELATION","challenge":"multiple nonces may collide in the same bank predictably","result":"SURVIVED","evidence":"same-step cross-nonce B64 collision ratio is 0.99927x random on canonical corpus and 0.99910x on diverse corpus"},
+    {"id":"RT7_VENDOR_SECRET_MAPPING","challenge":"a real HBM/DRAM/custom controller may use a mapping outside the modeled family","result":"NOT_CLOSED_BY_SOFTWARE","evidence":"requires concrete controller mapping/timing or physical specialized evidence; cannot be promoted to a generic DP6 weakness without such evidence"}
+  ],
+  "terminal_verdict":"NO_MATERIAL_BANK_LOCALITY_EXPLOIT_FOUND__GENERIC_SOFTWARE_SEARCH_EXHAUSTED_TO_CURRENT_INFORMATION_VALUE__EXTERNAL_CONTROLLER_EVIDENCE_ONLY_IF_NEW_INFORMATION_APPEARS",
+  "authority_created":false
+}
