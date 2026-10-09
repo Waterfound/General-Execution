@@ -1,0 +1,87 @@
+{
+  "schema": "fae.dp6.algorithm-source-facts.v1",
+  "source": {
+    "repository": "Waterfound/FAE-testnet",
+    "ref": "evidence/fae-dp6-rp-b3-t2-20260930",
+    "path": "labs/asic-f2-pre-go/hls/fae_dp6_hls.cpp",
+    "git_blob_sha1": "ea1ab21fbf359adc35955c42ea8e137707c37b6d",
+    "semantic_label": "FAE-DP6 v0.7 frozen semantics / v0.8 G3 correctness backend"
+  },
+  "constants": {
+    "programs": 8,
+    "program_size": 256,
+    "steps_per_program": 131072,
+    "rw5_total_steps": 1048576,
+    "argon_blocks": 262144,
+    "argon_block_bytes": 1024,
+    "matrix_bytes": 268435456,
+    "matrix_qwords": 33554432,
+    "mask": 33554431,
+    "argon_t": 1,
+    "argon_p": 1
+  },
+  "bindings": {
+    "mh3_salt": [
+      "prev",
+      "height",
+      "task"
+    ],
+    "mh3_password": [
+      "hdr",
+      "nonce",
+      "task"
+    ],
+    "rw5_seed": [
+      "mh",
+      "hdr",
+      "nonce",
+      "task"
+    ],
+    "program_seed": [
+      "transcript",
+      "program_index",
+      "mh"
+    ],
+    "final": [
+      "hdr",
+      "nonce",
+      "task",
+      "mh",
+      "transcript",
+      "registers"
+    ]
+  },
+  "mandatory_rw5_edge": {
+    "address": "mi=(chain ^ r[dst] ^ rotl64(r[src],17) ^ step*C) & mask",
+    "load": "mv=s[mi]",
+    "chain_update": "rotl64(chain ^ mv ^ r[src2] ^ imm, f(mv))*ODD + program/step",
+    "state_feedback": [
+      "r[src2] ^= mv ^ chain",
+      "r[dst] += mulh64(chain|1,mv|1)",
+      "s[mi] = rotl64(mv+r[dst]+chain+step,g(chain))"
+    ],
+    "next_address_depends_on_current_mv": true,
+    "mandatory_memory_read_write_each_step": true
+  },
+  "extra_memory_opcodes": [
+    8,
+    9,
+    10,
+    11,
+    12,
+    27,
+    30
+  ],
+  "branch_opcodes": [
+    24,
+    25,
+    26,
+    27
+  ],
+  "evidence_boundaries": {
+    "logic_ppa": "CLOSED_PREVIOUS_EVIDENCE",
+    "memory_economic_bound": "OPEN",
+    "hbm_optimistic": "COLLAPSE_NOT_EXCLUDED__UNVALIDATED_SCENARIO",
+    "algorithm_change_authority": false
+  }
+}
