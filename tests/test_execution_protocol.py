@@ -19,7 +19,7 @@ from general_execution.work_sparse_unattended import (
 AUTH = "authority://example/execution-protocol"
 REG = "sha256:" + "1" * 64
 AUTH_DIGEST = "sha256:" + "2" * 64
-PROJ = "projection://ep/example"
+PROJ = "p_0000000000000001"
 PRED = "verification://same-predicate"
 
 
@@ -40,7 +40,7 @@ def request(**overrides):
         request_id="EP-CASE-1",
         objective="Verify candidate without weakening evidence",
         evidence_predicate=PRED,
-        required_capability_ids=("cap-select", "exec-compose"),
+        required_capability_ids=("k_0000000000000001", "k_0000000000000002"),
         repository="example/repo",
         authority_ref=AUTH,
         projection_id=PROJ,
@@ -107,9 +107,9 @@ def exhausted_private_runner():
 
 
 CANDIDATES = (
-    candidate("candidate-a", ("cap-select",), cost=0),
-    candidate("candidate-b", ("exec-compose",), cost=0, execution=True),
-    candidate("candidate-c", ("substitute",), cost=1),
+    candidate("c_0000000000000001", ("k_0000000000000001",), cost=0),
+    candidate("c_0000000000000002", ("k_0000000000000002",), cost=0, execution=True),
+    candidate("c_0000000000000003", ("k_0000000000000003",), cost=1),
 )
 
 
@@ -134,7 +134,7 @@ def test_no_system_mode_is_explicit():
 def test_advisory_mode_is_distinct_from_real_run():
     decision = decide_execution_protocol(
         request=request(
-            required_capability_ids=("cap-select",),
+            required_capability_ids=("k_0000000000000001",),
             required_executor_capabilities=(),
             requested_actions=(),
             requires_observed_evidence=False,
@@ -145,7 +145,7 @@ def test_advisory_mode_is_distinct_from_real_run():
     )
     assert decision.invocation_mode is InvocationMode.ADVISORY
     assert decision.disposition is ProtocolDisposition.ADVISORY_READY
-    assert decision.selected_candidate_ids == ("candidate-a",)
+    assert decision.selected_candidate_ids == ("c_0000000000000001",)
     assert decision.selected_executor_id is None
 
 
@@ -159,7 +159,7 @@ def test_multiple_candidates_produce_composed_real_run():
         method_profiles=(profile("executor-a"),),
     )
     assert decision.invocation_mode is InvocationMode.COMPOSED_REAL_RUN
-    assert decision.selected_candidate_ids == ("candidate-a", "candidate-b")
+    assert decision.selected_candidate_ids == ("c_0000000000000001", "c_0000000000000002")
     assert decision.disposition is ProtocolDisposition.READY_FOR_EXISTING_ADMISSION
     assert decision.selected_executor_id == "executor-a"
     assert decision.evidence_predicate_preserved
@@ -169,7 +169,7 @@ def test_multiple_candidates_produce_composed_real_run():
 def test_capacity_exhaustion_selects_equivalent_zero_cost_alternative():
     decision = decide_execution_protocol(
         request=request(
-            required_capability_ids=("cap-select", "exec-compose", "substitute"),
+            required_capability_ids=("k_0000000000000001", "k_0000000000000002", "k_0000000000000003"),
         ),
         candidates=CANDIDATES,
         envelope=envelope(),
@@ -204,7 +204,7 @@ def test_capacity_exhaustion_selects_equivalent_zero_cost_alternative():
 def test_private_runner_exhaustion_does_not_globalize_to_public_runner():
     decision = decide_execution_protocol(
         request=request(
-            required_capability_ids=("cap-select", "exec-compose", "substitute"),
+            required_capability_ids=("k_0000000000000001", "k_0000000000000002", "k_0000000000000003"),
         ),
         candidates=CANDIDATES,
         envelope=envelope(),
@@ -228,7 +228,7 @@ def test_private_runner_exhaustion_does_not_globalize_to_public_runner():
 def test_capacity_waits_only_when_no_equivalent_alternative_exists():
     decision = decide_execution_protocol(
         request=request(
-            required_capability_ids=("cap-select", "exec-compose", "substitute"),
+            required_capability_ids=("k_0000000000000001", "k_0000000000000002", "k_0000000000000003"),
         ),
         candidates=CANDIDATES,
         envelope=envelope(),
@@ -293,19 +293,19 @@ def test_existing_execution_is_observed_not_redispatched():
 
 def test_uncovered_capability_fails_closed():
     decision = decide_execution_protocol(
-        request=request(required_capability_ids=("cap-unknown",)),
+        request=request(required_capability_ids=("k_ffffffffffffffff",)),
         candidates=CANDIDATES,
         envelope=envelope(),
     )
     assert decision.disposition is ProtocolDisposition.CONDITION_WAIT
-    assert decision.uncovered_capability_ids == ("cap-unknown",)
+    assert decision.uncovered_capability_ids == ("k_ffffffffffffffff",)
 
 
 def test_public_projection_rejects_internal_identity_disclosure():
     with pytest.raises(ExecutionProtocolError, match="cannot disclose internal identity"):
         CapabilityProjection(
-            candidate_id="candidate-a",
-            capability_ids=("cap-select",),
+            candidate_id="c_0000000000000001",
+            capability_ids=("k_0000000000000001",),
             projection_id=PROJ,
             registry_revision_digest=REG,
             authority_ref_digest=AUTH_DIGEST,
@@ -315,11 +315,11 @@ def test_public_projection_rejects_internal_identity_disclosure():
 
 def test_candidates_from_mixed_private_registry_projections_fail_closed():
     mixed = (
-        candidate("candidate-a", ("cap-select",), cost=0),
+        candidate("c_0000000000000001", ("k_0000000000000001",), cost=0),
         CapabilityProjection(
-            candidate_id="candidate-b",
-            capability_ids=("exec-compose",),
-            projection_id="projection://other",
+            candidate_id="c_0000000000000002",
+            capability_ids=("k_0000000000000002",),
+            projection_id="p_0000000000000002",
             registry_revision_digest="sha256:" + "3" * 64,
             authority_ref_digest=AUTH_DIGEST,
             execution_capable=True,
@@ -360,7 +360,29 @@ def test_capability_request_requires_projection_binding():
             request_id="EP-UNBOUND",
             objective="unbound capability selection",
             evidence_predicate=PRED,
-            required_capability_ids=("cap-select",),
+            required_capability_ids=("k_0000000000000001",),
             repository="example/repo",
             authority_ref=AUTH,
+        )
+
+
+def test_semantic_candidate_alias_is_rejected():
+    with pytest.raises(ExecutionProtocolError, match="opaque c_<16-hex> alias"):
+        CapabilityProjection(
+            candidate_id="internal-system-name",
+            capability_ids=("k_0000000000000001",),
+            projection_id=PROJ,
+            registry_revision_digest=REG,
+            authority_ref_digest=AUTH_DIGEST,
+        )
+
+
+def test_semantic_capability_alias_is_rejected():
+    with pytest.raises(ExecutionProtocolError, match="opaque k_<16-hex> alias"):
+        CapabilityProjection(
+            candidate_id="c_0000000000000001",
+            capability_ids=("diagnostic-intelligence",),
+            projection_id=PROJ,
+            registry_revision_digest=REG,
+            authority_ref_digest=AUTH_DIGEST,
         )
