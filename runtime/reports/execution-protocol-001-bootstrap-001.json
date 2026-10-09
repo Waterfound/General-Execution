@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:2f73e525937be87195fa4005e6842755bcc8553d3529346ff89dddbe7433c3ca",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "execution-protocol-001-bootstrap-001",
+    "human_required": false,
+    "operation": "bootstrap",
+    "portfolio_id": "execution-protocol-001",
+    "post_generation": 0,
+    "post_state_digest": "sha256:19d3ca444045c0d5313a74cf6c4a31ced3c4be30cffbd6a83b2be211272fb52d",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:19d3ca444045c0d5313a74cf6c4a31ced3c4be30cffbd6a83b2be211272fb52d",
+    "requested_action_ref": "condition://execution-protocol/private-verification-capacity",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:5684a70c9177067b32f0661799a5d1b710f33c1fb628be85be8025e821dd28b5",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
