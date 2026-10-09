@@ -139,9 +139,9 @@ The public engine deliberately does not require a full internal system inventory
 A private authority domain may keep real system identities, rich capability semantics, dependency topology, fallback policy, authority ceilings and planning rationale private, then emit a task-scoped projection such as:
 
 ```text
-projection_id
-opaque_candidate_id
-opaque_capability_ids
+projection_id = p_<16-hex>
+candidate_id = c_<16-hex>
+capability_ids = k_<16-hex>[]
 execution_capable
 cost_rank
 authority_ref_digest
@@ -166,3 +166,6 @@ Capacity observations are scoped to the concrete executor/resource class.
 For example, exhaustion of included minutes for private-repository GitHub-hosted runners does not imply that every GitHub Actions execution path is unavailable. A public-repository standard runner may remain admissible under GitHub's public-repository runner policy.
 
 The protocol therefore rejects global statements such as `github_actions = unavailable` when the evidence only proves a narrower resource class is exhausted. Resource observations should be as specific as the available evidence permits.
+
+
+Semantic names are intentionally invalid in the public projection fields. A caller cannot use an internal system name as `candidate_id` or a human-readable internal capability name as `capability_id`; those inputs are rejected by schema validation.
