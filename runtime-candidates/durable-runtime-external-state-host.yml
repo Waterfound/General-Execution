@@ -1,0 +1,26 @@
+name: External state host candidate
+
+# CANDIDATE ONLY — stored outside .github/workflows.
+# Preserves the current single-event host and changes persistence transport only.
+# Activation/cutover require separate authority.
+
+env:
+  RUNTIME_BRANCH: runtime/durable-asp-control
+  PERSISTENT_RUNTIME_REVISION: 62e4edb7b8ba9571a05b954cf0f82cf3299a6d4a
+
+binding:
+  remote_url: ${{ vars.GE_STATE_PLANE_REMOTE_URL }}
+  branch: ${{ vars.GE_STATE_PLANE_BRANCH }}
+  root: ${{ vars.GE_STATE_PLANE_ROOT }}
+  state_ref: ${{ vars.GE_STATE_PLANE_REF }}
+  token: ${{ secrets.GE_STATE_PLANE_TOKEN }}
+
+security:
+  rules:
+    - token is never embedded in the remote URL
+    - token is supplied only through GIT_ASKPASS
+    - remote URL must use HTTPS
+    - root must be relative and traversal-free
+    - exact-ref CAS is mandatory
+    - public receipts contain no provider locator or token
+    - no runtime repin is implied
