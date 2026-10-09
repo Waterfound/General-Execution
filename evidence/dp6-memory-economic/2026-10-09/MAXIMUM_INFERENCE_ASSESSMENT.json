@@ -1,0 +1,13 @@
+{
+  "envelope_digest": "sha256:0d96d018776f89dde2301b33055d70d06c9de764fe0d384108168b7047358417",
+  "expected_information_gain_bp": 400,
+  "minimum_information_gain_bp": 1000,
+  "strict_ready": true,
+  "material_reality_gap": true,
+  "disposition": "RETURN_TO_ROBUST_PREMISE_REVIEW",
+  "reason": "residual physical information gain is below the precommitted threshold",
+  "interpretation_precommitted": true,
+  "empirical_authority_created": false,
+  "physical_execution_triggered": false,
+  "schema_version": "ge.maximum-inference-assessment.v1"
+}
