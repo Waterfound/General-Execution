@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass, is_dataclass, replace
 from enum import Enum
 from itertools import combinations
+import re
 from typing import Any, Iterable
 
 from .canonical import sha256_digest
@@ -75,6 +76,15 @@ def _nonnegative(value: int, field: str) -> int:
     return value
 
 
+def _opaque_alias(value: str, prefix: str, field: str) -> str:
+    value = _nonempty(value, field)
+    if not re.fullmatch(rf"{re.escape(prefix)}_[0-9a-f]{{16}}", value):
+        raise ExecutionProtocolError(
+            f"{field} must be an opaque {prefix}_<16-hex> alias"
+        )
+    return value
+
+
 def _unique(values: Iterable[str], field: str, *, allow_empty: bool = True) -> tuple[str, ...]:
     items = tuple(_nonempty(item, field) for item in values)
     if not allow_empty and not items:
@@ -112,9 +122,11 @@ class CapabilityProjection:
     def __post_init__(self) -> None:
         if self.schema_version != SYSTEM_SCHEMA:
             raise ExecutionProtocolError("unsupported capability projection schema")
-        _nonempty(self.candidate_id, "candidate_id")
-        _unique(self.capability_ids, "capability_ids", allow_empty=False)
-        _nonempty(self.projection_id, "projection_id")
+        _opaque_alias(self.candidate_id, "c", "candidate_id")
+        capability_ids = _unique(self.capability_ids, "capability_ids", allow_empty=False)
+        for capability_id in capability_ids:
+            _opaque_alias(capability_id, "k", "capability_ids")
+        _opaque_alias(self.projection_id, "p", "projection_id")
         for field in ("registry_revision_digest", "authority_ref_digest"):
             value = _nonempty(getattr(self, field), field)
             if not value.startswith("sha256:") or len(value) != 71:
@@ -160,13 +172,18 @@ class ExecutionProtocolRequest:
             raise ExecutionProtocolError("unsupported request schema")
         for field in ("request_id", "objective", "evidence_predicate", "repository", "authority_ref"):
             _nonempty(getattr(self, field), field)
-        _unique(self.required_capability_ids, "required_capability_ids")
+        required_capability_ids = _unique(self.required_capability_ids, "required_capability_ids")
+        for capability_id in required_capability_ids:
+            _opaque_alias(capability_id, "k", "required_capability_ids")
         if self.required_capability_ids:
             for field in ("projection_id", "registry_revision_digest", "authority_ref_digest"):
                 value = getattr(self, field)
                 if value is None:
                     raise ExecutionProtocolError(f"{field} is required when capability selection is requested")
-                _nonempty(value, field)
+                if field == "projection_id":
+                    _opaque_alias(value, "p", field)
+                else:
+                    _nonempty(value, field)
             for field in ("registry_revision_digest", "authority_ref_digest"):
                 value = getattr(self, field)
                 if value is None or not value.startswith("sha256:") or len(value) != 71:
