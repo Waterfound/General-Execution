@@ -1,0 +1,50 @@
+{
+  "schema_version": "fae.dp6.memory-economic-one-machine.red-team.v1",
+  "program_id": "DP6-MEMORY-ECONOMIC-ONE-MACHINE-001-RT",
+  "attacks": [
+    {
+      "id": "RT1_CAPACITY",
+      "challenge": "256 MiB/context may itself make a specialist uneconomic",
+      "result": "REJECTED_AS_STANDALONE_DEFENSE",
+      "evidence": "36GB HBM3E holds 134 frozen contexts; reported market memory cost per context is low relative to complete-system fairness thresholds"
+    },
+    {
+      "id": "RT2_BANDWIDTH",
+      "challenge": "DP6 logical traffic may make modern HBM bandwidth insufficient",
+      "result": "REJECTED_AS_STANDALONE_DEFENSE",
+      "evidence": ">1.2 TB/s leaves attacker-favorable bandwidth-only upper ceilings about 1.46k-2.17k work/s before random-access/compute penalties"
+    },
+    {
+      "id": "RT3_LATENCY",
+      "challenge": "dependent latency may close the economics by itself",
+      "result": "NOT_CLOSED",
+      "evidence": "capacity-latency sensitivity remains hundreds of work/s over a wide latency range; complete W/$ determine whether 3x/5x is crossed"
+    },
+    {
+      "id": "RT4_LOCALITY",
+      "challenge": "bank/interleave locality may create a hidden specialized shortcut",
+      "result": "GENERIC_SOFTWARE_PATH_CLOSED",
+      "evidence": "prior exact-trace stress found no material generic exploit in modeled mapping family"
+    },
+    {
+      "id": "RT5_PRICE",
+      "challenge": "current HBM price inflation may itself make the attack uneconomic",
+      "result": "NOT_PROVEN",
+      "evidence": "market prices are incomplete and do not bound logic/package/NRE; even high memory price cannot be promoted to complete-system LCVW"
+    },
+    {
+      "id": "RT6_NRE",
+      "challenge": "advanced-node design cost necessarily protects DP6",
+      "result": "REJECTED_AS_HARD_BOUND",
+      "evidence": "industry averages are volume- and design-dependent sensitivities, not transferable DP6 ASIC lower bounds"
+    },
+    {
+      "id": "RT7_COMPLETE_SYSTEM",
+      "challenge": "One Machine can infer complete specialist work/W and work/USD from component data",
+      "result": "REJECTED",
+      "evidence": "exact-path sustained throughput, whole-system W and all-in cost remain first-order external discriminants"
+    }
+  ],
+  "terminal_verdict": "ONE_MACHINE_ARGUMENTS_EXHAUSTED__NO_SAFE_ASIC_ECONOMIC_BOUND_FROM_COMPONENT_DATA__EXACT_SPECIALIST_LCVW_REQUIRED",
+  "authority_created": false
+}
