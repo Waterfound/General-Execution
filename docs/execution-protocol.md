@@ -148,9 +148,9 @@ authority_ref_digest
 registry_revision_digest
 ```
 
-All candidates supplied for one decision must bind the same projection, registry revision and authority digest. Mixed projections fail closed.
+All candidates supplied for one decision must bind the same projection, registry revision and authority digest. The request itself also precommits the expected `projection_id`, `registry_revision_digest` and `authority_ref_digest`. A candidate set that is internally consistent but does not match the request binding fails closed.
 
-The public result contains only the opaque aliases it was given. It cannot reconstruct the private registry or create new candidate identities.
+The public result contains only the opaque aliases it was given. It cannot reconstruct the private registry, infer absent capabilities, or create new candidate identities.
 
 ## Core invariant
 
