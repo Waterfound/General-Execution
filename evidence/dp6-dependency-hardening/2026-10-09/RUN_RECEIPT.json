@@ -1,0 +1,45 @@
+{
+  "schema": "ge.local-run-receipt.v1",
+  "workstream": "DP6-DEPENDENCY-HARDENING-001",
+  "general_execution_revision": "143af0aae8a2131a8590437cad9ee282bede8f29",
+  "runner_id": "ge-local-readonly-dp6-audit-001",
+  "runner_digest": "sha256:6fc53e0e665b4ac0ee7d7a94208df622ecf1e57b5ce50aed4e4fb95614afc45f",
+  "source_facts_digest": "sha256:0cc750fb7ce415f5d4c1342107e9ce1515334ead5cfa4d7e1dc785bb0fd6a832",
+  "ledger_head": "sha256:e3efe56f99421011a56e9a6ff40103615f6db7b0b86c510b618420bf623c1811",
+  "local_closure_sha256": "sha256:50019797b69a504e1ff91399099cd2cfb49ce832bf69562def37e2a9829bf180",
+  "local_ledger_sha256": "sha256:6263d6f893b64b88cc766d995f03be24ecfcf539d3e28a408a5872a6c068f720",
+  "actions_consumed": 0,
+  "sessions": [
+    {
+      "name": "dependency-quality",
+      "spec_id": "ges-dbe3e5dd57764481a3a04ed6",
+      "session_id": "gex-1a2e549792548212dd8fbfcc",
+      "artifact_digest": "sha256:d4ebbbdae82be217695ee3f562d6d1d3a43333493fd7d927c39ff38ccd973105"
+    },
+    {
+      "name": "bank-locality",
+      "spec_id": "ges-c3c18451afce481eba0223b0",
+      "session_id": "gex-716a814a2a39d50fa1368f00",
+      "artifact_digest": "sha256:0089812ba2619c363116cf80b722bfcd1a656897052dbed562ba40de6ed7741c"
+    },
+    {
+      "name": "address-unpredictability",
+      "spec_id": "ges-eebc154b50672e6dc8e0d2a1",
+      "session_id": "gex-1e6188aa7928109d7a6759e0",
+      "artifact_digest": "sha256:f601a104c03d590fca3a0466cdecd838fb7501788f58586536e5c50e5c4cd5dc"
+    },
+    {
+      "name": "precomputation-resistance",
+      "spec_id": "ges-60d6c616052aec738d70c204",
+      "session_id": "gex-a478f41b0430f66484f2f4d8",
+      "artifact_digest": "sha256:54db358d18e7c650d63530f505dbbbe400955d6db46fe46e97ed7f874558a91f"
+    },
+    {
+      "name": "specialized-escape-routes",
+      "spec_id": "ges-3d5fc0233148a8c3cd202312",
+      "session_id": "gex-24de4aeb1ec6ec8e2de801c2",
+      "artifact_digest": "sha256:f22908ee5a824aacd719dbcd4027b0d70389eb248b30e334019e91cf637789e4"
+    }
+  ],
+  "terminal_verdict": "PRESERVE_CURRENT_DP6__NO_MATERIAL_SAME_BUDGET_CHANGE_FOUND__COUPLED_LATENCY_HIDING_SUPPRESSION_IS_KEY_DESIGN_INVARIANT"
+}
