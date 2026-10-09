@@ -25,7 +25,7 @@ from .work_sparse_unattended import (
 )
 
 PROTOCOL_VERSION = "0.1.0"
-SYSTEM_SCHEMA = "ge.execution-protocol-system.v1"
+SYSTEM_SCHEMA = "ge.execution-protocol-capability-projection.v1"
 REQUEST_SCHEMA = "ge.execution-protocol-request.v1"
 RESOURCE_SCHEMA = "ge.execution-protocol-resource-observation.v1"
 METHOD_SCHEMA = "ge.execution-protocol-method-profile.v1"
@@ -98,21 +98,36 @@ def _jsonable(value: Any) -> Any:
 
 @dataclass(frozen=True, slots=True)
 class SystemCapability:
-    system_id: str
-    capabilities: tuple[str, ...]
+    candidate_id: str
+    capability_ids: tuple[str, ...]
+    projection_id: str
+    registry_revision_digest: str
+    authority_ref_digest: str
     cost_rank: int = 0
     execution_capable: bool = False
+    internal_identity_disclosed: bool = False
     authority_created: bool = False
     schema_version: str = SYSTEM_SCHEMA
 
     def __post_init__(self) -> None:
         if self.schema_version != SYSTEM_SCHEMA:
-            raise ExecutionProtocolError("unsupported system capability schema")
-        _nonempty(self.system_id, "system_id")
-        _unique(self.capabilities, "capabilities", allow_empty=False)
+            raise ExecutionProtocolError("unsupported capability projection schema")
+        _nonempty(self.candidate_id, "candidate_id")
+        _unique(self.capability_ids, "capability_ids", allow_empty=False)
+        _nonempty(self.projection_id, "projection_id")
+        for field in ("registry_revision_digest", "authority_ref_digest"):
+            value = _nonempty(getattr(self, field), field)
+            if not value.startswith("sha256:") or len(value) != 71:
+                raise ExecutionProtocolError(f"{field} must be sha256:<64-hex>")
+            try:
+                int(value[7:], 16)
+            except ValueError as exc:
+                raise ExecutionProtocolError(f"{field} must contain hexadecimal digest") from exc
         _nonnegative(self.cost_rank, "cost_rank")
         if not isinstance(self.execution_capable, bool):
             raise ExecutionProtocolError("execution_capable must be boolean")
+        if self.internal_identity_disclosed:
+            raise ExecutionProtocolError("public capability projection cannot disclose internal identity")
         if self.authority_created:
             raise ExecutionProtocolError("system capability cannot create authority")
 
@@ -252,31 +267,36 @@ def _select_systems(
     if not required:
         return (), ()
 
-    ids = [item.system_id for item in systems]
+    ids = [item.candidate_id for item in systems]
     if len(ids) != len(set(ids)):
-        raise ExecutionProtocolError("system_id values must be unique")
+        raise ExecutionProtocolError("candidate_id values must be unique")
+    projection_ids = {item.projection_id for item in systems}
+    registry_digests = {item.registry_revision_digest for item in systems}
+    authority_digests = {item.authority_ref_digest for item in systems}
+    if len(projection_ids) != 1 or len(registry_digests) != 1 or len(authority_digests) != 1:
+        raise ExecutionProtocolError("capability candidates must come from one bound projection")
 
     covering: list[tuple[SystemCapability, ...]] = []
     for size in range(1, len(systems) + 1):
         for combo in combinations(systems, size):
-            covered = set().union(*(set(item.capabilities) for item in combo))
+            covered = set().union(*(set(item.capability_ids) for item in combo))
             if required <= covered:
                 covering.append(combo)
         if covering:
             break
 
     if not covering:
-        covered = set().union(*(set(item.capabilities) for item in systems)) if systems else set()
+        covered = set().union(*(set(item.capability_ids) for item in systems)) if systems else set()
         return (), tuple(sorted(required - covered))
 
     selected = min(
         covering,
         key=lambda combo: (
             sum(item.cost_rank for item in combo),
-            tuple(sorted(item.system_id for item in combo)),
+            tuple(sorted(item.candidate_id for item in combo)),
         ),
     )
-    return tuple(sorted(selected, key=lambda item: item.system_id)), ()
+    return tuple(sorted(selected, key=lambda item: item.candidate_id)), ()
 
 
 def _mode_for(
@@ -395,7 +415,7 @@ def decide_execution_protocol(
         systems,
     )
     mode = _mode_for(request, selected_systems)
-    selected_ids = tuple(item.system_id for item in selected_systems)
+    selected_ids = tuple(item.candidate_id for item in selected_systems)
 
     if uncovered:
         return ExecutionProtocolDecision(
