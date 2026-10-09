@@ -34,7 +34,7 @@ jobs:
       - name: Compile
         run: python -m compileall -q src tests
       - name: Focused preservation proof
-        run: python -m pytest -q tests/test_state_boundary.py tests/test_state_boundary_preservation_integration.py tests/test_state_plane_host.py tests/test_git_state_plane_transport.py tests/test_state_plane_single_event_integration.py
+        run: python -m pytest -q tests/test_state_boundary.py tests/test_state_boundary_preservation_integration.py tests/test_state_plane_host.py tests/test_git_state_plane_transport.py tests/test_single_event_state_plane_integration.py tests/test_state_plane_single_event_integration.py
       - name: Full regression
         run: python -m pytest -q
       - name: Fetch current durable snapshot without changing checkout
