@@ -214,12 +214,16 @@ def test_current_single_event_host_preserved_over_git_state_plane(tmp_path):
     remote = seed_remote(tmp_path)
     requirement, receipt, core_report = gate()
 
+    event = transition_event(initial_state())
     execution, host_report = execute_event_over_state_plane(
         make_transport(remote, tmp_path / "run"),
-        transition_event(initial_state()),
+        event,
         core_requirement=requirement,
         core_verification=receipt,
         core_report=core_report,
+        persist_private_ledger=True,
+        runtime_source_revision=REVISION,
+        trigger_commit="d" * 40,
     )
 
     assert execution.status == "committed"
@@ -229,6 +233,23 @@ def test_current_single_event_host_preserved_over_git_state_plane(tmp_path):
 
     verify_transport = make_transport(remote, tmp_path / "verify")
     _, payload = verify_transport.load()
+    root = verify_transport.checkout / "opaque"
+    report_file = root / "ledger" / "reports" / f"{event['event_id']}.json"
+    processed_file = root / "ledger" / "processed" / f"{event['event_id']}.json"
+    manifest_file = root / "state" / "manifest.json"
+    assert report_file.is_file()
+    assert processed_file.is_file()
+    assert manifest_file.is_file()
+    private_report = json.loads(report_file.read_text())
+    processed = json.loads(processed_file.read_text())
+    manifest = json.loads(manifest_file.read_text())
+    assert private_report["event_report_digest"] == execution.digest
+    assert processed["event_report_digest"] == execution.digest
+    assert processed["runtime_source_revision"] == REVISION
+    assert manifest["last_event_report_digest"] == execution.digest
+    assert manifest["runtime_source_revision"] == REVISION
+    assert processed["database_sha256"] == manifest["database_sha256"]
+
     db = tmp_path / "verify.db"
     db.write_bytes(payload)
     state, checkpoint, report = recover_portfolio_after_restart(
