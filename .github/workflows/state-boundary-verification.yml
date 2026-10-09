@@ -32,3 +32,13 @@ jobs:
         run: python -m pytest -q tests/test_state_boundary.py tests/test_state_boundary_preservation_integration.py
       - name: Full regression
         run: python -m pytest -q
+      - name: Fetch current durable snapshot without changing checkout
+        run: |
+          git fetch --no-tags origin runtime/durable-asp-control:refs/remotes/origin/runtime/durable-asp-control
+          git show refs/remotes/origin/runtime/durable-asp-control:runtime/state.sqlite.b64 > "$RUNNER_TEMP/state.sqlite.b64"
+          git show refs/remotes/origin/runtime/durable-asp-control:runtime/manifest.json > "$RUNNER_TEMP/manifest.json"
+      - name: Verify live durable snapshot recovery
+        run: |
+          python tools/verify_durable_snapshot.py \
+            --state-b64 "$RUNNER_TEMP/state.sqlite.b64" \
+            --manifest "$RUNNER_TEMP/manifest.json"
