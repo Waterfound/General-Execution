@@ -1,0 +1,132 @@
+{
+  "schema": "dp6.algorithm-investigation.result.v1",
+  "workstream": "DP6-DEPENDENCY-HARDENING-001",
+  "execution_substrate": "General Execution local bounded read-only execution",
+  "github_actions_consumed": 0,
+  "source_facts_digest": "sha256:0cc750fb7ce415f5d4c1342107e9ce1515334ead5cfa4d7e1dc785bb0fd6a832",
+  "findings": {
+    "dependency_quality": {
+      "status": "STRONG_NO_OBVIOUS_EDGE_COVERAGE_HEADROOM",
+      "rw5_total_steps": 1048576,
+      "mandatory_memory_carried_edges": 1048576,
+      "mandatory_edge_coverage": 1,
+      "next_mandatory_address_requires_current_memory_value": true,
+      "interpretation": "The mandatory RW5 recurrence creates one memory-carried dependency per step. The obvious remaining latency-hiding escape route is parallel independent contexts, which is coupled to 256 MiB private residency per context."
+    },
+    "bank_locality": {
+      "status": "NO_IDEAL_STATE_BANK_BIAS_OBSERVED__EXACT_TRACE_AND_PHYSICAL_MAPPING_STILL_OPEN",
+      "model": "idealized independent-state surrogate; not exact DP6 trace and not ASIC evidence",
+      "samples": 200000,
+      "bank_stats": {
+        "16": {
+          "chi_square": 18.33472,
+          "df": 15,
+          "max_relative_deviation": 0.0172
+        },
+        "32": {
+          "chi_square": 25.7888,
+          "df": 31,
+          "max_relative_deviation": 0.02288
+        },
+        "64": {
+          "chi_square": 58.32448,
+          "df": 63,
+          "max_relative_deviation": 0.04128
+        },
+        "128": {
+          "chi_square": 146.17856,
+          "df": 127,
+          "max_relative_deviation": 0.06688
+        },
+        "256": {
+          "chi_square": 293.7344,
+          "df": 255,
+          "max_relative_deviation": 0.10848
+        }
+      },
+      "current_combiner_single_bit_low25_hamming_mean": 1,
+      "hypothetical_bijective_finalizer_low25_hamming_mean": 12.5023,
+      "interpretation": "A final address mixer can increase local bit diffusion, but no exploitable bank bias was demonstrated. Exact DP6 trace plus a concrete controller/bank mapping is required before any algorithm change is justified."
+    },
+    "address_unpredictability": {
+      "status": "STRONG_HEURISTIC_MEMORY_CARRIED_NEXT_ADDRESS_DEPENDENCY",
+      "current_address_known_before_current_read": true,
+      "next_address_known_before_current_read": false,
+      "memory_dependent_branch_present": true,
+      "program_control_flow_data_dependent": true,
+      "interpretation": "The next mandatory address depends on chain updated with mv=s[mi], so it cannot be completed before the current memory value is known."
+    },
+    "precomputation_resistance": {
+      "status": "STRONG_HEURISTIC_NO_OBVIOUS_CROSS_NONCE_PRECOMPUTATION_SHORTCUT",
+      "nonce_binds_mh3_matrix": true,
+      "nonce_binds_rw5_seed": true,
+      "nonce_binds_final": true,
+      "programs_bound_to_mh_and_transcript": true,
+      "interpretation": "No obvious per-nonce matrix/program reuse shortcut is exposed by the frozen source structure. This is not a cryptanalytic proof and does not preclude fixed-function specialized hardware."
+    },
+    "specialized_escape_routes": {
+      "status": "COMPOSITE_DEFENSE_CONFIRMED_STRUCTURALLY",
+      "principle": "COUPLED_LATENCY_HIDING_SUPPRESSION",
+      "explanation": "Memory-carried dependency suppresses within-context memory-level parallelism; 256 MiB nonce-private residency raises the memory cost of hiding that latency by replicating many independent contexts.",
+      "pure_capacity_contexts": {
+        "8_GiB": 32,
+        "16_GiB": 64,
+        "24_GiB": 96,
+        "32_GiB": 128,
+        "80_GiB": 320
+      },
+      "warning": "Capacity counts are not throughput or economic ASIC bounds."
+    }
+  },
+  "red_team": {
+    "terminal_verdict": "NO_MATERIAL_ALGORITHM_CHANGE_JUSTIFIED__COMPOSITE_DEFENSE_SURVIVES__MEMORY_ECONOMIC_REALITY_GAP_OPEN",
+    "rejected": [
+      "More memory or more reads is automatically better",
+      "Add address whitening now",
+      "DP6 is ASIC-proof"
+    ],
+    "not_supported": [
+      "Dependency quality is weak",
+      "An obvious cross-nonce precomputation shortcut exists"
+    ]
+  },
+  "cii_admission": {
+    "terminal_verdict": "NO_IMPLEMENTATION_ADMITTED__ONE_BOUNDED_RESEARCH_QUESTION_REMAINS",
+    "new_frontier_justified": false,
+    "existing_owner": "DP6 Robust Premise / ASIC specialized-mining review",
+    "research_only": "BANK_INDEX_WHITENING / exact-trace controller-specific bank-locality question",
+    "no_action": [
+      "MORE_MEMORY",
+      "MORE_READS",
+      "STRONGER_SERIAL_EDGE_COVERAGE",
+      "PRECOMPUTATION_HARDENING"
+    ]
+  },
+  "maximum_inference": {
+    "envelope_digest": "sha256:4d1be64b0282187908221d695a90721df300824783cb4ad783b5b1e7c18738a0",
+    "strict_ready": true,
+    "material_reality_gap": true,
+    "expected_information_gain_bp": 500,
+    "minimum_information_gain_bp": 1000,
+    "disposition": "RETURN_TO_ROBUST_PREMISE_REVIEW",
+    "physical_execution_triggered": false,
+    "empirical_authority_created": false
+  },
+  "decision": {
+    "current_dp6": "PRESERVE",
+    "material_same_budget_change_found": false,
+    "physical_retest_justified_now": false,
+    "key_design_invariant": "COUPLED_LATENCY_HIDING_SUPPRESSION",
+    "optimization_rule": "Do not start by increasing memory or reads. Seek more specialized-hardware hostility per existing byte/read, and require a concrete exploit reduction before changing consensus."
+  },
+  "authority": {
+    "dp6_changed": false,
+    "consensus_changed": false,
+    "physical_test": false,
+    "paid_spend_usd": 0,
+    "provider_or_credentials_mutated": false,
+    "release": false,
+    "mainnet": false
+  },
+  "terminal_verdict": "PRESERVE_CURRENT_DP6__NO_MATERIAL_SAME_BUDGET_CHANGE_FOUND__COUPLED_LATENCY_HIDING_SUPPRESSION_IS_KEY_DESIGN_INVARIANT"
+}
