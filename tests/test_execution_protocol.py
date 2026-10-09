@@ -43,6 +43,9 @@ def request(**overrides):
         required_capability_ids=("cap-select", "exec-compose"),
         repository="example/repo",
         authority_ref=AUTH,
+        projection_id=PROJ,
+        registry_revision_digest=REG,
+        authority_ref_digest=AUTH_DIGEST,
         required_executor_capabilities=("repo_read", "test_execution"),
         requested_actions=("inspect_ci", "run_tests"),
         requires_observed_evidence=True,
@@ -327,4 +330,37 @@ def test_candidates_from_mixed_private_registry_projections_fail_closed():
             request=request(),
             candidates=mixed,
             envelope=envelope(),
+        )
+
+
+def test_request_projection_binding_rejects_consistent_but_wrong_projection():
+    wrong = tuple(
+        CapabilityProjection(
+            candidate_id=item.candidate_id,
+            capability_ids=item.capability_ids,
+            projection_id="projection://wrong",
+            registry_revision_digest="sha256:" + "4" * 64,
+            authority_ref_digest=AUTH_DIGEST,
+            cost_rank=item.cost_rank,
+            execution_capable=item.execution_capable,
+        )
+        for item in CANDIDATES
+    )
+    with pytest.raises(ExecutionProtocolError, match="does not match request binding"):
+        decide_execution_protocol(
+            request=request(),
+            candidates=wrong,
+            envelope=envelope(),
+        )
+
+
+def test_capability_request_requires_projection_binding():
+    with pytest.raises(ExecutionProtocolError, match="projection_id is required"):
+        ExecutionProtocolRequest(
+            request_id="EP-UNBOUND",
+            objective="unbound capability selection",
+            evidence_predicate=PRED,
+            required_capability_ids=("cap-select",),
+            repository="example/repo",
+            authority_ref=AUTH,
         )
