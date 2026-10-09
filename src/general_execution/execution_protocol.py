@@ -97,7 +97,7 @@ def _jsonable(value: Any) -> Any:
 
 
 @dataclass(frozen=True, slots=True)
-class SystemCapability:
+class CapabilityProjection:
     candidate_id: str
     capability_ids: tuple[str, ...]
     projection_id: str
@@ -141,7 +141,7 @@ class ExecutionProtocolRequest:
     request_id: str
     objective: str
     evidence_predicate: str
-    required_system_capabilities: tuple[str, ...]
+    required_capability_ids: tuple[str, ...]
     repository: str
     authority_ref: str
     required_executor_capabilities: tuple[str, ...] = ()
@@ -157,7 +157,7 @@ class ExecutionProtocolRequest:
             raise ExecutionProtocolError("unsupported request schema")
         for field in ("request_id", "objective", "evidence_predicate", "repository", "authority_ref"):
             _nonempty(getattr(self, field), field)
-        _unique(self.required_system_capabilities, "required_system_capabilities")
+        _unique(self.required_capability_ids, "required_capability_ids")
         _unique(self.required_executor_capabilities, "required_executor_capabilities")
         _unique(self.requested_actions, "requested_actions")
         for field in ("requires_observed_evidence", "requires_state_change", "advisory_allowed"):
@@ -217,10 +217,10 @@ class ExecutionProtocolDecision:
     request_id: str
     invocation_mode: InvocationMode
     disposition: ProtocolDisposition
-    selected_system_ids: tuple[str, ...]
+    selected_candidate_ids: tuple[str, ...]
     selected_executor_id: str | None
     selected_resource_id: str | None
-    uncovered_system_capabilities: tuple[str, ...]
+    uncovered_capability_ids: tuple[str, ...]
     resource_findings: tuple[str, ...]
     rejected_executors: tuple[str, ...]
     route_digest: str | None
@@ -235,8 +235,8 @@ class ExecutionProtocolDecision:
     def __post_init__(self) -> None:
         _nonempty(self.request_id, "request_id")
         _nonempty(self.authority_ref, "authority_ref")
-        _unique(self.selected_system_ids, "selected_system_ids")
-        _unique(self.uncovered_system_capabilities, "uncovered_system_capabilities")
+        _unique(self.selected_candidate_ids, "selected_candidate_ids")
+        _unique(self.uncovered_capability_ids, "uncovered_capability_ids")
         _unique(self.resource_findings, "resource_findings")
         _unique(self.rejected_executors, "rejected_executors")
         if self.authority_created or self.execution_triggered:
@@ -259,26 +259,26 @@ def decision_to_dict(decision: ExecutionProtocolDecision) -> dict[str, Any]:
     return _jsonable(decision)
 
 
-def _select_systems(
+def _select_candidates(
     required_capabilities: tuple[str, ...],
-    systems: tuple[SystemCapability, ...],
-) -> tuple[tuple[SystemCapability, ...], tuple[str, ...]]:
+    candidates: tuple[CapabilityProjection, ...],
+) -> tuple[tuple[CapabilityProjection, ...], tuple[str, ...]]:
     required = set(required_capabilities)
     if not required:
         return (), ()
 
-    ids = [item.candidate_id for item in systems]
+    ids = [item.candidate_id for item in candidates]
     if len(ids) != len(set(ids)):
         raise ExecutionProtocolError("candidate_id values must be unique")
-    projection_ids = {item.projection_id for item in systems}
-    registry_digests = {item.registry_revision_digest for item in systems}
-    authority_digests = {item.authority_ref_digest for item in systems}
+    projection_ids = {item.projection_id for item in candidates}
+    registry_digests = {item.registry_revision_digest for item in candidates}
+    authority_digests = {item.authority_ref_digest for item in candidates}
     if len(projection_ids) != 1 or len(registry_digests) != 1 or len(authority_digests) != 1:
         raise ExecutionProtocolError("capability candidates must come from one bound projection")
 
-    covering: list[tuple[SystemCapability, ...]] = []
-    for size in range(1, len(systems) + 1):
-        for combo in combinations(systems, size):
+    covering: list[tuple[CapabilityProjection, ...]] = []
+    for size in range(1, len(candidates) + 1):
+        for combo in combinations(candidates, size):
             covered = set().union(*(set(item.capability_ids) for item in combo))
             if required <= covered:
                 covering.append(combo)
@@ -286,7 +286,7 @@ def _select_systems(
             break
 
     if not covering:
-        covered = set().union(*(set(item.capability_ids) for item in systems)) if systems else set()
+        covered = set().union(*(set(item.capability_ids) for item in candidates)) if candidates else set()
         return (), tuple(sorted(required - covered))
 
     selected = min(
@@ -301,9 +301,9 @@ def _select_systems(
 
 def _mode_for(
     request: ExecutionProtocolRequest,
-    selected: tuple[SystemCapability, ...],
+    selected: tuple[CapabilityProjection, ...],
 ) -> InvocationMode:
-    if not request.required_system_capabilities:
+    if not request.required_capability_ids:
         if request.requires_observed_evidence or request.requires_state_change:
             return InvocationMode.REAL_RUN
         return InvocationMode.NO_SYSTEM
@@ -398,7 +398,7 @@ def _resolve_executors(
 def decide_execution_protocol(
     *,
     request: ExecutionProtocolRequest,
-    systems: tuple[SystemCapability, ...],
+    candidates: tuple[CapabilityProjection, ...],
     envelope: UnattendedAuthorityEnvelope,
     executors: tuple[ExecutorCapability, ...] = (),
     resource_observations: tuple[ResourceObservation, ...] = (),
@@ -410,27 +410,27 @@ def decide_execution_protocol(
     provider_resources: tuple[ProviderResource, ...] = (),
     executor_provider_bindings: tuple[ExecutorProviderBinding, ...] = (),
 ) -> ExecutionProtocolDecision:
-    selected_systems, uncovered = _select_systems(
-        request.required_system_capabilities,
-        systems,
+    selected_candidates, uncovered = _select_candidates(
+        request.required_capability_ids,
+        candidates,
     )
-    mode = _mode_for(request, selected_systems)
-    selected_ids = tuple(item.candidate_id for item in selected_systems)
+    mode = _mode_for(request, selected_candidates)
+    selected_ids = tuple(item.candidate_id for item in selected_candidates)
 
     if uncovered:
         return ExecutionProtocolDecision(
             request_id=request.request_id,
             invocation_mode=mode,
             disposition=ProtocolDisposition.CONDITION_WAIT,
-            selected_system_ids=(),
+            selected_candidate_ids=(),
             selected_executor_id=None,
             selected_resource_id=None,
-            uncovered_system_capabilities=uncovered,
+            uncovered_capability_ids=uncovered,
             resource_findings=(),
             rejected_executors=(),
             route_digest=None,
             evidence_predicate_preserved=False,
-            reasons=("system_capability_uncovered",),
+            reasons=("capability_uncovered",),
             authority_ref=request.authority_ref,
         )
 
@@ -439,10 +439,10 @@ def decide_execution_protocol(
             request_id=request.request_id,
             invocation_mode=mode,
             disposition=ProtocolDisposition.NO_SYSTEM_REQUIRED,
-            selected_system_ids=(),
+            selected_candidate_ids=(),
             selected_executor_id=None,
             selected_resource_id=None,
-            uncovered_system_capabilities=(),
+            uncovered_capability_ids=(),
             resource_findings=(),
             rejected_executors=(),
             route_digest=None,
@@ -456,10 +456,10 @@ def decide_execution_protocol(
             request_id=request.request_id,
             invocation_mode=mode,
             disposition=ProtocolDisposition.ADVISORY_READY,
-            selected_system_ids=selected_ids,
+            selected_candidate_ids=selected_ids,
             selected_executor_id=None,
             selected_resource_id=None,
-            uncovered_system_capabilities=(),
+            uncovered_capability_ids=(),
             resource_findings=(),
             rejected_executors=(),
             route_digest=None,
@@ -468,20 +468,20 @@ def decide_execution_protocol(
             authority_ref=request.authority_ref,
         )
 
-    if not any(item.execution_capable for item in selected_systems):
+    if not any(item.execution_capable for item in selected_candidates):
         return ExecutionProtocolDecision(
             request_id=request.request_id,
             invocation_mode=mode,
             disposition=ProtocolDisposition.CONDITION_WAIT,
-            selected_system_ids=selected_ids,
+            selected_candidate_ids=selected_ids,
             selected_executor_id=None,
             selected_resource_id=None,
-            uncovered_system_capabilities=(),
+            uncovered_capability_ids=(),
             resource_findings=(),
             rejected_executors=(),
             route_digest=None,
             evidence_predicate_preserved=False,
-            reasons=("real_run_requires_execution_capable_system",),
+            reasons=("real_run_requires_execution_capable_candidate",),
             authority_ref=request.authority_ref,
         )
 
@@ -490,10 +490,10 @@ def decide_execution_protocol(
             request_id=request.request_id,
             invocation_mode=mode,
             disposition=ProtocolDisposition.OBSERVE_EXISTING,
-            selected_system_ids=selected_ids,
+            selected_candidate_ids=selected_ids,
             selected_executor_id=None,
             selected_resource_id=None,
-            uncovered_system_capabilities=(),
+            uncovered_capability_ids=(),
             resource_findings=(),
             rejected_executors=(),
             route_digest=None,
@@ -529,10 +529,10 @@ def decide_execution_protocol(
             request_id=request.request_id,
             invocation_mode=mode,
             disposition=ProtocolDisposition.CONDITION_WAIT,
-            selected_system_ids=selected_ids,
+            selected_candidate_ids=selected_ids,
             selected_executor_id=None,
             selected_resource_id=None,
-            uncovered_system_capabilities=(),
+            uncovered_capability_ids=(),
             resource_findings=findings,
             rejected_executors=rejected,
             route_digest=None,
@@ -576,10 +576,10 @@ def decide_execution_protocol(
         request_id=request.request_id,
         invocation_mode=mode,
         disposition=disposition,
-        selected_system_ids=selected_ids,
+        selected_candidate_ids=selected_ids,
         selected_executor_id=route.selected_executor_id,
         selected_resource_id=route.selected_resource_id,
-        uncovered_system_capabilities=(),
+        uncovered_capability_ids=(),
         resource_findings=findings,
         rejected_executors=rejected,
         route_digest=route.digest,
