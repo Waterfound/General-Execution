@@ -1,0 +1,164 @@
+{
+  "schema_version": "fae.dp6.memory-economic-one-machine-calibration.v1",
+  "date": "2026-10-09",
+  "frozen_baseline": {
+    "work_s": 3.079401,
+    "watts": 73.2,
+    "usd": 1000,
+    "status": "HISTORICAL_SINGLE_LAPTOP_REFERENCE_NOT_REPRESENTATIVE_MEDIAN"
+  },
+  "dp6": {
+    "matrix_bytes": 268435456,
+    "mandatory_reads": 1048576,
+    "source_traffic_mib_low": 528,
+    "source_traffic_mib_high": 784,
+    "mh3_sensitivity_seconds": 0.115
+  },
+  "hbm3e": {
+    "capacity_bytes": 36000000000,
+    "bandwidth_bytes_s_floor": 1200000000000,
+    "capacity_contexts": 134,
+    "market_lta_usd_low": 365.8536585365854,
+    "market_lta_usd_high": 512.1951219512196,
+    "market_spot_usd": 2100,
+    "price_boundary": "public trade-press market report; not a supplier quote"
+  },
+  "public_sources": [
+    {
+      "id": "MICRON_HBM3E",
+      "url": "https://www.micron.com/products/memory/hbm/hbm3e",
+      "claim": "24GB/36GB placements; >1.2 TB/s; 16 channels/32 pseudochannels"
+    },
+    {
+      "id": "SED_2026_08_31",
+      "url": "https://en.sedaily.com/finance/2026/08/31/spot-hbm-prices-hit-5-times-contract-levels",
+      "claim": "36GB HBM3E $2,100 reported spot; 500k-700k KRW reported LTA"
+    },
+    {
+      "id": "TRENDFORCE_2026_09_29",
+      "url": "https://www.trendforce.com/presscenter/news/20260929-13255.html",
+      "claim": "HBM supply constrained; cost pressure material; ASIC/GPU vendors evaluating lower-capacity stacks"
+    },
+    {
+      "id": "SILVACO_SEC_IBS",
+      "url": "https://www.sec.gov/Archives/edgar/data/1943289/000162828024019172/silvacogroupincs-1a2.htm",
+      "claim": "IBS average chip-design cost sensitivities: 7nm $217M, 5nm $416M; not DP6-specific lower bounds"
+    }
+  ],
+  "derived": {
+    "baseline_work_per_w": 0.04206831967213114,
+    "baseline_work_per_usd": 0.003079401,
+    "hbm3e_usd_per_context": {
+      "lta_low": 2.7302511831088463,
+      "lta_high": 3.8223516563523847,
+      "spot": 15.671641791044776
+    },
+    "bandwidth_only_upper_work_s": {
+      "using_784MiB": 1459.705586336097,
+      "using_528MiB": 2167.4416281960225
+    }
+  },
+  "latency_sensitivity": [
+    {
+      "effective_latency_ns": 25,
+      "rw5_capacity_latency_upper_work_s": 5111.6943359375,
+      "with_115ms_mh3_sensitivity_upper_work_s": 948.9117257163574,
+      "5x_max_whole_system_watts_at_this_q": 4511.288937195082,
+      "5x_max_complete_system_usd_at_this_q": 61629.6302895503
+    },
+    {
+      "effective_latency_ns": 50,
+      "rw5_capacity_latency_upper_work_s": 2555.84716796875,
+      "with_115ms_mh3_sensitivity_upper_work_s": 800.3402043137141,
+      "5x_max_whole_system_watts_at_this_q": 3804.95446716838,
+      "5x_max_complete_system_usd_at_this_q": 51980.252283721034
+    },
+    {
+      "effective_latency_ns": 65,
+      "rw5_capacity_latency_upper_work_s": 1966.0362830528845,
+      "with_115ms_mh3_sensitivity_upper_work_s": 731.6110118158454,
+      "5x_max_whole_system_watts_at_this_q": 3478.2041094953133,
+      "5x_max_complete_system_usd_at_this_q": 47516.44958326931
+    },
+    {
+      "effective_latency_ns": 100,
+      "rw5_capacity_latency_upper_work_s": 1277.923583984375,
+      "with_115ms_mh3_sensitivity_upper_work_s": 609.4854123760106,
+      "5x_max_whole_system_watts_at_this_q": 2897.5980839081353,
+      "5x_max_complete_system_usd_at_this_q": 39584.67327743354
+    },
+    {
+      "effective_latency_ns": 150,
+      "rw5_capacity_latency_upper_work_s": 851.9490559895833,
+      "with_115ms_mh3_sensitivity_upper_work_s": 492.1288760657895,
+      "5x_max_whole_system_watts_at_this_q": 2339.66500160361,
+      "5x_max_complete_system_usd_at_this_q": 31962.6366339291
+    },
+    {
+      "effective_latency_ns": 200,
+      "rw5_capacity_latency_upper_work_s": 638.9617919921875,
+      "with_115ms_mh3_sensitivity_upper_work_s": 412.66931760508896,
+      "5x_max_whole_system_watts_at_this_q": 1961.900645527654,
+      "5x_max_complete_system_usd_at_this_q": 26801.92138698981
+    },
+    {
+      "effective_latency_ns": 288.1,
+      "rw5_capacity_latency_upper_work_s": 443.569449491279,
+      "with_115ms_mh3_sensitivity_upper_work_s": 321.26993066584436,
+      "5x_max_whole_system_watts_at_this_q": 1527.3722990113863,
+      "5x_max_complete_system_usd_at_this_q": 20865.741789773037
+    },
+    {
+      "effective_latency_ns": 400,
+      "rw5_capacity_latency_upper_work_s": 319.48089599609375,
+      "with_115ms_mh3_sensitivity_upper_work_s": 250.73423966900083,
+      "5x_max_whole_system_watts_at_this_q": 1192.0335379361677,
+      "5x_max_complete_system_usd_at_this_q": 16284.611173991361
+    }
+  ],
+  "design_cost_sensitivity": [
+    {
+      "node": "7nm",
+      "industry_average_design_cost_usd": 217000000,
+      "volume_units": 10000,
+      "amortized_design_cost_usd_per_unit": 21700,
+      "epistemic_boundary": "industry-average design-cost sensitivity only; not a DP6 ASIC lower bound"
+    },
+    {
+      "node": "7nm",
+      "industry_average_design_cost_usd": 217000000,
+      "volume_units": 100000,
+      "amortized_design_cost_usd_per_unit": 2170,
+      "epistemic_boundary": "industry-average design-cost sensitivity only; not a DP6 ASIC lower bound"
+    },
+    {
+      "node": "7nm",
+      "industry_average_design_cost_usd": 217000000,
+      "volume_units": 1000000,
+      "amortized_design_cost_usd_per_unit": 217,
+      "epistemic_boundary": "industry-average design-cost sensitivity only; not a DP6 ASIC lower bound"
+    },
+    {
+      "node": "5nm",
+      "industry_average_design_cost_usd": 416000000,
+      "volume_units": 10000,
+      "amortized_design_cost_usd_per_unit": 41600,
+      "epistemic_boundary": "industry-average design-cost sensitivity only; not a DP6 ASIC lower bound"
+    },
+    {
+      "node": "5nm",
+      "industry_average_design_cost_usd": 416000000,
+      "volume_units": 100000,
+      "amortized_design_cost_usd_per_unit": 4160,
+      "epistemic_boundary": "industry-average design-cost sensitivity only; not a DP6 ASIC lower bound"
+    },
+    {
+      "node": "5nm",
+      "industry_average_design_cost_usd": 416000000,
+      "volume_units": 1000000,
+      "amortized_design_cost_usd_per_unit": 416,
+      "epistemic_boundary": "industry-average design-cost sensitivity only; not a DP6 ASIC lower bound"
+    }
+  ],
+  "epistemic_boundary": "All throughput rows are attacker-favorable conditional upper bounds or sensitivities, never achieved specialist performance."
+}
