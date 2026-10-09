@@ -1,0 +1,123 @@
+{
+  "test_ref": "one-machine://fae-dp6/memory-economic-public-calibration-20261009",
+  "target_uncertainty": "Can further One Machine public-source/model-only work close the DP6 memory-economic ASIC fairness bound without an exact-path specialized implementation or representative home-device median?",
+  "evidence_predicate": "A safe closure requires either a conservative complete-system upper bound below both 3x/5x fairness thresholds or achieved/auditable exact-path specialized DP6 LCVW versus a compatible representative home-device median.",
+  "model_ids": [
+    "public-hbm-capacity-bandwidth-and-market-cost-calibration",
+    "dp6-capacity-latency-throughput-bound",
+    "exact-trace-bank-locality-closure",
+    "volume-amortized-design-cost-sensitivity"
+  ],
+  "assumption_refs": [
+    "Waterfound/Build-Colony@3f55d70af643a08896862702290a5ec94534ad3f/pilots/dp6-rp-b3-t3-001",
+    "Waterfound/General-Execution@de4260effbc626708df780272109c3a5a2ade59f/evidence/dp6-dependency-hardening/2026-10-09/exact-trace-bank-locality",
+    "Micron HBM3E official product data accessed 2026-10-09",
+    "Seoul Economic Daily 2026-08-31 HBM3E LTA/spot market report",
+    "TrendForce 2026-09-29 HBM supply/cost outlook",
+    "Silvaco SEC filing citing IBS node design-cost averages"
+  ],
+  "predictions": [
+    {
+      "metric": "hbm3e_36gb_dp6_full_context_capacity",
+      "low": 134,
+      "nominal": 134,
+      "high": 134,
+      "unit": "contexts",
+      "confidence_basis": "36,000,000,000 bytes divided by frozen 268,435,456-byte DP6 context"
+    },
+    {
+      "metric": "hbm3e_market_reported_cost_per_256mib_context",
+      "low": 2.73,
+      "nominal": 3.82,
+      "high": 15.68,
+      "unit": "USD/context",
+      "confidence_basis": "Aug-2026 reported LTA range through reported spot stress; market reports, not vendor quotes"
+    },
+    {
+      "metric": "attacker_favorable_bandwidth_upper",
+      "low": 1459.7,
+      "nominal": 1813.6,
+      "high": 2167.5,
+      "unit": "DP6 work/s",
+      "confidence_basis": "official >1.2 TB/s HBM3E bandwidth divided by 784..528 MiB source-derived logical traffic; ignores random-access and compute penalties"
+    },
+    {
+      "metric": "further_generic_public_source_information_gain",
+      "low": 0,
+      "nominal": 400,
+      "high": 900,
+      "unit": "basis_points",
+      "confidence_basis": "remaining decisive unknowns are exact-path specialist throughput/power/cost and representative median, not generic memory capacity or bank locality"
+    }
+  ],
+  "sensitivity_factors": [
+    "effective dependent random-read latency under concurrent 256 MiB contexts",
+    "MH3 exact specialized lower time",
+    "RW5/Argon specialized compute PPA and scheduling",
+    "memory-controller/PHY/package power and area",
+    "installed HBM/GDDR/DDR price at production volume",
+    "logic die cost, yield, NRE amortization and lifetime",
+    "board, cooling and power-delivery cost",
+    "representative home-device median work/W and work/USD"
+  ],
+  "counterfactuals": [
+    "A complete specialist system is expensive enough that work/USD remains below 3x despite cheap memory capacity",
+    "Effective dependent latency under full context pressure is high enough that complete throughput cannot cross the fairness threshold",
+    "RW5/Argon compute or controller power dominates enough to keep work/W below 3x",
+    "A lower-cost GDDR/DDR design trades latency for contexts and becomes more economic than HBM",
+    "A measured specialist implementation crosses both 5x thresholds and falsifies the household-device fairness premise"
+  ],
+  "failure_signatures": [
+    "Treating HBM stack price as complete miner price",
+    "Treating bandwidth-only or latency-only upper bound as achieved throughput",
+    "Treating industry-average node design cost as a DP6 ASIC lower bound",
+    "Promoting public price reports into supplier-backed procurement quotes",
+    "Calling the memory-economic bound safe without a representative home-device median",
+    "Continuing generic bank-mapping scenario churn after exact-trace software closure"
+  ],
+  "discriminating_measurements": [
+    "exact frozen DP6 parity-correct sustained specialized work/s",
+    "complete-system wall power under sustained exact-path DP6",
+    "all-in specialist system cost or auditable BOM plus NRE/yield/volume assumptions",
+    "representative home-device median under compatible work/W and work/USD methodology"
+  ],
+  "reality_gap": [
+    "No achieved or independently auditable complete exact-path specialized DP6 work/s",
+    "No complete specialist whole-system power",
+    "No complete specialist all-in economic cost interval",
+    "Representative home-device median is not yet frozen across required RDE classes"
+  ],
+  "material_reality_gap": true,
+  "interpretation_rules": [
+    {
+      "rule_id": "CAPACITY_COST_MOAT_FAILS",
+      "observed_condition": "public HBM capacity and market-price evidence makes 256 MiB/context affordable enough that capacity price alone cannot conditionally exclude 3x/5x",
+      "interpretation": "remove memory-capacity-cost-alone as a safety argument; preserve coupled latency-hiding suppression as the architectural defense"
+    },
+    {
+      "rule_id": "GENERIC_MACHINE_CEILING",
+      "observed_condition": "exact-trace locality is closed and public memory/cost calibration no longer changes the decisive variables",
+      "interpretation": "stop generic One Machine scenario churn and return to Robust Premise/external specialist LCVW gate"
+    },
+    {
+      "rule_id": "SPECIALIST_WARN",
+      "observed_condition": "achieved/auditable exact-path specialist reaches >=3x both work/W and work/USD versus frozen representative median",
+      "interpretation": "candidate WARN; independent assurance required"
+    },
+    {
+      "rule_id": "SPECIALIST_COLLAPSE",
+      "observed_condition": "achieved/auditable exact-path specialist reaches >=5x both work/W and work/USD versus frozen representative median",
+      "interpretation": "candidate COLLAPSE; independent assurance required; no unilateral consensus change"
+    }
+  ],
+  "substrate_refs": [
+    "Waterfound/General-Execution@143af0aae8a2131a8590437cad9ee282bede8f29/src/general_execution/maximum_inference.py",
+    "Waterfound/Build-Colony@3f55d70af643a08896862702290a5ec94534ad3f/pilots/dp6-rp-b3-t3-001",
+    "Waterfound/General-Execution@de4260effbc626708df780272109c3a5a2ade59f/evidence/dp6-dependency-hardening/2026-10-09/exact-trace-bank-locality"
+  ],
+  "simulation_evidence_only": true,
+  "empirical_validation_claimed": false,
+  "authority_created": false,
+  "execution_triggered": false,
+  "schema_version": "ge.maximum-inference-envelope.v1"
+}
