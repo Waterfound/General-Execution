@@ -338,7 +338,7 @@ def test_request_projection_binding_rejects_consistent_but_wrong_projection():
         CapabilityProjection(
             candidate_id=item.candidate_id,
             capability_ids=item.capability_ids,
-            projection_id="projection://wrong",
+            projection_id="p_ffffffffffffffff",
             registry_revision_digest="sha256:" + "4" * 64,
             authority_ref_digest=AUTH_DIGEST,
             cost_rank=item.cost_rank,
