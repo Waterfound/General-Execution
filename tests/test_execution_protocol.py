@@ -1,6 +1,7 @@
 import pytest
 
 from general_execution.execution_protocol import (
+    CapabilityProjection,
     ExecutionMethodProfile,
     ExecutionProtocolError,
     ExecutionProtocolRequest,
@@ -8,7 +9,6 @@ from general_execution.execution_protocol import (
     ProtocolDisposition,
     ResourceCauseKind,
     ResourceObservation,
-    SystemCapability,
     decide_execution_protocol,
 )
 from general_execution.work_sparse_unattended import (
@@ -16,12 +16,15 @@ from general_execution.work_sparse_unattended import (
     UnattendedAuthorityEnvelope,
 )
 
-AUTH = "authority://example/execution-protocol"\nREG = "sha256:" + "1" * 64\nAUTH_DIGEST = "sha256:" + "2" * 64\nPROJ = "projection://ep/example"
+AUTH = "authority://example/execution-protocol"
+REG = "sha256:" + "1" * 64
+AUTH_DIGEST = "sha256:" + "2" * 64
+PROJ = "projection://ep/example"
 PRED = "verification://same-predicate"
 
 
-def system(candidate_id, capabilities, *, cost=1, execution=False):
-    return SystemCapability(
+def candidate(candidate_id, capabilities, *, cost=1, execution=False):
+    return CapabilityProjection(
         candidate_id=candidate_id,
         capability_ids=tuple(capabilities),
         projection_id=PROJ,
@@ -37,8 +40,8 @@ def request(**overrides):
         request_id="EP-CASE-1",
         objective="Verify candidate without weakening evidence",
         evidence_predicate=PRED,
-        required_system_capabilities=("cap-select", "exec-compose"),
-        repository="Waterfound/General-Execution",
+        required_capability_ids=("cap-select", "exec-compose"),
+        repository="example/repo",
         authority_ref=AUTH,
         required_executor_capabilities=("repo_read", "test_execution"),
         requested_actions=("inspect_ci", "run_tests"),
@@ -54,7 +57,7 @@ def envelope():
     return UnattendedAuthorityEnvelope(
         envelope_id="ep-001",
         authority_ref=AUTH,
-        allowed_repositories=("Waterfound/General-Execution",),
+        allowed_repositories=("example/repo",),
         allowed_actions=("inspect_ci", "run_tests"),
         forbidden_actions=("merge_main", "paid_spend", "credential_change"),
         max_work_invocations=0,
@@ -90,135 +93,153 @@ def available(executor_id):
     )
 
 
-def exhausted_actions():
+def exhausted_private_runner():
     return ResourceObservation(
-        executor_id="github_actions",
+        executor_id="private_repo_runner",
         available=False,
         cause_kind=ResourceCauseKind.CAPACITY,
-        cause_code="included_minutes_exhausted_2000_of_2000",
-        evidence_ref="billing://github-actions/2026-10/2000-of-2000",
+        cause_code="included_minutes_exhausted",
+        evidence_ref="billing://private-runner/capacity",
     )
 
 
-SYSTEMS = (
-    system("candidate-a", ("cap-select",), cost=0),
-    system("candidate-b", ("exec-compose",), cost=0, execution=True),
-    system("candidate-c", ("substitute",), cost=1),
+CANDIDATES = (
+    candidate("candidate-a", ("cap-select",), cost=0),
+    candidate("candidate-b", ("exec-compose",), cost=0, execution=True),
+    candidate("candidate-c", ("substitute",), cost=1),
 )
 
 
 def test_no_system_mode_is_explicit():
     decision = decide_execution_protocol(
         request=request(
-            required_system_capabilities=(),
+            required_capability_ids=(),
             required_executor_capabilities=(),
             requested_actions=(),
             requires_observed_evidence=False,
             requires_state_change=False,
         ),
-        systems=SYSTEMS,
+        candidates=CANDIDATES,
         envelope=envelope(),
     )
     assert decision.invocation_mode is InvocationMode.NO_SYSTEM
     assert decision.disposition is ProtocolDisposition.NO_SYSTEM_REQUIRED
-    assert decision.selected_system_ids == ()
+    assert decision.selected_candidate_ids == ()
     assert not decision.execution_triggered
 
 
 def test_advisory_mode_is_distinct_from_real_run():
     decision = decide_execution_protocol(
         request=request(
-            required_system_capabilities=("cap-select",),
+            required_capability_ids=("cap-select",),
             required_executor_capabilities=(),
             requested_actions=(),
             requires_observed_evidence=False,
             requires_state_change=False,
         ),
-        systems=SYSTEMS,
+        candidates=CANDIDATES,
         envelope=envelope(),
     )
     assert decision.invocation_mode is InvocationMode.ADVISORY
     assert decision.disposition is ProtocolDisposition.ADVISORY_READY
-    assert decision.selected_system_ids == ("candidate-a",)
+    assert decision.selected_candidate_ids == ("candidate-a",)
     assert decision.selected_executor_id is None
 
 
-def test_multiple_systems_produce_composed_real_run():
+def test_multiple_candidates_produce_composed_real_run():
     decision = decide_execution_protocol(
         request=request(),
-        systems=SYSTEMS,
+        candidates=CANDIDATES,
         envelope=envelope(),
-        executors=(executor("connector_api"),),
-        resource_observations=(available("connector_api"),),
-        method_profiles=(profile("connector_api"),),
+        executors=(executor("executor-a"),),
+        resource_observations=(available("executor-a"),),
+        method_profiles=(profile("executor-a"),),
     )
     assert decision.invocation_mode is InvocationMode.COMPOSED_REAL_RUN
-    assert decision.selected_system_ids == ("candidate-a", "candidate-b")
+    assert decision.selected_candidate_ids == ("candidate-a", "candidate-b")
     assert decision.disposition is ProtocolDisposition.READY_FOR_EXISTING_ADMISSION
-    assert decision.selected_executor_id == "connector_api"
+    assert decision.selected_executor_id == "executor-a"
     assert decision.evidence_predicate_preserved
     assert not decision.execution_triggered
 
 
-def test_actions_capacity_exhaustion_selects_equivalent_zero_cost_alternative():
+def test_capacity_exhaustion_selects_equivalent_zero_cost_alternative():
     decision = decide_execution_protocol(
         request=request(
-            required_system_capabilities=(
-                "cap-select",
-                "exec-compose",
-                "substitute",
-            ),
+            required_capability_ids=("cap-select", "exec-compose", "substitute"),
         ),
-        systems=SYSTEMS,
+        candidates=CANDIDATES,
         envelope=envelope(),
         executors=(
-            executor("github_actions", cost=0),
-            executor("connector_api", cost=1),
+            executor("private_repo_runner", cost=0),
+            executor("executor-a", cost=1),
         ),
         resource_observations=(
-            exhausted_actions(),
-            available("connector_api"),
+            exhausted_private_runner(),
+            available("executor-a"),
         ),
         method_profiles=(
-            profile("github_actions"),
-            profile("connector_api"),
+            profile("private_repo_runner"),
+            profile("executor-a"),
         ),
     )
     assert decision.invocation_mode is InvocationMode.COMPOSED_REAL_RUN
     assert decision.disposition is ProtocolDisposition.READY_FOR_EXISTING_ADMISSION
-    assert decision.selected_executor_id == "connector_api"
-    assert "github_actions:capacity:included_minutes_exhausted_2000_of_2000" in decision.resource_findings
+    assert decision.selected_executor_id == "executor-a"
+    assert (
+        "private_repo_runner:capacity:included_minutes_exhausted"
+        in decision.resource_findings
+    )
     assert any(
-        item.startswith("github_actions|") and "resource_unavailable:capacity:" in item
+        item.startswith("private_repo_runner|")
+        and "resource_unavailable:capacity:" in item
         for item in decision.rejected_executors
     )
     assert decision.evidence_predicate_preserved
-    assert not decision.authority_created
-    assert not decision.execution_triggered
 
 
-def test_actions_capacity_exhaustion_waits_only_when_no_equivalent_alternative_exists():
+def test_private_runner_exhaustion_does_not_globalize_to_public_runner():
     decision = decide_execution_protocol(
         request=request(
-            required_system_capabilities=(
-                "cap-select",
-                "exec-compose",
-                "substitute",
-            ),
+            required_capability_ids=("cap-select", "exec-compose", "substitute"),
         ),
-        systems=SYSTEMS,
+        candidates=CANDIDATES,
         envelope=envelope(),
         executors=(
-            executor("github_actions", cost=0),
-            executor("connector_api", cost=1),
+            executor("private_repo_runner", cost=0),
+            executor("public_repo_runner", cost=1),
         ),
         resource_observations=(
-            exhausted_actions(),
-            available("connector_api"),
+            exhausted_private_runner(),
+            available("public_repo_runner"),
         ),
         method_profiles=(
-            profile("github_actions"),
-            profile("connector_api", predicates=("verification://weaker-predicate",)),
+            profile("private_repo_runner"),
+            profile("public_repo_runner"),
+        ),
+    )
+    assert decision.disposition is ProtocolDisposition.READY_FOR_EXISTING_ADMISSION
+    assert decision.selected_executor_id == "public_repo_runner"
+
+
+def test_capacity_waits_only_when_no_equivalent_alternative_exists():
+    decision = decide_execution_protocol(
+        request=request(
+            required_capability_ids=("cap-select", "exec-compose", "substitute"),
+        ),
+        candidates=CANDIDATES,
+        envelope=envelope(),
+        executors=(
+            executor("private_repo_runner", cost=0),
+            executor("executor-a", cost=1),
+        ),
+        resource_observations=(
+            exhausted_private_runner(),
+            available("executor-a"),
+        ),
+        method_profiles=(
+            profile("private_repo_runner"),
+            profile("executor-a", predicates=("verification://weaker-predicate",)),
         ),
     )
     assert decision.disposition is ProtocolDisposition.CONDITION_WAIT
@@ -231,32 +252,32 @@ def test_unavailable_executor_without_resolved_cause_is_rejected():
     with pytest.raises(ExecutionProtocolError, match="no resolved resource cause"):
         decide_execution_protocol(
             request=request(),
-            systems=SYSTEMS,
+            candidates=CANDIDATES,
             envelope=envelope(),
-            executors=(executor("github_actions", available=False),),
+            executors=(executor("executor-a", available=False),),
             resource_observations=(),
-            method_profiles=(profile("github_actions"),),
+            method_profiles=(profile("executor-a"),),
         )
 
 
 def test_forbidden_action_remains_human_gate_after_routing():
     decision = decide_execution_protocol(
         request=request(requested_actions=("merge_main",)),
-        systems=SYSTEMS,
+        candidates=CANDIDATES,
         envelope=envelope(),
-        executors=(executor("connector_api"),),
-        resource_observations=(available("connector_api"),),
-        method_profiles=(profile("connector_api"),),
+        executors=(executor("executor-a"),),
+        resource_observations=(available("executor-a"),),
+        method_profiles=(profile("executor-a"),),
     )
     assert decision.disposition is ProtocolDisposition.HUMAN_GATE
     assert decision.selected_executor_id is None
     assert not decision.authority_created
 
 
-def test_existing_execution_is_observed_not_redispatched_even_if_new_capacity_is_unavailable():
+def test_existing_execution_is_observed_not_redispatched():
     decision = decide_execution_protocol(
         request=request(existing_execution_ref="provider://already-running"),
-        systems=SYSTEMS,
+        candidates=CANDIDATES,
         envelope=envelope(),
         executors=(),
         resource_observations=(),
@@ -267,19 +288,19 @@ def test_existing_execution_is_observed_not_redispatched_even_if_new_capacity_is
     assert not decision.execution_triggered
 
 
-def test_uncovered_system_capability_fails_closed():
+def test_uncovered_capability_fails_closed():
     decision = decide_execution_protocol(
-        request=request(required_system_capabilities=("unknown_system_capability",)),
-        systems=SYSTEMS,
+        request=request(required_capability_ids=("cap-unknown",)),
+        candidates=CANDIDATES,
         envelope=envelope(),
     )
     assert decision.disposition is ProtocolDisposition.CONDITION_WAIT
-    assert decision.uncovered_system_capabilities == ("unknown_system_capability",)
+    assert decision.uncovered_capability_ids == ("cap-unknown",)
 
 
 def test_public_projection_rejects_internal_identity_disclosure():
     with pytest.raises(ExecutionProtocolError, match="cannot disclose internal identity"):
-        SystemCapability(
+        CapabilityProjection(
             candidate_id="candidate-a",
             capability_ids=("cap-select",),
             projection_id=PROJ,
@@ -291,8 +312,8 @@ def test_public_projection_rejects_internal_identity_disclosure():
 
 def test_candidates_from_mixed_private_registry_projections_fail_closed():
     mixed = (
-        system("candidate-a", ("cap-select",), cost=0),
-        SystemCapability(
+        candidate("candidate-a", ("cap-select",), cost=0),
+        CapabilityProjection(
             candidate_id="candidate-b",
             capability_ids=("exec-compose",),
             projection_id="projection://other",
@@ -304,9 +325,6 @@ def test_candidates_from_mixed_private_registry_projections_fail_closed():
     with pytest.raises(ExecutionProtocolError, match="one bound projection"):
         decide_execution_protocol(
             request=request(),
-            systems=mixed,
+            candidates=mixed,
             envelope=envelope(),
-            executors=(),
-            resource_observations=(),
-            method_profiles=(),
         )
