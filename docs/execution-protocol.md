@@ -1,6 +1,6 @@
 # Execution Protocol
 
-Execution Protocol is the canonical **Total Systems Steward decision protocol** for deciding whether a system should be invoked, which system composition is appropriate, whether the invocation is advisory or a real run, and which currently admissible executor may satisfy the exact evidence predicate.
+Execution Protocol is a generic capability-driven decision protocol for deciding whether a formal capability set should be invoked, which minimal composition is sufficient, whether the invocation is advisory or a real run, and which currently admissible executor may satisfy the exact evidence predicate.
 
 It is a protocol, not a new system or execution owner.
 
@@ -13,10 +13,10 @@ Intent
   -> Execution Mode
   -> Resource Cause Resolution
   -> Executor Selection
-  -> PSE Capability Substitution
-  -> Provider Portability when provider-bound
+  -> evidence-equivalent capability substitution
+  -> provider-resource routing when provider-bound
   -> Existing Launch / Admission
-  -> Durable Execution
+  -> persistent execution
 ```
 
 The protocol never skips directly from “preferred executor failed to start” to “provider failure” when a stronger resource cause is already observable.
