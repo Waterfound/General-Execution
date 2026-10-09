@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import hashlib
+import json
+import re
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable, Protocol
 
-from .canonical import sha256_digest
+from .canonical import canonical_json, sha256_digest
 from .persistent_burst_host import (
     PersistentBurstExecutionReport,
     PersistentBurstManifest,
@@ -30,6 +32,7 @@ class StatePlaneHostError(ValueError):
 
 class StatePlaneTransport(Protocol):
     def load(self) -> tuple[StateTransportReceipt, bytes]: ...
+    def stage_text(self, relative_path: str, content: str) -> None: ...
     def commit(
         self,
         payload: bytes,
@@ -123,6 +126,9 @@ def execute_event_over_state_plane(
     core_requirement: CoreVerificationRequirement | None = None,
     core_verification: CoreVerificationReceipt | None = None,
     core_report: CoreRehearsalReport | None = None,
+    persist_private_ledger: bool = False,
+    runtime_source_revision: str | None = None,
+    trigger_commit: str | None = None,
 ) -> tuple[PersistentRuntimeEventReport, StatePlaneHostReport]:
     """Execute exactly one canonical persistent-runtime event over private state.
 
@@ -161,6 +167,65 @@ def execute_event_over_state_plane(
 
         execution = process_persistent_runtime_event(db, event, **kwargs)
         post_payload = db.read_bytes()
+
+    if persist_private_ledger:
+        if not runtime_source_revision or not trigger_commit:
+            raise StatePlaneHostError(
+                "private ledger persistence requires runtime source and trigger binding"
+            )
+        stage_text = getattr(transport, "stage_text", None)
+        if not callable(stage_text):
+            raise StatePlaneHostError(
+                "state transport does not support atomic private ledger staging"
+            )
+        event_id = event.get("event_id")
+        if (
+            not isinstance(event_id, str)
+            or not event_id
+            or len(event_id) > 120
+            or re.fullmatch(r"[A-Za-z0-9._-]+", event_id) is None
+        ):
+            raise StatePlaneHostError("event_id is not safe for private ledger path")
+        db_digest = _raw_digest(post_payload)
+        envelope = {
+            "schema_version": "ge.persistent-runtime-execution.v1",
+            "event_report": json.loads(canonical_json(execution)),
+            "event_report_digest": execution.digest,
+            "database_sha256": db_digest,
+        }
+        processed = {
+            "schema_version": "ge.persistent-runtime-processed-event.v1",
+            "event_id": event_id,
+            "operation": event.get("operation"),
+            "trigger_commit": trigger_commit,
+            "event_report_digest": execution.digest,
+            "database_sha256": db_digest,
+            "runtime_source_revision": runtime_source_revision,
+            "authority_created": False,
+        }
+        manifest = {
+            "schema_version": "ge.persistent-runtime-manifest.v1",
+            "last_event_id": event_id,
+            "last_operation": event.get("operation"),
+            "last_trigger_commit": trigger_commit,
+            "last_event_report_digest": execution.digest,
+            "database_sha256": db_digest,
+            "runtime_source_revision": runtime_source_revision,
+            "persistent_provider_trigger_enabled": True,
+            "authority_created": False,
+        }
+        stage_text(
+            f"ledger/reports/{event_id}.json",
+            json.dumps(envelope, sort_keys=True, indent=2) + "\n",
+        )
+        stage_text(
+            f"ledger/processed/{event_id}.json",
+            json.dumps(processed, sort_keys=True, indent=2) + "\n",
+        )
+        stage_text(
+            "state/manifest.json",
+            json.dumps(manifest, sort_keys=True, indent=2) + "\n",
+        )
 
     post_receipt = transport.commit(
         post_payload,
