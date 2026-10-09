@@ -1,0 +1,80 @@
+name: State plane binding rehearsal
+
+on:
+  push:
+    branches:
+      - feature/state-boundary-v1
+    paths:
+      - "tools/run_state_plane_binding_rehearsal.py"
+      - ".github/workflows/state-plane-binding-rehearsal.yml"
+      - "src/general_execution/state_plane_host.py"
+      - "src/general_execution/git_state_plane_transport.py"
+
+permissions:
+  contents: read
+
+jobs:
+  rehearse:
+    if: ${{ vars.GE_STATE_PLANE_REMOTE_URL != '' && vars.GE_STATE_PLANE_BRANCH != '' && vars.GE_STATE_PLANE_ROOT != '' && vars.GE_STATE_PLANE_REF != '' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      STATE_PLANE_REMOTE_URL: ${{ vars.GE_STATE_PLANE_REMOTE_URL }}
+      STATE_PLANE_BRANCH: ${{ vars.GE_STATE_PLANE_BRANCH }}
+      STATE_PLANE_ROOT: ${{ vars.GE_STATE_PLANE_ROOT }}
+      STATE_PLANE_REF: ${{ vars.GE_STATE_PLANE_REF }}
+      STATE_PLANE_TOKEN: ${{ secrets.GE_STATE_PLANE_TOKEN }}
+      GIT_TERMINAL_PROMPT: "0"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install candidate
+        run: python -m pip install -e '.[dev]' --disable-pip-version-check
+
+      - name: Validate binding inputs
+        run: |
+          test -n "$STATE_PLANE_REMOTE_URL"
+          test -n "$STATE_PLANE_BRANCH"
+          test -n "$STATE_PLANE_ROOT"
+          test -n "$STATE_PLANE_REF"
+          test -n "$STATE_PLANE_TOKEN"
+          case "$STATE_PLANE_REMOTE_URL" in
+            https://*) ;;
+            *) echo "remote must use HTTPS" >&2; exit 70 ;;
+          esac
+          case "$STATE_PLANE_ROOT" in
+            /*|*".."*) echo "unsafe state root" >&2; exit 71 ;;
+          esac
+          case "$STATE_PLANE_REF" in
+            s_[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]) ;;
+            *) echo "invalid opaque state ref" >&2; exit 72 ;;
+          esac
+
+      - name: Configure ephemeral Git authentication
+        run: |
+          cat > "$RUNNER_TEMP/state-plane-askpass" <<'SH'
+          #!/bin/sh
+          case "$1" in
+            *Username*) printf '%s\n' oauth2 ;;
+            *Password*) printf '%s\n' "$STATE_PLANE_TOKEN" ;;
+            *) exit 1 ;;
+          esac
+          SH
+          chmod 700 "$RUNNER_TEMP/state-plane-askpass"
+          echo "GIT_ASKPASS=$RUNNER_TEMP/state-plane-askpass" >> "$GITHUB_ENV"
+
+      - name: Run real shadow binding rehearsal
+        run: |
+          python tools/run_state_plane_binding_rehearsal.py             --remote "$STATE_PLANE_REMOTE_URL"             --branch "$STATE_PLANE_BRANCH"             --root "$STATE_PLANE_ROOT"             --state-ref "$STATE_PLANE_REF"             --rehearsal-id "binding-${GITHUB_RUN_ID}"             --runtime-source-revision "${GITHUB_SHA}"             --trigger-commit "${GITHUB_SHA}"             --report "$RUNNER_TEMP/binding-rehearsal.json"
+
+      - name: Upload opaque rehearsal receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: state-plane-binding-rehearsal-${{ github.run_id }}
+          path: ${{ runner.temp }}/binding-rehearsal.json
+          if-no-files-found: error
+          retention-days: 30
