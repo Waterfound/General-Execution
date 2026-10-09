@@ -250,14 +250,14 @@ def test_forbidden_action_remains_human_gate_after_routing():
     assert not decision.authority_created
 
 
-def test_existing_execution_is_observed_not_redispatched():
+def test_existing_execution_is_observed_not_redispatched_even_if_new_capacity_is_unavailable():
     decision = decide_execution_protocol(
         request=request(existing_execution_ref="provider://already-running"),
         systems=SYSTEMS,
         envelope=envelope(),
-        executors=(executor("connector_api"),),
-        resource_observations=(available("connector_api"),),
-        method_profiles=(profile("connector_api"),),
+        executors=(),
+        resource_observations=(),
+        method_profiles=(),
     )
     assert decision.disposition is ProtocolDisposition.OBSERVE_EXISTING
     assert decision.selected_executor_id is None
