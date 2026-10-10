@@ -57,6 +57,8 @@ def project_github_pr_lifecycle(pr: Mapping[str, object]) -> dict[str, object]:
         raise ValueError("state must be open or closed")
     if merged and state != "closed":
         raise ValueError("merged PR must be closed")
+    if not merged and pr.get("merged_at") is not None:
+        raise ValueError("unmerged PR cannot have merged_at")
     for key in ("head_sha", "base_sha"):
         value = pr.get(key)
         if value is not None and (not isinstance(value, str) or not _SHA.fullmatch(value)):
@@ -75,7 +77,7 @@ def project_github_pr_lifecycle(pr: Mapping[str, object]) -> dict[str, object]:
         "representative_workflow_class": "software-pr-lifecycle",
         "terminal_state": "PR_MERGED_ONLY" if merged else "PR_NOT_MERGED",
         "intent_timestamp": None,  # PR creation is not mission intent.
-        "terminal_timestamp": merged_at.isoformat() if merged_at else None,
+        "terminal_timestamp": None,  # PR merge is not mission completion.
         "evidence_refs": [url],
     })
     return {
