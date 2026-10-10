@@ -1,0 +1,63 @@
+{
+  "schema": "FAE_POW_HISTORICAL_ASSURANCE_RESUME_CHECKPOINT_V1",
+  "date": "2026-10-10",
+  "mission": "fae-pow-historical-assurance",
+  "execution_protocol": "EP-001",
+  "execution_mode": "COMPOSED_REAL_RUN",
+  "authority": "Candidate assurance only",
+  "portfolio": {
+    "dp6_id": "fae-pow-historical-assurance-20261010",
+    "dp6_state": "candidate phase complete at generation 1",
+    "dp6_event": "fae-pow-historical-assurance-dp6-green-003",
+    "dp6_report": "runtime/reports/fae-pow-historical-assurance-dp6-green-003.json",
+    "strategic_id": "fae-pow-historical-strategic-20261010",
+    "strategic_bootstrap": "fae-pow-historical-strategic-bootstrap-001",
+    "strategic_db_state_last_verified": "generation 0; active strategic mining ready; secondary mempool economics ready; final freeze passive",
+    "new_sqlite_transition": "NOT_DISPATCHED",
+    "reason": "Candidate wave2 tests extend evidence but do not satisfy final strategic profitability or node policy closure."
+  },
+  "source": {
+    "repo": "Waterfound/FAE-testnet",
+    "pr_296": "https://github.com/Waterfound/FAE-testnet/pull/296",
+    "pr_297": "https://github.com/Waterfound/FAE-testnet/pull/297",
+    "pr_297_exact_head": "ae832e5149afddd1cb85f6bf2a2c5f2c42b28cc1",
+    "wave2_file": "lab/pow-historical-assurance/WAVE2_EXECUTION_STATE.json",
+    "closure_file": "lab/pow-historical-assurance/CLOSURE_MATRIX.json"
+  },
+  "new_evidence": [
+    {
+      "frontier": "mempool fee admission anti-pinning",
+      "tests": "9/9",
+      "verdict": "abstract candidate proof only; production node still vulnerable to full-mempool pinning"
+    },
+    {
+      "frontier": "equal-work tie cost",
+      "tests": "3/3",
+      "verdict": "bounded model, not FAE net-profitability"
+    },
+    {
+      "frontier": "finite PPLNS 2048 window",
+      "tests": "6/6",
+      "verdict": "accounting fixture, not BWH/FAW/EFAW live profitability"
+    }
+  ],
+  "next_admissible": [
+    "Reconcile source head and external CI; distinguish Vercel build-rate-limit from code failures",
+    "Design/verify opt-in candidate node fee-aware anti-pinning with package-safe atomic eviction and block-template priority, without consensus/economic activation",
+    "Extend selfish/stubborn + actual finite PPLNS job/fork timing, explicit counterfactual assumptions, and direct extension opportunity cost",
+    "Persist separate resume evidence after verified tests, without artificial terminal transitions",
+    "Park exact production DAA/genesis/DP6/routing and final economics under CONDITION_WAIT pending genuine upstream freeze"
+  ],
+  "limits": {
+    "no_merge": true,
+    "no_production": true,
+    "no_consensus_or_fee_economic_activation": true,
+    "no_paid_spend": true,
+    "no_provider_credentials": true,
+    "no_mainnet": true,
+    "mainnet_green_count": 0
+  },
+  "continuity": "This file is an immutable source-control checkpoint only; it does not mutate the durable SQLite state, wake a worker or grant fresh authority.",
+  "human_required_for_bounded_research": false,
+  "terminal_done": false
+}
