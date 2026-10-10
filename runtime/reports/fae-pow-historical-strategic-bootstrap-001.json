@@ -1,0 +1,19 @@
+{
+  "database_sha256": "sha256:5164ad85987f48773cd10dee45521b354316fa6ebb18e83767575aee42621bb0",
+  "event_report": {
+    "checkpoint_digest": null,
+    "event_id": "fae-pow-historical-strategic-bootstrap-001",
+    "human_required": false,
+    "operation": "bootstrap",
+    "portfolio_id": "fae-pow-historical-strategic-20261010",
+    "post_generation": 0,
+    "post_state_digest": "sha256:bfc50e521fd86c4ab06b046abb35838fa1fc9c0c05a1a97fb0e894e988ba98fd",
+    "pre_generation": 0,
+    "pre_state_digest": "sha256:bfc50e521fd86c4ab06b046abb35838fa1fc9c0c05a1a97fb0e894e988ba98fd",
+    "requested_action_ref": "github://Waterfound/FAE-testnet/pull/297#strategic-mining-and-pool-incentives",
+    "schema_version": "ge.persistent-runtime-event-report.v1",
+    "status": "bootstrapped"
+  },
+  "event_report_digest": "sha256:2c75529ff973b7fa3a1a85260021fb177448797e57fd06bff4f2fc8b8b225841",
+  "schema_version": "ge.persistent-runtime-execution.v1"
+}
