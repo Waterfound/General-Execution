@@ -216,9 +216,11 @@ def select_commercial_frontier(
             selected_kind=None,
             classification="NO_OPEN_FRONTIER",
             reasons=(
-                "all_frontiers_closed_or_rejected_without_current_successor",
-                if frontiers
-                else "no_frontiers_supplied",
+                (
+                    "all_frontiers_closed_or_rejected_without_current_successor"
+                    if frontiers
+                    else "no_frontiers_supplied"
+                ),
             ),
             rejected_frontiers=tuple(sorted(rejected)),
         )
