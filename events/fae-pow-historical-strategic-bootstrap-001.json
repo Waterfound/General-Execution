@@ -1,0 +1,94 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-pow-historical-strategic-bootstrap-001",
+  "operation": "bootstrap",
+  "body": {
+    "portfolio": {
+      "portfolio_id": "fae-pow-historical-strategic-20261010",
+      "generation": 0,
+      "active": {
+        "work_id": "HPA-STRATEGIC-MINING-CLOSURE",
+        "role": "active",
+        "state": "ready",
+        "objective": "Advance software-only strategic-mining assurance: compare equal-work tie policies with explicit opportunity cost and extend BWH/FAW/EFAW analysis as far as current unfrozen timing/pool semantics allow, preserving all remaining parameter dependencies explicitly.",
+        "active_gate": "strategic-mining-software-ceiling",
+        "next_action_ref": "github://Waterfound/FAE-testnet/pull/297#strategic-mining-and-pool-incentives",
+        "source_revision": "189c93a2c52fc0429375b093561cdd5fc26a2159",
+        "evidence_required": [
+          "equal_work_tie_opportunity_cost_model",
+          "selfish_stubborn_sensitivity",
+          "bwh_faw_efaw_bounded_model",
+          "parameter_dependencies_explicit",
+          "no_consensus_or_economic_activation"
+        ],
+        "authority_boundary": "Candidate assurance only. No main merge, consensus/economics activation, production deployment, release, mainnet, paid spend, or provider/credential mutation.",
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/FAE-testnet/pull/297/commit/189c93a2c52fc0429375b093561cdd5fc26a2159",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "secondary": {
+        "work_id": "HPA-MEMPOOL-ADMISSION-ECONOMICS",
+        "role": "secondary",
+        "state": "ready",
+        "objective": "Characterize fee-aware mempool anti-pinning policy space without selecting final fee economics before the fee/security-budget freeze.",
+        "active_gate": "mempool-admission-economics-software-ceiling",
+        "next_action_ref": "github://Waterfound/FAE-testnet/pull/297#mempool-admission-economics",
+        "source_revision": "189c93a2c52fc0429375b093561cdd5fc26a2159",
+        "evidence_required": [
+          "pinning_attack_reproduced",
+          "candidate_policy_space_compared",
+          "resource_bound_preserved",
+          "fee_economics_dependency_explicit"
+        ],
+        "authority_boundary": null,
+        "authority_ref": null,
+        "blockers": [],
+        "wake_condition": null,
+        "checkpoint_ref": "github://Waterfound/FAE-testnet/pull/297/commit/189c93a2c52fc0429375b093561cdd5fc26a2159",
+        "schema_version": "ge.portfolio-entry.v1"
+      },
+      "passive": [
+        {
+          "work_id": "HPA-FINAL-ECONOMIC-FREEZE",
+          "role": "passive",
+          "state": "passive",
+          "objective": "Hold terminal strategic-mining, mempool-fee and majority-work closure until final block time, DAA, fee/security-budget and pool semantics are frozen.",
+          "active_gate": "final-economic-inputs",
+          "next_action_ref": "condition://fae/pow-historical-assurance/final-economic-inputs",
+          "source_revision": "189c93a2c52fc0429375b093561cdd5fc26a2159",
+          "evidence_required": [
+            "final_block_time",
+            "final_daa_parameters",
+            "final_fee_security_budget",
+            "final_pool_semantics",
+            "final_tie_policy"
+          ],
+          "authority_boundary": "Final economic and consensus choices remain condition/authority bound; Durable Execution may preserve and analyze but cannot select or activate them.",
+          "authority_ref": null,
+          "blockers": [
+            {
+              "kind": "evidence",
+              "detail": "Final timing, fee/security-budget, pool and tie-policy inputs are not frozen.",
+              "evidence_refs": [
+                "github://Waterfound/FAE-testnet/pull/297",
+                "github://Waterfound/FAE-Development-Documentation/docs/01-FAE-DEVELOPMENT-MAP.md"
+              ],
+              "schema_version": "ge.portfolio-blocker.v1"
+            }
+          ],
+          "wake_condition": {
+            "kind": "evidence_predicate_satisfied",
+            "value": "final timing/economics/pool semantics available under existing authority",
+            "schema_version": "ge.wake-condition.v1"
+          },
+          "checkpoint_ref": "github://Waterfound/FAE-testnet/pull/297/commit/189c93a2c52fc0429375b093561cdd5fc26a2159",
+          "schema_version": "ge.portfolio-entry.v1"
+        }
+      ],
+      "previous_state_digest": null,
+      "schema_version": "ge.portfolio-state.v1"
+    }
+  }
+}
