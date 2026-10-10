@@ -1,0 +1,80 @@
+{
+  "schema_version": "ge.persistent-runtime-event.v1",
+  "event_id": "fae-pow-historical-assurance-dp6-green-003",
+  "operation": "transition",
+  "body": {
+    "policy": {
+      "policy_id": "fae-pow-historical-assurance-dp6-phase-v1",
+      "revision": "1",
+      "rules": [
+        {
+          "rule_id": "01-dp6-independent-verifier-green-close-phase",
+          "from_state": "ready",
+          "event": "verification_passed",
+          "to_state": "complete",
+          "next_action_ref": "github://Waterfound/FAE-testnet/pull/296#candidate-green",
+          "effect": "none",
+          "required_evidence": [
+            "dp6_candidate_green",
+            "verifier_pass"
+          ],
+          "authority_mode": "none",
+          "authority_boundary": null,
+          "schema_version": "ge.transition-rule.v1"
+        }
+      ],
+      "default_disposition": "stop",
+      "schema_version": "ge.transition-policy.v1"
+    },
+    "contract": {
+      "source": "github-push",
+      "event_kind": "durable-transition",
+      "portfolio_id": "fae-pow-historical-assurance-20261010",
+      "policy_digest": "sha256:3ffc74dab5b986706a3d2251cbc38051d97943a7301146f4d1edaf3dfc21b8b3",
+      "transition_event": "verification_passed"
+    },
+    "trigger": {
+      "source": "github-push",
+      "event_id": "fae-pow-historical-assurance-dp6-green-003",
+      "event_kind": "durable-transition",
+      "payload_digest": "sha256:33a6a0417771d80e92f851d45b524383dd826197203fa5b2f5dcaae972a42460",
+      "observation_digest": "sha256:50d20fe2df3353be57093894db726edd835f30df185d354d2fa5724eaf04768c",
+      "admission_ref": "github://Waterfound/General-Execution/events/fae-pow-historical-assurance-dp6-green-003"
+    },
+    "observation": {
+      "portfolio_id": "fae-pow-historical-assurance-20261010",
+      "expected_generation": 0,
+      "expected_state_digest": "sha256:b0af3cf3e881a6d99f9e5eed0bdc0ed230359af5f45864bd8a8d81cf51ccad70",
+      "policy_digest": "sha256:3ffc74dab5b986706a3d2251cbc38051d97943a7301146f4d1edaf3dfc21b8b3",
+      "event": "verification_passed",
+      "evidence": [
+        {
+          "kind": "dp6_candidate_green",
+          "locator": "github://Waterfound/FAE-testnet/pull/296/commit/f2d823d8a8db488fc1108b58a7ab859cc2e9813d/labs/asic-f2-pre-go/independent-verifier/RESULT.json",
+          "digest": "sha256:33a6a0417771d80e92f851d45b524383dd826197203fa5b2f5dcaae972a42460",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        },
+        {
+          "kind": "verifier_pass",
+          "locator": "github://Waterfound/FAE-testnet/pull/296/commit/f2d823d8a8db488fc1108b58a7ab859cc2e9813d/labs/asic-f2-pre-go/independent-verifier/RESULT.json",
+          "digest": "sha256:33a6a0417771d80e92f851d45b524383dd826197203fa5b2f5dcaae972a42460",
+          "schema_version": "ge.checkpoint-evidence.v1"
+        }
+      ],
+      "action_ref": "github://Waterfound/FAE-testnet/pull/296/commit/f2d823d8a8db488fc1108b58a7ab859cc2e9813d",
+      "observed_at": "2026-10-10T21:09:00Z",
+      "summary": "Close the DP6 assurance phase at candidate GREEN after independent verifier evidence; final production binding remains a later condition-bound replay.",
+      "canonical_refs": [
+        "github://Waterfound/FAE-testnet/pull/296",
+        "github://Waterfound/FAE-testnet/commit/f2d823d8a8db488fc1108b58a7ab859cc2e9813d"
+      ],
+      "uncertainties": [
+        "Exact future production verifier wiring and network/height/version activation binding remain unfrozen.",
+        "Organizationally independent external reproduction is not claimed."
+      ],
+      "wake_admission": null,
+      "authority_grant": null,
+      "schema_version": "ge.resume-tick-observation.v1"
+    }
+  }
+}
