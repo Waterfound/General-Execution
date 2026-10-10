@@ -1,0 +1,10 @@
+{
+  "database_sha256": "sha256:b44ba76cbe44349d780009d4143980a02d5599d3eaa7fa09f7a012ab8acfc7f7",
+  "event_id": "fae-pow-historical-assurance-bootstrap-001",
+  "event_report_digest": "sha256:ee2339bad6baa69fc563c4be02001884b69c12b2c1e23bca5eef1cfbe9b8c9ad",
+  "operation": "bootstrap",
+  "provider_actor": "Waterfound",
+  "runtime_source_revision": "f60c90cd349a2a190e00daed671d4602c1a1e73c",
+  "schema_version": "ge.persistent-runtime-processed-event.v1",
+  "trigger_commit": "4fda2ea774087671f1cce042db0c173f30ebd04b"
+}
