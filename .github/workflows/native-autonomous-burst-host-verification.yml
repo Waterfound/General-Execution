@@ -1,0 +1,36 @@
+name: Native Autonomous Burst host verification
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "src/general_execution/autonomous_burst_host.py"
+      - "tests/test_autonomous_burst_host.py"
+      - ".github/workflows/native-autonomous-burst-host-verification.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m pip install -e '.[dev]' --disable-pip-version-check
+      - run: python -m compileall -q src
+      - run: python -m pytest -q tests/test_autonomous_burst_host.py tests/test_autonomous_burst.py tests/test_persistent_runtime.py tests/test_resume_tick.py tests/test_continuity_check.py
+      - name: Preserve authority and runtime boundaries
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          host=Path("src/general_execution/autonomous_burst_host.py").read_text()
+          runtime=Path("src/general_execution/persistent_runtime.py").read_text()
+          assert "persist_receipt" in host
+          assert "max_transitions <= 8" in host
+          assert 'PersistentOperation = Literal["bootstrap", "transition"]' in runtime
+          assert "scheduler" not in host.split('"""',2)[2].lower()
+          PY
