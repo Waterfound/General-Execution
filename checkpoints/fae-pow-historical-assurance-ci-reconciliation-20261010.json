@@ -1,0 +1,47 @@
+{
+  "schema": "FAE_HISTORICAL_POW_ASSURANCE_CI_RECONCILIATION_CHECKPOINT_V1",
+  "date": "2026-10-10",
+  "source_pr": "https://github.com/Waterfound/FAE-testnet/pull/297",
+  "source_head": "bb2d244cd0c595f73a4ea7ac80f7286cc1f0e6c4",
+  "prior_evidence_checkpoint": "checkpoints/fae-pow-historical-assurance-wave2-20261010.json",
+  "status": "CI_PARTIAL__DO_NOT_MERGE__NO_TERMINAL_GREEN",
+  "verified_diagnostics": {
+    "historical_baseline_commit": "05dc4147dedb8b79702798f1fade4e115f00209f",
+    "baseline_verify_canonical_source": "FAIL already at baseline (before wave2); fae-node.mjs checksum mismatch",
+    "previous_head": "ae832e5149afddd1cb85f6bf2a2c5f2c42b28cc1",
+    "previous_tests": {
+      "passed": [
+        "Activation Deep Reorg Hardening",
+        "cross-lab-integration-gate",
+        "Independent Operator Readiness",
+        "codeql-security"
+      ],
+      "failed": {
+        "verify-canonical-source": "fae-node.mjs imported Sovereign Forge SHA mismatch; previously failing baseline",
+        "independent-node-v1.1-hardening": "partition-recovery-3node.mjs fetch failed UND_ERR_SOCKET other side closed; retry attempt cancelled after new head pushed",
+        "public-code-security-recurring-assurance": "WB-13 Cross-Lab authority composition attack exit 1; baseline_blocking OPEN_BLOCKER; second attempt still underway at checkpoint"
+      }
+    },
+    "external_vercel": "Both Vercel status checks failed with upgradeToPro=build-rate-limit; not an observed application-test failure"
+  },
+  "current_exact_head_observations": {
+    "Activation Deep Reorg Hardening": "SUCCESS",
+    "cross-lab-integration-gate": "SUCCESS",
+    "verify-canonical-source": "FAIL consistent with prior baseline",
+    "independent-node-v1.1-hardening": "IN_PROGRESS at observation",
+    "Independent Operator Readiness": "IN_PROGRESS at observation",
+    "codeql-security": "IN_PROGRESS at observation",
+    "public-code-security-recurring-assurance": "PENDING at observation"
+  },
+  "next_action": "Re-read CI for exact head, obtain WB-13 root failure evidence and decide remediation without waiving it; resolve canonical source-pinning mismatch with authorized provenance process; no blind expensive CI reruns.",
+  "runtime_database_transition": "NONE; this checkpoint is append-only external resumption evidence",
+  "authority": {
+    "merge": false,
+    "production": false,
+    "mainnet": false,
+    "policy_waivers": false,
+    "persistent_runtime_repin": false,
+    "spend": false
+  },
+  "mainnet_terminal_green": false
+}
