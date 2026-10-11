@@ -1,0 +1,44 @@
+name: Private-state source restore rehearsal (read-only)
+
+on:
+  push:
+    branches: [security/egress-boundary-candidate-20261010]
+  pull_request:
+    paths:
+      - "tools/rehearse_sqlite_source_restore.py"
+      - "tools/test_rehearse_sqlite_source_restore.py"
+      - ".github/workflows/read-only-source-restore-rehearsal.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  exact-public-source-restore:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Isolated negative recovery fixtures
+        run: |
+          python -m pip install pytest --disable-pip-version-check -q
+          python -m pytest -q tools/test_rehearse_sqlite_source_restore.py
+      - name: Checkout existing runtime snapshot (read only)
+        uses: actions/checkout@v4
+        with:
+          ref: runtime/durable-asp-control
+          path: snapshot_source
+          persist-credentials: false
+      - name: Verify exact source and independent process cold-open
+        run: |
+          python tools/rehearse_sqlite_source_restore.py \
+            --snapshot snapshot_source/runtime/state.sqlite.b64 \
+            --manifest snapshot_source/runtime/manifest.json
+      - name: No private persistence or writer changes
+        run: |
+          test ! -d .git/modules/snapshot_source
+          echo "SOURCE_ONLY: no private runtime host migration performed"
