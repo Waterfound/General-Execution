@@ -16,7 +16,8 @@ PRIVATE_FIELDS = frozenset({
     "next_action_ref", "authority_boundary", "authority_grant",
     "approved_action_ref", "requested_action_ref", "dependency_graph",
     "fallback_graph", "canonical_refs", "private_key", "credential",
-    "password", "seed_phrase",
+    "password", "seed_phrase", "secret", "token", "api_key", "access_key",
+    "authorization", "cookie", "session_token", "recovery_phrase",
 })
 DIGEST = re.compile(r"sha256:[a-f0-9]{64}\Z")
 SQLITE = b"SQLite format 3\x00"
@@ -65,6 +66,12 @@ def classify_public(path: str, data: bytes) -> tuple[str, ...]:
                 codes.append("SQLITE_STATE")
         except Exception:
             pass
+    if (
+        re.search(rb"\bgh[pousr]_[A-Za-z0-9_]{12,}", data)
+        or re.search(rb"github_" + rb"pat_[A-Za-z0-9_]{12,}", data)
+        or re.search(rb"-----BEGIN [A-Z ]*PRIVATE KEY-----", data)
+    ):
+        codes.append("CREDENTIAL_SHAPED")
     if re.search(rb"\bwf[.](?:sys|cap)[.][A-Za-z0-9_.-]+", data):
         codes.append("STABLE_PRIVATE_ID")
     if re.search(rb"Waterfound/" + rb"Systems(?:/|\b)", data):
