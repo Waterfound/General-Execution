@@ -71,6 +71,8 @@ class CommercialFrontier:
 
     def __post_init__(self) -> None:
         _nonempty(self.frontier_id, "frontier_id")
+        if not isinstance(self.kind, FrontierKind):
+            raise CommercialRatchetError("kind must be a FrontierKind")
         if (
             isinstance(self.expected_information_gain, bool)
             or not isinstance(self.expected_information_gain, int)
@@ -104,6 +106,10 @@ class CommercialRatchetDecision:
     execution_triggered: bool = False
 
     def __post_init__(self) -> None:
+        if not isinstance(self.disposition, RatchetDisposition):
+            raise CommercialRatchetError("disposition must be a RatchetDisposition")
+        if self.selected_kind is not None and not isinstance(self.selected_kind, FrontierKind):
+            raise CommercialRatchetError("selected_kind must be a FrontierKind")
         if self.authority_created or self.execution_triggered:
             raise CommercialRatchetError(
                 "Commercial Progress Ratchet cannot create authority or execute work"

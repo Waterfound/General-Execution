@@ -3,6 +3,7 @@ import pytest
 from general_execution.commercial_progress_ratchet import (
     CommercialFrontier,
     CommercialRatchetError,
+    CommercialRatchetDecision,
     FrontierKind,
     RatchetDisposition,
     select_commercial_frontier,
@@ -175,4 +176,27 @@ def test_duplicate_frontier_ids_fail_closed():
                 frontier("same", FrontierKind.COMPETITIVE_DIFFERENTIATION, 20),
             ),
             technical_capability_proven=True,
+        )
+
+
+@pytest.mark.parametrize("kind", ["BUYER_PROBLEM_EVIDENCE", "unknown", None])
+def test_non_enum_frontier_kind_fails_before_selection(kind):
+    with pytest.raises(CommercialRatchetError, match="kind must be a FrontierKind"):
+        frontier("invalid-kind", kind, 50)
+
+
+def test_string_disposition_cannot_bypass_selected_binding_validation():
+    with pytest.raises(CommercialRatchetError, match="disposition must be a RatchetDisposition"):
+        CommercialRatchetDecision(
+            disposition="SELECTED", selected_frontier_id=None, selected_kind=None,
+            classification="DIRECT_COMMERCIAL", reasons=(), rejected_frontiers=(),
+        )
+
+
+def test_string_selected_kind_cannot_escape_into_enum_serialization():
+    with pytest.raises(CommercialRatchetError, match="selected_kind must be a FrontierKind"):
+        CommercialRatchetDecision(
+            disposition=RatchetDisposition.SELECTED, selected_frontier_id="valid-id",
+            selected_kind="BUYER_PROBLEM_EVIDENCE", classification="DIRECT_COMMERCIAL",
+            reasons=(), rejected_frontiers=(),
         )
