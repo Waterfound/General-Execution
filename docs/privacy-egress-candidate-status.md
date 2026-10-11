@@ -1,3 +1,3 @@
 # Public/private publication boundary — candidate
 
-This branch is an isolated, non-activated privacy-hardening candidate. The live runtime currently publishes detailed operational state to a public branch. No migration, scheduler mutation, credential action, canonical merge, or historical rewrite has been performed. Complete restoration and private-state cutover verification is required before privacy can be considered closed.
+Generic code for minimizing public output and rejecting operational data at publication time. This candidate is not installed in any live runner, creates no authority and changes no provider or scheduler. Deployment plans, incident analysis, and private operational evidence belong exclusively to their authorized private owner. A public candidate CI gate is not a substitute for a pre-publication private egress gate.
