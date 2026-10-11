@@ -38,6 +38,7 @@ def test_raw_and_encoded_database_blocked():
 @pytest.mark.parametrize("field", [
     "objective", "work_id", "authority_boundary", "next_action_ref",
     "portfolio", "fallback_graph", "canonical_refs", "credential",
+    "token", "secret", "api_key", "recovery_phrase",
 ])
 def test_nested_operational_fields_rejected(field):
     data = json.dumps({"proof": [{"nested": {field: "dummy"}}]}).encode()
@@ -77,3 +78,11 @@ def test_unknown_status_rejected():
 
 def test_mechanism_source_can_remain_public():
     assert not classify_public("src/mechanism.py", b"def verify(): return True\n")
+
+
+def test_raw_synthetic_credential_shape_is_blocked_without_value_echo():
+    marker = ("gh" + "p_" + "Z" * 24).encode()
+    with pytest.raises(PublicEgressError) as ex:
+        admit_public("public/fixture.txt", marker)
+    assert "CREDENTIAL_SHAPED" in ex.value.categories
+    assert marker.decode() not in str(ex.value)
