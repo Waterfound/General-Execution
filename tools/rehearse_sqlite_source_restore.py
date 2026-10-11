@@ -44,7 +44,10 @@ def verify_snapshot(encoded: bytes, manifest: dict) -> dict:
         for check in ("quick_check", "integrity_check"):
             con = sqlite3.connect(f"file:{db}?mode=ro", uri=True)
             try:
-                outcome = con.execute(f"PRAGMA {check}").fetchone()
+                try:
+                    outcome = con.execute(f"PRAGMA {check}").fetchone()
+                except sqlite3.DatabaseError:
+                    raise ValueError("SQLITE_CHECK_FAILED") from None
             finally:
                 con.close()
             if outcome != ("ok",):
