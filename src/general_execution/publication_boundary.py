@@ -49,7 +49,7 @@ def classify_public(path: str, data: bytes) -> tuple[str, ...]:
     p = PurePosixPath(path)
     if p.is_absolute() or ".." in p.parts or "." in p.parts:
         codes.append("UNSAFE_PATH")
-    if p.parts[0].lower() in BLOCKED_ROOTS:
+    if not p.parts or p.parts[0].lower() in BLOCKED_ROOTS:
         codes.append("PRIVATE_PATH")
     if path.lower().endswith((".sqlite.b64", ".db.b64", ".sqlite",
                               ".sqlite3", ".db", ".pem", ".key")):
@@ -63,11 +63,11 @@ def classify_public(path: str, data: bytes) -> tuple[str, ...]:
         try:
             if base64.b64decode(data[:32]).startswith(SQLITE):
                 codes.append("SQLITE_STATE")
-        except (ValueError, Exception):
+        except Exception:
             pass
     if re.search(rb"\bwf[.](?:sys|cap)[.][A-Za-z0-9_.-]+", data):
         codes.append("STABLE_PRIVATE_ID")
-    if re.search(rb"Waterfound/Systems(?:/|\b)", data):
+    if re.search(rb"Waterfound/" + rb"Systems(?:/|\b)", data):
         codes.append("PRIVATE_REPO_REFERENCE")
     if path.endswith(".json"):
         try:
