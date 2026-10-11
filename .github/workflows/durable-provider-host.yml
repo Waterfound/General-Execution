@@ -20,6 +20,7 @@ env:
 
 jobs:
   consume-provider-input:
+    if: ${{ false }}
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:

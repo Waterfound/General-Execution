@@ -20,6 +20,7 @@ env:
 
 jobs:
   consume-event:
+    if: ${{ false }}
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
