@@ -1,0 +1,3 @@
+# WRM direct-substitution observation
+
+As of 2026-10-12, vendor-published offerings from InvoiceAnchor, Statement Zen, Lido and SupplierRecon overlap with generic monthly vendor-statement matching and exception-only reports. These are marketing claims, not verified parity tests or customer willingness to pay. Generic intake-and-exception reporting is not a unique differentiator. The buyer-paid reconciliation listing does not validate demand for a new WRM product. Retain no-build pending lawful paired real documents and an independently labeled exception set. Resume a different admissible buyer/problem frontier; no outreach, release or spending authorized.
