@@ -62,7 +62,8 @@ def classify_public(path: str, data: bytes) -> tuple[str, ...]:
         codes.append("SQLITE_STATE")
     if len(data) > 24:
         try:
-            if base64.b64decode(data[:32]).startswith(SQLITE):
+            # Base64 transports may wrap lines or prefix whitespace.
+            if base64.b64decode(b"".join(data.split())[:32]).startswith(SQLITE):
                 codes.append("SQLITE_STATE")
         except Exception:
             pass
@@ -76,14 +77,19 @@ def classify_public(path: str, data: bytes) -> tuple[str, ...]:
         codes.append("STABLE_PRIVATE_ID")
     if re.search(rb"Waterfound/" + rb"Systems(?:/|\b)", data):
         codes.append("PRIVATE_REPO_REFERENCE")
-    if path.endswith(".json"):
-        try:
-            obj = json.loads(data)
-        except (UnicodeError, ValueError):
+    # Inspect actual JSON content regardless of its filename: renaming an
+    # operational receipt must not disable the private-schema boundary.
+    try:
+        obj = json.loads(data)
+    except (UnicodeError, ValueError, RecursionError):
+        if path.lower().endswith(".json"):
             codes.append("INVALID_JSON")
-        else:
+    else:
+        try:
             if _private_fields(obj):
                 codes.append("PRIVATE_SCHEMA")
+        except RecursionError:
+            codes.append("INVALID_JSON")
     return tuple(sorted(set(codes)))
 
 
