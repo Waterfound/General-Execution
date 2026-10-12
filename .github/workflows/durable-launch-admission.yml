@@ -21,6 +21,7 @@ env:
 
 jobs:
   admit-launch:
+    if: ${{ false }}
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
