@@ -1,0 +1,60 @@
+{
+  "schema_version": "wrm.cr001.source-inspection-receipt.v1",
+  "observed_date": "2026-10-12",
+  "inspection_mode": "CONNECTED_GITHUB_STATIC_SOURCE_CONTRACT",
+  "outcome": "PASS",
+  "checks_passed": 15,
+  "checks_failed": 0,
+  "checked_files": {
+    "candidate_manifest": {
+      "repository": "Waterfound/General-Execution",
+      "path": "docs/revenue-mission/WRM-CR001-PAID-JOB-OPEN-SOURCE-COMPARATOR-20261012.json",
+      "blob": "91475eb83f7585ce90dd3529fbe8c1537de4813b"
+    },
+    "candidate_memo": {
+      "repository": "Waterfound/General-Execution",
+      "path": "docs/revenue-mission/WRM-CR001-PAID-JOB-OPEN-SOURCE-COMPARATOR-20261012.md",
+      "blob": "872495d1b8c0debf1ad8eff0751dde6cd4cc02ce"
+    },
+    "independent_mit_comparator": {
+      "repository": "KevinBjorv/xero-supplier-statement-checker",
+      "commit": "ab8658a7e94de696dd233501f075e355685e8adc",
+      "source_blob": "dd105aa00cb6b89497501cc20f8236f21bcdd1de",
+      "fixture_blob": "3d4af0895d9e80fbd7e550ccdc38fd74fb53f7b2"
+    }
+  },
+  "checks": [
+    "fresh_source_binding",
+    "source_committed",
+    "buyer_proof_only_labor",
+    "source_url_exact",
+    "open_source_license",
+    "source_blob_pinned",
+    "fixture_blob_pinned",
+    "fixture_counts_match",
+    "fixture_status",
+    "no_fictitious_outcome",
+    "no_false_product_selection",
+    "incomplete_retrieval_fails_closed",
+    "partial_payment_requires_review",
+    "unsafe_amount_not_match",
+    "release_not_authorized"
+  ],
+  "scope_limit": [
+    "External source inspection is not running the MIT product",
+    "Published fixture counts are synthetic and not independent acceptance testing",
+    "No matched licensed real buyer corpus obtained",
+    "No customer WTP, outbound contact or revenue",
+    "CR001_NO_PRODUCT_SELECTED"
+  ],
+  "side_effects": {
+    "public_release": false,
+    "commercial_spend": false,
+    "permissions_mutated": false,
+    "credentials_mutated": false,
+    "main_merged": false,
+    "runtime_activated": false,
+    "products_deployed": false
+  },
+  "verdict": "FALSIFY_GENERIC_RECONCILIATION__FIND_NARROW_PAID_JOB_AND_LAWFUL_REAL_INPUT"
+}
