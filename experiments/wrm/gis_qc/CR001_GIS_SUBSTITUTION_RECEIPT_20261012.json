@@ -1,0 +1,50 @@
+{
+  "schema": "cr001.gis-substitution-execution.v1",
+  "execution_date": "2026-10-12",
+  "source_job": "https://www.upwork.com/freelance-jobs/apply/GIS-Data-Quality-Controller-Agent_~022101716284364662488/",
+  "parent": {
+    "repo": "Waterfound/General-Execution",
+    "pr": 60,
+    "exact_head": "6399a7cd7bd34e392e6059f3f008db523e7ba388"
+  },
+  "execution": {
+    "python": "3.13.5",
+    "shapely": "2.1.2",
+    "tests_local_pass": 19,
+    "tests_local_fail": 0,
+    "git_native_ci_claim": false,
+    "buyer_benchmark_executed": false,
+    "qgis_executed": false,
+    "authenticated_unattended_wake": false
+  },
+  "file_integrity": {
+    "source_path": "experiments/wrm/gis_qc/gis_probe.py",
+    "source_git_blob": "55db3918afdb6e78161519cb0b42e0531f116b87",
+    "source_sha256": "03844b45c04f96a6302e5c97739e9f6495fb87eafa1fbfcd35c77e944676952e",
+    "tests_path": "experiments/wrm/gis_qc/test_gis_probe.py",
+    "tests_git_blob": "9a47de8e59b54a3598c7c5e5a10d2db7ccd7690e",
+    "tests_sha256": "f6c344fc7206cd94ae67dc91aedb364a1bcf24716eb631856e40941b8989545c",
+    "local_result_sha256": "5f1cca88c6cb8a1efd8ee667fd1c45f429aef29b8aa42c6c8078c4f8b5c00172",
+    "local_log_sha256": "5316219f50557b7d249122655b1a7bdf5969e9d273cd8caf95d38d568f33984b"
+  },
+  "source_classification": {
+    "buyer_public_listing": true,
+    "posted_budget_usd": 1000,
+    "actual_contract": false,
+    "ground_truth": "self-authored synthetic polygons; no client reference dataset",
+    "clean_control_fpr_measured": false,
+    "full_5m_performance_benchmarked": false,
+    "incumbent_superiority_proven": false
+  },
+  "decision": "HOLD_GIS_QC_AS_FIRST_PRODUCT",
+  "product_selected": false,
+  "revenue_received_usd": 0,
+  "authority": {
+    "work_used": false,
+    "spent_usd": 0,
+    "merge": false,
+    "customer_contact": false,
+    "new_credentials": false,
+    "new_runtime": false
+  }
+}
