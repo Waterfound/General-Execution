@@ -143,15 +143,23 @@ class OfflineLedger:
             s = db.execute("SELECT state FROM mock_subscriptions WHERE subscription_id=?", (sid,)).fetchone()
             return s["state"] if s else "unknown"
 
-    def reconcile(self, *, repair: bool = False) -> dict:
+    def reconcile(self, *, repair: bool = False, subscription_id: str | None = None) -> dict:
         """Reconstruct expected projections from immutable mock events.
 
-        Entitlement is denied if projections diverge. Only an explicit local repair
-        can rewrite a corrupted projection; no external provider is consulted.
+        Entitlement is denied if its subscription projection diverges. A global
+        audit still reports any customer corruption. Repairs are global-only and
+        explicit; no external provider is consulted.
         """
+        if subscription_id is not None and not SYNTHETIC.fullmatch(subscription_id):
+            raise ContractError("subscription_id must be synthetic")
+        if repair and subscription_id is not None:
+            raise ContractError("scoped repair is unsupported")
         with self._db() as db:
             db.execute("BEGIN IMMEDIATE")
-            events = db.execute("SELECT * FROM mock_events ORDER BY subscription_id, revision").fetchall()
+            if subscription_id is None:
+                events = db.execute("SELECT * FROM mock_events ORDER BY subscription_id, revision").fetchall()
+            else:
+                events = db.execute("SELECT * FROM mock_events WHERE subscription_id=? ORDER BY revision", (subscription_id,)).fetchall()
             expected = {}
             grouped = {}
             for e in events:
@@ -177,8 +185,12 @@ class OfflineLedger:
                     rev += 1
                 if state is not None:
                     expected[sid] = (plan, rev, state)
+            if subscription_id is None:
+                actual_rows = db.execute("SELECT * FROM mock_subscriptions")
+            else:
+                actual_rows = db.execute("SELECT * FROM mock_subscriptions WHERE subscription_id=?", (subscription_id,))
             actual = {r["subscription_id"]: (r["plan_id"], r["revision"], r["state"])
-                      for r in db.execute("SELECT * FROM mock_subscriptions")}
+                      for r in actual_rows}
             mismatches = sorted(sid for sid in set(expected) | set(actual) if expected.get(sid) != actual.get(sid))
             incorrect_applied = [e["subscription_id"] for e in events if bool(e["applied"]) !=
                                  (e["revision"] <= expected.get(e["subscription_id"], (None, 0, None))[1])]
@@ -190,13 +202,14 @@ class OfflineLedger:
                 db.execute("UPDATE mock_events SET applied=0")
                 for sid, (_, revision, _) in expected.items():
                     db.execute("UPDATE mock_events SET applied=1 WHERE subscription_id=? AND revision<=?", (sid, revision))
-            return {"healthy": not mismatches, "repaired": repair and bool(mismatches),
+            return {"healthy": not mismatches or (repair and bool(mismatches)),
+                    "repaired": repair and bool(mismatches),
                     "mismatched_subscriptions": mismatches, "subscriptions": len(expected),
                     "pending_gap_events": sum(len(grouped[sid]) - expected.get(sid, (None, 0, None))[1] for sid in grouped)}
 
     def entitled(self, sid: str) -> bool:
         try:
-            return self.reconcile()["healthy"] and self.state(sid) == "active"
+            return self.reconcile(subscription_id=sid)["healthy"] and self.state(sid) == "active"
         except sqlite3.Error:
             # Store outage or missing schema must never grant mock access.
             return False
