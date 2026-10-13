@@ -1,0 +1,52 @@
+{
+  "schema": "wrm.cr001.source-lineage-test-receipt.v1",
+  "checkpoint_utc_day": "2026-10-13",
+  "tested_python": "3.13.5",
+  "scope": "ISOLATED_LOCAL_PYTHON_EXECUTION_ON_BYTE_EXACT_GITHUB_BLOBS_NOT_GITHUB_CI",
+  "git_repo": "Waterfound/General-Execution",
+  "branch": "wrm/cr001-source-lineage-binding-20261012",
+  "stacked_base_sha": "6399a7cd7bd34e392e6059f3f008db523e7ba388",
+  "test_command": "cd experiments/wrm/permit_property && python -m unittest -v test_permit_property.py test_source_binding.py",
+  "test_count": 65,
+  "passed": 65,
+  "failed": 0,
+  "skipped": 0,
+  "source_file_hashes": {
+    "permit_property.py": {
+      "git_blob_sha1": "dede7cff70849c3e907ec4072e88f77b71b44713",
+      "sha256": "66b77e3b5081114997a2f603694b4e7415e8fba87d1c3ee12882696c0d6f20a7"
+    },
+    "test_permit_property.py": {
+      "git_blob_sha1": "85a01837eea6b52b472ccf14083e1d943b1a8e22",
+      "sha256": "45afd93bd9a8dc3b18a208a9c22a87e9dfd0facfdffca643c760274e29fefceb"
+    },
+    "source_binding.py": {
+      "git_blob_sha1": "7c9282847b26fdbeab80a438ddcf0ecddfd7bf19",
+      "sha256": "ef471b7cba82f69fecbc478dba4e065186284a1048dc916c7c68161473851dff"
+    },
+    "test_source_binding.py": {
+      "git_blob_sha1": "6b68594db10dbe5898f29e2716ed643b3184fe2c",
+      "sha256": "79154e141e2d6943cf8dca5d3522c6831e561a76921be35fbcf409236a7b13bb"
+    },
+    "observations.json": {
+      "git_blob_sha1": "5ed9e9fda29a4cd2248d392b388f0be32b14ef4a",
+      "sha256": "e692045fac9394ce9661d80c3b1cf024f8ea21c4fa395554b231410f575ab0d4"
+    }
+  },
+  "test_log_sha256": "fa1b61fd12f38e160b5c2ff451501f8269b5e110149dcf7935ad45a604f1c29f",
+  "real_sample_command": "python permit_property.py observations.json",
+  "real_sample_output_sha256": "b7f5008927084f731e594c731c89c1e13e1d8f438b66b2e66523c3e59d3310ca",
+  "real_sample": {
+    "permit_rows": 3,
+    "unique_geographic_ids": 2,
+    "reported_geographic_reference_matches": 3,
+    "second_geo_record_has_own_correct_source_url": true
+  },
+  "hard_limits": [
+    "Original official HTTP payload bytes not independently acquired/hashed or independently replayed",
+    "Evidence comprises normalized public JSON preserved from connector output, not authenticated official bytes",
+    "Supplemental Austin ZIP lacks independently pinned per-record origin URL",
+    "No entire-jurisdiction ingestion, buyer acceptance, owner verification, QGIS or commercial ROI proven",
+    "No new GitHub native 65-test CI run claimed"
+  ]
+}
