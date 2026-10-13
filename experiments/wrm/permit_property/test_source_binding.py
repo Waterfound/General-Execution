@@ -44,7 +44,9 @@ class SourceBindingTests(unittest.TestCase):
         with self.assertRaises(SourceBindingError):verified_query_urls(snapshot(),IDS,4)
     def test_unordered_ids(self):
         with self.assertRaises(SourceBindingError):verified_query_urls(snapshot(),IDS[::-1],3)
-    def test_gis_count_not_one(self):self.reject(lambda x:x['gis_counts'].update({IDS[0]:2}))
+    def test_count_zero_still_has_url_lineage(self):
+        x=snapshot();x['gis_counts'][IDS[0]]=0
+        self.assertIn(IDS[0],verified_query_urls(x,IDS,3))
     def test_missing_second_url(self):self.reject(lambda x:x.pop('gis_url_second'))
     def test_https_port(self):self.reject(lambda x:x.update(gis_url=x['gis_url'].replace('.gov/', '.gov:443/')))
     def test_userinfo(self):self.reject(lambda x:x.update(gis_url=x['gis_url'].replace('https://','https://attacker@')))
