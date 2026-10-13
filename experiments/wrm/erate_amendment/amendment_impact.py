@@ -102,7 +102,7 @@ def evaluate(snapshot: dict) -> dict:
             'relative_to_bid_opening': 'PRE_BID' if prebid else 'POST_BID',
             'disposition': disposition,
             'attachments': analyzed,
-            'buyer_action': 'READ_ORIGINAL_AND_ADDED_DOCUMENTS_BEFORE_BIDDING' if prebid and has_bid_doc else 'NO_CURRENT_BID_ACTION_INFERRED',
+            'buyer_action': 'REVIEW_SOURCE_AND_VERIFY_CURRENT_DEADLINE' if prebid and has_bid_doc and not has_unknown and observed < bid else 'NO_CURRENT_BID_ACTION_INFERRED',
         })
     return {
         'schema': 'cr001.amendment-impact-report.v1', 'solicitation_id': ident, 'fcc_form_470': form,
@@ -110,8 +110,10 @@ def evaluate(snapshot: dict) -> dict:
         'authenticated_source_bytes': False, 'document_bytes_inspected': False,
         'accepted_payment_or_bid_submission': False,
         'events': reports,
-        'pre_bid_impact_events': sum(r['buyer_action'].startswith('READ_ORIGINAL') for r in reports),
-        'caveat': 'Names and official amendment notes only. No prices, quantities, compliance or legal effect verified. Revalidate directly against official procurement source.',
+        'pre_bid_impact_events': sum(r['relative_to_bid_opening'] == 'PRE_BID' and r['disposition'].startswith('POTENTIAL') for r in reports),
+        'current_bid_action_events': sum(r['buyer_action'].startswith('REVIEW_SOURCE') for r in reports),
+        'historical_snapshot': observed >= bid,
+        'caveat': 'Names and official amendment notes only. Bid opening date is not verified submission deadline. No prices, quantities, compliance or legal effect verified. Revalidate directly against official procurement source.',
     }
 
 
