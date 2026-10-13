@@ -1,0 +1,75 @@
+{
+  "schema": "wrm.cr001.pdf-byte-candidate-test-receipt.v1",
+  "observed_date": "2026-10-12",
+  "run_mode": "LOCAL_PYTHON_STD_LIB_PLUS_FREE_PYMUPDF_AND_REPORTLAB",
+  "exact_tested_sources": {
+    "document_delta.py": {
+      "git_blob_sha1": "d6692b526266414632bc6bff091129340fce7c04",
+      "sha256": "949f4c3cdda1f6ca281cec86e05b191b08e30059602623f446a8f36ac28517b1"
+    },
+    "test_document_delta.py": {
+      "git_blob_sha1": "aa5fa25dcd375a8342821da80490a25443f7851b",
+      "sha256": "8651faaa93ae8a08a7a336497eaf1a6183581f769d9f55795190847d980b1e33"
+    }
+  },
+  "command": "cd experiments/wrm/erate_amendment && python -m unittest -v test_document_delta.py",
+  "tests": {
+    "passed": 28,
+    "failed": 0,
+    "skipped": 0,
+    "local_python": "3.13.5",
+    "fitz_version": "1.26.7",
+    "reportlab_installed": true
+  },
+  "original_negative": {
+    "failed_count": 2,
+    "origin": "Synthetic-PDF fixture writer broke words at arbitrary 88-character boundaries",
+    "scope": "TEST_FIXTURE_ONLY",
+    "repair": "wrap at word boundaries without changing source candidate"
+  },
+  "real_official_binary_fetch": {
+    "attempted": true,
+    "url_source": "https://www.clevelandmetroschools.org/fs/resource-manager/view/",
+    "container_download_result": "FAILED",
+    "container_dns_result": "NAME_RESOLUTION_FAILURE",
+    "web_pdf_page_read": "SUCCESS",
+    "official_original_sha256": null,
+    "official_addendum_sha256": null,
+    "authentic_binary_e2e": "NOT_EXECUTED"
+  },
+  "source_observation": {
+    "rfp": "21372",
+    "original_pages": 2,
+    "addendum_pages": 1,
+    "acknowledgement_requirement_seen": true,
+    "conditional_rejection_seen": true,
+    "final_response_date_unchanged": true,
+    "authority": "CMSD web-rendered PDFs",
+    "method": "WEB_TEXT_AND_VISUAL_NOT_RAW_BYTES"
+  },
+  "competitive_parity": {
+    "official_page": "MANUAL_SOURCE_READ",
+    "incumbent_same_input_run": "NOT_EXECUTED",
+    "source_claims_marketed": [
+      "ChangeTower RFP monitoring",
+      "ERateSync Form470/RFP requirement checks",
+      "BidCompliance RFP compliance matrix"
+    ],
+    "waterfound_synthetic_pdf_corpus": "EXECUTED",
+    "waterfound_official_pdf_binary_pair": "NOT_EXECUTED",
+    "proven_differentiation": false
+  },
+  "state": "DONE_TECHNICAL_CANDIDATE__EXTERNAL_SOURCE_BYTES_GATE",
+  "product_selected": false,
+  "revenue_received_usd": 0,
+  "operation": {
+    "spend": 0,
+    "work": false,
+    "scheduler_activation": false,
+    "private_data_exposure": false,
+    "canonical_merge": false,
+    "release": false,
+    "client_contact": false
+  },
+  "next": "Respect KILL of generic E-rate change alerts; do not select E-rate buyer product without lawful raw official-document byte proof, actual same-case incumbent output, and genuine buyer advantage. Pivot bounded buyer-job evidence toward public source record integrity only after direct substitute screen."
+}

@@ -1,0 +1,81 @@
+{
+  "schema": "wrm.cr001.post-document-falsification-tournament.v1",
+  "checkpoint_date": "2026-10-12",
+  "status": "NO_PRODUCT_SELECTED",
+  "ranked_next_candidate": "permit_portal_scraper_paid_acceptance",
+  "selection_gate_passed": false,
+  "selection_blockers": [
+    "buyer willingness to pay Waterfound unknown",
+    "specific lower-burden unique outcome not demonstrated",
+    "no real source-schema-reconciled candidate",
+    "no independently verified same-input competitor parity",
+    "no proof no-human delivery",
+    "no payment credentials or real revenue"
+  ],
+  "entries": [
+    {
+      "id": "supplier_statement_generic",
+      "decision": "KILL_GENERIC",
+      "cause": "Dext+AutoEntry+MIT source substitute and no licensed paired actual customer records"
+    },
+    {
+      "id": "erate_generic_rfp_change_obligation",
+      "decision": "KILL_GENERIC_AS_PRODUCT",
+      "cause": "official PDFs expose requirement; USAC, ERateSignal, ChangeTower, ErateSync and BidCompliance directly market overlapping alerts and/or compliance analysis",
+      "technical_reuse": "PDF exact-byte candidate 28/28 local tests; no official binary"
+    },
+    {
+      "id": "permit_portal_scraper_paid_acceptance",
+      "decision": "NEXT_BOUNDED_RESEARCH",
+      "buyer": "Public Upwork client, manufacturing/construction organization",
+      "source": "https://www.upwork.com/freelance-jobs/apply/Python-Developer-for-Permit-Portal-Scrapers_~022090116979619755021/",
+      "posted_compensation": "USD 30 / independently accepted jurisdiction scraper",
+      "acceptance": [
+        "all jurisdiction records beyond page one",
+        "resolve blank owner from public assessor",
+        "retrieve company public contact email/phone where lawful",
+        "20 fields conform to supplied rules",
+        "unattended fresh-Windows-task-scheduler CLI",
+        "writes to target Sheet"
+      ],
+      "evidence_class": "BUYER_POSTED_SPEC_AND_BUDGET_NOT_WATERFOUND_WTP",
+      "commercial_issues": [
+        "portal-specific integration work likely high recurrent maintenance",
+        "20 field mapping rules shared only after hire; cannot honestly claim full acceptance",
+        "private target sheet credentials not available",
+        "contact enrichment privacy/terms and portal rate limits require review",
+        "low per-job price"
+      ],
+      "next_test": "one jurisdiction public official bulk dataset + county assessor publicly documented API and explicit source-positive missing-owner reconciliation. Before code, check no-account availability and incumbent same-acceptance substitute; fail closed."
+    },
+    {
+      "id": "public_parcel_gis_22k",
+      "decision": "HOLD_CONTRACTUAL_INPUT",
+      "buyer": "Buyer-posted public US parcel data provider",
+      "source": "https://www.upwork.com/freelance-jobs/apply/Build-Repeatable-Parcel-and-GIS-Ingestion-Pipeline-Python-PostGIS-ArcGIS-REST_~022094970875552880932/",
+      "budget": "USD 22000 posted fixed job",
+      "rejection_reason": "NDA-gated full specifications, Docker/PostGIS/S3, one whole state, multiweek near-full-time work, not a zero-human independent product"
+    },
+    {
+      "id": "mini_grant_closeout",
+      "decision": "HOLD_PRIVATE_INPUT",
+      "cause": "original templates/verified output inaccessible without customer authority"
+    },
+    {
+      "id": "commodity_excel_cleanup",
+      "decision": "KILL_GENERIC",
+      "cause": "undifferentiated existing spreadsheet/Python functionality"
+    }
+  ],
+  "ratchet": {
+    "direct_commercial_frontier": "BUYER_JOB_AND_ACCEPTANCE_CRITERIA_FALSIFICATION",
+    "support_only": "REUSABLE_PDF_EVIDENCE_PARSER_NO_PRODUCT_BUILD",
+    "first_revenue_usd": 0,
+    "authority_created": false,
+    "spend": false,
+    "work": false,
+    "outreach": false
+  },
+  "next_machine_action": "Read one publicly documented county permit and assessor source, find legally accessible record-level ground-truth mismatch not already trivially solved by incumbent, and evaluate whether a jurisdiction-normalized reliability report can be delivered with <zero routine Waterfound work>. If not, kill; do not build scraper factory.",
+  "provenance": "Evidence-only comparative decision; source pages observed via public web; no buyer interview, no paid engagement, no competitor installed test"
+}
