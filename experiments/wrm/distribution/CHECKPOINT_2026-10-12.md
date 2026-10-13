@@ -14,7 +14,7 @@ Date: 2026-10-12. Scope: isolated, reversible, no release, payment, personal dat
 
 `cd experiments/wrm/distribution && python -W error::ResourceWarning -m unittest -v test_candidate.py`
 
-Local outcome on 2026-10-12: **21/21 PASS**. `python run_rehearsal.py` produced deterministic synthetic funnel, out-of-order replay, cold-process reopening, duplicate webhook and cancellation checks. Evidence class: `SYNTHETIC_MOCK_ONLY`. No CI, Actions, external sandbox, production-webhook or unattended provider run claimed.
+Local outcome on 2026-10-12: **24/24 PASS**. `python run_rehearsal.py` produced deterministic synthetic funnel, out-of-order replay, cold-process reopening, duplicate webhook and cancellation checks. Evidence class: `SYNTHETIC_MOCK_ONLY`. No CI, Actions, external sandbox, production-webhook or unattended provider run claimed.
 
 ## Ratchet-facing candidate status (no shared writer)
 
@@ -25,7 +25,7 @@ Local outcome on 2026-10-12: **21/21 PASS**. `python run_rehearsal.py` produced 
 | Acquisition hypothesis selected | OSS + legitimate inbound conditional route | PROVISIONAL_ONLY |
 | Distribution candidate implemented | offline contract, not landing/published site | PARTIAL_CANDIDATE |
 | Activation instrumentation tested | synthetic SQLite counts | VERIFIED_MOCK |
-| Monetization adapter verified | 21 tests, offline subscription transitions | VERIFIED_MOCK, NOT_PROVIDER_VERIFIED |
+| Monetization adapter verified | 24 tests, offline subscription transitions | VERIFIED_MOCK, NOT_PROVIDER_VERIFIED |
 | Unit economics modeled | `run_rehearsal.py` scenarios | MODELED_HYPOTHETICAL |
 | Recovery rehearsal passed | durable mock DB restart + conflicting/reordered events | VERIFIED_LOCAL_MOCK |
 | Commercial launch gates identified | docs host, seller, KYB/KYC, taxes, publication, privacy, service policy | IDENTIFIED |
