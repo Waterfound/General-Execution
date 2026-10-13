@@ -54,7 +54,7 @@ def verified_query_urls(metadata, geo_ids, permit_count):
         raise SourceBindingError('Austin full-source completeness must not be asserted')
     if metadata.get('gis_completeness_contract') != 'TWO_EXACT_GEO_ID_COUNT_QUERIES_EACH_COUNT_ONE' or len(geo_ids) != 2:
         raise SourceBindingError('GIS verification contract for the two IDs required')
-    if set(metadata.get('gis_count_urls', {})) != set(geo_ids):
+    if not isinstance(metadata.get('gis_count_urls'), dict) or set(metadata['gis_count_urls']) != set(geo_ids):
         raise SourceBindingError('exactly one count URL required for each geographic ID')
     if not isinstance(metadata.get('gis_url_second'), str):
         raise SourceBindingError('second GIS feature source URL missing')
