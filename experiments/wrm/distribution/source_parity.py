@@ -69,7 +69,8 @@ def assess(case: SourceCase) -> dict:
         'primary_status': case.primary_status,
         'discovery_status': case.discovery_status,
         'verdict': verdict,
-        'currently_accessible': verdict == 'CONDITIONAL_NEEDS_COMMERCIAL_VALIDATION',
+        'cross_source_open': verdict == 'CONDITIONAL_NEEDS_COMMERCIAL_VALIDATION',
+        'currently_accessible': False,  # no authorized account/contract/fulfillment proof
         'posted_budget_usd_historical': case.budget_usd,
         'waterfound_buyer_wtp_verified': False,
         'waterfound_revenue_verified': False,
@@ -83,6 +84,7 @@ def current_screen() -> dict:
     results = [assess(c) for c in CASES]
     return {'schema':'rma.dist.primary_source_parity.v1', 'source_snapshot_date':'2026-10-12',
             'cases':results, 'currently_accessible_candidates':sum(int(x['currently_accessible']) for x in results),
+            'cross_source_open_candidates':sum(int(x['cross_source_open']) for x in results),
             'disposition':'NO_CURRENTLY_ACCESSIBLE_BUYER_IN_SCREENED_CASES',
             'revenue_usd_observed':'0', 'authority_created':False,
             'next_direct_commercial_predicate':'lawful_open_buyer_job_and_independent_acceptance_proof'}
