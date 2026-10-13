@@ -6,11 +6,21 @@ class TestOfficialGrounded(unittest.TestCase):
     def test_source_case_expected(self):
         out=evaluate(FX)
         self.assertEqual(out['pre_bid_impact_events'],1)
+        self.assertEqual(out['current_bid_action_events'],0)
+        self.assertTrue(out['historical_snapshot'])
+        self.assertEqual(out['events'][0]['buyer_action'],'NO_CURRENT_BID_ACTION_INFERRED')
         self.assertEqual(out['events'][0]['disposition'],'POTENTIAL_PRICE_SCHEDULE_IMPACT_VERIFY_CONTENTS')
         self.assertEqual(out['events'][1]['disposition'],'AFTER_BID_OPENING_HISTORICAL_ONLY')
         self.assertEqual(out['events'][1]['buyer_action'],'NO_CURRENT_BID_ACTION_INFERRED')
         self.assertFalse(out['authenticated_source_bytes'])
         self.assertFalse(out['document_bytes_inspected'])
+    def test_prebid_observation_requires_deadline_review(self):
+        x=copy.deepcopy(FX)
+        x['events']=x['events'][:1]
+        x['observed_as_of_utc']='2025-02-22T00:00:00Z'
+        z=evaluate(x)
+        self.assertEqual(z['current_bid_action_events'],1)
+        self.assertEqual(z['events'][0]['buyer_action'],'REVIEW_SOURCE_AND_VERIFY_CURRENT_DEADLINE')
     def test_naive_all_amendments_raises_false_bid_event(self):
         self.assertEqual(len(FX['events']), 2)
         self.assertEqual(evaluate(FX)['pre_bid_impact_events'],1)
