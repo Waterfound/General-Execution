@@ -1,0 +1,103 @@
+{
+  "schema": "wrm.cr001.official-paired-document-observation.v1",
+  "observed_on": "2026-10-12",
+  "relevant_job": "ERate RFP original-vs-addendum bid obligation tracking",
+  "sources": [
+    {
+      "type": "OFFICIAL_ORIGINAL_RFP_PDF",
+      "owner": "Cleveland Metropolitan School District",
+      "rfp": "21372",
+      "url": "https://www.clevelandmetroschools.org/fs/resource-manager/view/f20ecdb8-5417-4818-9535-ab4fe00bb3e1",
+      "pages_read": 2,
+      "pdf_raw_bytes_downloaded": false,
+      "facts": [
+        {
+          "name": "submission_due",
+          "value": "2023-02-20",
+          "time": "13:00 local",
+          "classification": "ORIGINAL_DIRECT_TEXT"
+        },
+        {
+          "name": "last_written_questions",
+          "value": "2023-02-03",
+          "classification": "ORIGINAL_DIRECT_TEXT"
+        },
+        {
+          "name": "response_pricing_sheet",
+          "value": "required",
+          "classification": "ORIGINAL_DIRECT_TEXT"
+        }
+      ]
+    },
+    {
+      "type": "OFFICIAL_ADDENDUM_PDF",
+      "owner": "Cleveland Metropolitan School District",
+      "rfp": "21372",
+      "url": "https://www.clevelandmetroschools.org/fs/resource-manager/view/6f113102-bfcd-45ec-a056-4fef7da70f40",
+      "pages_read": 1,
+      "pdf_raw_bytes_downloaded": false,
+      "facts": [
+        {
+          "name": "addendum_acknowledgement",
+          "value": "required",
+          "classification": "ADDENDUM_DIRECT_TEXT",
+          "risk": "omission may lead to rejection; not automatic disqualification"
+        },
+        {
+          "name": "official_timeline_supersedes_conflicting_dates",
+          "value": true,
+          "classification": "ADDENDUM_DIRECT_TEXT"
+        },
+        {
+          "name": "submission_due",
+          "value": "2023-02-20",
+          "classification": "ADDENDUM_DIRECT_TEXT"
+        },
+        {
+          "name": "preproposal_zoom_link",
+          "value": "included",
+          "classification": "ADDENDUM_DIRECT_TEXT"
+        }
+      ]
+    }
+  ],
+  "actual_delta": {
+    "new_obligation": "ADDENDUM_RECEIPT_ACKNOWLEDGEMENT",
+    "risk_proven": "expressly stated in official addendum: omission may lead to rejection",
+    "price_sheet_change": "NOT_DEMONSTRATED",
+    "submission_deadline_changed": false,
+    "timeline_precedence_clarified": true,
+    "source_authority": "PUBLIC_SCHOOL_DISTRICT",
+    "document_change_detection_using_pdf_bytes": "NOT_EXECUTED",
+    "manual_independent_source_inspection": true,
+    "licensed_redistribution_of_pdf_bytes": "NOT_VERIFIED",
+    "standalone_product_value": "NOT_DEMONSTRATED"
+  },
+  "comparators": [
+    {
+      "name": "Official district list",
+      "same_case_test": "publicly lists RFP and addendum but does not itself extract the acknowledgement requirement into a structured obligation",
+      "nature": "VISUAL_READ_ONLY_OBSERVATION"
+    },
+    {
+      "name": "ERateSignal",
+      "same_case_test": "NOT_TESTED",
+      "nature": "VENDOR_ADVERTISED_FILTER_ALERT_ONLY"
+    },
+    {
+      "name": "USAC native Form 470 tool",
+      "same_case_test": "NOT_TESTED",
+      "nature": "PUBLIC_PLATFORM_DOC_LINK_DISCOVERY"
+    }
+  ],
+  "decision": "ADVANCE_TO_SINGLE_RAW_DOCUMENT_CONTENT_PROOF_NOT_PRODUCT_SELECTION",
+  "hard_gate": "Acquire original+addendum bytes with appropriate use, generate exact text-level or PDF-bound comparisons, build source-grounded obligation delta and independently inspect output; if this adds no buyer-observable value over incumbent, KILL.",
+  "safety": {
+    "bid_is_historical": true,
+    "not_legal_advice": true,
+    "source_document_ocr_or_parser_tested": false,
+    "customer_intent_to_buy_waterfound": false,
+    "competitor_parity": false,
+    "first_revenue": false
+  }
+}

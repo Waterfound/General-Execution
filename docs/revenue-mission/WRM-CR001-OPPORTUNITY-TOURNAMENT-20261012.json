@@ -1,0 +1,161 @@
+{
+  "schema": "wrm.cr001.opportunity-tournament.v1",
+  "observed_date": "2026-10-12",
+  "scope": "passive_candidate_commercial_decision_only",
+  "round": "CR001_WORKFREE_REAL_RUN_20261012",
+  "objective": "Falsify existing generic supplier reconciliation, compare a bounded E-Rate public amendment source case, prioritize a next legally runnable buyer outcome.",
+  "opportunities": [
+    {
+      "id": "supplier_statement_generic",
+      "buyer": "Accounting/payables teams procuring manual supplier-statement-to-invoice reconciliation",
+      "pain": "Monthly exception review against books or invoices",
+      "budget_signal": {
+        "kind": "DIRECT_POSTED_BUYER_HUMAN_LABOR_RATE",
+        "posted": "USD 5–20/hour",
+        "url": "https://www.upwork.com/freelance-jobs/apply/Invoice-Statement-Reconciliation_~022107967499694032024/",
+        "waterfound_wtp": false
+      },
+      "substitutes": [
+        {
+          "name": "Dext",
+          "url": "https://help.dext.com/en/articles/183198-reconcile-supplier-statements-in-dext"
+        },
+        {
+          "name": "AutoEntry",
+          "url": "https://help.autoentry.com/en/articles/2459511-reconcile-a-supplier-statement"
+        },
+        {
+          "name": "MIT Xero supplier statement checker",
+          "url": "https://github.com/KevinBjorv/xero-supplier-statement-checker",
+          "checked_source_commit": "ab8658a7e94de696dd233501f075e355685e8adc"
+        }
+      ],
+      "differentiation": "NONE_DEMONSTRATED",
+      "decisive_experiment": "Requires licensed paired real buyer statement and invoices, independently labeled errors and same-input incumbent comparison",
+      "result": "KILL_GENERIC",
+      "operational_burden": "UNKNOWN_CREDENTIALS_ACCOUNTING_DATA_SUPPORT",
+      "reason": "incumbents already implement matching and exception classification, no independently sourced novel paid outcome"
+    },
+    {
+      "id": "erate_official_amendment_impact",
+      "buyer": "E-Rate service-provider sales and procurement bid team; buyer-posted application request",
+      "pain": "Detect which public Form 470/RFP changes may affect a quote without confusing subsequent award records with bidding changes",
+      "budget_signal": {
+        "kind": "DIRECT_BUYER_REQUEST_FOR_PROJECT_WITHOUT_POSTED_PRICE",
+        "posted": "Budget amount not verified",
+        "url": "https://www.upwork.com/freelance-jobs/apply/RFP-Procurement-Intelligence-App_~022099679983526658973/",
+        "waterfound_wtp": false
+      },
+      "public_dataset": {
+        "source": "USAC open data",
+        "url": "https://opendata.usac.org/",
+        "reuse": "public reuse stated",
+        "source_case": "https://oregonbuys.gov/bso/external/bidDetail.sda?docId=S-P03012-00012701&external=true&parentUrl=close"
+      },
+      "substitutes": [
+        {
+          "name": "USAC native Form470 tooling",
+          "url": "https://www.usac.org/e-rate/service-providers/step-2-responding-to-bids/",
+          "same_input_execution": false
+        },
+        {
+          "name": "ERateSignal",
+          "url": "https://eratesignal.com/form-470-alerts",
+          "same_input_execution": false,
+          "advertised_prices_url": "https://www.eratesignal.com/"
+        }
+      ],
+      "differentiation": "HYPOTHESIS_ONLY: source-verifiable cross-document changed requirement/price schedule classification, not generic alert or scoring",
+      "decisive_experiment": "Retrieve original and amended public documents with allowed access, compare exact text/quantities/deadline changes against independent page metadata, compare same-input source/competitor where available",
+      "real_experiment": {
+        "fixture_provenance": "MANUAL_OFFICIAL_PAGE_TRANSCRIPTION_NOT_RAW_BYTES",
+        "tests": "18/18_LOCAL_PASS",
+        "pre_opening_impact": 1,
+        "post_opening_award": 1,
+        "current_actionable": 0,
+        "source_authenticated": false,
+        "comparator_tested": false,
+        "competitive_advantage_proven": false
+      },
+      "result": "REFINE_ONCE",
+      "operational_burden": "offline standardlib proof zero paid runtime; ongoing source access, OCR/PDF, legal time and buyer support unproven",
+      "kill": "If official page already offers all changed-obligation evidence or direct substitute parity is similar, or actual original+amended source bytes cannot be obtained lawfully, KILL"
+    },
+    {
+      "id": "mini_grant_closeout",
+      "buyer": "Community mini-grant program seeking to populate closeout documents from submissions",
+      "pain": "Manual final-submission-to-closeout documentation",
+      "budget_signal": {
+        "kind": "DIRECT_POSTED_FIXED_BUDGET",
+        "posted": "USD 250 fixed",
+        "url": "https://www.upwork.com/freelance-jobs/apply/Automate-Grant-Closeout-Process_~022102514329451113180/",
+        "waterfound_wtp": false
+      },
+      "substitutes": [
+        {
+          "name": "Google Apps Script and Microsoft Power Automate",
+          "evidence": "job asks for platform-specific workflow integrations"
+        },
+        {
+          "name": "Submittable",
+          "url": "https://www.submittable.com/solutions/grants",
+          "kind": "vendor_marketing"
+        }
+      ],
+      "differentiation": "HYPOTHESIS_ONLY: private-schema-compatible zero-support export with explicit missing-evidence",
+      "decisive_experiment": "Must obtain a lawful real input schema + original closeout template and independently check output against first party expected closeout",
+      "result": "HOLD_EVIDENCE_GAP",
+      "operational_burden": "customer-specific accounts and template mapping; likely onboarding/support, not near-zero One Man",
+      "kill": "No permissioned buyer template or safe independent ground truth"
+    },
+    {
+      "id": "commodity_excel_cleaning",
+      "buyer": "Small and medium organizations posting Excel cleanup jobs",
+      "pain": "Remove duplicate rows, normalize names, missing values and formats",
+      "budget_signal": {
+        "kind": "DIRECT_POSTED_FIXED_PRICE",
+        "posted": "USD 100",
+        "url": "https://www.upwork.com/freelance-jobs/apply/Python-Automation-Script-Excel-CSV-Data-Processing_~022102452385220593190/",
+        "waterfound_wtp": false
+      },
+      "substitutes": [
+        {
+          "name": "Standard spreadsheet and Python tools",
+          "kind": "general_nonverified_parity"
+        }
+      ],
+      "differentiation": "NONE_DEMONSTRATED",
+      "decisive_experiment": "Would require a distinct labeled high-value transformation already proven unachievable by existing customer tools",
+      "result": "KILL_GENERIC",
+      "operational_burden": "one-off custom input mapping and low price, high human support risk",
+      "reason": "requested deliverables explicitly basic CLI cleanup, not defensible product"
+    }
+  ],
+  "selection_gate": {
+    "buyer_and_pain_identifiable": true,
+    "external_budget_signal": true,
+    "direct_substitutes_examined": true,
+    "specific_competitive_difference_demonstrated": false,
+    "source_bound_executable_candidate_demonstrated": true,
+    "independently_verified_buyer_outcome": false,
+    "near_zero_human_operations_verified": false,
+    "first_revenue_path_plausible_but_unproven": true,
+    "first_product_selected": false
+  },
+  "decision": "NO_PRODUCT_SELECTED",
+  "next_action": "One bounded E-Rate original-versus-amendment document-content proof with independent changed-condition labeling. If same-case source/competitor parity cannot be demonstrated, close this wedge and try a separately buyer-posted machine-deliverable task.",
+  "revenue": {
+    "actual_payment_verified": false,
+    "usd": 0
+  },
+  "authority": {
+    "new_system": false,
+    "customer_contact": false,
+    "work": false,
+    "spend": false,
+    "merge": false,
+    "deploy": false,
+    "credentials": false,
+    "runtime": false
+  }
+}
