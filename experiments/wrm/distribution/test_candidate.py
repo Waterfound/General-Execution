@@ -90,6 +90,34 @@ class CandidateTests(unittest.TestCase):
         self.assertTrue(self.ledger.reconcile()["healthy"])
         self.assertTrue(self.ledger.entitled("sim-org-a"))
 
+    def test_source_event_tampering_fails_closed_and_cannot_repair(self):
+        self.ledger.ingest_mock(event(1, "subscription.created"))
+        self.ledger.ingest_mock(event(2, "invoice.paid"))
+        with closing(sqlite3.connect(self.path)) as db:
+            with db:
+                db.execute("UPDATE mock_events SET kind='invoice.failed' WHERE revision=2")
+        self.assertFalse(self.ledger.entitled("sim-org-a"))
+        self.assertFalse(self.ledger.reconcile()["healthy"])
+        self.assertEqual(len(self.ledger.reconcile()["integrity_violations"]), 1)
+        with self.assertRaises(ContractError):
+            self.ledger.reconcile(repair=True)
+
+    def test_applied_flag_corruption_repaired_from_immutable_events(self):
+        self.ledger.ingest_mock(event(1, "subscription.created"))
+        self.ledger.ingest_mock(event(2, "invoice.paid"))
+        with closing(sqlite3.connect(self.path)) as db:
+            with db:
+                db.execute("UPDATE mock_events SET applied=0 WHERE revision=2")
+        self.assertFalse(self.ledger.entitled("sim-org-a"))
+        self.assertTrue(self.ledger.reconcile(repair=True)["repaired"])
+        self.assertTrue(self.ledger.entitled("sim-org-a"))
+
+    def test_store_unavailability_fails_closed(self):
+        self.ledger.ingest_mock(event(1, "subscription.created"))
+        self.ledger.ingest_mock(event(2, "invoice.paid"))
+        self.path.unlink()  # Simulated loss/outage. No regrant from memory.
+        self.assertFalse(self.ledger.entitled("sim-org-a"))
+
     def test_only_synthetic_identifiers(self):
         with self.assertRaises(ContractError):
             self.ledger.ingest_mock(MockEvent("actual@customer.com", "sim-org-a", 1, "subscription.created", "candidate-basic"))
