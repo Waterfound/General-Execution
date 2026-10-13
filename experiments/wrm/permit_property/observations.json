@@ -1,0 +1,64 @@
+{
+  "schema": "wrm.cr001.official-permit-property.v1",
+  "provenance": {
+    "evidence_class": "CONNECTOR_EXTRACTED_PUBLIC_JSON_NOT_RAW_BYTES",
+    "austin_dataset": "3syk-w9eu",
+    "gis_layer": "TCAD_public/MapServer/0",
+    "complete_sample": true,
+    "gis_complete": true,
+    "austin_url": "https://data.austintexas.gov/resource/3syk-w9eu.json?%24select=permit_number%2Ctcad_id%2Cissue_date%2Cpermit_class_mapped%2Cjurisdiction&%24where=tcad_id%20IS%20NOT%20NULL&%24limit=3",
+    "gis_url": "https://gis.traviscountytx.gov/server1/rest/services/Boundaries_and_Jurisdictions/TCAD_public/MapServer/0/query?where=geo_id%3D%270239360701%27&outFields=geo_id%2CPROP_ID%2Csitus_address%2Csitus_zip&returnGeometry=false&f=json",
+    "gis_url_second": "https://gis.traviscountytx.gov/server1/rest/services/Boundaries_and_Jurisdictions/TCAD_public/MapServer/0/query?where=geo_id%3D%270339500820%27&outFields=geo_id%2CPROP_ID%2Csitus_address%2Csitus_zip&returnGeometry=false&f=json",
+    "austin_completeness_contract": "EXPLICIT_LIMIT_3_NOT_EXHAUSTIVE_SOURCE",
+    "gis_completeness_contract": "TWO_EXACT_GEO_ID_COUNT_QUERIES_EACH_COUNT_ONE",
+    "queried_date": "2026-10-12",
+    "gis_counts": {
+      "0239360701": 1,
+      "0339500820": 1
+    },
+    "gis_count_urls": {
+      "0239360701": "https://gis.traviscountytx.gov/server1/rest/services/Boundaries_and_Jurisdictions/TCAD_public/MapServer/0/query?where=geo_id%3D%270239360701%27&returnCountOnly=true&f=json",
+      "0339500820": "https://gis.traviscountytx.gov/server1/rest/services/Boundaries_and_Jurisdictions/TCAD_public/MapServer/0/query?where=geo_id%3D%270339500820%27&returnCountOnly=true&f=json"
+    }
+  },
+  "permits": [
+    {
+      "permit_number": "2026-115272 PP",
+      "tcad_id": "0239360701",
+      "issue_date": "2026-09-14T00:00:00.000",
+      "permit_class_mapped": "Commercial",
+      "jurisdiction": "AUSTIN FULL PURPOSE",
+      "original_zip": "78754"
+    },
+    {
+      "permit_number": "2026-117823 PP",
+      "tcad_id": "0339500820",
+      "issue_date": "2026-09-11T00:00:00.000",
+      "permit_class_mapped": "Residential",
+      "jurisdiction": "AUSTIN LTD",
+      "original_zip": "78617"
+    },
+    {
+      "permit_number": "2026-117826 PP",
+      "tcad_id": "0339500820",
+      "issue_date": "2026-09-11T00:00:00.000",
+      "permit_class_mapped": "Residential",
+      "jurisdiction": "AUSTIN LTD",
+      "original_zip": "78617"
+    }
+  ],
+  "parcels": [
+    {
+      "geo_id": "0239360701",
+      "PROP_ID": 992875,
+      "situs_address": "BLUE GOOSE RD 78754",
+      "situs_zip": "78754"
+    },
+    {
+      "geo_id": "0339500820",
+      "PROP_ID": 822637,
+      "situs_address": "PEARCE LN 78617",
+      "situs_zip": "78617"
+    }
+  ]
+}
