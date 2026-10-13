@@ -156,6 +156,18 @@ class OfflineLedger:
             grouped = {}
             for e in events:
                 grouped.setdefault(e["subscription_id"], []).append(e)
+            invalid_digests = [e["event_id"] for e in events
+                               if e["digest"] != MockEvent(
+                                   e["event_id"], e["subscription_id"], e["revision"],
+                                   e["kind"], e["plan_id"]
+                               ).digest()]
+            if invalid_digests:
+                if repair:
+                    raise ContractError("refuse to repair corrupted source event history")
+                return {"healthy": False, "repaired": False,
+                        "integrity_violations": sorted(invalid_digests),
+                        "mismatched_subscriptions": sorted(grouped),
+                        "subscriptions": 0, "pending_gap_events": 0}
             for sid, batch in grouped.items():
                 rev, state, plan = 0, None, batch[0]["plan_id"]
                 for e in batch:
@@ -168,6 +180,9 @@ class OfflineLedger:
             actual = {r["subscription_id"]: (r["plan_id"], r["revision"], r["state"])
                       for r in db.execute("SELECT * FROM mock_subscriptions")}
             mismatches = sorted(sid for sid in set(expected) | set(actual) if expected.get(sid) != actual.get(sid))
+            incorrect_applied = [e["subscription_id"] for e in events if bool(e["applied"]) !=
+                                 (e["revision"] <= expected.get(e["subscription_id"], (None, 0, None))[1])]
+            mismatches = sorted(set(mismatches) | set(incorrect_applied))
             if repair and mismatches:
                 db.execute("DELETE FROM mock_subscriptions")
                 db.executemany("INSERT INTO mock_subscriptions VALUES (?,?,?,?)",
@@ -180,7 +195,11 @@ class OfflineLedger:
                     "pending_gap_events": sum(len(grouped[sid]) - expected.get(sid, (None, 0, None))[1] for sid in grouped)}
 
     def entitled(self, sid: str) -> bool:
-        return self.reconcile()["healthy"] and self.state(sid) == "active"
+        try:
+            return self.reconcile()["healthy"] and self.state(sid) == "active"
+        except sqlite3.Error:
+            # Store outage or missing schema must never grant mock access.
+            return False
 
     def track_synthetic(self, event_id: str, journey_id: str, stage: str) -> str:
         if not SYNTHETIC.fullmatch(event_id) or not SYNTHETIC.fullmatch(journey_id) or stage not in FUNNEL:
