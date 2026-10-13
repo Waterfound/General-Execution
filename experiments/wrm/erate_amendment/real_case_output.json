@@ -1,0 +1,49 @@
+{
+  "schema": "cr001.amendment-impact-report.v1",
+  "solicitation_id": "S-P03012-00012701",
+  "fcc_form_470": "250018588",
+  "source_url": "https://oregonbuys.gov/bso/external/bidDetail.sda?docId=S-P03012-00012701&external=true&parentUrl=close",
+  "evidence_class": "MANUALLY_TRANSCRIBED_PUBLIC_WEB_PAGE",
+  "authenticated_source_bytes": false,
+  "document_bytes_inspected": false,
+  "accepted_payment_or_bid_submission": false,
+  "events": [
+    {
+      "sequence": 1,
+      "occurred_at_utc": "2025-02-21T00:40:54Z",
+      "relative_to_bid_opening": "PRE_BID",
+      "disposition": "POTENTIAL_PRICE_SCHEDULE_IMPACT_VERIFY_CONTENTS",
+      "attachments": [
+        {
+          "filename": "RFP-2425-114 Network Equip ERate Addendum 1",
+          "category": "ADDENDUM_DOCUMENT",
+          "document_contents_verified": false
+        },
+        {
+          "filename": "REVISED Attachment C - Product Specifications and Price Schedule",
+          "category": "REVISED_PRICE_SCHEDULE",
+          "document_contents_verified": false
+        }
+      ],
+      "buyer_action": "NO_CURRENT_BID_ACTION_INFERRED"
+    },
+    {
+      "sequence": 2,
+      "occurred_at_utc": "2025-03-04T18:31:36Z",
+      "relative_to_bid_opening": "POST_BID",
+      "disposition": "AFTER_BID_OPENING_HISTORICAL_ONLY",
+      "attachments": [
+        {
+          "filename": "Notice of Intent to Award: RFP-2425-114 Network Equip ERate",
+          "category": "AWARD_NOTICE",
+          "document_contents_verified": false
+        }
+      ],
+      "buyer_action": "NO_CURRENT_BID_ACTION_INFERRED"
+    }
+  ],
+  "pre_bid_impact_events": 1,
+  "current_bid_action_events": 0,
+  "historical_snapshot": true,
+  "caveat": "Names and official amendment notes only. Bid opening date is not verified submission deadline. No prices, quantities, compliance or legal effect verified. Revalidate directly against official procurement source."
+}
