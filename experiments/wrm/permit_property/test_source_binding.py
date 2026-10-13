@@ -29,6 +29,7 @@ class SourceBindingTests(unittest.TestCase):
     def test_count_wrong_id(self): self.reject(lambda x:x['gis_count_urls'].update({IDS[1]:count(IDS[0])}))
     def test_count_wrong_count_flag(self): self.reject(lambda x:x['gis_count_urls'].update({IDS[1]:x['gis_count_urls'][IDS[1]].replace('true','false')}))
     def test_count_missing(self): self.reject(lambda x:x['gis_count_urls'].pop(IDS[1]))
+    def test_nonmapping_count_urls(self):self.reject(lambda x:x.update(gis_count_urls=list(IDS)))
     def test_count_extra(self): self.reject(lambda x:x['gis_count_urls'].update({'9999999999':count('9999999999')}))
     def test_unexpected_param(self): self.reject(lambda x:x.update(gis_url=x['gis_url']+'&returnCountOnly=true'))
     def test_duplicate_where(self): self.reject(lambda x:x.update(gis_url=x['gis_url']+'&where=geo_id%3D%27fake%27'))
