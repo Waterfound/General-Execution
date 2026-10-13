@@ -1,0 +1,14 @@
+{
+  "schema": "cr001.official-amendment-transcription.v1",
+  "source_url": "https://oregonbuys.gov/bso/external/bidDetail.sda?docId=S-P03012-00012701&external=true&parentUrl=close",
+  "evidence_class": "MANUALLY_TRANSCRIBED_PUBLIC_WEB_PAGE",
+  "solicitation_id": "S-P03012-00012701",
+  "fcc_form_470": "250018588",
+  "bid_opening_utc": "2025-02-28T22:30:00Z",
+  "observed_as_of_utc": "2026-10-12T23:59:00Z",
+  "events": [
+    {"sequence": 1, "occurred_at_utc": "2025-02-21T00:40:54Z", "note_relation": "ADDED_ATTACHMENT_ENTRIES_TRANSCRIBED_FROM_OFFICIAL_AMENDMENT_NOTE", "added_attachments": ["RFP-2425-114 Network Equip ERate Addendum 1", "REVISED Attachment C - Product Specifications and Price Schedule"]},
+    {"sequence": 2, "occurred_at_utc": "2025-03-04T18:31:36Z", "note_relation": "ADDED_ATTACHMENT_ENTRIES_TRANSCRIBED_FROM_OFFICIAL_AMENDMENT_NOTE", "added_attachments": ["Notice of Intent to Award: RFP-2425-114 Network Equip ERate"]}
+  ],
+  "fixture_notes": "Source times PST/PDT converted from Oregon local site; manually transcribed from official bid page (not saved raw HTML). Opening Feb28 14:30 local PST -> 22:30Z. Amendment1 Feb20 16:40:54 PST -> Feb21 00:40:54Z. Amendment2 Mar4 10:31:36 PST -> Mar4 18:31:36Z: event timestamp in this fixture should be 2025-03-04T18:31:36Z."
+}
