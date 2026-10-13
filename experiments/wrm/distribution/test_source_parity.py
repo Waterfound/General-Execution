@@ -24,6 +24,8 @@ class PrimarySourceParityTests(unittest.TestCase):
         c=SourceCase('hypothetical','https://example.org/a','https://example.org/b','OPEN','OPEN','2026-10-12','25')
         result=assess(c)
         self.assertEqual(result['verdict'],'CONDITIONAL_NEEDS_COMMERCIAL_VALIDATION')
+        self.assertTrue(result['cross_source_open'])
+        self.assertFalse(result['currently_accessible'])
         self.assertFalse(result['waterfound_buyer_wtp_verified'])
         self.assertFalse(result['waterfound_revenue_verified'])
         self.assertFalse(result['automatic_publication_authorized'])
