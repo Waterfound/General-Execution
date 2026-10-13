@@ -1,0 +1,79 @@
+{
+  "schema": "wrm.cr001.executed-probe-receipt.v1",
+  "observation_date": "2026-10-12",
+  "work_mode": "CHAT_CONNECTORS_PLUS_LOCAL_FREE_PYTHON_NOT_WORK",
+  "environment": {
+    "python": "3.13.5",
+    "stdlib_only": true,
+    "command": "cd experiments/wrm/erate_amendment && python -m unittest -q test_amendment_impact.py && python amendment_impact.py oregon_2025_grounded.json > real_case_output.json"
+  },
+  "verification": {
+    "executed_local_tests": 18,
+    "passed": 18,
+    "failed": 0,
+    "skipped": 0,
+    "native_gh_actions_run": false,
+    "remote_exact_git_blobs_matched_to_local_executed_artifacts": true,
+    "artifacts": {
+      "code": {
+        "path": "experiments/wrm/erate_amendment/amendment_impact.py",
+        "git_blob": "7de18125a9e003260870de4bdc62f5fec09dbdaf",
+        "sha256": "fec4cda3e6a682b0d6d875b5325592308b95f6fadb8cbf722dcab139f7662213"
+      },
+      "tests": {
+        "path": "experiments/wrm/erate_amendment/test_amendment_impact.py",
+        "git_blob": "c29a42d4a08e3de9ec17881649bad455f44cea01",
+        "sha256": "57a81db7b33c484f07d1f994c854cb460060c0b498bf1723554dce625f5d6c1b"
+      },
+      "manually_transcribed_public_case": {
+        "path": "experiments/wrm/erate_amendment/oregon_2025_grounded.json",
+        "git_blob": "047abefe32ae244f82d77a6f8bcfe92bd5494c4b",
+        "sha256": "fc26721a0a7fd648cb2e83de14ed42ac6e7d12b71b89852c7d1db12502b8a9ff"
+      },
+      "reported_case_output": {
+        "path": "experiments/wrm/erate_amendment/real_case_output.json",
+        "git_blob": "2066d46a2f9d883910a3c5deca5843fc08198fda",
+        "sha256": "a333b230fa30f8e01ad7681df65526edf63b5fc5915956502c2e1ef74177d57e"
+      }
+    }
+  },
+  "single_case": {
+    "source": "https://oregonbuys.gov/bso/external/bidDetail.sda?docId=S-P03012-00012701&external=true&parentUrl=close",
+    "amendment_entries": 2,
+    "prebid_potential_impact_events": 1,
+    "postbid_award_notice_events": 1,
+    "current_bid_actions": 0,
+    "raw_site_bytes_downloaded": false,
+    "source_content_files_downloaded": false
+  },
+  "paired_public_pdfs": {
+    "source_owner": "Cleveland Metropolitan School District",
+    "rfp": "21372",
+    "original": "https://www.clevelandmetroschools.org/fs/resource-manager/view/f20ecdb8-5417-4818-9535-ab4fe00bb3e1",
+    "addendum": "https://www.clevelandmetroschools.org/fs/resource-manager/view/6f113102-bfcd-45ec-a056-4fef7da70f40",
+    "read_original_and_addendum_as_published_web_pdf_text_and_visuals": true,
+    "source_bytes_retained": false,
+    "acknowledgment_requirement_source_observed": true,
+    "official_timeline_precedence_source_observed": true,
+    "submission_due_date_changed": false,
+    "automated_original_vs_addendum_parsing_not_tested": true
+  },
+  "commercial_checks": {
+    "waterfound_paid": 0,
+    "waterfound_payment_verified": false,
+    "external_waterfound_wtp": false,
+    "unique_advantage": false,
+    "incumbent_same_case_parity": false,
+    "product_selected": false,
+    "work_used": false,
+    "spend": false
+  },
+  "state": "CR001_EXECUTED_TECHNICAL_PROBE__FIRST_DEFENSIBLE_PRODUCT_NOT_SELECTED",
+  "next_machine_action": "Independent original/addendum byte retrieval subject to source rights and no new credentials; compare source-grounded obligation delta and cost versus official and incumbent on identical inputs. If no demonstrated new buyer-visible capability, kill E-rate generic wedge and advance next admissible buyer-paid job.",
+  "limits": [
+    "Manually transcribed source event fixture is not authenticated raw provider bytes",
+    "Official PDFs were inspected through web text/screens, not independently downloaded/checksummed",
+    "No actual financial benefits or customer outcomes measured",
+    "No competitor product execution or paid conversion"
+  ]
+}
