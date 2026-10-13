@@ -153,3 +153,40 @@ For future public-bounty candidates, verify in this order before any implementat
 6. acceptance is objective enough to test privately before the public claim gate.
 
 The recheck produced genuine negative commercial information: it eliminated the strongest recent hardware, end-to-end and research leads without implementation cost. **NO_PRODUCT_SELECTED and USD 0 remain unchanged.** Additional bounty-scanner instrumentation is SUPPORT_ONLY; source-state verification and a surviving paid job remain the commercial predicate.
+
+
+## Same-day source-quality stress test
+
+A fresh GitHub-label search surfaced two apparently open, low-cost Algora tasks. Direct issue, comment and repository inspection rejected both before implementation.
+
+### oss-hunter-livefire #1 — public automation fixture, not a commercial opportunity
+
+tine1117/oss-hunter-livefire issue #1 is open and labeled as a USD 50 bounty for a one-line duration-parser fix. However, the repository README explicitly describes the repository as a sandbox/test fixture for exercising an automated bounty-solving workflow and asks contributors to star the repository and follow its owner. The issue already had 66 comments, and repository search returned more than 160 near-equivalent pull requests for the same missing `"d": 86400` mapping.
+
+Sources:
+- https://github.com/tine1117/oss-hunter-livefire/issues/1
+- https://github.com/tine1117/oss-hunter-livefire/blob/main/README.md
+- https://github.com/tine1117/oss-hunter-livefire/pulls
+
+Decision: **REJECT_AS_NON-COMMERCIAL_FIXTURE_AND_EXTREME_CONTENTION**. An open bounty label and objective test are insufficient when the owner discloses that the repository is a workflow fixture and the solution has already been duplicated at industrial scale. Do not star, follow, comment, patch or claim.
+
+### pcb-viewer #163 — funded history, but already repeatedly rewarded and economically dominated
+
+tscircuit/pcb-viewer issue #163 remains open with a USD 3 Algora bounty. The Algora bot's issue table lists many submitted solutions and reward links, while repository search shows numerous later pull requests still claiming the same small migration. The public-claim requirement also includes a UI demo video.
+
+Sources:
+- https://github.com/tscircuit/pcb-viewer/issues/163
+- https://github.com/tscircuit/pcb-viewer/pulls?q=is%3Apr+163
+
+Decision: **REJECT_AS_ALREADY-SATURATED_AND_NEGATIVE_EXPECTED_VALUE**. This does demonstrate a payer history, but it is not a live exclusive task: the same outcome has repeatedly been submitted/rewarded, the nominal reward is USD 3, and the public/demo overhead exceeds the maximum gross return even before payout friction.
+
+### Admission rule added
+
+Before treating an open bounty as claimable, verify not only issue state and funding but also repository purpose and reward lifecycle:
+
+1. reject declared test fixtures, engagement farms and repositories whose primary observed purpose is exercising automated submissions;
+2. count equivalent open and closed pull requests, not only issue assignees;
+3. inspect bot reward history—an open issue can remain visible after equivalent solutions have already been rewarded;
+4. compare the maximum gross reward with mandatory public artifacts, account/payment overhead and contention; reject when the best-case economics are already negative.
+
+This stress test found no admissible patch candidate. It improves the claimability filter but does not alter **NO_PRODUCT_SELECTED**, customer evidence, WTP, revenue or USD 0. No external interaction or implementation was performed.
