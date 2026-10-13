@@ -95,3 +95,61 @@ Kill a candidate immediately when any hard criterion fails; do not add orchestra
 - Generic bounty-board monitoring infrastructure: **SUPPORT_ONLY**; additional instrumentation would not cure eligibility, scope or payout defects.
 
 Next machine-admissible action is to screen newly posted bounties or other public paid jobs against the admission criteria, prioritizing funded, objective, low-contention tasks. Do not notify or seek a human gate until a candidate survives the read-only screen and a private patch/test proof is complete.
+
+
+## Same-day recheck: compatible assets and source-state verification
+
+A second screen on 2026-10-13 tested whether the first pass had missed a smaller software-only or already-owned-hardware opportunity.
+
+### Objective hardware recipe bounties — valid format, unavailable equipment
+
+sybil-solutions/local-ai-registry issues #216–#223 each advertise USD 50 on merge for a tested local-model recipe and specify six objective checks. The published targets are Intel Arc B580, GTX 1080 Ti, RTX 2080 Ti, RX 7900 XTX, selected AMD 16 GB cards, RTX 4060 Ti 16 GB, RTX 5060 Ti 16 GB and Radeon 890M. None matches Waterfound's available MacBook M1, iPhone/iPads or Steam Deck. The previously returned RTX 2070 is also not a target.
+
+Sources:
+- https://github.com/sybil-solutions/local-ai-registry/issues/216
+- https://github.com/sybil-solutions/local-ai-registry/issues/223
+
+Decision: **REJECT_WITHOUT_SPEND**. These are unusually clear acceptance tests, but completing them requires unavailable hardware. No purchase, rental, borrowing or fabricated benchmark is admissible.
+
+### Copperhead end-to-end bounty — accepted-equivalent work already in flight
+
+copperheadhq/copperhead issue #66 advertises USD 50 for an eight-stage KiCad pipeline run, fixes, deterministic coverage and a findings report. On inspection it had 105 comments and two assignees; multiple contributors had already claimed or supplied plans. The task also requires a configured KiCad/provider environment and a real full pipeline run.
+
+Source: https://github.com/copperheadhq/copperhead/issues/66
+
+Decision: **REJECT_FOR_CONTENTION_AND_UNBOUNDED_RUNTIME**. A speculative duplicate implementation has poor expected value and would not be a bounded public-fixture proof.
+
+### Research leads — one unpaid, one heavily contested
+
+aadarwal/swarmstatus-bounties issue #4 has precise primary-source acceptance criteria for an SEC county-data anomaly, but explicitly says no monetary reward is announced and already has an attempt. aLexzzz430/Cognitive-OS issue #5 advertises USD 3,000 for an accepted packet from at least eight distinct AI systems, but had 92 comments and multiple submitted PRs; compliant work requires genuine access to eight systems and acceptance remains maintainer-discretionary.
+
+Sources:
+- https://github.com/aadarwal/swarmstatus-bounties/issues/4
+- https://github.com/aLexzzz430/Cognitive-OS/issues/5
+
+Decision: **REJECT_FOR_FIRST_REVENUE**. The former cannot produce revenue; the latter combines provider-access burden, heavy competition and discretionary acceptance.
+
+### Aggregator false positives — posted amount is not funding evidence
+
+A recent BountyScout alert surfaced several apparently small software bounties. Direct source inspection found examples already closed as `not_planned`, including scaffold-studio-hq/scaffold-studio-mcp #3 (USD 45), Signpost-Labs/signpost-api #100 (USD 100) and Escaro-Labs/escaro #70 (USD 45). Their threads asked maintainers to confirm funding and payout, but no such confirmation was observed before closure.
+
+Sources:
+- https://github.com/2510034127qq-wq/BountyScout/issues/250
+- https://github.com/scaffold-studio-hq/scaffold-studio-mcp/issues/3
+- https://github.com/Signpost-Labs/signpost-api/issues/100
+- https://github.com/Escaro-Labs/escaro/issues/70
+
+Commercial learning: a title containing a dollar amount, or an aggregator's extracted reward, is not demand/WTP evidence unless the source issue is open and the maintainer or escrow mechanism actually authorizes and funds it.
+
+## Updated admission order
+
+For future public-bounty candidates, verify in this order before any implementation:
+
+1. source issue is currently open and the advertised reward was authorized by the payer;
+2. funding or credible payout history exists;
+3. Waterfound is eligible and the payout route is lawful and available;
+4. required hardware, provider access and fixtures are already available without spend or credential expansion;
+5. no assignee, accepted-equivalent PR or excessive contention exists;
+6. acceptance is objective enough to test privately before the public claim gate.
+
+The recheck produced genuine negative commercial information: it eliminated the strongest recent hardware, end-to-end and research leads without implementation cost. **NO_PRODUCT_SELECTED and USD 0 remain unchanged.** Additional bounty-scanner instrumentation is SUPPORT_ONLY; source-state verification and a surviving paid job remain the commercial predicate.
