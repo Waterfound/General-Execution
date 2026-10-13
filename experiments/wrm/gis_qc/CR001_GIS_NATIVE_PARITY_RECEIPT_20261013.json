@@ -1,0 +1,70 @@
+{
+  "schema": "cr001.gis.native-substitute-parity-receipt.v1",
+  "date": "2026-10-13",
+  "parent": "6399a7cd7bd34e392e6059f3f008db523e7ba388",
+  "local_suite": {
+    "python": "3.13.5",
+    "shapely": "2.1.2",
+    "pass": 24,
+    "fail": 0,
+    "github_native_ci": false,
+    "source_blobs": [
+      "55db3918afdb6e78161519cb0b42e0531f116b87",
+      "9a47de8e59b54a3598c7c5e5a10d2db7ccd7690e",
+      "79603c67425aabed2bd6b71a6d1fd41d2ef6c3ec",
+      "9c40326206039b4fbb3d9f0deab381f6075d1740"
+    ],
+    "test_log_sha256": "c49e3e630af58bb5ad287780d279cb81d5df2c51e2d187e4c8eeada5d0b52609"
+  },
+  "benchmark": {
+    "source": "SYNTHETIC_ONLY",
+    "same_input": true,
+    "comparative_free_substitute": "Shapely 2.1.2 STRtree",
+    "repetitions": 2,
+    "features": [
+      20,
+      60,
+      100,
+      180
+    ],
+    "candidate_median_ms": [
+      3.509,
+      30.36,
+      81.445,
+      269.791
+    ],
+    "native_median_ms": [
+      0.192,
+      0.372,
+      0.526,
+      0.816
+    ],
+    "candidate_div_native": [
+      18.27,
+      81.66,
+      154.9,
+      330.45
+    ],
+    "exact_pair_sets_equal": true,
+    "first_result_json_sha256": "4098a4561f12b0daec311cea2a3a97bfe27fef1a7f1ae782104049aa0932acfc",
+    "QGIS_executed": false,
+    "buyer_acceptance": false,
+    "full_5m_benchmark": false,
+    "performance_claim_for_5m": false
+  },
+  "demand": {
+    "public_budget_USD": 1000,
+    "buyer_listing": "https://www.upwork.com/freelance-jobs/apply/GIS-Data-Quality-Controller-Agent_~022101716284364662488/",
+    "WTP_Waterfound_verified": false,
+    "revenue_received_USD": 0
+  },
+  "decision": "KILL_GENERIC_GIS_OVERLAP_VALIDATOR_AS_FIRST_PRODUCT__FULL_GIS_JOB_HOLD__CR001_FIRST_DEFENSIBLE_PRODUCT_OPEN",
+  "authority": {
+    "spend": false,
+    "merge": false,
+    "outreach": false,
+    "work": false,
+    "publish_commercially": false,
+    "scheduler": false
+  }
+}
