@@ -45,3 +45,16 @@ Kill the sharper hypothesis if any of the following occurs:
 3. The method cannot handle one scan and one multi-page/broken-table fixture without manual reconstruction that destroys viable unit economics.
 
 Promote only after all are observed: three lawful representative inputs, same-input competitor comparison, independently checkable acceptance criteria, and real willingness-to-try or WTP. Until then: capability proven narrowly; observed customer outcome, differentiation, demand for the discriminator, WTP and revenue all unverified.
+
+## Follow-up direct-demand screen — final disposition
+
+A fresh primary-market search on 2026-10-13 tested whether buyers specifically request semantic or formula-level validation, rather than ordinary row/count/total checking.
+
+- A current USD100 clinical CRF entry and quality-check job requires scanned-form transcription, source consistency, missing/out-of-range query logs and GCP/ALCOA+ experience. It demonstrates a real validation job, but the value is domain-governed human judgment and private supplied records, not autonomous formula-backed PDF conversion: https://www.upwork.com/freelance-jobs/apply/Clinical-Data-Entry-Quality-Check-identified-CRF-Data_~022107198975369803005/ .
+- A current USD30–60/hour Document AI engineering job requires an existing private parsing system, representative private documents, complex layouts, merged cells, glyphs, diagrams, routing and measurable quality. It validates demand for custom engineering, not a standalone table checker: https://www.upwork.com/freelance-jobs/apply/PDF-Parsing-Document-Expert-Needed-Improve-Existing-System_~022094873425753987085/ .
+- A statistical-validation engagement requires a PhD biostatistician, actual private records and a signed professional opinion. This is explicitly unsuitable for near-zero-human autonomous fulfillment and cannot be substituted by the probe: https://www.upwork.com/freelance-jobs/apply/Biostatistician-Independent-Statistical-Validation-Opinion-Needed_~022108084675655563802/ .
+- A competing catalog pipeline already advertises source IDs, typed fields, validation rules, a dead-letter table, run reports and a USD1,200–7,500 price range. This is seller positioning rather than verified sales, but it removes any plausible claim that provenance plus exception routing is unique: https://www.upwork.com/services/product/development-it-clean-database-rows-from-your-pdfs-and-messy-excel-files-2102641762813535040 .
+
+The search found no direct paid specification for formula-recomputed PDF tables. Therefore criterion 2 is satisfied in the bounded screen: paid specifications either request ordinary extraction/validation or domain expertise and private evidence, not the candidate discriminator.
+
+**FINAL KILL as first product:** `formula-verifiable scientific/regulatory PDF table conversion`. Preserve the executed probe as reusable capability only. Do not add OCR, layout routing, more fixtures or product infrastructure around it. Re-open only on independent direct buyer evidence requesting the semantic discriminator with lawful representative input and machine-verifiable acceptance.
