@@ -190,3 +190,38 @@ Before treating an open bounty as claimable, verify not only issue state and fun
 4. compare the maximum gross reward with mandatory public artifacts, account/payment overhead and contention; reject when the best-case economics are already negative.
 
 This stress test found no admissible patch candidate. It improves the claimability filter but does not alter **NO_PRODUCT_SELECTED**, customer evidence, WTP, revenue or USD 0. No external interaction or implementation was performed.
+
+
+## Same-day payer-lifecycle and expiry qualification
+
+A further read-only screen tested two stronger-looking paths: a recurring commercial payer with recently posted defects, and a higher-value deterministic-testing challenge with public payout history.
+
+### Expensify — real recurring payer, but current jobs are already allocated
+
+Expensify/App issues #103775 and #103774 each advertise USD 175 for current Sentry defects and expose narrow suspected causes. Both source issues also embed Upwork job IDs. Direct state inspection found #103775 already assigned to the issue reporter and a contributor, while #103774 is assigned, labeled `Reviewing`, and has an issue owner. The latter also already has an automated implementation attempt in review.
+
+Sources:
+- https://github.com/Expensify/App/issues/103775
+- https://github.com/Expensify/App/issues/103774
+- https://github.com/Expensify/App/pull/103793
+
+Decision: **REJECT_CURRENT ISSUES; RETAIN PAYER AS A MARKET SIGNAL**. The defects demonstrate a recurring payer and materially affected users, but neither is an unallocated opportunity. Expensify's proposal, assignment and Upwork lifecycle is part of claimability, not administrative cleanup after coding. Do not submit a duplicate patch or public proposal without selection and the later account/authority gate.
+
+Commercial learning: for recurring-payer repositories, screen issue ownership, proposal selection, in-house/automated competing implementations and payment-platform eligibility before estimating implementation value. A public root cause is not a claim right.
+
+### Turso deterministic-simulation challenge — proven historical payouts, submissions closed
+
+Algora's official Turso challenge page advertises up to USD 1,000 for data-loss or corruption bugs found by extending Turso's deterministic simulator and shows a public leaderboard with prior rewards. It also explicitly states **Challenge Completed**, **Submissions are closed**, and **All bounties have been awarded to the winners**.
+
+Source: https://algora.io/challenges/turso
+
+Decision: **REJECT_AS_EXPIRED**. A shallow public-source checkout was inspected only to assess feasibility; no code was changed, no simulator run was claimed, and no toolchain was installed. The historical payout record validates that the mechanism once paid for rigorous reproducible outcomes, but it is not current demand or an available revenue path.
+
+### Ratchet result
+
+This pass adds two hard pre-implementation checks:
+
+1. a challenge page must state that submissions are currently open, not merely preserve historical reward copy and a leaderboard;
+2. a newly posted issue must be unallocated under the payer's actual assignment/proposal process, even when the code and suspected fix are public.
+
+No candidate survived all claimability predicates. **NO_PRODUCT_SELECTED**, demand for Waterfound, WTP for Waterfound, customer status, revenue and USD 0 remain unchanged. The next ACTIVE commercial action remains source-state screening for a newly posted, unassigned, funded, objective job; generic scanner or runtime work remains SUPPORT_ONLY.
