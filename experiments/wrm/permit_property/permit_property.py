@@ -14,6 +14,7 @@ import hashlib
 import json
 import re
 from pathlib import Path
+from source_binding import SourceBindingError, verified_query_urls
 
 DATASET = '3syk-w9eu'
 GIS_LAYER = 'TCAD_public/MapServer/0'
@@ -128,6 +129,10 @@ def reconcile(snapshot):
             raise EvidenceError('invalid independently observed cardinality')
         if n != len(parcel_by_geo.get(geo, [])):
             raise EvidenceError('GIS completeness mismatch; fail closed')
+    try:
+        gis_urls = verified_query_urls(meta, tuple(sorted(ids)), len(permits))
+    except SourceBindingError as exc:
+        raise EvidenceError(f'source query lineage: {exc}') from exc
     out = []
     for r in permits:
         found = parcel_by_geo.get(r['tcad_id'], [])
@@ -149,19 +154,21 @@ def reconcile(snapshot):
             'outcome':outcome,'public_property_reference':prop,
             'owner_identity_verified':False,'property_legal_identity_verified':False,
             'commercial_value_verified':False,
-            'source_austin':meta['austin_url'], 'source_gis':meta['gis_url']
+            'source_austin':meta['austin_url'], 'source_gis':gis_urls[r['tcad_id']]
         })
     counts=Counter(row['outcome'] for row in out)
     return {
         'schema':'wrm.cr001.permit-property-report.v1',
         'provenance_class':meta['evidence_class'],
         'sample_size':len(out),'distinct_geo_ids':len(ids),
+        'sample_scope':'BOUNDED_3_ROWS_NOT_SOURCE_EXHAUSTIVE',
         'geographic_reference_match_count':counts.get('MATCHED_GEOGRAPHIC_REFERENCE',0),
         'outcome_counts':dict(sorted(counts.items())),
         'rows':out,
         'limitations':['No original provider HTTP bytes available: sample is connector-extracted JSON',
                        'Matching publisher Geographic IDs and ZIP does NOT establish legal ownership, parcel-unit identity, or lead quality',
                        'Dates are publisher floating timestamps, not independently timezone-validated',
+                       'Supplemental Austin ZIP values lack authenticated source-response bytes and per-record ZIP-source lineage',
                        'No customer, competitive advantage, WTP, revenue, or unattended operation proven']
     }
 
