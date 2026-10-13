@@ -7,8 +7,8 @@
   "branch": "wrm/cr001-source-lineage-binding-20261012",
   "stacked_base_sha": "6399a7cd7bd34e392e6059f3f008db523e7ba388",
   "test_command": "cd experiments/wrm/permit_property && python -m unittest -v test_permit_property.py test_source_binding.py",
-  "test_count": 65,
-  "passed": 65,
+  "test_count": 69,
+  "passed": 69,
   "failed": 0,
   "skipped": 0,
   "source_file_hashes": {
@@ -25,15 +25,15 @@
       "sha256": "ef471b7cba82f69fecbc478dba4e065186284a1048dc916c7c68161473851dff"
     },
     "test_source_binding.py": {
-      "git_blob_sha1": "6b68594db10dbe5898f29e2716ed643b3184fe2c",
-      "sha256": "79154e141e2d6943cf8dca5d3522c6831e561a76921be35fbcf409236a7b13bb"
+      "git_blob_sha1": "23c1caa64d08622bd3174c10cb25eeec32a2c4f1",
+      "sha256": "c9154b583a9355e7ffea3ff20e8f02602dcb380d5a411e5c768676ee2bae47a9"
     },
     "observations.json": {
       "git_blob_sha1": "5ed9e9fda29a4cd2248d392b388f0be32b14ef4a",
       "sha256": "e692045fac9394ce9661d80c3b1cf024f8ea21c4fa395554b231410f575ab0d4"
     }
   },
-  "test_log_sha256": "fa1b61fd12f38e160b5c2ff451501f8269b5e110149dcf7935ad45a604f1c29f",
+  "test_log_sha256": "70dc1538c4a0e15e76ea1b0e4354100effa102f26dc020f9a05d7481e0fe1b33",
   "real_sample_command": "python permit_property.py observations.json",
   "real_sample_output_sha256": "b7f5008927084f731e594c731c89c1e13e1d8f438b66b2e66523c3e59d3310ca",
   "real_sample": {
@@ -47,6 +47,7 @@
     "Evidence comprises normalized public JSON preserved from connector output, not authenticated official bytes",
     "Supplemental Austin ZIP lacks independently pinned per-record origin URL",
     "No entire-jurisdiction ingestion, buyer acceptance, owner verification, QGIS or commercial ROI proven",
-    "No new GitHub native 65-test CI run claimed"
+    "No new GitHub native 65-test CI run claimed",
+    "Adversarial demonstration: altering an unverified normalized PROP_ID still changes the purported reference without detection; authentic provider bytes required"
   ]
 }
