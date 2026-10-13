@@ -241,3 +241,36 @@ The official Open Collective project is real: it reported a USD 528.86 balance a
 Decision: **REJECT_CURRENTLY_UNFUNDED; RECHECK ONLY IF SOURCE STATE CHANGES**. A collective-level balance and generic issue-template invitation are credible payer-history evidence, but not task-specific WTP or a payment promise for #17814. Do not implement, comment, request assignment or open a PR unless the issue receives the documented amount, transaction and label and still remains unassigned.
 
 Admission rule added: require a task-specific funding binding—not merely a funded program, organization balance or boilerplate donation invitation—before implementation economics are evaluated.
+
+
+## Same-day aggregator regression — recycled saturated bounties
+
+A fresh third-party alert claimed two open bounties were currently available. Direct source reconciliation showed that both are stale or saturated rather than clean first-revenue opportunities.
+
+### WorkAdventure mobile app #1 — on hold, broad and repeatedly rewarded
+
+BAWES-Universe/workadventure-universe issue #1 advertises USD 150, but is explicitly labeled `on-hold`. It is a multi-platform Android/iOS epic with dependent subissues rather than a narrow standalone acceptance test. Its Algora history shows numerous prior attempts and reward links, while the thread still contains work-in-progress claims.
+
+Source: https://github.com/BAWES-Universe/workadventure-universe/issues/1
+
+Decision: **REJECT_AS_ON_HOLD_AND_SATURATED**. Open issue state and a dollar label do not override an explicit hold, completed reward history, active attempts or dependency breadth. Do not claim, implement or comment.
+
+### EdgeChains AWS Comprehend PII #290 — repeatedly rewarded and provider-dependent
+
+arakoodev/EdgeChains issue #290 advertises USD 50 (with an additional USD 25 entry in the bot ledger) for a JavaScript SDK integration with AWS Comprehend PII redaction, tests, a full example and a Loom demonstration. The issue had 86 comments on inspection. Its Algora table records many work-in-progress attempts and many reward links for equivalent submissions.
+
+Source: https://github.com/arakoodev/EdgeChains/issues/290
+
+Decision: **REJECT_AS REPEATEDLY REWARDED, SATURATED AND PROVIDER-DEPENDENT**. A credible real-world demonstration would also require AWS access and a public video artifact; those dependencies cannot rescue an already duplicated task and would add credential/provider overhead. Do not start AWS usage, record a demo, claim or implement.
+
+### Admission rule strengthened
+
+Aggregator counts and open-state filters are insufficient. Before implementation, reconcile each candidate against:
+
+1. explicit hold or pause labels;
+2. the bot/provider reward ledger, including prior equivalent payouts;
+3. equivalent open, closed and rewarded pull requests;
+4. active work-in-progress claims and dependent subissues;
+5. required paid-provider access, credentials, hardware and public demo artifacts.
+
+This regression independently confirms the earlier pcb-viewer result: **open + priced is not the same as unclaimed + payable**. No candidate survived the commercial screen. **NO_PRODUCT_SELECTED, demand for Waterfound, WTP for Waterfound, customer status, revenue and USD 0 remain unchanged.** No external interaction, implementation, provider use or public claim was performed.
