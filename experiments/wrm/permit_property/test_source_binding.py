@@ -51,4 +51,31 @@ class SourceBindingTests(unittest.TestCase):
     def test_missing_second_url(self):self.reject(lambda x:x.pop('gis_url_second'))
     def test_https_port(self):self.reject(lambda x:x.update(gis_url=x['gis_url'].replace('.gov/', '.gov:443/')))
     def test_userinfo(self):self.reject(lambda x:x.update(gis_url=x['gis_url'].replace('https://','https://attacker@')))
+
+class IntegratedSourceLineageTests(unittest.TestCase):
+    def sample(self):
+        import json
+        from pathlib import Path
+        return json.loads((Path(__file__).parent/'observations.json').read_text())
+    def test_second_geographic_id_gets_second_official_url(self):
+        from permit_property import reconcile
+        result = reconcile(self.sample())
+        self.assertEqual(result['rows'][1]['source_gis'],self.sample()['provenance']['gis_url_second'])
+        self.assertNotEqual(result['rows'][0]['source_gis'],result['rows'][1]['source_gis'])
+    def test_integrated_swapped_gis_queries_rejected(self):
+        from permit_property import reconcile, EvidenceError
+        data=self.sample();m=data['provenance'];m['gis_url'],m['gis_url_second']=m['gis_url_second'],m['gis_url']
+        with self.assertRaises(EvidenceError): reconcile(data)
+    def test_integrated_count_query_spoof_rejected(self):
+        from permit_property import reconcile, EvidenceError
+        data=self.sample();m=data['provenance'];m['gis_count_urls'][IDS[1]]=m['gis_count_urls'][IDS[0]]
+        with self.assertRaises(EvidenceError): reconcile(data)
+    def test_normalized_fixture_is_not_authenticated_provider_bytes(self):
+        from permit_property import reconcile
+        data=self.sample();data['parcels'][0]['PROP_ID']=999998
+        result=reconcile(data)
+        self.assertEqual(result['rows'][0]['public_property_reference'],999998)
+        self.assertEqual(result['provenance_class'],'CONNECTOR_EXTRACTED_PUBLIC_JSON_NOT_RAW_BYTES')
+        self.assertFalse(result['rows'][0]['property_legal_identity_verified'])
+
 if __name__ == '__main__':unittest.main()
