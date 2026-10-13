@@ -1,0 +1,130 @@
+{
+  "schema_version": "wrm.cr001.market-falsification.v1",
+  "observed_date": "2026-10-12",
+  "source_owner": {
+    "repository": "Waterfound/General-Execution",
+    "pr": 46,
+    "base_exact_head": "5920b02299edc37abb8fd39f70b8168c99a4c911"
+  },
+  "decision": "NO_PRODUCT_SELECTED",
+  "specific_wedge": "standalone supplier-statement vs invoice exception-only service",
+  "buyer_signal": {
+    "source_url": "https://www.upwork.com/freelance-jobs/apply/Invoice-Statement-Reconciliation_~022107967499694032024/",
+    "classification": "FIRST_PARTY_POSTED_BUDGET_FOR_HUMAN_SERVICE",
+    "observations": [
+      "monthly reconciliation requested",
+      "posted hourly band USD 5 to 20",
+      "six-plus month engagement stated",
+      "one hire shown on listing"
+    ],
+    "limitations": [
+      "Hire count not causally attributed to this exact job",
+      "not a purchase order for Waterfound",
+      "no verified software willingness-to-pay",
+      "no client data or authorization"
+    ]
+  },
+  "operator_pain": {
+    "source_url": "https://www.reddit.com/r/AccountingUK/comments/1v523zg/supplier_statement_reconciliations_help/",
+    "classification": "ANONYMOUS_FIRST_HAND_SELF_REPORT",
+    "observations": [
+      "report of recurring manual reconciliation of hundreds of supplier lines",
+      "respondents recommend spreadsheet lookup and AI copilots"
+    ],
+    "limitations": [
+      "not an authenticated paying buyer",
+      "reported severity and saved time not independently measured"
+    ]
+  },
+  "direct_substitutes": [
+    {
+      "product": "Dext Supplier Statements",
+      "url": "https://help.dext.com/en/articles/183198-reconcile-supplier-statements-in-dext",
+      "evidence": "VENDOR_DOCUMENTED",
+      "capabilities": [
+        "reference matching",
+        "fallback by supplier, amount and date",
+        "incomplete/missing/review statuses"
+      ],
+      "installed_parity": "NOT_TESTED"
+    },
+    {
+      "product": "AutoEntry",
+      "url": "https://help.autoentry.com/en/articles/2459511-reconcile-a-supplier-statement",
+      "evidence": "VENDOR_DOCUMENTED",
+      "capabilities": [
+        "supplier statement upload",
+        "invoice automatch",
+        "manual exception resolution"
+      ],
+      "installed_parity": "NOT_TESTED"
+    },
+    {
+      "product": "Xero Supplier Statement Checker",
+      "url": "https://github.com/KevinBjorv/xero-supplier-statement-checker",
+      "evidence": "PUBLIC_SOURCE_INSPECTED_NOT_EXECUTED",
+      "commit": "ab8658a7e94de696dd233501f075e355685e8adc",
+      "license": "MIT",
+      "source_blobs": {
+        "src/matching.ts": "dd105aa00cb6b89497501cc20f8236f21bcdd1de",
+        "fixtures/expected/report.json": "3d4af0895d9e80fbd7e550ccdc38fd74fb53f7b2"
+      },
+      "published_synthetic_fixture_counts": {
+        "matched": 2,
+        "amount_difference": 1,
+        "not_found": 1,
+        "review_required": 6
+      },
+      "capabilities": [
+        "read-only comparison against Xero bills",
+        "partial-payment and credit review",
+        "uncertain results on incomplete retrieval",
+        "evidence-backed exception report"
+      ],
+      "installed_parity": "NOT_TESTED",
+      "limitations": [
+        "synthetic fixture and static source inspection only",
+        "live Xero matching not independently tested"
+      ]
+    }
+  ],
+  "adjacent_payer_job": {
+    "source_url": "https://www.upwork.com/freelance-jobs/apply/Testers-Avolumi-Agent-Signup-REST-MCP-Workflow-Website_~022107120075583255805/",
+    "classification": "FIRST_PARTY_POSTED_BUDGET_FOR_QA_SERVICE",
+    "observations": [
+      "USD 12 fixed-price task",
+      "two separate physical-device journeys requested",
+      "three hires shown"
+    ],
+    "decision": "REJECT_AS_FOUNDATION_FOR_ONE_MACHINE_REVENUE",
+    "reason": "low posted price and dependence on two-device live manual/client-access workflow undermine near-zero-human repeatable margins",
+    "limitations": [
+      "hire count not proof of ongoing product demand",
+      "no client outreach or test executed"
+    ]
+  },
+  "candidate_gate": {
+    "lawfully_usable_real_paired_input_and_independent_ground_truth": false,
+    "independent_comparator_execution": false,
+    "unique_deliverable_advantage_demonstrated": false,
+    "buyer_willingness_to_try_waterfound": false,
+    "buyer_willingness_to_pay_waterfound": false,
+    "end_to_end_zero_human_delivery_proven": false,
+    "revenue_received_verified": false,
+    "product_build_admitted": false
+  },
+  "ratchet": {
+    "active_frontier": "BUYER_PROBLEM_EVIDENCE_AND_DIRECT_SUBSTITUTE_FALSIFICATION",
+    "secondary": "FIND_LAWFUL_PAIRED_REAL_CASE_AND_REPRODUCIBLE_DIFFERENTIATION",
+    "passive": "RELEASE_OUTREACH_PAYMENT_SUPPORT",
+    "next_condition": "Obtain an independently licensed paired actual statement/invoice case with labeled discrepancies AND a specific buyer-paid outcome not already covered by Dext/AutoEntry/MIT checker; compare output with a no-account substitute on identical evidence before building.",
+    "condition_without_source": "REJECT_SUPPLIER_GENERIC_AND_RESELECT_EXISTING_BUYER_JOB",
+    "commercial_information_gain": "DIRECT_SUBSTITUTION_STRENGTHENED",
+    "state": "NO_PRODUCT_SELECTED_NO_WTP_NO_REVENUE",
+    "authority_created": false,
+    "execution_triggered": false,
+    "customer_contacted": false,
+    "paid_provider_used": false,
+    "released": false
+  }
+}
