@@ -40,3 +40,27 @@ Six direct/adjacent substitute products and one research study added to the fals
 Next: choose a payer/job with two independent first-hand reports of the same repeated costly failure, inspect direct specialist and platform substitutes before coding, and locate a lawful representative input plus a safe decision existing products do not already advertise. If a difficult public case for the existing MSP vendor-commitment or HVAC addendum residual becomes available, prefer a bounded comparative proof; neither is promoted yet. Keep NO_PRODUCT_SELECTED until evidence survives.
 
 No outreach, spending, credential change, private data disclosure, scheduler/runtime change, release or merge. Existing WRM recurring owner unchanged. This research artifact is not a target-owned UFP cold-restart receipt, native Durable event, or customer validation.
+
+
+## 2026-10-13 update — native bounty identity and payout-ledger substitute
+
+A newly posted first-party implementation program in `ditto-assistant/ditto-subnet` further weakens the broader **Agent PR Recovery & Approval Ledger** idea:
+
+- issue #2871 specifies GitHub-account ↔ miner-hotkey attestation, replay protection, append-only identity history, signed unlinking, public status and a Backroom MCP read tool;
+- issue #2872 specifies versioned CLA digests, signed acceptance, append-only signature records, upload gates, adoption telemetry and PR checks;
+- parent epic #2054 separates claim, submission, acceptance, merge, deployment, approval and payment;
+- `docs/bounty-claims.md` already specifies signed bounty revisions, exact-commit submission binding, reservations, expiry, handoff, replay guards, reviewer deadlines and public state;
+- `docs/maintenance-treasury.md` specifies hash-chained accounting, multisig custody, caps, disputes and chain-reconciled payment receipts.
+
+Primary sources:
+- https://github.com/ditto-assistant/ditto-subnet/issues/2871
+- https://github.com/ditto-assistant/ditto-subnet/issues/2872
+- https://github.com/ditto-assistant/ditto-subnet/issues/2054
+- https://github.com/ditto-assistant/ditto-subnet/blob/main/docs/bounty-claims.md
+- https://github.com/ditto-assistant/ditto-subnet/blob/main/docs/maintenance-treasury.md
+
+This is **capability and active engineering evidence**, not evidence that a customer bought such a product. Both treasury documents are explicitly marked `proposed`; the contract says it sets policy only, registers no keys, moves no funds and approves no bounty. The parent epic requires a no-funds rehearsal before any capped allocation. Therefore the newly labeled `bounty` issues are not current payment promises and must not be treated as claimable revenue.
+
+Decision: **KILL_GENERIC** for identity/CLA/claim/reservation/approval/payout-ledger machinery as WRM-T1 differentiation. A live adjacent project is implementing these primitives natively and open source at greater domain depth than a generic external dashboard. Do not build another ledger, approval inbox, signed-claim service or bounty control plane without a named buyer and a missing outcome beyond these published contracts.
+
+Residual scope is narrower than before: only a zero-migration recovery decision for a concrete costly failure that provider-native state and direct substitutes cannot answer. No such buyer/job or WTP was found in this pass. `NO_PRODUCT_SELECTED` and revenue USD 0 remain unchanged.
