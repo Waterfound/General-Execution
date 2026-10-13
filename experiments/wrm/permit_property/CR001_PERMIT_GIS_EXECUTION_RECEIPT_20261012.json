@@ -1,0 +1,103 @@
+{
+  "schema": "wrm.cr001.public-permit-gis-execution.v1",
+  "observed_at_local_date": "2026-10-12",
+  "parent": {
+    "repository": "Waterfound/General-Execution",
+    "pr": 57,
+    "head": "ce780783a0bfc53828c4e49957e436915b8b5806"
+  },
+  "execution": {
+    "mode": "WORK_FREE_LOCAL_PYTHON_AND_CONNECTED_PUBLIC_SOURCE_READS",
+    "language": "Python stdlib",
+    "tests_executed": 39,
+    "tests_passed": 39,
+    "tests_failed": 0,
+    "tests_ci": "NOT_EXECUTED_AS_NATIVE_CI",
+    "replay_command": "cd experiments/wrm/permit_property && python -m unittest -v test_permit_property.py && python permit_property.py observations.json",
+    "spent_usd": 0,
+    "authenticated_recurring_wake_proven": false
+  },
+  "source": {
+    "austin": "https://data.austintexas.gov/Building-and-Development/Issued-Construction-Permits/3syk-w9eu/about_data",
+    "gis": "https://gis.traviscountytx.gov/server1/rest/services/Boundaries_and_Jurisdictions/TCAD_public/MapServer/0",
+    "provenance_class": "CONNECTOR_EXTRACTED_PUBLIC_JSON_NOT_RAW_BYTES",
+    "raw_network_sha256": null,
+    "raw_bytes_available": false,
+    "identity_field": "City of Austin tcad_id -> Travis County GIS geo_id",
+    "identity_field_documented_by_publisher": true,
+    "independent_count_queries": 2,
+    "independent_count_results": {
+      "0239360701": 1,
+      "0339500820": 1
+    },
+    "site_data_disclaimer_acknowledged": true,
+    "owner_personal_data_copied": false,
+    "source_query_scopes": "THREE_SELECTED_PERMITS_AND_TWO_EXACT_PUBLIC_GIS_ID_LOOKUPS_NOT_DATASET_COVERAGE"
+  },
+  "files": {
+    "source": {
+      "path": "experiments/wrm/permit_property/permit_property.py",
+      "git_blob": "58de43c88cffb21d23824e26d5fc753988b99cef",
+      "sha256": "b264f5792cc915b27fe9365841541aebe081dd5a9be8fb4918299074a09c4eb8"
+    },
+    "tests": {
+      "path": "experiments/wrm/permit_property/test_permit_property.py",
+      "git_blob": "85a01837eea6b52b472ccf14083e1d943b1a8e22",
+      "sha256": "45afd93bd9a8dc3b18a208a9c22a87e9dfd0facfdffca643c760274e29fefceb"
+    },
+    "observations": {
+      "path": "experiments/wrm/permit_property/observations.json",
+      "git_blob": "5ed9e9fda29a4cd2248d392b388f0be32b14ef4a",
+      "sha256": "e692045fac9394ce9661d80c3b1cf024f8ea21c4fa395554b231410f575ab0d4",
+      "normalized_sha256": "d2cb506064ceea283a94ccc58a305a86ff943cf53247e1818d9206eb2ef196ae"
+    },
+    "generated_local_report": {
+      "sha256": "7d99551585678d0f561db3d7e6ff10d753a17ba4b5f7de3588a0490e66a3265d",
+      "git_blob": "afd60825af0ff3f8026d738095061c66c2782779",
+      "path": "LOCAL_REGENERATED_NOT_COMMITTED"
+    }
+  },
+  "results": {
+    "permits": 3,
+    "distinct_geographic_ids": 2,
+    "unique_gis_count_verified": 2,
+    "geographic_reference_matches": 3,
+    "legal_property_identity_verified": 0,
+    "owner_identity_verified": 0,
+    "revenue_claimed_usd": 0
+  },
+  "economic": {
+    "buyer_posted_usd_per_accepted_jurisdiction": 30,
+    "waterfound_customer_validated": false,
+    "acceptance_probability_measured": false,
+    "acceptance_probability_example": 0.8,
+    "hypothetical_expected_gross_per_attempt_usd": 24,
+    "hypothetical_hours_per_attempt": 2,
+    "hypothetical_gross_per_hour_before_costs_usd": 12,
+    "actual_cost_per_jurisdiction_measured": false,
+    "ongoing_maintenance_unknown": true,
+    "actual_waterfound_margin": null
+  },
+  "commercial": {
+    "source_data_join": "CANDIDATE_VERIFIED_3_SAMPLED",
+    "competitor_installed_parity": "NOT_TESTED",
+    "competitive_advantage": "NOT_PROVEN",
+    "customer_demand_for_waterfound": "NOT_VERIFIED",
+    "product_selected": false,
+    "first_revenue_received": false,
+    "disposition": "KILL_GENERIC_PERMIT_SCRAPER_AS_FIRST_PRODUCT",
+    "successor": "Find next buyer-paid public-input verifiable-outcome job with competing output and low operational burden, not generic official permit API packaging"
+  },
+  "authority": {
+    "work_used": false,
+    "spend_usd": 0,
+    "new_credentials": false,
+    "new_runtime": false,
+    "new_scheduler": false,
+    "new_product_release": false,
+    "merge_to_main": false,
+    "customer_contact": false,
+    "private_state_emitted": false
+  },
+  "terminal": "CR001_PUBLIC_DATA_RECONCILIATION_CANDIDATE_VERIFIED__FIRST_DEFENSIBLE_PRODUCT_OPEN"
+}
