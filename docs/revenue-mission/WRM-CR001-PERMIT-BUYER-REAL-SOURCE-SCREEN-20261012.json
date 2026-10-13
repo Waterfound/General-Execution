@@ -1,0 +1,72 @@
+{
+  "schema": "wrm.cr001.permit-buyer-source-readiness.v1",
+  "observed_date": "2026-10-12",
+  "buyer_job": {
+    "url": "https://www.upwork.com/freelance-jobs/apply/Python-Developer-for-Permit-Portal-Scrapers_~022090116979619755021/",
+    "posted_fixed_price_usd_per_jurisdiction": 30,
+    "client_spend_reported_usd": 30000,
+    "hires_displayed": 11,
+    "details_exposed_after_hire": [
+      "complete 20-field mapping",
+      "jurisdiction-specific policy and target Sheets"
+    ],
+    "acceptance": [
+      "full data not page one",
+      "fill missing permit owner via county assessor",
+      "company phone and email public information",
+      "unattended Windows runnable with no prompts",
+      "20 validated fields"
+    ],
+    "status": "BUYER_POSTED_PAYMENT_SPEC_NOT_WATERFOUND_WTP"
+  },
+  "source_investigation": {
+    "permit_open_data": {
+      "name": "City of Austin Issued Construction Permits",
+      "url": "https://data.austintexas.gov/Building-and-Development/Issued-Construction-Permits/3syk-w9eu/about_data",
+      "license": "Public Domain U.S. Government as reported by portal",
+      "reported_rows": "~2.38 million",
+      "fields_count": 68,
+      "unique_id_field": "Project ID",
+      "join_key_name": "TCAD ID",
+      "join_key_description": "Aligns with TravisCAD Geographic ID",
+      "data_last_updated": "2026-10-11",
+      "rest_interface": "Socrata/OData advertised",
+      "raw_record_fetched_and_hashed": false
+    },
+    "assessor": {
+      "name": "Travis Central Appraisal District",
+      "url": "https://traviscad.org/publicinformation",
+      "exports_available": [
+        "2026 Certified Appraisal Export",
+        "2026 Certified Special Export (JSON)"
+      ],
+      "exact_complete_export_downloaded": false,
+      "join_validation_executed": false,
+      "source_terms_not_fully_audited": true
+    },
+    "api_probe": {
+      "method": "Public no-account web open to Austin Socrata JSON resource",
+      "result": "UNAVAILABLE_IN_CURRENT_READ_CLIENT",
+      "independent_row_retrieval_proven": false
+    }
+  },
+  "commercial_hurdles": [
+    "30 USD/jurisdiction appears low relative to unique scraper integration effort",
+    "up to 20 fields and client target-sheet contract not public; cannot prove acceptance",
+    "separate county tax/property export sources not yet joined with an actual matched record",
+    "contractor contact lookup may require careful privacy and lawful usage",
+    "per-jurisdiction maintenance likely recurring",
+    "do not claim first revenue from this task"
+  ],
+  "selection": "HOLD_NARROW_COMPARATOR_NOT_PRODUCT_SELECTED",
+  "next_free_experiment": "If freely downloadable Austin permit rows with TCAD ID and 2026 TCAD appraisal export are available through an authorized executor, take 1–5 non-sensitive synthetic-neutral records, normalize the two official keys, reject 0/ambiguous joins, confirm output vs both government source rows, compare with direct free scrapers. If access or repeatability remains absent, kill $30-per-jurisdiction product hypothesis. No scraping bypass, new login, personal contact enrichment, client deliverable or product release.",
+  "verdict": "SOURCE_DISCOVERED__LIVE_JOIN_NOT_RUN__DIRECT_COMPETITIVE_ADVANTAGE_UNKNOWN",
+  "authority": {
+    "spent_usd": 0,
+    "work": false,
+    "customer_contact": false,
+    "private_person_data_published": false,
+    "product_selected": false,
+    "first_revenue_usd": 0
+  }
+}
