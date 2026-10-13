@@ -225,3 +225,19 @@ This pass adds two hard pre-implementation checks:
 2. a newly posted issue must be unallocated under the payer's actual assignment/proposal process, even when the code and suspected fix are public.
 
 No candidate survived all claimability predicates. **NO_PRODUCT_SELECTED**, demand for Waterfound, WTP for Waterfound, customer status, revenue and USD 0 remain unchanged. The next ACTIVE commercial action remains source-state screening for a newly posted, unassigned, funded, objective job; generic scanner or runtime work remains SUPPORT_ONLY.
+
+
+## Same-day task-specific funding qualification — Mautic #17814
+
+Mautic issue #17814 is a technically narrow, newly filed bug with a one-line suspected root-cause fix and a concrete reproduction against SugarCRM/SuiteCRM. It is open, unassigned and uncontested as inspected on 2026-10-13. Its template footer links to Mautic's bounty program, but the issue has no bounty label, no amount in the title, no funding transaction link and no comment allocating funds to this task.
+
+Primary sources:
+- https://github.com/mautic/mautic/issues/17814
+- https://opencollective.com/mautic/projects/bounties
+- https://contribute.mautic.org/en/latest/contributing/mautic_bounty_programme.html
+
+The official Open Collective project is real: it reported a USD 528.86 balance and USD 3,208.41 total disbursed when inspected. The official program says eligible issues must have an attached bounty, contributors must request assignment before work, merged bug fixes may require companion PRs, and payment requires an Open Collective account and invoice. The provider workflow says a sponsor funds a specific issue, posts the transaction and amount, after which triage adds the bounty amount to the title and the `Bounty` label.
+
+Decision: **REJECT_CURRENTLY_UNFUNDED; RECHECK ONLY IF SOURCE STATE CHANGES**. A collective-level balance and generic issue-template invitation are credible payer-history evidence, but not task-specific WTP or a payment promise for #17814. Do not implement, comment, request assignment or open a PR unless the issue receives the documented amount, transaction and label and still remains unassigned.
+
+Admission rule added: require a task-specific funding binding—not merely a funded program, organization balance or boilerplate donation invitation—before implementation economics are evaluated.
