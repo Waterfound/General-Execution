@@ -56,8 +56,6 @@ def verified_query_urls(metadata, geo_ids, permit_count):
         raise SourceBindingError('GIS verification contract for the two IDs required')
     if set(metadata.get('gis_count_urls', {})) != set(geo_ids):
         raise SourceBindingError('exactly one count URL required for each geographic ID')
-    if any(metadata['gis_counts'].get(g) != 1 for g in geo_ids):
-        raise SourceBindingError('v1 verified GIS case expects one feature per ID')
     if not isinstance(metadata.get('gis_url_second'), str):
         raise SourceBindingError('second GIS feature source URL missing')
     result = {}
