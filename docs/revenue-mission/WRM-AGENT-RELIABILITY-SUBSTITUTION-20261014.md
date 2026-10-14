@@ -1,6 +1,6 @@
 # WRM — Agent reliability and recovery substitution screen (2026-10-14)
 
-Status: `GENERIC_RESIDUAL_KILLED / MICRO_HYPOTHESIS_ONLY / NO_PRODUCT_SELECTED`  
+Status: `GENERIC_RESIDUAL_KILLED / LOW_COST_MARKET_CONFIRMED_COMMODITIZED / MICRO_HYPOTHESIS_ONLY / NO_PRODUCT_SELECTED`  
 Observed Waterfound revenue: **USD 0**
 
 ## Commercial question
@@ -54,6 +54,24 @@ Prior paid listings already established adjacent pain:
 
 Those listings were allocated, highly contested and dependent on private systems. They establish problem salience, not demand for Waterfound or availability of a test customer.
 
+## Low-cost substitution and realized transaction evidence
+
+Source: https://www.upwork.com/services/product/development-it-a-broken-n8n-make-or-zapier-workflow-fixed-2105984848028958507
+
+An Upwork Project Catalog seller publicly offers repair of broken n8n, Make or Zapier workflows at **USD 50 / USD 120 / USD 250**. The offer explicitly covers silent failures or double runs, wrong or missing data, webhook/API/authentication failures, rate limits, timeouts, a tested repair and a plain-English summary; Standard and Advanced also include error handling and failure alerts.
+
+The page shows a five-star review dated **2026-10-01** for the completed job **“AI Automation Specialist – Existing Workflow Automation & Error Handling”**: “Amazing work. Everything we expected and wanted has been delivered.”
+
+This is realized purchase evidence in the exact low-code workflow-reliability category. It does **not** establish Waterfound demand or WTP, the transaction amount actually paid, repeat purchasing, diagnostic-only demand, or provider economics.
+
+## Fresh buyer/job evidence: pre-demo agent QA
+
+Source: https://www.upwork.com/freelance-jobs/apply/n8n-Automation-Specialist-Review-Existing-Agents_~022107505844883771824/
+
+A recent contract-to-hire listing asks for review of existing n8n agents and architecture, stress tests across normal and edge cases, checks of error handling, retries, fallbacks, prompts, tool calls, integrations, data flows, reliability and security, followed by a short prioritized report and a **Demo Ready / Not Demo Ready** verdict. Fixes are explicitly scoped separately.
+
+This validates a buyer-described pre-demo QA job, but not an available Waterfound opportunity: proposal and hiring counts were not visible through read-only retrieval, and applying would require external outreach, work examples, location/time-zone and availability disclosures, plus access to private existing agents. No application or contact was made.
+
 ## Decision
 
 ### `KILL_AS_UNIQUE_DIFFERENTIATOR`
@@ -65,9 +83,11 @@ Do not build or market:
 - generic state/effect classification;
 - generic idempotency, retry, compensation or recovery roadmap;
 - generic fault-injection suite plus operator runbook;
-- generic trace/dataset/evaluator dashboard.
+- generic trace/dataset/evaluator dashboard;
+- generic low-cost n8n, Make or Zapier audit/repair;
+- generic pre-demo QA/readiness report without a distinct, measurable outcome.
 
-The exact high-value service is already offered commercially, while evaluation platforms and runtimes provide substantial native components.
+The high-value reliability/recovery service is already offered commercially, evaluation platforms and runtimes provide substantial native components, and low-cost workflow repair has both public substitutes and realized transaction evidence.
 
 ### Residual: `MICRO_HYPOTHESIS_ONLY / NO_BUILD`
 
@@ -75,7 +95,7 @@ Only this narrower job remains logically possible:
 
 > Given one lawful, representative workflow artifact and one buyer-defined ambiguous-success failure, produce a zero-install, read-only counterexample showing whether two executions of the same input can create divergent or duplicate authoritative terminal state, with a deterministic evidence bundle and an incumbent baseline.
 
-This residual is materially narrower because it excludes implementation, remediation, monitoring and ongoing operations. It is not yet a product: no available buyer has requested it, no willingness to try or pay exists, and no evidence shows that the USD 25,000 service or existing evaluation tooling is too heavy for a buyer who would purchase the micro-screen.
+This residual is materially narrower because it excludes implementation, remediation, monitoring and ongoing operations. The low-price angle is no longer differentiated: public offers start at USD 50 and include tested repair. It is not yet a product: no available buyer has requested this specific counterexample, no willingness to try or pay exists, and no evidence shows that the USD 25,000 service, low-cost repair market or existing evaluation tooling is too heavy for a buyer who would purchase the micro-screen.
 
 ## Admission predicate
 
@@ -103,8 +123,9 @@ Kill it if any of these hold:
 ## Evidence state
 
 - Capability: Waterfound has governed execution and recovery/idempotence rehearsal evidence, not a buyer-specific diagnostic.
-- Buyer/problem: adjacent paid evidence exists.
-- Competitive differentiation: generic reliability/recovery work is **falsified as unique**.
+- Buyer/problem: adjacent paid listings and one realized category transaction exist.
+- Category willingness to pay: **observed for low-code workflow repair**, amount actually paid unknown; this is not Waterfound WTP.
+- Competitive differentiation: generic reliability/recovery and low-cost workflow audit/repair are **falsified as unique**.
 - Narrow product proof: **not admitted**.
 - External demand for Waterfound: unverified.
 - Willingness to try/pay, ROI, fair price and revenue: unverified / USD 0.
