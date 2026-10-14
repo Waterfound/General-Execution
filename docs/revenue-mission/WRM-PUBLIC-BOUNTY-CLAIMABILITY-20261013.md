@@ -274,3 +274,31 @@ Aggregator counts and open-state filters are insufficient. Before implementation
 5. required paid-provider access, credentials, hardware and public demo artifacts.
 
 This regression independently confirms the earlier pcb-viewer result: **open + priced is not the same as unclaimed + payable**. No candidate survived the commercial screen. **NO_PRODUCT_SELECTED, demand for Waterfound, WTP for Waterfound, customer status, revenue and USD 0 remain unchanged.** No external interaction, implementation, provider use or public claim was performed.
+
+
+## 2026-10-14 qualification — Railway paid Q&A channel
+
+A new read-only screen found a materially different bounty mechanism: Railway directly funds accepted answers to deployment/configuration questions in Central Station. This is not an unverified dollar label attached by a repository owner.
+
+Official source: https://docs.railway.com/community/bounties
+
+The official rules state that Railway funds 100% of approved bounties; the standard amount is USD 10; the original poster, a Conductor or Railway may accept a solution; Railway reviews the accepted answer before payout. AI assistance is explicitly permitted only with disclosure, full human review and factual verification. Earnings can be used as Railway credits or withdrawn through Stripe Connect.
+
+A fresh public-source radar snapshot at 2026-10-14T00:37:37Z identified a four-hour-old, zero-reply USD 10 question titled “Deployment configuration snapshot and reconciliation after an ambiguous deploy response”:
+
+- primary question URL: https://station.railway.com/questions/deployment-configuration-snapshot-and-re-cf5f73e3
+- source-labelled radar artifact: https://github.com/HCTDIP/corps-jobs/blob/main/reports/railway_bounty_latest.json
+
+The source thread body was not retrievable through the available read-only index during this wake. Therefore its exact facts, requested deliverable, live status and answerability are **UNVERIFIED**. The title alone is insufficient to draft or publish an answer.
+
+### Jurisdiction and value qualification
+
+Railway's official earnings documentation says bounty, template and referral earnings share the workspace Earnings page and Stripe Connect flow. Its template-kickback documentation explicitly states that cash withdrawals are not supported in Brazil, although Railway credits remain available: https://docs.railway.com/templates/kickbacks .
+
+Decision: **HOLD_SOURCE_BODY_UNAVAILABLE / POTENTIAL_NONCASH_RESOURCE_ONLY**.
+
+This is real funded demand and a potentially repeatable low-human channel aligned with deployment-reconciliation expertise, but it is not currently a cash-revenue path for Waterfound's jurisdiction. A USD 10 Railway credit could count as an operational resource only if Railway usage is independently useful; no such utility is assumed here.
+
+Recheck the candidate only while it remains open and unanswered. Advance to a private answer draft only if the full public question becomes readable and can be solved from public documentation or a free synthetic reproduction. Kill it if it requires private project access, credentials, a paid Railway deployment, unsupported speculation, or if an adequate answer already exists. Public reply, Railway account/workspace selection and any payout onboarding remain later explicit gates.
+
+No answer, account, deployment, reply, claim, credit, cash, credential or external interaction was created. **NO_PRODUCT_SELECTED, customer status, WTP for Waterfound and observed revenue USD 0 remain unchanged.**
