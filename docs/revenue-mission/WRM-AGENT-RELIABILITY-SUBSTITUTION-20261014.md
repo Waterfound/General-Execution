@@ -1,6 +1,6 @@
 # WRM — Agent reliability and recovery substitution screen (2026-10-14)
 
-Status: `GENERIC_RESIDUAL_KILLED / LOW_COST_MARKET_CONFIRMED_COMMODITIZED / MICRO_HYPOTHESIS_ONLY / NO_PRODUCT_SELECTED`  
+Status: `GENERIC_RESIDUAL_KILLED / LOW_COST_MARKET_CONFIRMED_COMMODITIZED / CROWDED_BOUNTY_CHANNEL_REJECTED / MICRO_HYPOTHESIS_ONLY / NO_PRODUCT_SELECTED`  
 Observed Waterfound revenue: **USD 0**
 
 ## Commercial question
@@ -72,6 +72,27 @@ A recent contract-to-hire listing asks for review of existing n8n agents and arc
 
 This validates a buyer-described pre-demo QA job, but not an available Waterfound opportunity: proposal and hiring counts were not visible through read-only retrieval, and applying would require external outreach, work examples, location/time-zone and availability disclosures, plus access to private existing agents. No application or contact was made.
 
+## Public bounty channel screen: Go-Hybrid
+
+Sources:
+
+- https://github.com/limitlessprojects/Go-Hybrid/blob/f99d6d0b37722de206015be9e1c59b04e827c794/BOUNTY.md
+- https://github.com/limitlessprojects/Go-Hybrid/blob/f99d6d0b37722de206015be9e1c59b04e827c794/GUARANTEES.md
+
+A read-only source review at exact commit `f99d6d0b37722de206015be9e1c59b04e827c794` screened a public Hybrid compiler soundness bounty as a possible machine-deliverable revenue channel.
+
+Verified economics and competition:
+
+- the advertised pool is **USD 500 per cycle**, split across ten ranked contributions: USD 75, 60, 50, then USD 45 for places four through ten;
+- payout occurs only after maintainer reproduction; theories, duplicates, known issues and already-fixed findings receive no payment;
+- exact amounts may be changed before cycle close, and no escrow or prefunding proof is stated;
+- the Hall of Fame already records many October 2026 soundness, harness and tooling contributions, including several multi-finding contributors;
+- latest-main reproduction and a minimal accepted-but-unsound `.hy` program are mandatory.
+
+The checker source and corpus were inspected rather than bulk-scanned. The obvious closure-escape case is expressly documented as the contested A5 perimeter, while task/send boundaries inside closures now receive a dedicated fail-closed pass. Recently landed fixes also cover shadowing, call-return aliases, const mutation, pointer allocation, composite sharing, non-owned moves, method/function confusion, multi-value shapes, managed-gate ambiguity and related families.
+
+Decision: **`REJECT_AS_ACTIVE_REVENUE_CHANNEL`**. The expected value is too low for continued speculative hunting: maximum advertised first place is USD 75, duplicate and rapid-fix risk are high, funding is not independently verified, and no novel accepted-but-unsound reproduction was found. Reopen only if a minimal, latest-main, previously unknown repro is already produced during otherwise useful research. No issue, claim, account action, disclosure or payment setup was made.
+
 ## Decision
 
 ### `KILL_AS_UNIQUE_DIFFERENTIATOR`
@@ -126,6 +147,7 @@ Kill it if any of these hold:
 - Buyer/problem: adjacent paid listings and one realized category transaction exist.
 - Category willingness to pay: **observed for low-code workflow repair**, amount actually paid unknown; this is not Waterfound WTP.
 - Competitive differentiation: generic reliability/recovery and low-cost workflow audit/repair are **falsified as unique**.
+- Direct bounty channel: **rejected as an active revenue path** after source inspection; no qualifying repro or expected-value case was established.
 - Narrow product proof: **not admitted**.
 - External demand for Waterfound: unverified.
 - Willingness to try/pay, ROI, fair price and revenue: unverified / USD 0.
