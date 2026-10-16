@@ -20,6 +20,10 @@ Source: https://www.upwork.com/freelance-jobs/apply/Construction-Document-Contro
 
 This is stronger buyer evidence than anonymous pain reports because it specifies a budget, cadence, acceptance behavior and operating context. It is still a single buyer posting rather than repeated market demand.
 
+A separately titled `Construction Document Logger & Metadata Specialist` listing contains the same wording and the same client profile; it showed four interviews when observed. Treat it as a split/duplicate procurement by the same buyer, **not** an independent demand signal: https://www.upwork.com/freelance-jobs/apply/Construction-Document-Logger-Metadata-Specialist_~022109541306566726990/
+
+One adjacent, independent listing for a commercial-energy permit expeditor requests ongoing municipal-portal submission/status tracking, documentation and rejection follow-up at **US$15–35/hour for 6+ months**. It showed one hire, three interviews and a client profile with US$12K total spend. This supports recurring paid demand for permit-portal operations, but not for byte-level preservation or cross-source evidence: https://www.upwork.com/freelance-jobs/apply/Permit-Expeditor_~022098407170501687614/
+
 ## Direct substitution before build
 
 - Procore Document Management already tracks versions and attribute-change history, including timestamp, actor, field and from/to values. It also compares document versions. Sources: https://www.procore.com/platform/document-management ; https://v2.support.procore.com/product-manuals/document-management-project/tutorials/view-change-history-for-documents-in-the-document-mangement-tool ; https://v2.support.procore.com/product-manuals/document-management-project/tutorials/compare-documents-in-the-document-management-tool/
@@ -48,6 +52,7 @@ The probe never edits source files. Three deterministic tests pass on a syntheti
 | Predicate | Evidence | State |
 | --- | --- | --- |
 | A buyer specified the exact job and a budget | Public US$7,500 listing; client spend/hire history | Observed, single-buyer |
+| Adjacent buyers pay for recurring permit-portal operations | Independent US$15–35/hour listing with one hire | Observed, adjacent only |
 | Generic document versioning is differentiated | Procore/Newforma already cover it | Falsified |
 | Generic PDF visual comparison is differentiated | Bluebeam and Procore already cover it | Falsified |
 | Independent cross-source byte-level register is technically feasible | Synthetic manifest/diff tests | Capability proven narrowly |
