@@ -1,6 +1,6 @@
 # WRM — Agent reliability and recovery substitution screen (2026-10-14)
 
-Status: `GENERIC_RESIDUAL_KILLED / LOW_COST_MARKET_CONFIRMED_COMMODITIZED / CROWDED_BOUNTY_CHANNEL_REJECTED / MICRO_HYPOTHESIS_ONLY / NO_PRODUCT_SELECTED`  
+Status: `GENERIC_RESIDUAL_KILLED / LOW_COST_MARKET_CONFIRMED_COMMODITIZED / CROWDED_BOUNTY_CHANNEL_REJECTED / RECENT_BOUNTY_FEED_REJECTED / MICRO_HYPOTHESIS_ONLY / NO_PRODUCT_SELECTED`  
 Observed Waterfound revenue: **USD 0**
 
 ## Commercial question
@@ -92,6 +92,30 @@ Verified economics and competition:
 The checker source and corpus were inspected rather than bulk-scanned. The obvious closure-escape case is expressly documented as the contested A5 perimeter, while task/send boundaries inside closures now receive a dedicated fail-closed pass. Recently landed fixes also cover shadowing, call-return aliases, const mutation, pointer allocation, composite sharing, non-owned moves, method/function confusion, multi-value shapes, managed-gate ambiguity and related families.
 
 Decision: **`REJECT_AS_ACTIVE_REVENUE_CHANNEL`**. The expected value is too low for continued speculative hunting: maximum advertised first place is USD 75, duplicate and rapid-fix risk are high, funding is not independently verified, and no novel accepted-but-unsound reproduction was found. Reopen only if a minimal, latest-main, previously unknown repro is already produced during otherwise useful research. No issue, claim, account action, disclosure or payment setup was made.
+
+## Fresh public-bounty feed screen: collision dominates (2026-10-16)
+
+Primary sources:
+
+- https://github.com/Parabola-org/parabola/issues/10
+- https://github.com/Parabola-org/parabola/issues/20
+- https://github.com/attestar-labs/attestar/issues/44
+- https://github.com/attestar-labs/attestar/issues/46
+- https://github.com/paraloom-labs/paraloom-core/issues/929
+- https://github.com/paraloom-labs/paraloom-core/issues/930
+
+A fresh read-only screen tested whether newly posted, explicit-price GitHub bounties offered a better machine-deliverable path than the rejected Go-Hybrid channel.
+
+Observed competition and admissibility:
+
+- Parabola advertised USD 45–90 for narrowly specified TypeScript changes, but sampled issues already had seven comments each, implementation/claim activity, and referenced open PRs before selection. Issue #10 had an implemented PR #25 plus another claim; issue #20 already referenced PR #33 plus multiple prospective contributors.
+- Attestar advertised USD 80 for fixture-consistency CI and USD 85 for CodeQL. The former already had two competing PRs (#266 and #267); the latter had four (#265, #269, #270 and #271). The CodeQL acceptance predicate also requires repository code-scanning visibility that only a maintainer can verify. Questions about assignment, funding, payout rail and acceptance timing remained unanswered in the issue threads.
+- Paraloom advertised up to USD 150 USDC for wallet defects, but issues #929 and #930 already contained prior-art notices pointing to earlier reports and companion fixes, multiple generated claim comments, and multiple PRs. Duplicate/priority risk therefore dominated nominal reward.
+- The remaining explicit USD 50 hardware-recipe listings require specified physical GPUs and measured runs, which are not available inside the current authority/capability envelope.
+
+Decision: **`REJECT_CURRENT_FEED_AS_ACTIVE_REVENUE_CHANNEL`**. The advertised amounts do not compensate for near-immediate collision, duplicate/prior-art risk, maintainer-dependent acceptance, and unverified payment availability. Do not produce speculative patches for already-contested work. Reopen only for an unassigned task whose funding and payout terms are maintainer-confirmed, whose acceptance test is locally reproducible, and whose implementation can be completed before public collision without credentials, hardware, spend or outreach.
+
+No claim, comment, issue, PR, wallet disclosure, payment setup or external contact was made.
 
 ## Decision
 
