@@ -1,6 +1,6 @@
 # WRM — Agent reliability and recovery substitution screen (2026-10-14)
 
-Status: `GENERIC_RESIDUAL_KILLED / LOW_COST_MARKET_CONFIRMED_COMMODITIZED / CROWDED_BOUNTY_CHANNEL_REJECTED / RECENT_BOUNTY_FEED_REJECTED / MICRO_HYPOTHESIS_ONLY / NO_PRODUCT_SELECTED`  
+Status: `GENERIC_RESIDUAL_KILLED / LOW_COST_MARKET_CONFIRMED_COMMODITIZED / CROWDED_BOUNTY_CHANNEL_REJECTED / RECENT_BOUNTY_FEED_REJECTED / MICRO_HYPOTHESIS_KILLED / NO_PRODUCT_SELECTED`  
 Observed Waterfound revenue: **USD 0**
 
 ## Commercial question
@@ -121,7 +121,7 @@ Commercial interpretation:
 4. The highest-value case demands source reconciliation, repair, regression and ongoing detection. It therefore fails the current micro-hypothesis kill criterion because the buyer needs remediation and private-system access.
 5. No listing states willingness to use a public/synthetic fixture, try a Waterfound proof, or pay for a same-input terminal-state counterexample.
 
-Decision: retain **`MICRO_HYPOTHESIS_ONLY / NO_BUILD`**. Buyer/problem evidence improved, but the admission predicate remains unmet. The next read-only search should target an audit-only buyer who explicitly accepts a synthetic/public representative fixture and wants an authoritative-state counterexample before granting private access.
+Decision at this stage: the buyer/problem evidence improved, but the admission predicate remained unmet. The subsequent substitute screen and repeated absence of willingness to try triggered the explicit kill criterion recorded below.
 
 No proposal, contact, account action, private access, publication or payment onboarding was performed.
 
@@ -166,36 +166,43 @@ Do not build or market:
 
 The high-value reliability/recovery service is already offered commercially, evaluation platforms and runtimes provide substantial native components, and low-cost workflow repair has both public substitutes and realized transaction evidence.
 
-### Residual: `MICRO_HYPOTHESIS_ONLY / NO_BUILD`
+### Closed residual: `MICRO_HYPOTHESIS_KILLED`
 
-Only this narrower job remains logically possible:
+The final residual was:
 
 > Given one lawful, representative workflow artifact and one buyer-defined ambiguous-success failure, produce a zero-install, read-only counterexample showing whether two executions of the same input can create divergent or duplicate authoritative terminal state, with a deterministic evidence bundle and an incumbent baseline.
 
-This residual is materially narrower because it excludes implementation, remediation, monitoring and ongoing operations. The low-price angle is no longer differentiated: public offers start at USD 50 and include tested repair. It is not yet a product: no available buyer has requested this specific counterexample, no willingness to try or pay exists, and no evidence shows that the USD 25,000 service, low-cost repair market or existing evaluation tooling is too heavy for a buyer who would purchase the micro-screen.
+It is now closed. Targeted buyer searches found costly silent-success failures and paid audit-only work, but no buyer requested this counterexample, accepted a public/synthetic fixture as representative, or expressed willingness to try it. Observed buyers either require private code/system access, broader decision support, remediation, regression coverage or ongoing detection.
 
-## Admission predicate
+The residual also competes with a dense audit-only market:
 
-Build the smallest synthetic/public proof only after all are true:
+- Benri publishes USD 500–2,000 for a 2–3 day workflow audit;
+- Mulhacén Labs publishes EUR 500 for an audit-only report and roadmap;
+- Sports City Insights publishes USD 950 for a workflow audit that includes two live builds with real data;
+- INDOLES publishes EUR 5,500 for a three-week audit and EUR 15,000 for a six-week field-tested pilot;
+- Ailix publishes EUR 4,000–20,000 for business/technical audit and a GO/NO-GO decision.
 
-1. an available buyer states one costly ambiguous-success, duplicate or interrupted-retry failure;
-2. the buyer accepts a public, synthetic or explicitly authorized fixture as representative;
-3. the authoritative terminal-state predicate is deterministic and observable;
-4. the same fixture can be run against a named incumbent/native baseline;
-5. the desired output is diagnosis/evidence rather than implementation;
-6. the buyer expresses willingness to try the bounded proof;
-7. no outreach, publication, credentials, private access, contract, payment onboarding or spend is needed to complete the proof.
+Sources:
 
-## Kill criteria for the micro hypothesis
+- https://www.benri.to/pricing
+- https://mulhacenlabs.com/en/services/ai-workflow-audit
+- https://sportscityinsights.com/services/ai-automation/
+- https://www.indoles.com.tr/en/articles/ai-consulting-pricing
+- https://www.ailix.ai/en/services/audit-ia
 
-Kill it if any of these hold:
+These are public offer prices, not verified sales, Waterfound demand or Waterfound WTP. They show that generic audit/roadmap positioning is already crowded from low hundreds to enterprise five figures.
 
-- the buyer needs remediation or a runbook, which the direct service already covers;
-- a custom evaluator in LangSmith/Laminar or an ordinary integration test produces the same result at comparable friction;
-- the failure cannot be reproduced without private code or external-system access;
-- the buyer will not treat a synthetic/public fixture as decision-relevant;
-- no buyer expresses willingness to try;
-- the output remains a generic checklist rather than an authoritative state counterexample.
+## Closure evidence
+
+Kill criteria met:
+
+- **No willingness to try:** repeated public buyer searches produced no request for the bounded same-input counterexample.
+- **Private access required:** the strongest buyer cases require internal code, data, execution history or real systems.
+- **Remediation required:** the economically strongest silent-success cases require fixes, regression tests and ongoing detection.
+- **Substitution:** existing audit services, evaluation platforms and ordinary integration tests cover most of the deliverable.
+- **No price advantage:** low-cost repair already starts near USD 50–150, while standalone audits are widely offered from EUR 500 / USD 500 upward.
+
+Do not build, package, publish or price this wedge. Reopen only upon new external evidence that a real buyer accepts a public/synthetic representative fixture and explicitly wants to try or pay for an authoritative-state counterexample before private access or remediation.
 
 ## Evidence state
 
@@ -204,7 +211,7 @@ Kill it if any of these hold:
 - Category willingness to pay: **observed for low-code workflow repair**, amount actually paid unknown; this is not Waterfound WTP.
 - Competitive differentiation: generic reliability/recovery and low-cost workflow audit/repair are **falsified as unique**.
 - Direct bounty channel: **rejected as an active revenue path** after source inspection; no qualifying repro or expected-value case was established.
-- Narrow product proof: **not admitted**.
+- Narrow product proof: **killed before build** after its explicit no-WTT and substitution criteria were met.
 - External demand for Waterfound: unverified.
 - Willingness to try/pay, ROI, fair price and revenue: unverified / USD 0.
 
