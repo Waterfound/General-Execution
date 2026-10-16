@@ -93,6 +93,38 @@ The checker source and corpus were inspected rather than bulk-scanned. The obvio
 
 Decision: **`REJECT_AS_ACTIVE_REVENUE_CHANNEL`**. The expected value is too low for continued speculative hunting: maximum advertised first place is USD 75, duplicate and rapid-fix risk are high, funding is not independently verified, and no novel accepted-but-unsound reproduction was found. Reopen only if a minimal, latest-main, previously unknown repro is already produced during otherwise useful research. No issue, claim, account action, disclosure or payment setup was made.
 
+## Fresh buyer evidence: silent success and paid diagnosis (2026-10-16)
+
+Primary listings:
+
+- https://www.upwork.com/freelance-jobs/apply/Python-Technical-Lead-Focused-Code-Audit-Delivery-Plan_~022104544189642558856/
+- https://www.upwork.com/freelance-jobs/apply/Head-Automation-Engineering-EST-full-time_~022097292329226196719/
+- https://www.upwork.com/freelance-jobs/apply/Automation-Fix-Debug-Optimize-Existing-Agent-Workflow_~022105205564933219360/
+- https://www.upwork.com/freelance-jobs/apply/Automation-Specialist-Existing-Workflow-Automation-Error-Handling_~022104533100819533048/
+- https://www.upwork.com/freelance-jobs/apply/OpenClaw-Automation-Lead-Technical-Audit-Fix-Management_~022102742454985785030/
+
+A current read-only buyer screen found a sharper economic failure than generic agent unreliability: **a workflow can report success while authoritative business state is wrong**.
+
+Observed demand signals:
+
+- A September 28 listing offers **USD 200 fixed price** for a focused audit and delivery plan for an internal AI assistant. It explicitly asks the auditor to define one useful first-release scenario and concrete acceptance criteria and to recommend what to keep, fix, simplify or investigate. Implementation is excluded. This is direct buyer evidence for a bounded diagnostic/decision artifact, but it requires private code, SQL and GitHub history and does not request the proposed same-input counterexample.
+- A current Head of Automation listing reports that roughly 100 automated jobs kept dashboards populated while one quiet failure caused **USD 372,000 of ad spend to be attributed to the wrong campaigns**. The buyer asks for source-of-truth reconciliation, reproduction before repair, a regression test and detection for every automation. This is buyer-stated value at risk, not independently verified loss, saved value, Waterfound ROI or Waterfound WTP.
+- A September 30 listing offers **USD 100 fixed price** to debug an existing AI-agent workflow, improve retries and exception handling, prevent duplicates and apply the fix.
+- A September 28 contract-to-hire listing offers **USD 150 fixed price** to audit existing automations, repair failures, add logging/monitoring, prevent duplicates, test and document fixes.
+- A recent OpenClaw QA listing asks for independent review across normal, edge, negative, permission and recovery cases, followed by issue triage, verified resolution and regression. Its budget, weekly hours and completion date are unset.
+
+Commercial interpretation:
+
+1. The strongest observed buyer problem is not “agent monitoring”; it is **undetected divergence between reported workflow success and authoritative economic state**.
+2. Audit-only demand exists at USD 200, but the observed deliverable is broader decision support over private assets, not the proposed zero-install micro-screen.
+3. The lower-price market normally bundles diagnosis with remediation for USD 100–150. This remains a strong substitute against a standalone generic diagnostic.
+4. The highest-value case demands source reconciliation, repair, regression and ongoing detection. It therefore fails the current micro-hypothesis kill criterion because the buyer needs remediation and private-system access.
+5. No listing states willingness to use a public/synthetic fixture, try a Waterfound proof, or pay for a same-input terminal-state counterexample.
+
+Decision: retain **`MICRO_HYPOTHESIS_ONLY / NO_BUILD`**. Buyer/problem evidence improved, but the admission predicate remains unmet. The next read-only search should target an audit-only buyer who explicitly accepts a synthetic/public representative fixture and wants an authoritative-state counterexample before granting private access.
+
+No proposal, contact, account action, private access, publication or payment onboarding was performed.
+
 ## Fresh public-bounty feed screen: collision dominates (2026-10-16)
 
 Primary sources:
