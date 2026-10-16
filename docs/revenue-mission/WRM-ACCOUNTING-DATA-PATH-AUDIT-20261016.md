@@ -83,3 +83,22 @@ Promote only if all are met:
 Create only the smallest synthetic two-system receipt fixture and an explicit truth set. Test whether a simple event-chain comparator can localize a duplicate, delayed sync, manual post-sync edit and missing approval while distinguishing unknown evidence. Do not build connectors, a dashboard, hosted service, accounting logic, remediation workflow or append-only ledger before that comparison passes.
 
 Customer access, outreach, proposal submission, provider installation, financial onboarding, payment/KYC, public publication and contractual acceptance remain separate authority gates. No private producer activation, scheduler change, spend, merge or canonical-state mutation occurred.
+
+
+## Synthetic capability proof result
+
+A minimal read-only comparator was tested against an independently fixed synthetic truth set containing:
+
+- duplicate destination creation;
+- a 45-minute delayed synchronization against a 15-minute bound;
+- destination creation without the required approval evidence;
+- a human edit after the initial synchronized create;
+- an orphan destination record with no valid source-event correlation.
+
+Result: **5/5 planted conditions detected (100% fixture recall)** and all 11 relevant receipt identifiers cited across the findings. The comparator emits `UNCORRELATED_DESTINATION` rather than guessing a source for the orphan record. The first test run failed only because the test incorrectly expected five unique evidence identifiers; the assertion was repaired to verify the exact 11-receipt provenance set, after which the test passed.
+
+This is a narrow capability proof only. It does not establish real-system field availability, completeness of QuickBooks/Xero/Karbon exports, correct accounting interpretation, buyer active minutes saved, superiority over manual native-log review, production reliability, demand for Waterfound, or WTP.
+
+Updated state: `TWO_BUYER_BUDGET_SIGNALS / SYNTHETIC_CAPABILITY_PROOF_PASS / REAL_PARITY_UNKNOWN / NO_PRODUCT_FREEZE`.
+
+The next admissible commercial discriminator is a representative parity case using lawful exported schemas or public sample logs. No connector, dashboard or hosted service is justified until the same fault can be compared against separate native views and one measurable gain is observed.
