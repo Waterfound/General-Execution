@@ -1,0 +1,18 @@
+{
+  "source_events": [
+    {"event_id": "qbo-1", "record_key": "INV-101", "action": "approved", "actor_type": "human", "at": "2026-10-01T10:00:00Z"},
+    {"event_id": "xero-2", "record_key": "INV-202", "action": "approved", "actor_type": "human", "at": "2026-10-01T11:00:00Z"},
+    {"event_id": "qbo-3", "record_key": "INV-303", "action": "approved", "actor_type": "human", "at": "2026-10-01T12:00:00Z", "required_approval_id": "approval-303"},
+    {"event_id": "xero-4", "record_key": "INV-404", "action": "approved", "actor_type": "human", "at": "2026-10-01T13:00:00Z"}
+  ],
+  "destination_events": [
+    {"event_id": "karbon-1a", "source_event_id": "qbo-1", "record_key": "INV-101", "action": "create", "actor_type": "integration", "at": "2026-10-01T10:01:00Z"},
+    {"event_id": "karbon-1b", "source_event_id": "qbo-1", "record_key": "INV-101", "action": "create", "actor_type": "integration", "at": "2026-10-01T10:02:00Z"},
+    {"event_id": "karbon-2", "source_event_id": "xero-2", "record_key": "INV-202", "action": "create", "actor_type": "integration", "at": "2026-10-01T11:45:00Z"},
+    {"event_id": "karbon-3", "source_event_id": "qbo-3", "record_key": "INV-303", "action": "create", "actor_type": "integration", "at": "2026-10-01T12:02:00Z"},
+    {"event_id": "karbon-4", "source_event_id": "xero-4", "record_key": "INV-404", "action": "create", "actor_type": "integration", "at": "2026-10-01T13:01:00Z"},
+    {"event_id": "karbon-4-edit", "source_event_id": "xero-4", "record_key": "INV-404", "action": "update", "actor_type": "human", "at": "2026-10-01T13:09:00Z"},
+    {"event_id": "karbon-orphan", "record_key": "INV-999", "action": "create", "actor_type": "integration", "at": "2026-10-01T14:00:00Z"}
+  ],
+  "approval_events": []
+}
