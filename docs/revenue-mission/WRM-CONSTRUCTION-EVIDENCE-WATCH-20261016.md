@@ -44,6 +44,16 @@ Vendor pages are capability claims, not independent parity benchmarks. They are 
 
 The only residual is forensic rather than operational: a buyer may need a source-external record covering both a municipal portal and Procore, retaining byte-level identity and explicitly separating content changes from timestamp-only changes. One buyer posting suggests that assembling incumbent capabilities can still leave paid manual work, but two further searches did not find a second independent buyer for this exact job. The residual therefore remains on hold and is not a selected product.
 
+## Post-hoc chronology refinement screen
+
+The two downstream buyer listings suggested a possible refinement: a review-only, source-linked factual chronology and evidence-gap register for construction claims. That refinement is commercially legible but already directly served:
+
+- Storia markets a source-linked construction-project timeline, evidence assembly, event chain, cited claim narrative, and expert-editable output, including Procore and Aconex integrations: https://storiatechnologies.com/en/products/claims-and-dispute-resolution
+- Astora markets factual timeline reconstruction across 500–1,000 project documents, contradiction detection, source-traced amounts, and an auditable evidence file; its published deployment claims 850 documents processed in five days versus six weeks. These are vendor-reported results, not independently verified: https://www.astora.app/en/use-cases/claims
+- ContractingClaims keeps sources, events, missing information, drafts and versions together for professional review while explicitly separating chronology from disputed causation and entitlement: https://www.contractingclaims.com/resources/construction-claim-chronology
+
+These are near-exact substitutes for the proposed refinement, not merely adjacent document-management tools. The refinement is therefore rejected before implementation. No generic chronology extractor, RAG layer, claims dashboard or legal drafting assistant should be built without a buyer-observed unresolved job that those products fail.
+
 ## Smallest falsifiable capability proof
 
 `construction_evidence_snapshot.py` creates a read-only manifest containing relative path, byte size, modification timestamp and SHA-256 for every file. Comparing two manifests reports:
@@ -67,6 +77,7 @@ The probe never edits source files. Three deterministic tests pass on a syntheti
 | Independent cross-source byte-level register is technically feasible | Synthetic manifest/diff tests | Capability proven narrowly; support-only |
 | Cross-system operational coordination is differentiated | PermitFlow integrates permit workflow and status into Procore | Falsified as a generic wedge |
 | A second buyer requests substantially the same watch | Two searches found claims/litigation chronology work, not the same prospective watch | Not observed |
+| Post-hoc factual chronology is a differentiated refinement | Storia, Astora and ContractingClaims offer source-linked chronology/evidence workflows | Falsified before build |
 | It improves correct decisions or buyer effort vs incumbents | No representative parity test | Unknown |
 | It can operate lawfully on a real portal and Procore account | No project identifier, credentials, terms review or authorization | Unknown / not attempted |
 | External demand or WTP for Waterfound | No contact, proposal, interview or sale | Unknown |
@@ -92,6 +103,6 @@ The probe never edits source files. Three deterministic tests pass on a syntheti
 
 Close the generic construction-document watch as an active candidate. Preserve the small manifest proof as support-only and do not extend it. The forensic residual may be reopened only if an independent buyer explicitly requests source-external byte preservation across permit and project systems, after which a lawful two-source parity fixture must demonstrate measurable advantage over PermitFlow + Procore + Bluebeam before any connector or service build.
 
-The next commercial-discovery cycle should select a different buyer/problem wedge with stronger repeated demand and weaker native substitution. Private portal access, Procore installation, customer contact, proposal submission, contract acceptance and publication remain separate authority gates; none is needed to close this candidate.
+The next commercial-discovery cycle should select a different buyer/problem wedge with stronger repeated demand and weaker native substitution; do not pivot this candidate into post-hoc claims chronology. Private portal access, Procore installation, customer contact, proposal submission, contract acceptance and publication remain separate authority gates; none is needed to close this candidate.
 
 No private producer activation, scheduler change, merge, paid account, outreach, spend, payment/KYC or canonical-state mutation occurred.
