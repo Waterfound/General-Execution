@@ -61,3 +61,31 @@ Direct specialist claims already cover full opening-to-hardware-set mapping and 
 - **Authority created or expanded:** false.
 
 A real public job posting plus visible hiring activity improves **commercial evidence quality** relative to unsourced ideation, but does not justify freezing a product or reporting increased completion percentage.
+
+
+## 2026-10-16 public parity result — service hypothesis closed at the matching core
+
+The previously missing lawful comparison fixture is now available. Two public synthetic pairs were inspected:
+
+1. F20 FinanceOps publishes a vendor statement and AP ledger with one same-reference amount mismatch (USD 960.52 versus USD 915.52) and offers a free, no-account browser reconciliation tool. Source: https://finops.focus20labs.com/samples/ and https://finops.focus20labs.com/tools/vendor-reconciliation/
+2. SupplierRecon publishes fictional supplier-statement and AP-ledger samples containing an exact match, a one-cent variance, a one-to-many split, and an unmatched credit. Source: https://supplierrecon.com/supplier-reconciliation-template/
+
+A live, read-only run of SupplierRecon's public sample on 2026-10-16 completed locally in the browser without an account or customer data. The incumbent produced:
+
+- 184 exact matches;
+- 7 review candidates;
+- 3 unmatched records;
+- a USD 1,240.00 reported difference;
+- explicit grouped and ambiguous classifications;
+- row-level provenance, deterministic candidate equations, rule/version identification, and an exportable review workpaper;
+- a human-review boundary rather than automatic accounting approval.
+
+This is direct observed product behavior, not merely vendor copy. The sample demonstrates that a buyer can obtain a richer exception/review workpaper than the proposed minimal memo with negligible setup on a prepared fixture. No Waterfound implementation was needed to answer the predicate.
+
+**Decision:** `GENERIC_MATCHING_AND_EXCEPTION_MEMO_KILLED / DONE_FOR_YOU_SERVICE_ADVANTAGE_UNPROVEN / NO_PRODUCT_SELECTED`.
+
+The buyer-paid human-service posting remains valid demand evidence for operational work, but it does not establish that Waterfound can deliver lower buyer effort than a free native tool. Any residual value lies outside the tested matching core: collecting statements from email/portals, normalizing PDFs and irregular exports, chasing missing documents, and resolving exceptions. Those steps require confidential customer data, access, accounting review, and human communications; public synthetic matching fixtures cannot prove near-zero-Waterfound fulfillment or WTP.
+
+Do not build a parser, dashboard, OCR pipeline, mailbox collector, ERP connector, or hosted reconciliation service for this hypothesis. Reopen only after an independent buyer signal isolates a specific incumbent failure in intake or exception follow-up and a lawful representative fixture can measure it. Revenue remains USD 0; customer demand and WTP for Waterfound remain unknown.
+
+No upload of private data, account creation, outreach, proposal, spend, payment/KYC, publication, merge, or authority expansion occurred.
