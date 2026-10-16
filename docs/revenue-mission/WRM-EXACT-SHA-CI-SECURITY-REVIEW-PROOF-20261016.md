@@ -83,15 +83,38 @@ The commit's workflow is already automatically dispatchable on matching pull req
 
 Therefore static scanning, rule enumeration, SHA pinning and permission repair are `SUPPORT_ONLY`, not differentiation. The residual hypothesis is the exact-SHA evidence reconciliation and independent bounded judgment requested by the buyer: scope fidelity, negative-authority assertions, CI/SHA correspondence, pass/fail decision and residual-risk statement in one short deliverable.
 
+## Second contextual fixture
+
+To test whether the review adds anything beyond scanner findings, a second exact workflow-only commit was inspected:
+
+- Commit: `b1836ee8da5357632e6436292aed66301d7940ed`.
+- Scope: exactly one workflow modified, `.github/workflows/durable-launch-admission.yml`; two lines added.
+- Change: fetch `main`, then require the pinned launch-admission source commit to be an ancestor of `origin/main` before executing it.
+- Existing workflow authority: `contents: write`, receipt creation, commit and push to `runtime/durable-asp-control`.
+
+### Second-fixture verdict
+
+`FAIL_CLOSED_NO_EXACT_COMMIT_CI_EVIDENCE`
+
+The two added commands are read-only and strengthen provenance by rejecting a pinned source not contained in current `main`. No new secret access, cloud mutation, artifact upload or write command was introduced by the diff itself. However:
+
+1. GitHub returned zero associated pull-request workflow runs for the exact commit.
+2. The modified workflow's trigger watches only new `launch-orders/*.json` and `constitutional-assessments/*.json` on its runtime branch; it does not include its own workflow path.
+3. Therefore a source change to this write-capable workflow is not self-validating under its own trigger contract, and no CI result can be truthfully matched to the reviewed SHA.
+
+Required correction boundary: add the workflow path to an appropriate non-mutating verification trigger or maintain a separate read-only verifier that exercises the workflow contract on workflow-source changes. Do not dispatch the write-capable runtime job merely to manufacture CI evidence.
+
+This is decision-relevant context beyond the two generic scanner findings in the first fixture. A static YAML scanner can identify broad permissions and mutable action tags, but the exact-commit review also reconciled trigger coverage, associated run receipts, write authority and the distinction between safely verifying a mutation path and actually invoking it.
+
 ## Evidence ladder
 
 | Predicate | State |
 |---|---|
 | Exact buyer-posted problem and budget | Observed: USD 250 fixed-price listing |
 | Competitive attention | Observed: 20–50 proposals, two interviews shown |
-| Public read-only delivery proof | Observed: one exact-SHA report completed |
-| Report finds decision-relevant issues | Observed: two pass-blocking controls and three defense-in-depth items |
-| Better than scanners alone | Unknown; scanners cover both blocking findings |
+| Public read-only delivery proof | Observed: two exact-SHA workflow reviews completed |
+| Report finds decision-relevant issues | Observed: two source hardening blockers plus an exact-commit CI coverage gap on a write-capable workflow |
+| Better than scanners alone | Partially observed: trigger/run/authority reconciliation added one contextual finding; no matched scanner run yet |
 | Independent reviewer requirement accepts machine-assisted delivery | Unknown |
 | Willingness to try Waterfound | Not observed |
 | Waterfound WTP / sustainable fair price | Not established |
@@ -114,6 +137,7 @@ Promotion requires a second representative fixture plus external willingness to 
 - Upwork exact buyer listing: https://www.upwork.com/freelance-jobs/apply/Independent-Azure-GitHub-Actions-Security-Reviewer_~022106853401122567421/
 - Reviewed exact commit: https://github.com/Waterfound/General-Execution/commit/3ed68361757b32d9797ca9bd6bcee7727062e5fd
 - Matching PBR workflow run: https://github.com/Waterfound/General-Execution/actions/runs/37721751343
+- Second reviewed commit: https://github.com/Waterfound/General-Execution/commit/b1836ee8da5357632e6436292aed66301d7940ed
 - GitHub secure-use reference: https://docs.github.com/en/actions/reference/security/secure-use
 - GitHub least-privilege token guidance: https://docs.github.com/actions/reference/authentication-in-a-workflow
 - GitHub full-SHA pinning guidance: https://docs.github.com/en/code-security/tutorials/secure-your-organization/protect-against-threats
