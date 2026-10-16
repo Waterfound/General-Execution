@@ -1,6 +1,6 @@
 # WRM — cross-source construction evidence watch
 
-Observed: 2026-10-16. Status: `BUYER_BUDGET_SIGNAL / NARROW_CAPABILITY_PROOF_PASS / DIFFERENTIATION_UNPROVEN / NO_PRODUCT_FREEZE`.
+Observed: 2026-10-16. Status: `GENERIC_WEDGE_KILLED / FORENSIC_RESIDUAL_HOLD / NARROW_CAPABILITY_PROOF_PASS / NO_PRODUCT_FREEZE`.
 
 This is public-source commercial falsification plus a synthetic, read-only probe. It is not customer validation, a legal/forensic opinion, a production monitor, measured ROI, WTP for Waterfound, or revenue.
 
@@ -24,16 +24,25 @@ A separately titled `Construction Document Logger & Metadata Specialist` listing
 
 One adjacent, independent listing for a commercial-energy permit expeditor requests ongoing municipal-portal submission/status tracking, documentation and rejection follow-up at **US$15–35/hour for 6+ months**. It showed one hire, three interviews and a client profile with US$12K total spend. This supports recurring paid demand for permit-portal operations, but not for byte-level preservation or cross-source evidence: https://www.upwork.com/freelance-jobs/apply/Permit-Expeditor_~022098407170501687614/
 
+Two further searches found paid downstream evidence work, but not a second independent buyer for the same prospective cross-source watch:
+
+- A U.S. heavy-civil firm seeks a senior construction contracts and claims specialist for an hourly, multi-month engagement. The job requires an event chronology, indexed exhibits, a live claims register, and traceable review-ready work; it showed 10–15 proposals and a client with US$42K prior spend. This validates the value of factual construction chronologies in claims work, not a repeatable demand signal for automated monitoring: https://www.upwork.com/freelance-jobs/apply/Senior-Construction-Contracts-and-Claims-Specialist_~022110119114601588706/
+- A construction-litigation paralegal listing requests defect logs, timeline charts, evidence folders and preservation notices in an hourly, 6+ month engagement; it showed fewer than five proposals and a client with US$1.7K prior spend. This is dispute-specific, expert-led legal support and therefore outside the proposed review-only monitoring job: https://www.upwork.com/freelance-jobs/apply/Experienced-Native-Paralegal-Pennsylvania-Construction-Litigation_~022109254961263298512/
+
+These adjacent roles support a downstream need for trustworthy records and chronology. They do not satisfy the promotion criterion of a second buyer requesting substantially the same cross-source monitoring service.
+
 ## Direct substitution before build
 
 - Procore Document Management already tracks versions and attribute-change history, including timestamp, actor, field and from/to values. It also compares document versions. Sources: https://www.procore.com/platform/document-management ; https://v2.support.procore.com/product-manuals/document-management-project/tutorials/view-change-history-for-documents-in-the-document-mangement-tool ; https://v2.support.procore.com/product-manuals/document-management-project/tutorials/compare-documents-in-the-document-management-tool/
 - Bluebeam Revu already compares PDFs and overlays revised pages. Source: https://support.bluebeam.com/revu/features/compare-documents-vs-overlay-pages.html
 - Newforma markets revision management and document audit trails. Sources: https://www.newforma.com/enhancing-risk-management-in-construction-with-document-control/ ; https://www.newforma.com/the-power-of-information-management-reducing-project-delays-in-construction-document-control/
 - Permit-management platforms market status tracking, document management and notifications. Source: https://www.permitflow.com/blog/how-does-construction-permit-management-software-work
+- PermitFlow's Procore integration is a stronger direct substitute than a stand-alone permit tracker: it brings permit workflow into Procore, tracks status, replaces spreadsheets/document trackers, and adds reminders and follow-ups. It requires a paid PermitFlow subscription and Procore Company Admin, so it is not a parity benchmark for independent evidence preservation, but it substantially covers the operational coordination job. Source: https://www.permitflow.com/blog/permitflow-procore-integration
+- Procore separately describes its audit trail as an automatically timestamped chronological record for accountability and disputes. This is a vendor claim rather than an independent evidentiary validation, but it further narrows any residual beyond native auditability. Source: https://www.procore.com/library/construction-audit-trail
 
-Vendor pages are capability claims, not independent parity benchmarks. They are sufficient to **kill generic version history, PDF comparison, overlay, audit trail and permit-status alerting as unique features**.
+Vendor pages are capability claims, not independent parity benchmarks. They are sufficient to **kill generic version history, PDF comparison, overlay, audit trail, permit-status alerting, and cross-system operational coordination as unique features**.
 
-The only residual is the independent, cross-source observation boundary: a buyer may need a source-external record covering both a municipal portal and Procore, retaining byte-level identity and explicitly separating content changes from timestamp-only changes. The listing itself suggests that assembling those incumbent capabilities still leaves paid operational work. That is an inference from one posting, not proof of a market gap.
+The only residual is forensic rather than operational: a buyer may need a source-external record covering both a municipal portal and Procore, retaining byte-level identity and explicitly separating content changes from timestamp-only changes. One buyer posting suggests that assembling incumbent capabilities can still leave paid manual work, but two further searches did not find a second independent buyer for this exact job. The residual therefore remains on hold and is not a selected product.
 
 ## Smallest falsifiable capability proof
 
@@ -55,7 +64,9 @@ The probe never edits source files. Three deterministic tests pass on a syntheti
 | Adjacent buyers pay for recurring permit-portal operations | Independent US$15–35/hour listing with one hire | Observed, adjacent only |
 | Generic document versioning is differentiated | Procore/Newforma already cover it | Falsified |
 | Generic PDF visual comparison is differentiated | Bluebeam and Procore already cover it | Falsified |
-| Independent cross-source byte-level register is technically feasible | Synthetic manifest/diff tests | Capability proven narrowly |
+| Independent cross-source byte-level register is technically feasible | Synthetic manifest/diff tests | Capability proven narrowly; support-only |
+| Cross-system operational coordination is differentiated | PermitFlow integrates permit workflow and status into Procore | Falsified as a generic wedge |
+| A second buyer requests substantially the same watch | Two searches found claims/litigation chronology work, not the same prospective watch | Not observed |
 | It improves correct decisions or buyer effort vs incumbents | No representative parity test | Unknown |
 | It can operate lawfully on a real portal and Procore account | No project identifier, credentials, terms review or authorization | Unknown / not attempted |
 | External demand or WTP for Waterfound | No contact, proposal, interview or sale | Unknown |
@@ -68,7 +79,7 @@ The probe never edits source files. Three deterministic tests pass on a syntheti
 1. a permitted incumbent configuration exports the same cross-source, source-preserving register with comparable setup and review effort;
 2. a representative public/synthetic two-source fixture yields no action beyond native version history and ordinary Bluebeam comparison;
 3. lawful acquisition requires brittle browser automation, credential sharing, prohibited scraping, or sustained human checking that prevents low-touch delivery;
-4. two further buyer searches show only one-off forensic disputes rather than recurring monitoring demand.
+4. two further buyer searches show only one-off forensic disputes rather than recurring monitoring demand. **Triggered on 2026-10-16 for the generic/prospective wedge.**
 
 **Promote to one candidate service proof only if:**
 
@@ -79,6 +90,8 @@ The probe never edits source files. Three deterministic tests pass on a syntheti
 
 ## Next admissible frontier
 
-Search for a second buyer signal and a lawful public two-source fixture. Do not add a dashboard, scheduler, portal scraper, Procore connector, PDF renderer, hosted service or cryptographic ledger before those predicates are met. Private portal access, Procore installation, customer contact, proposal submission, contract acceptance and publication remain separate authority gates; they are not current blockers to continued public research.
+Close the generic construction-document watch as an active candidate. Preserve the small manifest proof as support-only and do not extend it. The forensic residual may be reopened only if an independent buyer explicitly requests source-external byte preservation across permit and project systems, after which a lawful two-source parity fixture must demonstrate measurable advantage over PermitFlow + Procore + Bluebeam before any connector or service build.
+
+The next commercial-discovery cycle should select a different buyer/problem wedge with stronger repeated demand and weaker native substitution. Private portal access, Procore installation, customer contact, proposal submission, contract acceptance and publication remain separate authority gates; none is needed to close this candidate.
 
 No private producer activation, scheduler change, merge, paid account, outreach, spend, payment/KYC or canonical-state mutation occurred.
