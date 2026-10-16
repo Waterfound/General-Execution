@@ -65,6 +65,12 @@ GitHub's native organization metrics are sufficient to identify frequently faili
 
 The only surviving hypothesis is a one-time, install-free, evidence-to-correction review that converts a chronic failure into a source-pinned root cause and a safe change boundary. This remains a service hypothesis, not a product claim.
 
+## Non-Waterfound counterexample
+
+Microsoft Aspire issue `#19639` provides a useful adverse comparator. Its public CI process already recorded exact failed runs, recurrence counts, a concrete root cause, an advisory-vs-blocking mitigation, a seven-day health ledger, and later distinguished an unrelated setup failure that had been misclassified as the older flaky-test cause. This demonstrates genuine coordination pain, but also shows that a mature team can build the same evidence-to-decision loop into its native engineering process.
+
+The comparator therefore does not promote the candidate. It narrows the plausible buyer to a team with repeated CI failures but without an existing health ledger or specialist CI owner. That buyer segment and its willingness to try remain unverified.
+
 ## Falsification criteria
 
 Kill the candidate if any of the following is established:
@@ -86,6 +92,8 @@ Promotion requires a representative non-Waterfound workflow, consented or public
 - Pipetrics, GitHub Actions cost monitoring and optimization: https://pipetrics.com/
 - Upwork, “Azure & GitHub Actions Reviewer / DevOps Consultant”: https://www.upwork.com/freelance-jobs/apply/Azure-GitHub-Actions-Reviewer-DevOps-Consultant-hours-fixed-price_~022099290780222011710/
 - Upwork, “Azure and GitHub Consultant”: https://www.upwork.com/freelance-jobs/apply/Azure-and-GitHub-Consultant_~022108173016046661145/
+- Upwork, “Independent Azure & GitHub Actions Security Reviewer” (USD 250 fixed-price listing observed 2026-10-16): https://www.upwork.com/freelance-jobs/apply/Independent-Azure-GitHub-Actions-Security-Reviewer_~022106853401122567421/
+- Microsoft Aspire `#19639`, recurring CI failure triage and mitigation history: https://github.com/microsoft/aspire/issues/19639
 
 ## Mission posture
 
