@@ -1,6 +1,6 @@
 # WRM — independent accounting data-path audit
 
-Observed: 2026-10-16. Status: `TWO_BUYER_BUDGET_SIGNALS / NARROW_JTBD_SELECTED / DIFFERENTIATION_PLAUSIBLE_NOT_PROVEN / NO_PRODUCT_FREEZE`.
+Observed: 2026-10-16. Status: `CANDIDATE_KILLED / SERVICE_DEMAND_OBSERVED / AUTONOMOUS_LOW_TOUCH_DELIVERY_NOT_FEASIBLE / NO_PRODUCT_SELECTED`.
 
 This dossier records public commercial evidence and a substitution screen. It is not an accounting opinion, customer validation, authorization to access financial systems, quantified ROI, Waterfound WTP, or revenue.
 
@@ -102,3 +102,29 @@ This is a narrow capability proof only. It does not establish real-system field 
 Updated state: `TWO_BUYER_BUDGET_SIGNALS / SYNTHETIC_CAPABILITY_PROOF_PASS / REAL_PARITY_UNKNOWN / NO_PRODUCT_FREEZE`.
 
 The next admissible commercial discriminator is a representative parity case using lawful exported schemas or public sample logs. No connector, dashboard or hosted service is justified until the same fault can be compared against separate native views and one measurable gain is observed.
+
+
+## Real-source feasibility screen and decision
+
+Official documentation was checked on 2026-10-16 before any connector or additional implementation:
+
+| System | Read path actually available | Constraint relevant to the job |
+| --- | --- | --- |
+| QuickBooks Online | The native audit log records actors and changes, including third-party integration actions. | Intuit requires an active subscription and **admin access**; the UI shows 150 records at a time. Intuit's documented bulk export covers reports, lists and posting transactions, not the audit log. A view-reports role explicitly cannot access the audit log. Sources: https://quickbooks.intuit.com/learn-support/en-us/help-article/audit-log/use-audit-log-quickbooks-online/L2WoVnW6I_US_en_US ; https://quickbooks.intuit.com/learn-support/en-us/help-article/list-management/export-reports-lists-data-quickbooks-online/L1xleDrLp_US_en_US ; https://quickbooks.intuit.com/learn-support/en-us/help-article/access-permissions/user-roles-access-rights-quickbooks-online/L66POfRrI_US_en_US |
+| Xero | The History and Notes report can be filtered and exported; the Accounting API can retrieve history for one existing document. | A cross-system review must first resolve each document, then retrieve its local history. Xero decommissioned the broader Accounting Activities API (including user activities) on 2026-05-04. Sources: https://central.xero.com/0/article/View-a-history-and-notes-summary-for-transactions-and-user-activity ; https://developer.xero.com/documentation/api/accounting/historyandnotes ; https://developer.xero.com/changelog |
+| Karbon | Public API resources expose record identifiers, timestamps and supported external keys. | API authentication is **account-level**, requires an API application token plus access key, and is not scoped to an individual user. API actions are not attributed to a specific Karbon user. Private/hidden clients are excluded unless an administrator separately requests access. External keys are not guaranteed unique across connected systems. Sources: https://developers.karbonhq.com/guides/authentication/ ; https://developers.karbonhq.com/release-notes/2026-04-22/ |
+
+### Falsification result
+
+The synthetic comparator proves only that already-normalized receipts can be joined correctly. It does not solve the commercially decisive acquisition problem. For the exact paid buyer path, a complete, attributable chain cannot be assembled by a least-privilege reviewer from documented machine-readable exports alone:
+
+- QuickBooks actor/change evidence requires admin UI access and has no documented audit-log bulk export in the official export guide;
+- Xero history is exportable but API history is document-scoped, while the broader user-activity API has been retired;
+- Karbon access is account-wide and some records require additional administrator action; the API cannot itself attribute API actions to a human user;
+- therefore evidence collection becomes credentialed, system-specific and substantially manual before the comparator adds value.
+
+This hits kill criterion 3 (vendor-admin access cannot remain least-privilege and low-touch) and kill criterion 4 (bespoke manual consulting dominates the workflow). The paid listings remain valid evidence for a human-delivered independent audit service, but not for an autonomous near-zero-operation Waterfound product under the current authority envelope.
+
+Decision: **kill the accounting data-path audit candidate**. Preserve the synthetic comparator as capability evidence only; do not build connectors, normalize additional schemas, install provider access, request credentials, package a dashboard, submit a proposal or claim ROI.
+
+No customer demand for Waterfound, willingness to try, WTP, time saving, accounting correctness or revenue was established. Revenue remains **USD 0**. The mission returns to commercial discovery with no product selected.
