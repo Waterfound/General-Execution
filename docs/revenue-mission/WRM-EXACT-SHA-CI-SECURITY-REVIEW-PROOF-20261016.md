@@ -2,7 +2,7 @@
 
 ## Commercial decision
 
-`ACTIVE_CANDIDATE / SINGLE_EXACT_BUYER / MATCHED_SCANNER_DIFFERENTIATION_SURVIVES / NO_PRODUCT_SELECTION`
+`CANDIDATE_KILLED / SINGLE_BUYER_OUTLIER / CONTEXTUAL_CAPABILITY_SUPPORT_ONLY / NO_PRODUCT_SELECTED`
 
 Refine the prior chronic-failure triage hypothesis to the sharper paid job:
 
@@ -132,6 +132,23 @@ A bounded public search on 2026-10-17 did not find a second buyer asking for the
 
 This supports the problem class while weakening repeatability of the low-touch read-only boundary. It is not a second exact buyer signal and does not satisfy promotion criteria.
 
+## Bounded repeatability test and terminal decision
+
+On 2026-10-17, a second bounded search covered Upwork, Freelancer, PeoplePerHour and Guru using the exact outcome terms: independent review, GitHub Actions or CI/CD workflow, security, read-only/report and exact commit/SHA. The only result matching the full narrow job was the already-recorded Upwork listing.
+
+Adjacent buyer scopes consistently crossed the candidate boundary:
+
+- the Freelancer CI Security Audit required repository and CI-dashboard access, vulnerability reproduction, a mergeable fix and a verified clean pipeline; its stated budget was INR 1,500–12,500 and it received 15 proposals;
+- an AWS & cybersecurity audit included GitHub Actions, but bundled AWS architecture, IAM, networking, backup/restore, logs, roadmap and a review meeting;
+- an AWS audit and Git-governance scope required NDA-controlled audit windows, broad cloud/Git review, a correction ledger and verification of implemented corrections;
+- PeoplePerHour and Guru results were implementation, DevOps, production-support or broad application-review engagements rather than one-workflow review-only deliverables.
+
+This triggers kill criterion 5. The exact USD 250 listing is real paid-intent evidence, but the broader market screen does not support a repeatable low-touch product. The matched scanner run also established that most source-level value is already commoditized; the contextual trigger/run/authority check survives technically but has no repeated exact buyer evidence.
+
+**Terminal decision:** close this candidate. Preserve the exact-SHA reconciliation method and two public reports as `SUPPORT_ONLY` capability evidence. Do not build a scanner wrapper, dashboard, hosted service, installation path, remediation workflow or pricing package. Do not submit a proposal or claim customer demand, WTP, ROI or revenue.
+
+The Revenue Mission returns to buyer/problem discovery with `NO_PRODUCT_SELECTED` and revenue `USD 0`. No human gate is current because additional machine-admissible commercial discovery remains.
+
 ## Evidence ladder
 
 | Predicate | State |
@@ -157,7 +174,7 @@ Kill or reduce to `SUPPORT_ONLY` if any occurs:
 4. a second representative fixture produces only generic scanner findings and no source-specific decision;
 5. no additional direct buyer signal appears, or observed work consistently bundles implementation/cloud access that defeats the read-only low-touch boundary.
 
-Promotion requires a second exact buyer signal plus external willingness to try; the second public fixture alone is insufficient. Pricing remains unselected: the USD 250 listing is buyer evidence, not a Waterfound price recommendation.
+Promotion criteria were not met. Reopening requires a new direct buyer signal for the same review-only boundary plus observable willingness to try; the second public fixture alone is insufficient. Pricing remains unselected: the USD 250 listing is buyer evidence, not a Waterfound price recommendation.
 
 ## Sources
 
@@ -172,10 +189,12 @@ Promotion requires a second exact buyer signal plus external willingness to try;
 - zizmor v1.31.1 immutable release: https://github.com/zizmorcore/zizmor/releases/tag/v1.31.1
 - StepSecurity pricing and feature matrix: https://www.stepsecurity.io/pricing
 - Adjacent CI security audit requiring access, reproduction and remediation: https://www.freelancer.com/projects/security/security-audit
+- Broad AWS and cybersecurity audit including GitHub Actions: https://www.freelancer.com/projects/amazon-web-services/aws-cybersecurity-audit-for-tech
+- Broad AWS audit and Git governance engagement: https://www.freelancer.com/projects/cloud-security/aws-audit-git-governance
 
 ## Mission posture
 
-- `ACTIVE`: seek additional direct buyer/problem evidence for the exact-SHA review-only outcome; do not expand implementation.
-- `SECONDARY`: this first public report and its evidence contract.
-- `SUPPORT_ONLY`: scanner execution, the predecessor chronic-failure monitor, dashboards, collectors, persistent installation, automated remediation and generic security checklists.
+- `ACTIVE`: none from this wedge; return selection to buyer/problem discovery.
+- `SECONDARY`: none from this wedge.
+- `SUPPORT_ONLY`: exact-SHA reconciliation method, both public reports, scanner execution, the predecessor chronic-failure monitor, dashboards, collectors, persistent installation, automated remediation and generic security checklists.
 - `HUMAN_GATE`: none currently. Outreach, proposal submission, account use, contract acceptance and private client access remain gated, but machine-admissible validation remains.
