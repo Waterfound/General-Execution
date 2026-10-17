@@ -1,0 +1,115 @@
+{
+  "schema": "wrm.competitive-substitution-matrix.v1",
+  "observed_at": "2026-10-10",
+  "status": "RESEARCH_CANDIDATE_NO_CUSTOMER_VALIDATION",
+  "sources": [
+    {
+      "name": "GitHub Copilot agent sessions",
+      "source": "https://docs.github.com/pt/copilot/how-tos/copilot-on-github/use-copilot-agents/manage-and-track-agents",
+      "observed_capabilities": [
+        "agent session dashboard",
+        "progress monitoring",
+        "session logs",
+        "tool trace",
+        "session steering",
+        "session stop/archive",
+        "commit-to-session attribution"
+      ],
+      "implication": "A generic GitHub agent-session monitoring surface is not a defensible WRM wedge."
+    },
+    {
+      "name": "GitLab AI Governance",
+      "source": "https://docs.gitlab.com/user/ai-governance/",
+      "observed_capabilities": [
+        "AI-agent session monitoring",
+        "AI audit events",
+        "Allow Ask Deny tool governance",
+        "external agent coverage through GitLab MCP"
+      ],
+      "implication": "Generic governance, audit, and tool-approval policy are incumbent capabilities."
+    },
+    {
+      "name": "CodeRabbit",
+      "source": "https://www.coderabbit.ai/pricing",
+      "observed_capabilities": [
+        "agentic PR review",
+        "coding-agent loops",
+        "multi-repo checks",
+        "enterprise audit logging",
+        "paid agent execution"
+      ],
+      "implication": "Adjacent PR automation already has commercial pricing and mature review workflows."
+    },
+    {
+      "name": "Agentplane",
+      "source": "https://github.com/basilisk-labs/agentplane",
+      "observed_capabilities": [
+        "agent-agnostic Git-native workflow control",
+        "authority bounds",
+        "task lifecycle state",
+        "PR routing",
+        "evidence",
+        "recovery",
+        "closure"
+      ],
+      "implication": "Authority plus evidence plus recovery for heterogeneous coding agents is already an open-source substitute."
+    },
+    {
+      "name": "AgentHUD",
+      "source": "https://github.com/neochoon/agenthud",
+      "observed_capabilities": [
+        "read-only multi-agent session aggregation",
+        "working-versus-waiting visibility",
+        "structured machine-readable reports",
+        "live merged event feed"
+      ],
+      "implication": "Read-only multi-agent visibility alone is not sufficient differentiation."
+    },
+    {
+      "name": "ADHDev",
+      "source": "https://github.com/vilmire/adhdev",
+      "observed_capabilities": [
+        "multi-agent dashboard",
+        "approval inbox",
+        "cross-agent execution",
+        "workflow recovery and merge refinery",
+        "multi-provider support"
+      ],
+      "implication": "Dashboard plus approvals plus unattended convergence is crowded."
+    }
+  ],
+  "falsified_or_weakened_wedges": [
+    "generic_agent_governance_dashboard",
+    "generic_multi_agent_monitoring",
+    "authority_plus_evidence_as_unique_claim",
+    "approval_inbox_as_unique_claim",
+    "generic_recovery_control_plane"
+  ],
+  "narrower_hypothesis": {
+    "name": "Zero-migration Agent PR Recovery Digest",
+    "status": "HYPOTHESIS_ONLY_NOT_PRODUCT_SCOPE",
+    "job_to_be_done": "For an existing repository already using heterogeneous coding agents, identify from read-only repository and optional receipt evidence why an agent-created PR is stalled, whether it is safely recoverable, what evidence is missing, and the next smallest safe action without requiring the team to adopt a new orchestration control plane first.",
+    "boundary": [
+      "GitHub-first",
+      "read-only",
+      "no agent launch or orchestration",
+      "no write permission",
+      "no migration into a proprietary workflow",
+      "explicit UNKNOWN when evidence is insufficient",
+      "exact evidence links for each classification"
+    ],
+    "claimed_gap_to_falsify": "Existing substitutes are strong at running, monitoring or governing agents, but a zero-migration forensic recovery layer for already-existing heterogeneous PR workflows may reduce adoption friction. This is not yet proven.",
+    "kill_criteria": [
+      "a current substitute already diagnoses stalled heterogeneous PR workflows with equivalent read-only zero-migration evidence and negligible setup",
+      "repository-native evidence is insufficient to classify recovery safely without invasive integrations",
+      "target teams do not experience recurring stalled-agent PR or approval-fragmentation pain",
+      "the output is only a repackaging of native GitHub or GitLab views",
+      "external users show no willingness to try the workflow"
+    ],
+    "smallest_next_experiment": "Build a fixture-bound read-only classifier only after the exact classification contract is frozen; compare its output against native repository views and at least one substitute. Do not build a dashboard or hosted service."
+  },
+  "buyer_validation": "NONE",
+  "wtp": "NONE",
+  "revenue": "NONE",
+  "authority_created": false
+}
