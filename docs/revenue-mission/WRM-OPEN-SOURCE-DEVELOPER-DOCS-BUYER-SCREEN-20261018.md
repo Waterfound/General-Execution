@@ -2,13 +2,13 @@
 
 ## Decision
 
-`SINGLE_BUYER_SIGNAL / NOT_ADMITTED_FOR_BUILD / NO_PRODUCT_SELECTED`
+`CANDIDATE_KILLED / SINGLE_BUYER_OUTLIER / NO_PRODUCT_SELECTED`
 
-The narrow job is not generic documentation generation. It is:
+The narrow job tested was:
 
 > From an existing public TypeScript codebase, prove that a new developer can set up and run one representative workflow, then explain the architecture and product flow with code-led examples and simple diagrams.
 
-This job is commercially plausible, but the evidence currently supports one paid buyer only. It does not yet justify a Waterfound product or service build.
+The bounded repetition screen found one paid buyer only. The hypothesis is closed; no Waterfound product or proof build is admitted.
 
 ## Buyer evidence
 
@@ -28,15 +28,29 @@ Observed from the indexed listing on 2026-10-18:
 
 This is real paid demand and one realized hire. It is not an available opportunity: a hire already exists. The listing does not identify the repository, and work "directly with the founder" implies private acceptance criteria and coordination.
 
+## Bounded repetition screen
+
+A second marketplace search on 2026-10-18 tested the exact outcome across Upwork, Freelancer, and PeoplePerHour.
+
+The search found adjacent paid work, but not a second independent buyer for source-pinned executable onboarding documentation:
+
+- [Independent Technical Architecture Review](https://www.upwork.com/freelance-jobs/apply/Independent-Technical-Architecture-Review-Fotografieagenda_~022110805667539158282/) asks for a concise architecture assessment, not onboarding proof.
+- A current Freelancer [Technical Architecture Review + MVP Estimate](https://www.freelancer.com/job-search/project-risk-matrix-example/) requests a broad private package: Figma gap review, module map, architecture, ERD, RBAC, booking concurrency, API capability map, localization, security, operations, decision register, and estimate.
+- Current implementation jobs bundle setup documentation and diagrams with building, correcting, deploying, or supporting the software; documentation is handover residue rather than the purchased core outcome.
+- A current [full-stack platform audit/simplification](https://www.freelancer.com/projects/full-stack-development/Audit-Simplify-Full-Stack-Platform) requires repository/environment mapping, bug reproduction, refactoring or removal recommendations, a clean-machine setup, and deployment documentation—again coupled to private access and remediation.
+
+Result: no repeated buyer evidence for the exact read-only job; no current unallocated public-repository opportunity.
+
 ## Substitute boundary
 
 Native and adjacent tools cover large parts of the output:
 
 - [Postman](https://www.postman.com/api-platform/api-documentation/) automatically generates and updates API documentation from OpenAPI definitions and collections.
 - [Swagger](https://swagger.io/solutions/api-documentation/) generates, visualizes, and maintains API reference documentation.
-- [GitBook](https://www.gitbook.com/) and other AI-native documentation systems support drafting, organization, and maintenance of developer documentation.
+- [GitBook](https://www.gitbook.com/) and other AI-native documentation systems support drafting, organization, and maintenance.
+- [Eraser](https://www.eraser.io/use-case/architecture-diagrams) generates codebase and architecture diagrams.
 
-They do not by themselves prove that a clean newcomer can execute the documented setup and representative workflow at an exact source revision. That verification boundary is the only plausible differentiation found in this screen.
+Executable onboarding verification remained a plausible difference, but a plausible technical difference without repeated buyer demand is not a commercial wedge.
 
 ## Evidence classification
 
@@ -44,28 +58,19 @@ They do not by themselves prove that a clean newcomer can execute the documented
 |---|---|
 | Capability | Waterfound can inspect public repositories and produce source-pinned evidence without new credentials. |
 | Observed buyer outcome | One USD 500 contract received 20–50 proposals, 6 interviews, and 1 hire. |
-| Competitive differentiation | Possible only at executable onboarding verification; generic reference generation is substituted. |
-| Demand evidence | One buyer; insufficient repetition. |
-| Willingness to pay | Observed for the buyer's broader milestone contract, not for a standalone verification proof. |
+| Competitive differentiation | Possible only at executable onboarding verification; generic reference and diagram generation are substituted. |
+| Demand evidence | One buyer; bounded repetition screen found no second buyer. |
+| Willingness to pay | Observed for one broader milestone contract, not for a standalone verification proof. |
 | Revenue | USD 0. |
 
-## Admission and kill criteria
+## Kill-criteria result
 
-Admit a smallest read-only proof only if all are true:
+- Second independent paid buyer: **FAIL**.
+- Current unallocated opportunity: **FAIL**.
+- Public or buyer-authorized source snapshot: **FAIL / UNKNOWN**.
+- Read-only delivery without private coordination: **FAIL / UNKNOWN**.
+- Native substitution for prose/reference/diagrams: **PRESENT**.
 
-1. a second independent paid buyer requests materially the same code-led onboarding/architecture outcome;
-2. at least one current buyer is unallocated or explicitly open to an additional deliverable;
-3. a public repository or buyer-authorized source snapshot is available;
-4. the deliverable can be evaluated without private credentials, publication, outreach, paid tooling, or contractual acceptance;
-5. the differentiator is executable onboarding verification, not prose or generated API reference.
+## Operational consequence
 
-Kill or refine the hypothesis if:
-
-- no second independent buyer is found in the next bounded marketplace screen;
-- buyer demand consistently requires private founder sessions or undisclosed repositories;
-- buyers accept generated documentation without executable verification;
-- a native tool produces the same source-pinned setup proof and architecture trace.
-
-## Next admissible frontier
-
-Search for one additional paid, independently posted buyer whose requested acceptance outcome is reproducible onboarding from a public or buyer-authorized repository. Do not build a documentation generator, contact the buyer, submit a proposal, or publish a sample before the admission criteria pass.
+Do not build a documentation generator, onboarding verifier, architecture mapper, sample, landing page, or pricing package for this hypothesis. Preserve the evidence as market learning only. No buyer contact, proposal, publication, credentials, contract, payment onboarding, or spend occurred.
