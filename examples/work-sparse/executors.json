@@ -43,12 +43,12 @@
         "artifact_evidence",
         "parallel_candidates"
       ],
-      "cost_rank": 20,
+      "cost_rank": 100,
       "estimated_cost_cents": 0,
       "requires_work": false,
       "paid": false,
-      "available": true,
-      "evidence_ref": "build-colony://runner-pool",
+      "available": false,
+      "evidence_ref": "github-private-runner://requires-independent-zero-hosted-minute-runner-admission",
       "authority_created": false
     },
     {
