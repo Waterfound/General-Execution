@@ -128,6 +128,8 @@ class ExecutorCapability:
     executor_id: str
     capabilities: tuple[str, ...]
     cost_rank: int
+    # None means legacy unscoped capability; admitted public/private executors should bind scope.
+    allowed_repositories: tuple[str, ...] | None = None
     estimated_cost_cents: int = 0
     requires_work: bool = False
     paid: bool = False
@@ -142,6 +144,8 @@ class ExecutorCapability:
         _nonempty(self.executor_id, "executor_id")
         _unique(self.capabilities, "capabilities", allow_empty=False)
         _nonnegative_int(self.cost_rank, "cost_rank")
+        if self.allowed_repositories is not None:
+            _unique(self.allowed_repositories, "executor.allowed_repositories", allow_empty=False)
         _nonnegative_int(self.estimated_cost_cents, "estimated_cost_cents")
         _boolean(self.requires_work, "requires_work")
         _boolean(self.paid, "paid")
@@ -309,6 +313,7 @@ def decide_work_sparse_route(
         executor
         for executor in executors
         if required <= set(executor.capabilities)
+        and (executor.allowed_repositories is None or work.repository in executor.allowed_repositories)
     )
     if not matching:
         return _finalize(
