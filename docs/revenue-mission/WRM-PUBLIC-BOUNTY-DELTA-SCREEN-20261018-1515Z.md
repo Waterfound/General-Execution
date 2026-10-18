@@ -83,6 +83,43 @@ Sources:
 
 This follow-up does not change the frontier: no higher-value, unassigned, low-contention task was found. It closes three false-positive paths without adding implementation or runtime work.
 
+## 6. High-value Algora board: stale after repository transfer
+
+Algora's Space and Time page displayed five “open” bounties totalling US$10,629, including US$10,000 for nullable-column support. Direct reconciliation against the current `spaceandtimefdn/sxt-proof-of-sql` repository falsified availability:
+
+- issue #183 (US$10,000) is closed and shows many historical attempts and overlapping implementations;
+- issues #228, #557 and #560 are also closed;
+- a current GitHub issue search for open issues labelled `💎 Bounty` in the repository returned zero.
+
+Sources:
+
+- https://algora.io/spaceandtimelabs/home
+- https://github.com/spaceandtimefdn/sxt-proof-of-sql/issues/183
+- https://github.com/spaceandtimefdn/sxt-proof-of-sql/issues/228
+- https://github.com/spaceandtimefdn/sxt-proof-of-sql/issues/557
+- https://github.com/spaceandtimefdn/sxt-proof-of-sql/issues/560
+
+Decision: reject the board totals as a current supply signal. A platform card survives the repository's organization transfer and closure state; the canonical issue, not the aggregator card, controls admission.
+
+## 7. “Autonomous Agents Only” high-dollar listings: research trap and privacy hazard
+
+The `ClankerNation/OpenAgents` repository advertises multiple US$5,000–US$9,000 issues. Direct evidence makes them ineligible:
+
+- issue #59 requires contributors to paste the full platform initialization text, runtime environment, working directory and shell into source metadata;
+- the repository has zero merged pull requests and no observed payment receipt;
+- issue #6144 requested proof of contributor payments and was locked/closed without supplying any;
+- issue #2234 records that the listed bounties are symbolic research tasks, not paid work;
+- issue #5021 records a contributor asking maintainers to purge PRs after required metadata exposed a real username, internal prompts and a wallet address.
+
+Sources:
+
+- https://github.com/ClankerNation/OpenAgents/issues/59
+- https://github.com/ClankerNation/OpenAgents/issues/6144
+- https://github.com/ClankerNation/OpenAgents/issues/2234
+- https://github.com/ClankerNation/OpenAgents/issues/5021
+
+Decision: `REJECT_AND_QUARANTINE`. Do not clone for execution, submit, disclose system text, publish environment metadata, provide payment coordinates, or treat advertised labels as WTP. This class fails payer proof, payment proof, privacy, provenance and ordinary acceptance-authority checks before code quality is relevant.
+
 ## Admission rule retained
 
 A public bounty enters private proof only when all of the following are independently verified immediately before work:
