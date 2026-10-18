@@ -1,6 +1,6 @@
 # WRM — Agent reliability and recovery substitution screen (2026-10-14)
 
-Status: `GENERIC_RESIDUAL_KILLED / LOW_COST_MARKET_CONFIRMED_COMMODITIZED / CROWDED_BOUNTY_CHANNEL_REJECTED / RECENT_BOUNTY_FEED_REJECTED / MICRO_HYPOTHESIS_KILLED / NO_PRODUCT_SELECTED`  
+Status: `GENERIC_RESIDUAL_KILLED / LOW_COST_MARKET_CONFIRMED_COMMODITIZED / CROWDED_BOUNTY_CHANNEL_REJECTED / RECENT_BOUNTY_FEED_REJECTED / AI_SAFETY_PERMISSION_AUDIT_REJECTED / MICRO_HYPOTHESIS_KILLED / NO_PRODUCT_SELECTED`  
 Observed Waterfound revenue: **USD 0**
 
 ## Commercial question
@@ -148,6 +148,38 @@ Observed competition and admissibility:
 Decision: **`REJECT_CURRENT_FEED_AS_ACTIVE_REVENUE_CHANNEL`**. The advertised amounts do not compensate for near-immediate collision, duplicate/prior-art risk, maintainer-dependent acceptance, and unverified payment availability. Do not produce speculative patches for already-contested work. Reopen only for an unassigned task whose funding and payout terms are maintainer-confirmed, whose acceptance test is locally reproducible, and whose implementation can be completed before public collision without credentials, hardware, spend or outreach.
 
 No claim, comment, issue, PR, wallet disclosure, payment setup or external contact was made.
+
+## AI safety permission-architecture buyer reconciliation — 2026-10-18
+
+Primary buyer source:
+
+- https://www.upwork.com/freelance-jobs/apply/Safety-Engineering-Consultant_~022110398258396779493/
+
+A recent worldwide Upwork listing offered a **USD 110 fixed-price** AI safety consulting engagement. Search indexing showed USD 110 total spend, two hires and one active engagement. The requested surface included AI risk assessment, threat model, safety architecture, red-team plan, adversarial cases, automated evaluation, guardrails, prompt-injection defenses, agent permission architecture, human-approval workflows, production monitoring, incident response and deployment documentation.
+
+This is direct buyer evidence for agent permission and approval safety, but it is not a narrow available Waterfound wedge:
+
+- the acceptance surface spans consulting, design, testing, implementation and operations rather than one falsifiable job;
+- the listing does not provide a public target, representative fixture or buyer-defined expected outcomes;
+- current hire/spend signals indicate allocation, while proposal count and remaining scope could not be reconciled from the canonical page;
+- no evidence says the buyer wants Waterfound-specific governed execution, recovery or authority-stop evidence.
+
+Direct native and open substitutes further defeat generic differentiation:
+
+- NVIDIA Open Agent Safety Platform and OpenShell provide enforceable runtime boundaries; OpenShell policies declare what each agent can touch and block access outside policy.
+  Sources: https://nvidianews.nvidia.com/news/open-agent-safety-platform and https://github.com/NVIDIA/OpenShell
+- Microsoft PyRIT provides automated multi-turn attack strategies and risk scanning for generative-AI targets.
+  Source: https://github.com/microsoft/PyRIT
+- UK AISI Inspect supports sandboxed agent evaluation, tool-call approval policies, denial of ungranted calls and resumable checkpointing.
+  Sources: https://inspect.aisi.org.uk/approval.html, https://inspect.aisi.org.uk/agent-bridge.html and https://inspect.aisi.org.uk/checkpointing.html
+- NIST AIRC already supplies AI RMF operationalization and testing, evaluation, verification and validation resources.
+  Source: https://airc.nist.gov/
+
+Decision: **`REJECT_GENERIC_AI_SAFETY_PERMISSION_AUDIT / NO_BUILD`**. Do not construct another threat-model template, red-team harness, approval ledger, agent policy dashboard or checkpointing layer from this listing. Waterfound's authority-stop and recovery rehearsals remain capability evidence only.
+
+Reopen solely if a fresh, unallocated buyer supplies a lawful public or synthetic target plus an objective forbidden-action predicate that the named substitutes cannot express or verify, and explicitly accepts a bounded proof before private access, remediation or deployment.
+
+No proposal, outreach, target testing, account action, customer access, publication, spend, contract, payment/KYC, runtime activation or privacy-producer activation occurred.
 
 ## Decision
 
