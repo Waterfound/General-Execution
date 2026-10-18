@@ -31,7 +31,10 @@
       "paid": false,
       "available": true,
       "evidence_ref": "github-actions://Waterfound/General-Execution",
-      "authority_created": false
+      "authority_created": false,
+      "allowed_repositories": [
+        "Waterfound/General-Execution"
+      ]
     },
     {
       "schema_version": "ge.work-sparse-executor-capability.v1",
@@ -48,8 +51,11 @@
       "requires_work": false,
       "paid": false,
       "available": false,
-      "evidence_ref": "github-private-runner://requires-independent-zero-hosted-minute-runner-admission",
-      "authority_created": false
+      "evidence_ref": "build-colony://private-runner-unavailable-until-isolated-host-proof",
+      "authority_created": false,
+      "allowed_repositories": [
+        "Waterfound/Build-Colony"
+      ]
     },
     {
       "schema_version": "ge.work-sparse-executor-capability.v1",
