@@ -1,0 +1,55 @@
+{
+  "finding_count": 4,
+  "findings": [
+    {
+      "evidence": [
+        "FIGMA-AVAILABILITY-01",
+        "BR-001"
+      ],
+      "id": "CONTRADICTION:FIGMA-AVAILABILITY-01:BR-001",
+      "kind": "cross_artifact_contradiction",
+      "message": "clinician_availability scope is 'global' in design but 'facility_specific' in the business rule.",
+      "severity": "BLOCKER"
+    },
+    {
+      "evidence": [
+        "WF-BOOKING-01",
+        "S2",
+        "permissions:clinician"
+      ],
+      "id": "PERMISSION_GAP:WF-BOOKING-01:S2",
+      "kind": "workflow_permission_gap",
+      "message": "Workflow requires 'clinician' to 'confirm_appointment', but RBAC does not grant it.",
+      "severity": "BLOCKER"
+    },
+    {
+      "evidence": [
+        "WF-BOOKING-01",
+        "S3",
+        "permissions:facility_admin"
+      ],
+      "id": "PERMISSION_GAP:WF-BOOKING-01:S3",
+      "kind": "workflow_permission_gap",
+      "message": "Workflow requires 'facility_admin' to 'reschedule_appointment', but RBAC does not grant it.",
+      "severity": "BLOCKER"
+    },
+    {
+      "evidence": [
+        "WF-BOOKING-01"
+      ],
+      "id": "DECISION_REQUIRED:DECISION-CONCURRENCY-01",
+      "kind": "product_decision_required",
+      "message": "Define the conflict policy for simultaneous booking requests.",
+      "severity": "HIGH"
+    }
+  ],
+  "fixture_id": "synthetic-multirole-booking-v1",
+  "read_only": true,
+  "schema": "waterfound.prebuild-decision-gap-proof.v1",
+  "severity_counts": {
+    "BLOCKER": 3,
+    "HIGH": 1,
+    "LOW": 0,
+    "MEDIUM": 0
+  }
+}
