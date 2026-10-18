@@ -2,7 +2,7 @@
 
 ## Decision
 
-`PUBLIC_PROOF_PASSED / CANDIDATE_NOT_SELECTED / EXTERNAL_VALUE_UNPROVEN`
+`CANDIDATE_KILLED / DIRECT_SUBSTITUTE_CONFIRMED / CAPABILITY_SUPPORT_ONLY / NO_PRODUCT_SELECTED`
 
 ## Narrow job-to-be-done
 
@@ -54,6 +54,30 @@ Sources:
 - [pre-launch Stripe review buyer](https://www.upwork.com/freelance-jobs/apply/Pre-launch-security-review-Supabase-Next-Stripe_~022097269113797358975/)
 - [billing health-check substitute](https://www.upwork.com/services/product/development-it-a-stripe-and-subscription-billing-health-check-of-your-saas-2095573148150399838)
 
+## Independent public-fixture replication
+
+Repository: `SummonIQ/tuniq` at exact commit `6eff1b2e529a3ef3561a1942db7ae7b1d6e0a643`.
+
+The complete public tree contained no separate queue, worker, retry, or dead-letter implementation. Its Stripe route exposed three independently checkable paths that can acknowledge HTTP 200 with no access-state mutation:
+
+- `checkout.session.completed` skips its mutation block when any required identity field is absent;
+- `customer.subscription.updated` does not treat zero matched users as an error;
+- `customer.subscription.deleted` does not treat zero matched users as an error.
+
+The same probe flags all three paths. The expanded suite passes 3/3 tests, including the first fixture and its negative control. Repeated second-fixture output SHA-256 is `dddcd886386e5e91d6d8f4de70be1bb32827674d62594e166cc03c55f9d8a3ff`.
+
+This replication establishes a reusable technical detector shape across two source-pinned public repositories. It does not establish production occurrence, customer harm, or commercial value.
+
+## Substitute falsification
+
+The product boundary is not commercially distinct:
+
+- an Upwork Stripe/subscription health check already covers checkout, lifecycle, webhooks, idempotency, entitlements, failed payments, plan changes, and the code granting or revoking access; it delivers a prioritized report without implementation or live-charge testing for USD 695–2,995;
+- another Upwork no-write billing/webhook audit explicitly covers silent access drift, missed retries, stale subscription status, paid users blocked, evidence packets, and safe fix paths for USD 149–899;
+- AxonBuild publishes the exact diagnostic mechanism: a Stripe webhook can return 200 while the database remains unchanged, including identity mappings that match no user.
+
+These are direct substitutes for the outcome tested here. A smaller automated report would be a delivery-method or price difference; no buyer evidence shows it is a sharper unresolved job.
+
 ## Evidence classification
 
 | Predicate | Status |
@@ -61,17 +85,15 @@ Sources:
 | Technical capability | Proven on one public, source-pinned fixture. |
 | Material issue | Code-level paid-access divergence path proven; real-world occurrence unproven. |
 | Buyer/problem evidence | Repeated jobs and existing paid service offers. |
-| Differentiation | Unknown; existing billing-health-check services are direct substitutes. |
+| Differentiation | Falsified; direct no-write billing/access-drift substitutes exist. |
 | Human time / revenue saved | Unknown. |
 | WTT / WTP for Waterfound | Unknown. |
 | Revenue | USD 0. |
 
 ## Kill and advance criteria
 
-Advance only if additional independent public fixtures show the same failure class and the bounded detector finds it with low preparation burden, or a buyer-authorized validation opportunity appears.
-
-Kill if existing Stripe health checks or static analyzers provide the same source-linked finding; if the finding requires extensive manual interpretation; if the dominant buyer need is remediation rather than diagnosis; or if no willingness-to-try signal appears after an authorized opportunity.
+The technical advance criterion was met on a second fixture, but the commercial kill criterion was also met by direct substitutes. Reopen only on independent evidence of demand for an automated source-only product that incumbent audits do not satisfy.
 
 ## Current consequence
 
-Do not build UI, integrations, pricing, outreach, or publication. The next admissible step is substitute falsification and a second independent public-fixture test, not expansion.
+Close the candidate. Preserve the probe and both public-fixture outputs only as `SUPPORT_ONLY` capability. Do not build UI, integrations, pricing, outreach, or publication. Continue commercial discovery toward an outcome with direct buyer evidence and material differentiation.
