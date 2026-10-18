@@ -117,3 +117,22 @@ A global GitHub issue search for the exact public state `Squash: funded` found o
 This does not prove that Squash cannot grade or pay through a separate private backend. It does prove that the available public record does not yet demonstrate the advertised end-to-end predicate: funded task → objective green verdict → payout released/settled.
 
 Accordingly, **no external onboarding is justified yet**, even if one of the four new issues becomes funded. Before promotion, require both a current funded-and-unclaimed item and a reconciled completed grader/payout precedent, or equivalent primary platform evidence. The channel remains `CONDITION_WAIT`; no Waterfound gate is active.
+
+## Grading and settlement reconciliation — 2026-10-18T22:25Z
+
+The historical live-flow issue advanced after the prior reconciliation:
+
+- the maintainer publicly stated that the frozen test passed and the delivery was accepted;
+- payout did **not** settle because the solver's Japanese bank account was not supported by the platform's US-based Stripe arrangement;
+- the maintainer named the United States, Canada, the United Kingdom and the European Union as supported bank locations, reopened payout setup, and offered to find another route if the solver cannot supply one.
+
+Primary source: <https://github.com/DaltonTheDeveloper/squash-live-test/issues/2#issuecomment-6256594228>
+
+This upgrades one predicate from unknown to observed: **exact-commit machine grading can reach accepted**. It also exposes the current commercial bottleneck: acceptance is not equivalent to payable settlement, and the available public record does not establish a supported Brazil payee route or a completed payout.
+
+Updated channel state:
+
+`GRADING_ACCEPTANCE_CONFIRMED / SETTLEMENT_NOT_CONFIRMED / CURRENT_ITEMS_UNFUNDED / BRAZIL_ELIGIBILITY_UNKNOWN / NO_CLAIM / NO_REVENUE`
+
+No Waterfound human gate is active. Promotion still requires a current funded-and-unclaimed item, independently verified Brazil payee eligibility under the actual arrangement, and a settled-payout precedent or an equivalent binding primary payment term. No onboarding should begin merely to probe eligibility.
+
