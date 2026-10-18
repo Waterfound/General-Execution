@@ -1,13 +1,19 @@
 import copy
 import json
+import sys
 import unittest
 from pathlib import Path
+
+
+ROOT = Path(__file__).parents[1]
+sys.path.insert(0, str(ROOT / "scripts" / "revenue_mission"))
 
 from stripe_silent_entitlement_probe import analyze
 
 
-FIXTURE = Path(__file__).with_name("stripe_silent_entitlement_public_fixture.json")
-FIXTURE_2 = Path(__file__).with_name("stripe_silent_entitlement_public_fixture_2.json")
+FIXTURE_DIR = Path(__file__).with_name("fixtures")
+FIXTURE = FIXTURE_DIR / "stripe_silent_entitlement_public_fixture.json"
+FIXTURE_2 = FIXTURE_DIR / "stripe_silent_entitlement_public_fixture_2.json"
 
 
 class ProbeTests(unittest.TestCase):
