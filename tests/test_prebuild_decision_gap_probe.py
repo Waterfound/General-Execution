@@ -1,15 +1,21 @@
 import json
+import sys
 import unittest
 from pathlib import Path
+
+
+ROOT = Path(__file__).parents[1]
+sys.path.insert(0, str(ROOT / "scripts" / "revenue_mission"))
 
 from prebuild_decision_gap_probe import analyze
 
 
+FIXTURE = Path(__file__).with_name("fixtures") / "prebuild_decision_gap_fixture.json"
+
+
 class ProbeTest(unittest.TestCase):
     def test_synthetic_fixture_finds_expected_gaps(self):
-        fixture = json.loads(
-            Path("prebuild_decision_gap_fixture.json").read_text(encoding="utf-8")
-        )
+        fixture = json.loads(FIXTURE.read_text(encoding="utf-8"))
         result = analyze(fixture)
 
         self.assertTrue(result["read_only"])
