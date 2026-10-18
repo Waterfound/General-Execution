@@ -63,6 +63,26 @@ Source: https://github.com/SalamLang/Salam/issues/1713
 
 Decision: reject. The compensation is immaterial relative to build, publication, installation, review, and collection effort; the promotional requirements also make it a poor fit for evidence-first revenue work.
 
+
+## 5. Follow-up delta — 2026-10-18 20:33 UTC
+
+Three later signals were reconciled against the same admission rule:
+
+| Signal | Public evidence | Decision |
+|---|---|---|
+| Paraloom wallet #93 — US$150 USDC | The issue's public thread contains a completed implementation, 116/116 reported passing tests, and a payout address; PR #95 is the submitted implementation. | Reject: already implemented/claimed; no duplicate build. |
+| SoroWill contracts #587 | Four solver applications appeared in the Stellar Wave flow within minutes, while the issue itself exposes no fixed reward amount. | Reject: materially contested and compensation not independently verified. |
+| Stacker News weekly-close contest #1597420 | A public radar snapshot reports a 10,000-sat contest, but the primary rules and acceptance authority were not retrievable from the available read-only path. The title describes a stock-price outcome contest rather than a bounded software deliverable. | Quarantine: no primary-rule verification; no prediction, account creation, or public entry. |
+
+Sources:
+
+- https://github.com/paraloom-labs/paraloom-wallet/issues/93
+- https://github.com/paraloom-labs/paraloom-wallet/pull/95
+- https://github.com/SoroWill/sorowill-contracts/issues/587
+- https://github.com/relayhop/sn-monetization-runtime/issues/1306
+
+This follow-up does not change the frontier: no higher-value, unassigned, low-contention task was found. It closes three false-positive paths without adding implementation or runtime work.
+
 ## Admission rule retained
 
 A public bounty enters private proof only when all of the following are independently verified immediately before work:
