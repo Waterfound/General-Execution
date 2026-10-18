@@ -126,7 +126,7 @@ The historical live-flow issue advanced after the prior reconciliation:
 - payout did **not** settle because the solver's Japanese bank account was not supported by the platform's US-based Stripe arrangement;
 - the maintainer named the United States, Canada, the United Kingdom and the European Union as supported bank locations, reopened payout setup, and offered to find another route if the solver cannot supply one.
 
-Primary source: <https://github.com/DaltonTheDeveloper/squash-live-test/issues/2#issuecomment-6256594228>
+Primary source: <https://github.com/DaltonTheDeveloper/squash-live-test/issues/2#issuecomment-6255917408>
 
 This upgrades one predicate from unknown to observed: **exact-commit machine grading can reach accepted**. It also exposes the current commercial bottleneck: acceptance is not equivalent to payable settlement, and the available public record does not establish a supported Brazil payee route or a completed payout.
 
