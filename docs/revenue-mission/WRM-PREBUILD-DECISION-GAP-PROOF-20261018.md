@@ -2,7 +2,7 @@
 
 ## Decision
 
-`NARROW_PROOF_PASSED / CANDIDATE_NOT_SELECTED / EXTERNAL_VALUE_UNPROVEN`
+`CANDIDATE_KILLED / DIFFERENTIATION_FALSIFIED / CAPABILITY_SUPPORT_ONLY / NO_PRODUCT_SELECTED`
 
 ## Narrow job-to-be-done
 
@@ -77,6 +77,30 @@ Kill if:
 - buyers require continuous meetings, private access, estimates, and implementation rather than the bounded register;
 - no willingness-to-try signal appears after an authorized external validation opportunity.
 
+## Substitute falsification — 2026-10-18
+
+Fresh official-source review falsified the claimed product boundary:
+
+- [Figma AI UX Gap Finder](https://www.figma.com/solutions/ai-ux-gap-finder/) surfaces usability issues, flow breakdowns, and missing states directly in the design file without a separate audit tool.
+- [Figma AI Design QA Assistant](https://www.figma.com/solutions/ai-design-qa-assistant/) checks design inconsistencies, accessibility, and UI patterns in the incumbent workspace.
+- [Trace.Space](https://www.trace.space/product) ingests requirements, design parameters, and tests; generates trace links; flags missing coverage and inconsistencies.
+- [Visure](https://visuresolutions.com/alm-guide/conflicting-requirements/) advertises AI detection of requirement overlaps, contradictions, and ambiguities.
+- [Jama Software](https://www.jamasoftware.com/requirements-management-guide/artificial-intelligence-in-product-development/using-ai-to-write-software-requirements/) describes AI detection of duplicates and contradictions across requirement sets.
+
+No single source proves identical output to the local probe. However, the probe's central buyer jobs—design-gap review, contradiction detection, missing-state discovery, and cross-artifact traceability—are already native capabilities of incumbent design and requirements platforms. The remaining combination is a packaging difference, not evidence of a sharper unresolved job.
+
+The observed marketplace listings continue to support demand for broad independent expert review, but not willingness to try or pay for this bounded automated register. Those engagements also ask for architecture judgment, estimates, security/operations review, or ongoing supervision beyond the candidate's scope.
+
+## Evidence classification after falsification
+
+| Predicate | Status |
+|---|---|
+| Technical capability | Proven on one synthetic structured fixture. |
+| Observed customer value | None. |
+| Differentiation | Falsified at product level by incumbent overlap. |
+| Exact demand / WTT / WTP | None observed. |
+| Revenue | USD 0. |
+
 ## Current consequence
 
-Do not expand the probe, build UI, add integrations, set pricing, contact buyers, or publish an offer. Preserve as a candidate proof while the next admissible frontier tests external value or finds a stronger buyer job.
+Close the candidate. Preserve the deterministic probe only as `SUPPORT_ONLY` internal capability; do not expand it, build UI, add integrations, price it, contact buyers, or publish an offer. Continue commercial discovery toward a job with direct buyer evidence and a material outcome not already native to incumbent workspaces.
