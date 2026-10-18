@@ -61,6 +61,25 @@ This is unusually strong payment and scope evidence but also unusually high winn
 
 Mirrored/indexed pages surfaced rewards from USD 500 to USD 7,500. Direct inspection of the original issues showed the sampled tasks were already closed as completed and assigned, including #56290, #58227, #58228, #56277 and #56751. The index was therefore stale for admission purposes.
 
+### Algora open-index reconciliation — 2026-10-18
+
+Algora's public BasedHardware/Omi page displayed twelve “open” bounties, including USD 500, USD 1,000, USD 1,500 and USD 20,000 entries. Direct reconciliation against the original GitHub issues showed that every high-value/no-or-low-claim item sampled was already closed:
+
+- Omi #2316, USD 1,000: closed as **not planned** after partner-API constraints;
+- Omi #2008, USD 1,500: closed as **completed**;
+- Omi #1944, USD 20,000: closed as **not planned** after a long, qualification-heavy React Native migration discussion;
+- Omi #1812, USD 500: closed as **completed**.
+
+Sources:
+
+- https://algora.io/BasedHardware/bounties?status=open
+- https://github.com/BasedHardware/omi/issues/2316
+- https://github.com/BasedHardware/omi/issues/2008
+- https://github.com/BasedHardware/omi/issues/1944
+- https://github.com/BasedHardware/omi/issues/1812
+
+The platform page is useful as a historical payment/channel signal, but its “open” classification is not a claimability oracle. Original issue state, maintainer intent, linked work and current technical dependencies must all be reconciled immediately before admission.
+
 ## Decision
 
 Do not build against any screened bounty. Do not claim, comment, fork for submission, publish a branch, open a pull request, or begin payment onboarding.
@@ -81,6 +100,7 @@ Reject a candidate before implementation if any one holds:
 
 - winner-take-all race already has a substantive PR;
 - reward exists only on an aggregator and cannot be confirmed at the original issue;
+- a platform index says open while the canonical issue is closed, parked, superseded or no longer wanted;
 - issue is closed, assigned, reserved or stale;
 - acceptance depends on unavailable hardware, paid services, customer credentials or production access;
 - payout requires upfront money, wallet funding, undisclosed identity transfer or unverifiable terms;
@@ -92,7 +112,7 @@ Reject a candidate before implementation if any one holds:
 - Capability: not tested; admission failed before build.
 - Buyer/problem: maintainers posted explicit, testable engineering needs.
 - Payment signal: explicit USD 600 terms confirmed for one open issue; no Waterfound payment.
-- Availability: open for SpaceApp, but heavily contested; sampled Tenstorrent tasks closed.
+- Availability: open for SpaceApp, but heavily contested; sampled Tenstorrent and Algora-indexed Omi tasks closed.
 - Differentiation: unproven; speed alone is not a defensible advantage in an existing multi-PR race.
 - Waterfound WTT/WTP/revenue: none / none / USD 0.
 - Mission posture: continue commercial discovery; no current human gate and no new infrastructure.
