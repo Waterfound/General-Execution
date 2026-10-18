@@ -1,0 +1,61 @@
+{
+  "claims_not_established": [
+    "a real customer paid and lost access",
+    "revenue leakage occurred",
+    "operator time was saved",
+    "willingness to try or pay"
+  ],
+  "finding_count": 3,
+  "findings": [
+    {
+      "bounded_consequence": "provider records successful delivery while application access can remain unchanged",
+      "event_type": "checkout.session.completed",
+      "evidence": [
+        "mutation block is skipped unless userId, customer, and subscriptionId are all truthy",
+        "missing identity inputs do not raise or return an error",
+        "route reaches received:true with default HTTP 200"
+      ],
+      "id": "silent-entitlement-drop:checkout.session.completed",
+      "predicate": "paid-access mutation can affect zero users and still be acknowledged",
+      "severity": "BLOCKER"
+    },
+    {
+      "bounded_consequence": "provider records successful delivery while application access can remain unchanged",
+      "event_type": "customer.subscription.deleted",
+      "evidence": [
+        "findMany can return no users for the Stripe customer ID",
+        "updateMany result is not checked for zero mutations",
+        "route reaches received:true with default HTTP 200"
+      ],
+      "id": "silent-entitlement-drop:customer.subscription.deleted",
+      "predicate": "paid-access mutation can affect zero users and still be acknowledged",
+      "severity": "BLOCKER"
+    },
+    {
+      "bounded_consequence": "provider records successful delivery while application access can remain unchanged",
+      "event_type": "customer.subscription.updated",
+      "evidence": [
+        "findMany can return no users for the Stripe customer ID",
+        "updateMany result is not checked for zero mutations",
+        "route reaches received:true with default HTTP 200"
+      ],
+      "id": "silent-entitlement-drop:customer.subscription.updated",
+      "predicate": "paid-access mutation can affect zero users and still be acknowledged",
+      "severity": "BLOCKER"
+    }
+  ],
+  "fixture": {
+    "billing_mode": "unknown",
+    "commit": "6eff1b2e529a3ef3561a1942db7ae7b1d6e0a643",
+    "license_context": "public repository; analysis only",
+    "repository": "SummonIQ/tuniq",
+    "source_files": [
+      "apps/web/src/app/api/stripe/webhook/route.ts"
+    ]
+  },
+  "read_only": true,
+  "schema_version": 1,
+  "severity_counts": {
+    "BLOCKER": 3
+  }
+}
