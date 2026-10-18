@@ -95,3 +95,16 @@ The candidate is GREEN when:
 - replay detects executor/authority/execution-claim tampering;
 - full General Execution regression remains green;
 - EAC-01 remains unchanged and green.
+
+
+## Public/private runner structural admission (2026-10-18 candidate)
+
+General Execution public is a **governance + admission + public-project-specific executor**, not a disguised source host for private Build-Colony. A private Build-Colony caller invoking reusable public workflows is still billed as private GitHub Actions, and uploading private source to public GE would violate privacy and likely GitHub Actions project-scoping policy.
+
+- Executor capabilities may declare an optional exact `allowed_repositories` list; the router now rejects out-of-scope matching before cheaper-cost ordering. This means a public GE GitHub runner can only be selected for `Waterfound/General-Execution` in the included manifest, not for `Waterfound/Build-Colony`.
+- The private `build_colony_runner` in the public demonstration manifest is `available=false` until a genuinely isolated and authorized private execution capability exists. Earlier static `available=true` was an unsupported capacity claim.
+- Unsupported/missing target compute returns `CONDITION_WAIT`, **never public private-source exfiltration, spurious Green or silently paid private Actions**.
+- Legacy capabilities without repository scope remain backward compatible for generic provider-neutral executors; a new private-source native owner must include and verify exact repository/sensitivity scope before using its own execution path.
+- A future trusted private executor (isolated macOS runner, separately private GitLab mirror, or another vetted mechanism) still needs a verified native receipt, source binding, privacy proof and genuine $0 capacity. No self-hosted runner registration, provider token changes or real cross-repo activation is performed by this candidate.
+
+**Status distinction:** public Work-Sparse policy and tests can be source/CI-green while actual private Build-Colony CI remains unavailable. Do not claim `BUILD_COLONY_PRIVATE_CI_OPERATIONAL` from a policy change.
