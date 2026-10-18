@@ -106,3 +106,14 @@ Close the candidate when any one holds:
 This is the first screened channel in the current discovery branch with objective machine acceptance and a locally passing new-task fixture. It remains **SECONDARY / CONDITION_WAIT_ON_FUNDING**, not ACTIVE and not a present human gate.
 
 No product is selected. No customer demand for WRM-T1, operator-hours saved, ROI, sustainable price, WTP for a Waterfound product, completed payment or revenue was established. Observed Waterfound revenue remains **USD 0**.
+
+## Operational reconciliation — 2026-10-18T19:33Z
+
+A global GitHub issue search for the exact public state `Squash: funded` found only two relevant Squash live-test issues from this operator:
+
+- `squash-live-test#1` never advanced beyond funding pending. The bot rejected both claim and delivery; a solver had already published a fix but could not enter grading.
+- `squash-live-test#2` advanced to funded, claim and delivery-submitted. More than five hours after the recorded delivery, the issue still contained no grader verdict or payout event. The delivered commit exposed zero GitHub check runs and zero commit statuses; its combined status remained pending.
+
+This does not prove that Squash cannot grade or pay through a separate private backend. It does prove that the available public record does not yet demonstrate the advertised end-to-end predicate: funded task → objective green verdict → payout released/settled.
+
+Accordingly, **no external onboarding is justified yet**, even if one of the four new issues becomes funded. Before promotion, require both a current funded-and-unclaimed item and a reconciled completed grader/payout precedent, or equivalent primary platform evidence. The channel remains `CONDITION_WAIT`; no Waterfound gate is active.
