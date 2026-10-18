@@ -320,3 +320,75 @@ def test_invalid_authority_envelope_cannot_overlap_allowed_and_forbidden_actions
             allowed_actions=("read_state", "merge_main"),
             forbidden_actions=("merge_main",),
         )
+
+
+def test_public_ge_executor_cannot_satisfy_private_build_colony_ci():
+    public = ExecutorCapability(
+        executor_id="github_actions",
+        capabilities=("repo_read", "ci_dispatch", "test_execution"),
+        cost_rank=10,
+        allowed_repositories=("Waterfound/General-Execution",),
+        available=True,
+        evidence_ref="github-actions://Waterfound/General-Execution",
+    )
+    private = ExecutorCapability(
+        executor_id="build_colony_runner",
+        capabilities=("repo_read", "ci_dispatch", "test_execution"),
+        cost_rank=20,
+        allowed_repositories=("Waterfound/Build-Colony",),
+        available=False,
+        evidence_ref="build-colony://private-runner-unavailable",
+    )
+    decision = decide_work_sparse_route(
+        envelope(),
+        work(repository="Waterfound/Build-Colony"),
+        (public, private),
+    )
+    assert decision.disposition == "CONDITION_WAIT"
+    assert decision.selected_executor_id is None
+    assert not decision.execution_triggered
+    assert not decision.authority_created
+
+
+def test_public_ge_executor_remains_available_for_own_project_only():
+    public = ExecutorCapability(
+        executor_id="github_actions",
+        capabilities=("repo_read", "ci_dispatch"),
+        cost_rank=10,
+        allowed_repositories=("Waterfound/General-Execution",),
+        available=True,
+        evidence_ref="github-actions://Waterfound/General-Execution",
+    )
+    decision = decide_work_sparse_route(envelope(), work(), (public,))
+    assert decision.disposition == "DISPATCH"
+    assert decision.selected_executor_id == "github_actions"
+
+
+def test_repo_scoped_executor_rejects_empty_or_duplicate_scope():
+    with pytest.raises(WorkSparseError):
+        ExecutorCapability(
+            executor_id="unbound",
+            capabilities=("repo_read",),
+            cost_rank=0,
+            allowed_repositories=(),
+        )
+    with pytest.raises(WorkSparseError):
+        ExecutorCapability(
+            executor_id="duplicate",
+            capabilities=("repo_read",),
+            cost_rank=0,
+            allowed_repositories=("Waterfound/General-Execution", "Waterfound/General-Execution"),
+        )
+
+
+def test_examples_never_advertise_build_colony_private_actions_as_free_capacity():
+    import json
+    from pathlib import Path
+
+    items = json.loads(
+        (Path(__file__).resolve().parents[1] / "examples/work-sparse/executors.json").read_text()
+    )["executors"]
+    by_id = {item["executor_id"]: item for item in items}
+    assert by_id["github_actions"]["allowed_repositories"] == ["Waterfound/General-Execution"]
+    assert by_id["build_colony_runner"]["allowed_repositories"] == ["Waterfound/Build-Colony"]
+    assert by_id["build_colony_runner"]["available"] is False

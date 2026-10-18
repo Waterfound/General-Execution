@@ -67,6 +67,7 @@ def _executors(data: dict[str,Any]) -> tuple[ExecutorCapability,...]:
             executor_id=item["executor_id"],
             capabilities=_tuple(item["capabilities"],"capabilities"),
             cost_rank=item["cost_rank"],
+            allowed_repositories=_tuple(item["allowed_repositories"],"executor.allowed_repositories") if "allowed_repositories" in item else None,
             estimated_cost_cents=item.get("estimated_cost_cents",0),
             requires_work=item.get("requires_work",False),
             paid=item.get("paid",False),
