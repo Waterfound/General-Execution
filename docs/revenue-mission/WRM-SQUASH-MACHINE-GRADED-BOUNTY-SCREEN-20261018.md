@@ -159,3 +159,27 @@ Updated channel state:
 
 There is still no present Waterfound gate. A human action becomes justified only after a distinct current bounty has a new machine-verifiable funded receipt, no competing claim, a public acceptance contract, and a payment route explicitly available to the intended Brazilian payee without misrepresenting residence or account ownership.
 
+
+## Settled-payout precedent — 2026-10-19T00:09Z
+
+After the maintainer directed the accepted solver to send a payment coordinate through the stated private channel, the solver posted **“Squash payout confirmed”** in the public issue thread.
+
+Primary receipt: <https://github.com/DaltonTheDeveloper/squash-live-test/issues/2#issuecomment-6256873006>
+
+This is claimant-side confirmation of payment, not a processor receipt and not proof of the exact rail, fees, timing, or tax treatment. It nevertheless closes the historical channel predicate at the level supported by public evidence: a frozen-test delivery was accepted, the original award remained payable after the configured bank route failed, and an alternative settlement was confirmed by the recipient.
+
+The confirmation also included a personal payment coordinate in the public thread. That datum is neither reproduced nor treated as an admissible Waterfound input; no contact, reuse, or outreach is authorized.
+
+Updated channel state:
+
+`HISTORICAL_GRADING_ACCEPTED_AND_ALTERNATIVE_PAYOUT_CONFIRMED_BY_RECIPIENT / CURRENT_FOUR_ITEMS_UNFUNDED / REOPENED_SECOND_AWARD_FUNDING_AMBIGUOUS / BRAZIL_ROUTE_UNPROVEN / NO_CLAIM / NO_WATERFOUND_REVENUE`
+
+Commercial consequence:
+
+- the channel now has one public end-to-end payout precedent;
+- the precedent used an exceptional manual alternative after the configured bank route failed, so it does not establish routine settlement or Brazilian payee eligibility;
+- the four distinct current candidates remain `Squash: funding pending`;
+- the reopened historical issue still lacks a new bot funding receipt separating a second award from the already settled first award;
+- no Waterfound gate is current.
+
+Promote a Waterfound action only when a distinct current issue is visibly funded and unclaimed, its frozen acceptance contract remains unchanged, and the issuer explicitly confirms a lawful payment route for the intended Brazilian payee without misrepresenting residence, bank ownership, or account identity. Until then, preserve the local proof and continue public-payoff discovery.
