@@ -183,3 +183,24 @@ Commercial consequence:
 - no Waterfound gate is current.
 
 Promote a Waterfound action only when a distinct current issue is visibly funded and unclaimed, its frozen acceptance contract remains unchanged, and the issuer explicitly confirms a lawful payment route for the intended Brazilian payee without misrepresenting residence, bank ownership, or account identity. Until then, preserve the local proof and continue public-payoff discovery.
+
+## Brazil payout-route determination — 2026-10-19
+
+Official Stripe documentation resolves the advertised self-serve Connect route more narrowly than the earlier generic country claims:
+
+- Stripe Connect cross-border payouts are self-serve only among platforms and connected accounts in the United States, United Kingdom, European Economic Area, Canada, and Switzerland.
+- Stripe states that self-serve cross-border payouts to countries outside those regions are not supported; platforms must contact sales for alternatives or use a different product such as Global Payouts.
+- Brazil is not listed in the documented legacy Express connected-account availability list used by the inspected onboarding model.
+
+Primary sources:
+
+- <https://docs.stripe.com/connect/cross-border-payouts>
+- <https://docs.stripe.com/connect/accounts#express-accounts>
+
+Therefore the current advertised Squash Connect/Stripe bank route is **not available to a Brazilian connected account under the public self-serve terms**. The recipient-confirmed Japanese payout demonstrates that Squash can settle an exceptional manual alternative after failure, but it does not create a standing Brazil route or a binding promise to Waterfound.
+
+Updated decision:
+
+`HISTORICAL_END_TO_END_PAYOUT_PRECEDENT / CURRENT_CONNECT_ROUTE_EXCLUDES_BRAZIL / MANUAL_BRAZIL_ALTERNATIVE_UNCONFIRMED / CURRENT_FOUR_ITEMS_UNFUNDED / NO_CLAIM / NO_WATERFOUND_REVENUE`
+
+This closes eligibility research for the advertised integration and moves the channel to **PASSIVE / CONDITION_WAIT**. Do not probe onboarding. Re-enter only if a distinct task becomes funded and unclaimed **and** the issuer publicly commits to a lawful Brazil-compatible settlement route, fees, recipient requirements, and acceptance terms before any claim or implementation. Given the US$5 gross reward, reject any route whose human coordination, KYC, tax, transfer, or collection burden makes expected net value immaterial.
