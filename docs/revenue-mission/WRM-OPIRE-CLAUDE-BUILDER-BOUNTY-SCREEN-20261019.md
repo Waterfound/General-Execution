@@ -60,3 +60,22 @@ Reconsider only if a primary maintainer or platform record identifies a distinct
 `PASSIVE / REJECTED_UNTIL_MATERIAL_CONTRACT_RESET`
 
 No product is selected. No customer demand or WTP for a Waterfound product was established. No external action is authorized or required. Observed Waterfound revenue remains **USD 0**.
+
+
+## Official Opire contract reconciliation
+
+Official Opire documentation inspected on 2026-10-19 contradicts the issues' statement that payment is “released automatically on merge”:
+
+- Opire's lifecycle says a claim only notifies the bounty creator; the creator reviews the PR and arranges payment. It explicitly says claiming never creates an automatic payment.
+- Opire's costs-and-payments page says payment is arranged directly by the people involved and instructs contributors to agree payment details before creating or claiming a bounty.
+
+Primary sources:
+
+- <https://docs.opire.dev/rewards/lifecycle>
+- <https://docs.opire.dev/rewards/pricing>
+
+This is a material contract mismatch, not a stylistic difference. The advertised GitHub text describes automatic release on merge, while the governing platform documentation leaves acceptance and settlement to the creator and requires direct payment coordination. Together with the saturated submission record and absence of owner replies, this independently satisfies the kill criterion for unreconciled payment terms.
+
+Updated state:
+
+`REJECT_AS_ACTIVE_REVENUE_CHANNEL / EXTREME_DUPLICATION / ISSUE_PAYMENT_PROMISE_CONFLICTS_WITH_PLATFORM_CONTRACT / DIRECT_SETTLEMENT_UNRECONCILED / NO_CLAIM / NO_REVENUE`
