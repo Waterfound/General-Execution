@@ -136,3 +136,26 @@ Updated channel state:
 
 No Waterfound human gate is active. Promotion still requires a current funded-and-unclaimed item, independently verified Brazil payee eligibility under the actual arrangement, and a settled-payout precedent or an equivalent binding primary payment term. No onboarding should begin merely to probe eligibility.
 
+## Award-preservation and reopened-task reconciliation — 2026-10-18T23:43Z
+
+The maintainer subsequently clarified two facts:
+
+1. the original solver's accepted US$5 award still stands; and
+2. because the configured Stripe route cannot pay the solver's Japanese bank, Squash offered direct settlement through PayPal or another Japan-compatible route after the solver emails its GitHub handle and payment coordinate.
+
+Primary receipt: <https://github.com/DaltonTheDeveloper/squash-live-test/issues/2#issuecomment-6256634917>
+
+No public payment receipt was observed, so the state is **promised alternative settlement**, not settled payout.
+
+The maintainer also reopened the same issue as “$5, first come” and stated that automated grading remains the judge. The public thread does not contain a new bot funding receipt that distinguishes a second funded award from the already accepted and still-unsettled original obligation. The reopened issue therefore remains **funding ambiguous**, not a new claimable Waterfound asset.
+
+Reopen source: <https://github.com/DaltonTheDeveloper/squash-live-test/issues/2#issuecomment-6256191178>
+
+The four separate candidates (`cal.diy`, `documenso`, `activepieces`, `archestra`) remain `Squash: funding pending`.
+
+Updated channel state:
+
+`GRADING_ACCEPTED / ORIGINAL_AWARD_PRESERVED / ALTERNATIVE_SETTLEMENT_PROMISED_NOT_OBSERVED / REOPENED_REWARD_FUNDING_AMBIGUOUS / FOUR_NEW_ITEMS_UNFUNDED / BRAZIL_ROUTE_UNPROVEN / NO_CLAIM / NO_REVENUE`
+
+There is still no present Waterfound gate. A human action becomes justified only after a distinct current bounty has a new machine-verifiable funded receipt, no competing claim, a public acceptance contract, and a payment route explicitly available to the intended Brazilian payee without misrepresenting residence or account ownership.
+
