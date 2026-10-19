@@ -204,3 +204,34 @@ Updated decision:
 `HISTORICAL_END_TO_END_PAYOUT_PRECEDENT / CURRENT_CONNECT_ROUTE_EXCLUDES_BRAZIL / MANUAL_BRAZIL_ALTERNATIVE_UNCONFIRMED / CURRENT_FOUR_ITEMS_UNFUNDED / NO_CLAIM / NO_WATERFOUND_REVENUE`
 
 This closes eligibility research for the advertised integration and moves the channel to **PASSIVE / CONDITION_WAIT**. Do not probe onboarding. Re-enter only if a distinct task becomes funded and unclaimed **and** the issuer publicly commits to a lawful Brazil-compatible settlement route, fees, recipient requirements, and acceptance terms before any claim or implementation. Given the US$5 gross reward, reject any route whose human coordination, KYC, tax, transfer, or collection burden makes expected net value immaterial.
+
+
+## Current-task funding and claim reconciliation — 2026-10-19
+
+Two of the four distinct candidates advanced from funding pending, but neither became an admissible Waterfound opportunity:
+
+- `DaltonTheDeveloper/activepieces#1` reached a funded state, was claimed by another solver, and received an exact-commit delivery. The public thread now shows grading delay and inconsistent later “open/first-come” messaging after that prior claim and delivery.
+- `DaltonTheDeveloper/documenso#1` likewise reached funded, was claimed by the same external solver, and received an exact-commit delivery. It also has later “open/first-come” messaging despite the recorded delivery.
+- `DaltonTheDeveloper/cal.diy#1` and `DaltonTheDeveloper/archestra#1` remain funding pending.
+
+Primary sources:
+
+- <https://github.com/DaltonTheDeveloper/activepieces/issues/1>
+- <https://github.com/DaltonTheDeveloper/documenso/issues/1>
+- <https://github.com/DaltonTheDeveloper/cal.diy/issues/1>
+- <https://github.com/DaltonTheDeveloper/archestra/issues/1>
+
+The first two items fail the existing promotion criterion that no other solver holds the claim or has delivered. Their later reopening language does not establish a distinct second funded award, a clean claim transfer, or an unambiguous acceptance contract. The advertised payout geography in those threads remains the United States, Canada, United Kingdom and European Union, so it does not cure the independently documented Brazil exclusion for the current Connect route.
+
+Updated channel state:
+
+`TWO_CURRENT_ITEMS_FUNDED_BUT_ALREADY_CLAIMED_AND_DELIVERED / GRADING_PENDING_OR_CONTRACT_AMBIGUOUS / TWO_ITEMS_UNFUNDED / CURRENT_CONNECT_ROUTE_EXCLUDES_BRAZIL / NO_WATERFOUND_CLAIM / NO_WATERFOUND_REVENUE`
+
+Commercial consequence:
+
+- do not race, duplicate, claim, implement, contact, onboard or publish against either delivered item;
+- do not treat later “open” wording as a new award without a distinct machine-verifiable funding receipt and explicit claim reset;
+- retain the channel as **PASSIVE / CONDITION_WAIT**, because no current item is both funded and unclaimed and no lawful routine Brazil settlement route is established;
+- re-enter only under the already recorded conjunctive criteria: a distinct funded-and-unclaimed task, a stable frozen acceptance contract, and a public Brazil-compatible settlement commitment whose expected net value remains material after coordination, KYC, tax, transfer and collection burden.
+
+No product demand, Waterfound WTP, payable Waterfound claim, or revenue is established. Observed Waterfound revenue remains **USD 0**.
