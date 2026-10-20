@@ -57,3 +57,60 @@ Reconsider Algora only when a primary issue and bot record jointly show:
 `ALGORA_CHANNEL_PASSIVE / CURRENT_SAMPLE_REJECTED / CONTINUE_READ_ONLY_DISCOVERY`
 
 No task, product, account, external contact, publication, WTP or revenue was created. Observed Waterfound revenue remains **USD 0**.
+
+## 2026-10-20 reconciliation addendum — board state is not payment authority
+
+**Updated state:** `ALGORA_CHANNEL_PASSIVE / ISSUE_SIDE_PAYMENT_CONFIRMATION_REQUIRED / STALE_BOARD_HAZARD_CONFIRMED / NO_CLAIM / NO_REVENUE`
+
+A current primary-source reconciliation confirmed a stronger failure mode than competition alone.
+
+### Coolify issue #7528
+
+- The GitHub issue remains open and Algora bot comments advertise a **US$200** bounty.
+- The issue accumulated 47 comments, many attempts, and several submitted PRs.
+- The maintainer locked the thread because of AI-bot spam.
+- Most importantly, maintainer **Cinzya** stated that Coolify stopped its Algora bounty program, asked Algora to remove still-listed issues, and warned that payouts “won't work / happen” and bounty claims are no longer accepted.
+
+Primary sources:
+
+- <https://github.com/coollabsio/coolify/issues/7528>
+- <https://github.com/coollabsio/coolify/issues/7528#issuecomment-5655068172>
+
+Therefore an Algora-visible reward, open GitHub issue, and bot instructions are jointly insufficient evidence that paid entitlement still exists. Starting work on this item would be speculative unpaid contribution and is rejected.
+
+### Additional stale-state evidence
+
+Algora's Cal.com board currently reports two open rewards attached to the same old font issue, while the underlying GitHub issue was closed as completed in September 2025. This independently shows that board-open state can diverge from source-of-truth completion state.
+
+Sources:
+
+- <https://algora.io/cal/bounties?status=open>
+- <https://github.com/calcom/sans/issues/2>
+
+### Adjacent marketplace check
+
+OpenBounty currently advertises funded tasks and amounts but explicitly states that it is in **mock-payments mode** and no real funds move during the MVP. It is not an admissible revenue channel regardless of apparent dollar labels.
+
+Source: <https://openbounty.ai/>
+
+### Hardened admission rule
+
+A bounty is machine-admissible for technical feasibility work only after all of the following are proven concurrently:
+
+1. the underlying issue is open and current;
+2. the maintainer has not ended or repudiated the bounty program;
+3. the platform moves real money rather than simulated balances;
+4. the exact task has remaining award capacity and no accepted or overlapping solution;
+5. current issue-side evidence confirms that the reward is still payable;
+6. the payout route supports Brazil and its KYC/tax requirements are known;
+7. Waterfound has authority for any required claim/contact step.
+
+A marketplace label, bot comment, “funded” badge, balance display, or historical payout record cannot substitute for these predicates.
+
+### Commercial consequence
+
+- Reject Coolify #7528 as a revenue opportunity.
+- Reject OpenBounty while mock payments remain in effect.
+- Do not build, claim, comment, contact maintainers, create accounts, or onboard payout details.
+- Keep Algora as `PASSIVE / WATCH_ONLY`; require issue-side payment confirmation before spending implementation effort.
+- Preserve `NO_PRODUCT_SELECTED`, revenue **USD 0**, and no WTP or payout claim.
