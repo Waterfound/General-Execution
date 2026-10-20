@@ -1,7 +1,7 @@
 # WRM candidate — MCP tenant-boundary replay proof
 
 **Observed and tested:** 2026-10-20  
-**Candidate state:** `NARROW_PROOF_PASSED / DEMAND_FOR_STANDALONE_PROOF_UNVALIDATED`  
+**Candidate state:** `CANDIDATE_KILLED / BROAD_PENTEST_SUBSTITUTE_CONFIRMED / CAPABILITY_SUPPORT_ONLY`  
 **Mission state:** `NO_PRODUCT_SELECTED` / revenue USD 0
 
 ## Narrow job to be done
@@ -49,7 +49,14 @@ Observed substitute coverage:
 
 The reviewed substitutes do not establish the same predicate: dynamically replaying authenticated contexts to prove tenant isolation and exact destructive-action authorization at invocation time.
 
-**Differentiation remains provisional.** A broader substitute or commercial penetration-testing service may already provide equivalent tests; this must be falsified before expansion.
+**Differentiation was falsified on 2026-10-20.** Appsecco sells standalone MCP server security assessments that explicitly test adversarial access boundaries, tool-parameter manipulation, authentication/authorization, and multi-tenant isolation, with reproduction evidence and retesting. Its public fixed-price bands are USD 3,500–5,000 for a single MCP server, USD 7,500–12,500 for 2–5 servers, and USD 15,000+ for enterprise multi-tenant scope. This is a direct commercial substitute for the broader outcome, while the marketplace evidence above continues to bundle the narrow invariant into implementation work rather than buying it alone.
+
+Primary sources:
+
+- https://appsecco.com/ai-security/mcp-pentesting
+- https://appsecco.com/pricing
+- https://github.com/appsecco/pentesting-mcp-servers-checklist
+- https://arxiv.org/abs/2609.14780
 
 ## Smallest proof
 
@@ -88,9 +95,9 @@ Observed result:
 |---|---|
 | Capability | Synthetic deterministic replay detects the two named boundary failures |
 | Observed outcome | Vulnerable fixture failed 2/4; hardened fixture passed 4/4 |
-| Competitive differentiation | Provisional gap versus reviewed static/injection-oriented scanners |
+| Competitive differentiation | Falsified against an established standalone MCP pentest service covering access boundaries, parameter abuse, auth and multi-tenant isolation |
 | Demand evidence | Multiple buyers explicitly require tenant isolation and destructive-action safeguards inside larger builds |
-| WTP | Budgets observed for full implementation only; standalone proof WTP unknown |
+| WTP | Real public pricing exists for broad MCP pentesting; no evidence that buyers purchase the narrow replay proof alone |
 | ROI | Unmeasured |
 | Revenue | USD 0 |
 
@@ -112,12 +119,17 @@ Close the candidate if any of the following is established:
 4. the proof cannot be adapted to a public/synthetic MCP fixture without product-specific implementation work;
 5. evidence quality depends on model self-report rather than objective invocation traces and validators.
 
+## Commercial decision — 2026-10-20
+
+The candidate hits kill criteria 1 and 2:
+
+1. an established provider sells the broader standalone outcome with explicit multi-tenant isolation, adversarial boundary testing, reproducible findings and retest;
+2. bounded buyer evidence requests the narrow invariant inside full implementation work, not as a separately purchased proof.
+
+Decision: `CANDIDATE_KILLED / NO_PRODUCT_SELECTED`.
+
+The synthetic probe remains a truthful `SUPPORT_ONLY` capability. No public-fixture expansion, productization, pricing, outreach, proposal, account creation, credential use or publication is admitted. Revenue remains USD 0.
+
 ## Next admissible frontier
 
-Before adding features, test only these commercial predicates:
-
-1. Is the tenant-boundary proof purchased or requested as a separable pre-deployment/release-gate deliverable?
-2. Do established MCP security services already sell this exact dynamic invariant?
-3. Can one public MCP fixture be assessed read-only with objective traces without account, credential, or external write access?
-
-No outreach, proposal, account creation, publication, or pricing is authorized by this dossier.
+Return to buyer/problem discovery and reject the first failed commercial predicate before code. Prefer a job with direct evidence of a separable paid deliverable, a reachable payout path, and a differentiation claim that survives named substitutes.
