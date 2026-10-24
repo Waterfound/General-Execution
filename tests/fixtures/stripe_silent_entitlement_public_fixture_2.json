@@ -1,0 +1,52 @@
+{
+  "fixture": {
+    "repository": "SummonIQ/tuniq",
+    "commit": "6eff1b2e529a3ef3561a1942db7ae7b1d6e0a643",
+    "license_context": "public repository; analysis only",
+    "billing_mode": "unknown",
+    "source_files": [
+      "apps/web/src/app/api/stripe/webhook/route.ts"
+    ]
+  },
+  "event_paths": [
+    {
+      "event_type": "checkout.session.completed",
+      "affects_paid_access": true,
+      "zero_updates_possible": true,
+      "zero_updates_is_error": false,
+      "terminal_http_status": 200,
+      "durable_retry_queue": false,
+      "evidence": [
+        "mutation block is skipped unless userId, customer, and subscriptionId are all truthy",
+        "missing identity inputs do not raise or return an error",
+        "route reaches received:true with default HTTP 200"
+      ]
+    },
+    {
+      "event_type": "customer.subscription.updated",
+      "affects_paid_access": true,
+      "zero_updates_possible": true,
+      "zero_updates_is_error": false,
+      "terminal_http_status": 200,
+      "durable_retry_queue": false,
+      "evidence": [
+        "findMany can return no users for the Stripe customer ID",
+        "updateMany result is not checked for zero mutations",
+        "route reaches received:true with default HTTP 200"
+      ]
+    },
+    {
+      "event_type": "customer.subscription.deleted",
+      "affects_paid_access": true,
+      "zero_updates_possible": true,
+      "zero_updates_is_error": false,
+      "terminal_http_status": 200,
+      "durable_retry_queue": false,
+      "evidence": [
+        "findMany can return no users for the Stripe customer ID",
+        "updateMany result is not checked for zero mutations",
+        "route reaches received:true with default HTTP 200"
+      ]
+    }
+  ]
+}

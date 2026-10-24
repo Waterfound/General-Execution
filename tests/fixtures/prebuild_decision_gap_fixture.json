@@ -1,0 +1,43 @@
+{
+  "fixture_id": "synthetic-multirole-booking-v1",
+  "business_rules": [
+    {
+      "id": "BR-001",
+      "subject": "clinician_availability",
+      "predicate": "scope",
+      "object": "facility_specific"
+    }
+  ],
+  "design_claims": [
+    {
+      "id": "FIGMA-AVAILABILITY-01",
+      "subject": "clinician_availability",
+      "predicate": "scope",
+      "object": "global"
+    }
+  ],
+  "permissions": {
+    "patient": ["request_appointment"],
+    "clinician": ["view_appointment"],
+    "facility_admin": ["view_appointment"]
+  },
+  "workflows": [
+    {
+      "id": "WF-BOOKING-01",
+      "steps": [
+        {"id": "S1", "role": "patient", "action": "request_appointment"},
+        {"id": "S2", "role": "clinician", "action": "confirm_appointment"},
+        {"id": "S3", "role": "facility_admin", "action": "reschedule_appointment"}
+      ]
+    }
+  ],
+  "required_decisions": [
+    {
+      "id": "DECISION-CONCURRENCY-01",
+      "severity": "HIGH",
+      "question": "Define the conflict policy for simultaneous booking requests.",
+      "evidence": ["WF-BOOKING-01"]
+    }
+  ],
+  "decisions": {}
+}
