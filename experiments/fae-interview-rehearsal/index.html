@@ -74,8 +74,8 @@ small,.muted{color:var(--muted)}a{color:var(--cyan)}footer{margin-top:32px;color
 
 <section class="card">
 <h2>Source and safety boundary</h2>
-<p>The role model is grounded in a current Nordic Semiconductor FAE posting emphasizing customer applications, timely technical solutions, design-ins, value presentation and technical relationships. The diagnostic pattern is synthetic and does not reproduce confidential employer questions.</p>
-<p><a href="https://careers.nordicsemi.com/jobs/7777383-field-application-engineer">Official role source</a> · <a href="https://www.reddit.com/r/ECE/comments/1qpdgx5/fast_development_programm_field_applications/">Recent candidate discussion</a></p>
+<p>The role model is grounded in a current Nordic Semiconductor FAE posting emphasizing customer applications, timely technical solutions, design-ins, value presentation and technical relationships. Texas Instruments documents that encapsulation and nearby objects can detune an antenna and recommends matching to compensate. The 13 dB result and timing budget in this case are explicitly synthetic—they are not vendor specifications or real labor estimates.</p>
+<p><a href="https://careers.nordicsemi.com/jobs/7777383-field-application-engineer">Official role source</a> · <a href="https://www.ti.com/lit/an/swra730/swra730.pdf">Official antenna source</a> · <a href="https://www.reddit.com/r/ECE/comments/1qpdgx5/fast_development_programm_field_applications/">Recent candidate discussion</a></p>
 </section>
 <footer>Candidate proof only. No hiring-probability claim, expert certification, covert live-interview aid, payment, storage or external transmission.</footer>
 </main>
@@ -107,6 +107,8 @@ function evaluate(){
  const ab=run.includes("ab"),rssi=run.includes("rssi");const evidence=ab&&rssi?25:(ab||rssi?12:0);points+=evidence;parts.push([evidence===25?"good":"warn","Evidence convergence",`${evidence}/25 — decisive A/B and RF-margin evidence should converge.`]);
  const efficiency=Math.max(0,20-Math.max(0,used-10));points+=efficiency;parts.push([efficiency>=16?"good":"warn","Test efficiency",`${efficiency}/20 — ${used} of 30 minutes used.`]);
  const terms=["known","unknown","next","owner","checkpoint"];const lower=msg.toLowerCase();const hits=terms.filter(x=>lower.includes(x)).length;const comm=Math.min(15,hits*3);points+=comm;parts.push([comm>=12?"good":"warn","Customer close",`${comm}/15 — measured presence of bounded known/unknown/next/owner/checkpoint language; not expert semantic grading.`]);
+ if(!correct){points=Math.min(points,49);parts.push(["bad","Fail-closed cap","An incorrect root cause cannot pass regardless of writing quality."])}
+ else if(!(ab&&rssi)){points=Math.min(points,79);parts.push(["warn","Evidence cap","Correct guessing without two converging tests cannot reach the passing band."])}
  q("#score").textContent=`${points} / 100`;q("#verdict").textContent=points>=80?"Evidence-led escalation":points>=55?"Promising, but incomplete":"Premature or weakly supported";
  q("#breakdown").innerHTML=parts.map(p=>`<p><b class="${p[0]}">${p[1]}:</b> ${p[2]}</p>`).join("")+`<p class="muted">Fixed truth: the enclosure detunes the antenna enough to remove link margin on the weakest units. Recommended next action: antenna/enclosure tuning review and a bounded confirmation sweep; do not replace the SoC without contrary evidence.</p>`;
  q("#lab").classList.add("hidden");q("#result").classList.remove("hidden");q("#result").scrollIntoView({behavior:"smooth"});
