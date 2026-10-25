@@ -1,6 +1,6 @@
 # WRM — FAE Interview Rehearsal Website Screen — 2026-10-25
 
-Status: **ONE_NARROW_WEB_HYPOTHESIS / PUBLIC_BUYER_PAIN / PAID_CATEGORY_CONFIRMED / DIFFERENTIATION_UNPROVEN / PRIVATE_PROOF_ONLY / NO_PRODUCT_SELECTED**
+Status: **DIRECT_PAID_SUBSTITUTE_CONFIRMED / ACTIVE_CANDIDATE_KILLED / PRIVATE_RESEARCH_ASSET_ONLY / DEMAND_AND_WTP_UNPROVEN / NO_PRODUCT_SELECTED**
 
 Observed Waterfound revenue: **USD 0**
 
@@ -213,3 +213,31 @@ The fixture was corrected to:
 This correction improves the commercial value predicate: the product should teach disciplined uncertainty, not reward confident engineering theater.
 
 Technical result: **PHYSICALLY_PLAUSIBLE / INITIAL_MECHANISM_OVERCLAIM_REPAIRED / FAIL_CLOSED_SCORING / EXPERT_VALIDATION_STILL_UNKNOWN**.
+
+
+## Paid-substitute closure — 2026-10-25
+
+A current direct-category incumbent now falsifies the remaining commercial premise strongly enough to stop product work:
+
+- Voltage Learning markets a hardware/electronics interview platform with real company/role question banks, guided exercises, dynamic AI grading, instant feedback and progress tracking: https://voltagelearning.com/
+- Its current pricing page offers a free sampler and a paid lifetime plan displayed at **USD 99** (discounted from USD 199), including 5,000+ questions, 600+ guided exercises, 250+ roles, unlimited AI credits and feedback on every answer: https://voltagelearning.com/pricing
+- Its current silicon-validation material explicitly teaches ambiguous hardware diagnosis through hypotheses, controlled experiments, measured evidence, root-cause isolation and cross-team communication: https://voltagelearning.com/guides/qualcomm-silicon-validation-engineer-interview-guide
+- VLSIGURU also offers semiconductor interview-preparation courses, mock interviews, practical debug/lab material and expert mentoring: https://vlsiguru.com/interview-preparation-courses
+
+This is stronger than general category evidence: a paid incumbent already bundles the core learning job, broad role coverage, feedback, exercises and progress tracking at a low one-time price. The deterministic hidden-truth lab remains somewhat interaction-specific, but there is no evidence that this difference is important enough to overcome the incumbent's breadth, social proof, free entry and price anchor.
+
+### Decision
+
+The FieldSignal / FAE diagnostic-lab candidate is **KILLED as an ACTIVE commercial candidate**. Preserve the browser fixture only as a private research asset; do not add scenarios, scoring, AI, telemetry, checkout, publication or runtime.
+
+This closure does not claim that the fixture has no educational value. It means its incremental commercial value and distribution advantage are unproven, while a strong direct paid substitute is now observed.
+
+### Ratchet disposition
+
+- **ACTIVE:** return to buyer/problem discovery for a different narrow job with an observable unresolved consequence and weaker substitute coverage.
+- **SECONDARY:** retain the technical-coherence notes and fixture for reuse only if future buyer evidence independently points back to this exact job.
+- **PASSIVE:** FieldSignal implementation, FAE interview content expansion, pricing, publication, outreach and payment setup.
+
+No customer demand, Waterfound WTT/WTP, revenue, quantified ROI or expert validation was established. Observed Waterfound revenue remains **USD 0**.
+
+Closure state: **PAID_DIRECT_SUBSTITUTE / BROAD_BUNDLE_AT_USD_99_LIFETIME / DIFFERENTIATION_TOO_THIN / ACTIVE_CANDIDATE_KILLED / PRIVATE_ASSET_PRESERVED / NO_HUMAN_GATE**.
