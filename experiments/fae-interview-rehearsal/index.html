@@ -49,7 +49,7 @@ small,.muted{color:var(--muted)}a{color:var(--cyan)}footer{margin-top:32px;color
 <select id="diagnosis">
 <option value="">Select a hypothesis…</option>
 <option value="power">Power integrity / burst-current droop</option>
-<option value="rf">Enclosure-driven antenna detuning / RF margin</option>
+<option value="rf">Enclosure-driven RF margin loss (mechanism not yet proven)</option>
 <option value="firmware">Firmware build or radio configuration</option>
 <option value="soc">Defective or unstable SoC lot</option>
 <option value="temperature">Temperature-sensitive failure</option>
@@ -103,14 +103,14 @@ function evaluate(){
  const diagnosis=q("#diagnosis").value,msg=q("#message").value.trim();
  if(!diagnosis||msg.length<40){(diagnosis?q("#message"):q("#diagnosis")).focus();return}
  let points=0,parts=[];
- const correct=diagnosis==="rf";if(correct){points+=40;parts.push(["good","Root cause","Correctly localized the enclosure-driven RF-margin failure. +40"])}else parts.push(["bad","Root cause","The committed diagnosis conflicts with the fixed truth set. +0"]);
+ const correct=diagnosis==="rf";if(correct){points+=40;parts.push(["good","Root cause","Correctly localized the enclosure-driven RF-margin failure without claiming an unmeasured mechanism. +40"])}else parts.push(["bad","Root cause","The committed diagnosis conflicts with the fixed truth set. +0"]);
  const ab=run.includes("ab"),rssi=run.includes("rssi");const evidence=ab&&rssi?25:(ab||rssi?12:0);points+=evidence;parts.push([evidence===25?"good":"warn","Evidence convergence",`${evidence}/25 — decisive A/B and RF-margin evidence should converge.`]);
  const efficiency=Math.max(0,20-Math.max(0,used-10));points+=efficiency;parts.push([efficiency>=16?"good":"warn","Test efficiency",`${efficiency}/20 — ${used} of 30 minutes used.`]);
  const terms=["known","unknown","next","owner","checkpoint"];const lower=msg.toLowerCase();const hits=terms.filter(x=>lower.includes(x)).length;const comm=Math.min(15,hits*3);points+=comm;parts.push([comm>=12?"good":"warn","Customer close",`${comm}/15 — measured presence of bounded known/unknown/next/owner/checkpoint language; not expert semantic grading.`]);
  if(!correct){points=Math.min(points,49);parts.push(["bad","Fail-closed cap","An incorrect root cause cannot pass regardless of writing quality."])}
  else if(!(ab&&rssi)){points=Math.min(points,79);parts.push(["warn","Evidence cap","Correct guessing without two converging tests cannot reach the passing band."])}
  q("#score").textContent=`${points} / 100`;q("#verdict").textContent=points>=80?"Evidence-led escalation":points>=55?"Promising, but incomplete":"Premature or weakly supported";
- q("#breakdown").innerHTML=parts.map(p=>`<p><b class="${p[0]}">${p[1]}:</b> ${p[2]}</p>`).join("")+`<p class="muted">Fixed truth: the enclosure detunes the antenna enough to remove link margin on the weakest units. Recommended next action: antenna/enclosure tuning review and a bounded confirmation sweep; do not replace the SoC without contrary evidence.</p>`;
+ q("#breakdown").innerHTML=parts.map(p=>`<p><b class="${p[0]}">${p[1]}:</b> ${p[2]}</p>`).join("")+`<p class="muted">Fixed truth: installing the enclosure removes RF link margin on the weakest units. The present evidence does not distinguish detuning, absorption, shielding or placement effects. Recommended next action: bounded antenna/enclosure characterization and confirmation sweep; do not replace the SoC without contrary evidence.</p>`;
  q("#lab").classList.add("hidden");q("#result").classList.remove("hidden");q("#result").scrollIntoView({behavior:"smooth"});
 }
 function reset(){used=0;run=[];q("#diagnosis").value="";q("#message").value="";q("#result").classList.add("hidden");q("#lab").classList.remove("hidden");render()}
