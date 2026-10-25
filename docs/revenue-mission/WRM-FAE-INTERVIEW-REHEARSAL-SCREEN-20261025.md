@@ -190,3 +190,26 @@ Advance only by answering, in order:
 4. Only then: will a target candidate commit money or a credible paid-trial action?
 
 Current state: **GENERIC_PROMPT_PROOF_KILLED / DETERMINISTIC_DIAGNOSTIC_LAB_REFINED / PRIVATE_CAPABILITY_ONLY / DEMAND_AND_WTP_UNKNOWN / NO_PRODUCT_SELECTED**.
+
+
+## Technical-coherence validation — 2026-10-25
+
+Primary technical support was found in Texas Instruments' 2022 tunable-PCB-antenna application note. TI states that encapsulation and nearby objects can detune an antenna and recommends a matching network to compensate:
+
+- https://www.ti.com/lit/an/swra730/swra730.pdf
+- supporting measurement/matching guidance: https://www.ti.com/lit/an/swra726/swra726.pdf
+
+The scenario is therefore physically plausible, but the initial proof overclaimed the mechanism. An enclosure A/B test plus an RSSI/link-margin sweep establishes an **enclosure-driven RF loss**; those observations alone do not distinguish detuning from absorption, shielding, placement or another enclosure interaction.
+
+The fixture was corrected to:
+
+- score “enclosure-driven RF margin loss; mechanism not yet proven” as the supported diagnosis;
+- preserve mechanism as an explicit unknown;
+- recommend bounded antenna/enclosure characterization rather than claiming a completed root-cause proof;
+- identify the 13 dB result and 30-minute budget as synthetic values, not vendor specifications or labor estimates;
+- cap any wrong diagnosis below 50/100;
+- cap a correct guess without both converging tests below the 80/100 passing band.
+
+This correction improves the commercial value predicate: the product should teach disciplined uncertainty, not reward confident engineering theater.
+
+Technical result: **PHYSICALLY_PLAUSIBLE / INITIAL_MECHANISM_OVERCLAIM_REPAIRED / FAIL_CLOSED_SCORING / EXPERT_VALIDATION_STILL_UNKNOWN**.
