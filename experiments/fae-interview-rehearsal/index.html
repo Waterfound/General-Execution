@@ -1,101 +1,116 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>FieldSignal — private FAE rehearsal fixture</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FieldSignal Lab — private FAE diagnostic rehearsal</title>
 <style>
-:root{--bg:#07111f;--panel:#0d1b2d;--ink:#edf6ff;--muted:#9fb1c5;--cyan:#67e8f9;--green:#86efac;--amber:#fcd34d;--line:#253a52}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% 0,#123553 0,transparent 38%),var(--bg);color:var(--ink);font:16px/1.55 system-ui,sans-serif}
-main{max-width:920px;margin:auto;padding:48px 20px 80px}.eyebrow{color:var(--cyan);font-weight:750;letter-spacing:.12em;text-transform:uppercase;font-size:.76rem}
-h1{font-size:clamp(2.2rem,6vw,4.8rem);line-height:.97;margin:.4rem 0 1rem;max-width:800px}h2{font-size:1.35rem;margin:0 0 .5rem}
-.lede{font-size:1.2rem;color:#c8d8e8;max-width:700px}.pill{display:inline-block;border:1px solid #31516e;border-radius:999px;padding:.35rem .7rem;margin:.25rem .2rem .25rem 0;color:#c9e5f8;font-size:.85rem}
-.card{background:rgba(13,27,45,.92);border:1px solid var(--line);border-radius:18px;padding:22px;margin-top:18px;box-shadow:0 18px 55px #0005}
+:root{--bg:#06101c;--panel:#0d1b2b;--panel2:#11243a;--ink:#edf7ff;--muted:#9fb4c8;--cyan:#66e4f3;--green:#80e5a5;--amber:#ffd166;--red:#ff8d8d;--line:#294159}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 78% -8%,#17476b 0,transparent 36%),var(--bg);color:var(--ink);font:16px/1.5 system-ui,sans-serif}
+main{max-width:1020px;margin:auto;padding:42px 20px 76px}.eyebrow{color:var(--cyan);font-weight:800;letter-spacing:.12em;text-transform:uppercase;font-size:.75rem}
+h1{font-size:clamp(2.4rem,6vw,5.2rem);line-height:.94;margin:.45rem 0 1rem;max-width:900px}h2{font-size:1.35rem;margin:.1rem 0 .5rem}.lede{font-size:1.2rem;color:#c9d9e7;max-width:760px}
+.pill{display:inline-block;border:1px solid #35536e;border-radius:999px;padding:.33rem .7rem;margin:.22rem .18rem .22rem 0;color:#cce8f6;font-size:.84rem}
+.card{background:rgba(13,27,43,.95);border:1px solid var(--line);border-radius:18px;padding:22px;margin-top:18px;box-shadow:0 18px 55px #0005}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.fact{border-left:3px solid var(--cyan);padding-left:12px}.fact b{display:block;color:var(--cyan)}
-button{appearance:none;border:0;border-radius:12px;padding:.8rem 1rem;font-weight:750;cursor:pointer;background:var(--cyan);color:#05202a}button.secondary{background:#1a3047;color:var(--ink);border:1px solid #38536d}button:disabled{opacity:.4;cursor:not-allowed}
-textarea{width:100%;min-height:150px;margin:.8rem 0;padding:14px;border-radius:12px;border:1px solid #36506b;background:#081522;color:var(--ink);font:inherit;resize:vertical}
-.step{color:var(--amber);font-weight:750}.prompt{font-size:1.2rem}.hidden{display:none}
-.rubric label{display:block;padding:10px 0;border-bottom:1px solid var(--line)}.rubric input{margin-right:10px}
-.result{border:1px solid #28714b;background:#0c2a22}.score{font-size:2rem;color:var(--green);font-weight:800}
-small,.muted{color:var(--muted)}a{color:var(--cyan)}
-footer{margin-top:36px;color:var(--muted);font-size:.84rem}@media(max-width:680px){.grid{grid-template-columns:1fr}main{padding-top:28px}}
+.meter{height:12px;background:#08131f;border-radius:999px;overflow:hidden;margin:.55rem 0}.meter span{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--amber),var(--red));width:0;transition:width .3s}
+.test-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:15px}
+button{appearance:none;border:0;border-radius:12px;padding:.82rem 1rem;font-weight:780;cursor:pointer;background:var(--cyan);color:#03202a;text-align:left}
+button.test{background:var(--panel2);border:1px solid #385470;color:var(--ink);min-height:86px}button.test:hover{border-color:var(--cyan)}button.secondary{background:#1a3047;color:var(--ink);border:1px solid #38536d}button:disabled{opacity:.38;cursor:not-allowed}
+button small{display:block;color:#a8bdce;margin-top:5px}.log{display:grid;gap:9px;margin-top:14px}.entry{border:1px solid #29455c;border-radius:12px;padding:12px;background:#091826}.entry b{color:var(--cyan)}
+label{display:block;margin:.7rem 0 .3rem;color:#cfe1ed;font-weight:700}select,textarea{width:100%;padding:13px;border-radius:12px;border:1px solid #3b5872;background:#071522;color:var(--ink);font:inherit}textarea{min-height:115px;resize:vertical}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px}.hidden{display:none}.score{font-size:2.2rem;color:var(--green);font-weight:850;margin:.3rem 0}.good{color:var(--green)}.warn{color:var(--amber)}.bad{color:var(--red)}
+small,.muted{color:var(--muted)}a{color:var(--cyan)}footer{margin-top:32px;color:var(--muted);font-size:.83rem}
+@media(max-width:720px){.grid,.test-grid{grid-template-columns:1fr}main{padding-top:26px}}
 </style>
 </head>
-<body>
-<main>
-<div class="eyebrow">Private synthetic product proof · no telemetry</div>
-<h1>Can you debug the customer—not just the circuit?</h1>
-<p class="lede">A five-step rehearsal for semiconductor Field Applications Engineers. It rewards disciplined discovery, discriminating tests and customer clarity—not confident guessing.</p>
-<div><span class="pill">Browser-only</span><span class="pill">Fictional case</span><span class="pill">No login</span><span class="pill">No AI score</span></div>
+<body><main>
+<div class="eyebrow">Private synthetic proof · deterministic truth set</div>
+<h1>Run the customer debug room.</h1>
+<p class="lede">You have 30 simulated minutes before the escalation call. Buy evidence with tests, localize the fault, then explain the next move without bluffing.</p>
+<div><span class="pill">Browser-only</span><span class="pill">No login</span><span class="pill">No AI</span><span class="pill">No telemetry</span><span class="pill">Fictional device</span></div>
 
 <section class="card">
-<h2>Customer brief</h2>
-<p>A wearable prototype using a fictional low-power BLE SoC worked on an open bench. After moving into the production enclosure, some units lose packets during a 20-second burst transmission. The customer says, “Your chip is unstable. We ship in six days.”</p>
+<h2>Escalation brief</h2>
+<p>A wearable using a fictional low-power BLE SoC passed open-bench testing. In its production enclosure, 3 of 10 units lose packets during a 20-second burst. The customer says: “Your chip is unstable. We ship in six days.”</p>
 <div class="grid">
-<div class="fact"><b>Known</b>Failure appears after enclosure integration; only some units; burst traffic.</div>
-<div class="fact"><b>Unknown</b>Power rail behavior, RF layout/enclosure effect, firmware build, temperature, antenna tuning and exact reproduction rate.</div>
+<div class="fact"><b>Customer outcome</b>Decide today whether the design can proceed to the pilot build.</div>
+<div class="fact"><b>Your constraint</b>Do not recommend a redesign before evidence separates the leading causes.</div>
 </div>
 </section>
 
-<section id="session" class="card">
-<div id="stepLabel" class="step">Step 1 of 5 · Outcome</div>
-<p id="prompt" class="prompt"></p>
-<textarea id="answer" placeholder="Answer as if the customer and hiring panel were listening…"></textarea>
-<div>
-<button id="next">Save answer & continue</button>
-<button id="reset" class="secondary">Reset</button>
-</div>
-<p><small>Answers stay in this tab and are discarded on reset or close.</small></p>
-</section>
-
-<section id="review" class="card hidden">
-<h2>Evidence-bound self-review</h2>
-<p class="muted">Check only what your actual answers demonstrate. This fixture intentionally avoids pretending that keyword matching is expert scoring.</p>
-<div class="rubric" id="rubric"></div>
-<p class="score" id="score">0 / 6</p>
-<button id="restart" class="secondary">Run the scenario again</button>
-</section>
-
-<section class="card">
-<h2>What makes this FAE-specific?</h2>
+<section id="lab" class="card">
 <div class="grid">
-<div><b>Generic prep</b><p class="muted">Structure, confidence, STAR stories, coding and broad technical questions.</p></div>
-<div><b>This wedge</b><p class="muted">Customer outcome, minimum evidence, hypothesis families, discriminating next test, design-in risk and a technically honest next-step commitment.</p></div>
+<div><h2>Evidence budget</h2><div class="meter"><span id="bar"></span></div><b id="clock">0 / 30 min used</b></div>
+<div><h2>Current confidence</h2><p class="muted" id="confidence">Symptom confirmed; cause unknown.</p></div>
+</div>
+<div class="test-grid" id="tests"></div>
+<div class="log" id="log"><p class="muted">No tests run. Choose evidence that changes a decision.</p></div>
+
+<label for="diagnosis">Commit to a diagnosis when the evidence is sufficient</label>
+<select id="diagnosis">
+<option value="">Select a hypothesis…</option>
+<option value="power">Power integrity / burst-current droop</option>
+<option value="rf">Enclosure-driven antenna detuning / RF margin</option>
+<option value="firmware">Firmware build or radio configuration</option>
+<option value="soc">Defective or unstable SoC lot</option>
+<option value="temperature">Temperature-sensitive failure</option>
+</select>
+<label for="message">Customer update</label>
+<textarea id="message" placeholder="State what is known, the evidence, what remains unknown, the next action, owner and checkpoint…"></textarea>
+<div class="row"><button id="submit">Close the escalation</button><button id="reset" class="secondary">Reset case</button></div>
+</section>
+
+<section id="result" class="card hidden">
+<div class="eyebrow">Evidence report</div><p class="score" id="score"></p><h2 id="verdict"></h2><div id="breakdown"></div>
+<div class="row"><button id="again" class="secondary">Re-run the same case</button></div>
+</section>
+
+<section class="card">
+<h2>Why this is not a question list</h2>
+<div class="grid">
+<div><b>Static prep</b><p class="muted">Shows prompts and model answers. The learner can read without making a costly choice.</p></div>
+<div><b>FieldSignal Lab</b><p class="muted">Hides the truth, prices each measurement in time, reveals only requested evidence and scores premature solutioning separately from technical recall.</p></div>
 </div>
 </section>
 
 <section class="card">
-<h2>Grounding boundary</h2>
-<p>The role rubric is derived from a current Nordic Semiconductor FAE posting describing customer application understanding, timely technical solutions, design-ins, value presentation and technical relationships, plus recent public candidate discussions describing customer-debug scenarios, block diagrams and communication.</p>
-<p><a href="https://careers.nordicsemi.com/jobs/7777383-field-application-engineer">Official role source</a> · <a href="https://www.reddit.com/r/ECE/comments/1qpdgx5/fast_development_programm_field_applications/">Candidate discussion</a></p>
+<h2>Source and safety boundary</h2>
+<p>The role model is grounded in a current Nordic Semiconductor FAE posting emphasizing customer applications, timely technical solutions, design-ins, value presentation and technical relationships. The diagnostic pattern is synthetic and does not reproduce confidential employer questions.</p>
+<p><a href="https://careers.nordicsemi.com/jobs/7777383-field-application-engineer">Official role source</a> · <a href="https://www.reddit.com/r/ECE/comments/1qpdgx5/fast_development_programm_field_applications/">Recent candidate discussion</a></p>
 </section>
-
-<footer>Candidate proof only. It does not reproduce proprietary interview questions, estimate hiring probability, provide live-interview assistance or claim expert-validated scoring.</footer>
+<footer>Candidate proof only. No hiring-probability claim, expert certification, covert live-interview aid, payment, storage or external transmission.</footer>
 </main>
 <script>
-const steps=[
-["Outcome","What do you say first? Clarify the customer's outcome, urgency and what “lose packets” means before proposing a cause."],
-["Reproduction","Ask for the smallest evidence packet that would make the failure reproducible and comparable."],
-["Hypotheses","Organize plausible causes into distinct families. Explain why each remains possible from the facts given."],
-["Discriminating test","Choose one next test that best separates the leading hypotheses. State what each possible result would mean."],
-["Customer close","Give a technically honest customer update: what is known, unknown, what happens next, who owns it and when the next evidence checkpoint occurs."]
+const tests=[
+{id:"ab",name:"A/B: enclosure removed",cost:4,result:"On all 3 failing units, packet loss disappears when the enclosure is removed and returns when it is reinstalled.",weight:3},
+{id:"rssi",name:"RF margin sweep",cost:6,result:"Median link margin falls 13 dB after enclosure installation; the failing units were already closest to the margin limit.",weight:3},
+{id:"vdd",name:"Scope VDD during burst",cost:8,result:"Rail stays within the fictional SoC tolerance during all bursts; no reset or brownout flag is observed.",weight:1},
+{id:"fw",name:"Firmware identity check",cost:5,result:"Passing and failing units run the same signed image and radio configuration.",weight:1},
+{id:"swap",name:"Swap the SoC",cost:8,result:"The failure follows the assembled board and enclosure, not the installed SoC sample.",weight:1},
+{id:"temp",name:"Temperature sweep",cost:10,result:"Failure rate is unchanged across the bounded room-temperature sweep.",weight:0}
 ];
-const criteria=[
-"Defined the customer-visible failure and decision deadline without accepting an unverified root cause.",
-"Requested concrete reproduction conditions and measurable evidence.",
-"Separated at least three hypothesis families (for example power, RF/enclosure, firmware, environment or unit variation).",
-"Selected a test that distinguishes hypotheses rather than merely collecting more data.",
-"Explained how different test outcomes would change the next action.",
-"Closed with a bounded, honest customer commitment and evidence checkpoint."
-];
-let i=0,answers=[];
+let used=0,run=[];
 const q=s=>document.querySelector(s);
-function render(){q("#stepLabel").textContent=`Step ${i+1} of ${steps.length} · ${steps[i][0]}`;q("#prompt").textContent=steps[i][1];q("#answer").value=answers[i]||"";q("#answer").focus()}
-function finish(){q("#session").classList.add("hidden");q("#review").classList.remove("hidden");q("#rubric").innerHTML=criteria.map((x,n)=>`<label><input type="checkbox" data-n="${n}">${x}</label>`).join("");q("#rubric").addEventListener("change",score)}
-function score(){const n=q("#rubric").querySelectorAll("input:checked").length;q("#score").textContent=`${n} / ${criteria.length}`;q("#score").style.color=n>=5?"var(--green)":n>=3?"var(--amber)":"#fca5a5"}
-q("#next").onclick=()=>{const v=q("#answer").value.trim();if(!v){q("#answer").focus();return}answers[i]=v;if(i<steps.length-1){i++;render()}else finish()};
-function reset(){i=0;answers=[];q("#review").classList.add("hidden");q("#session").classList.remove("hidden");render()}
-q("#reset").onclick=reset;q("#restart").onclick=reset;render();
-</script>
-</body>
-</html>
+function render(){
+ q("#clock").textContent=`${used} / 30 min used`;q("#bar").style.width=`${used/30*100}%`;
+ q("#tests").innerHTML=tests.map(t=>`<button class="test" data-id="${t.id}" ${run.includes(t.id)||used+t.cost>30?"disabled":""}>${t.name}<small>${t.cost} simulated minutes</small></button>`).join("");
+ q("#tests").querySelectorAll("button").forEach(b=>b.onclick=()=>take(b.dataset.id));
+ if(!run.length)q("#log").innerHTML='<p class="muted">No tests run. Choose evidence that changes a decision.</p>';
+ const decisive=run.includes("ab")&&run.includes("rssi");
+ q("#confidence").textContent=decisive?"Enclosure-related RF loss is supported by two converging tests.":run.includes("ab")||run.includes("rssi")?"One strong RF clue observed; convergence is incomplete.":"Cause remains weakly constrained.";
+}
+function take(id){const t=tests.find(x=>x.id===id);used+=t.cost;run.push(id);if(run.length===1)q("#log").innerHTML="";q("#log").insertAdjacentHTML("beforeend",`<div class="entry"><b>${t.name} · ${t.cost} min</b><br>${t.result}</div>`);render()}
+function evaluate(){
+ const diagnosis=q("#diagnosis").value,msg=q("#message").value.trim();
+ if(!diagnosis||msg.length<40){(diagnosis?q("#message"):q("#diagnosis")).focus();return}
+ let points=0,parts=[];
+ const correct=diagnosis==="rf";if(correct){points+=40;parts.push(["good","Root cause","Correctly localized the enclosure-driven RF-margin failure. +40"])}else parts.push(["bad","Root cause","The committed diagnosis conflicts with the fixed truth set. +0"]);
+ const ab=run.includes("ab"),rssi=run.includes("rssi");const evidence=ab&&rssi?25:(ab||rssi?12:0);points+=evidence;parts.push([evidence===25?"good":"warn","Evidence convergence",`${evidence}/25 — decisive A/B and RF-margin evidence should converge.`]);
+ const efficiency=Math.max(0,20-Math.max(0,used-10));points+=efficiency;parts.push([efficiency>=16?"good":"warn","Test efficiency",`${efficiency}/20 — ${used} of 30 minutes used.`]);
+ const terms=["known","unknown","next","owner","checkpoint"];const lower=msg.toLowerCase();const hits=terms.filter(x=>lower.includes(x)).length;const comm=Math.min(15,hits*3);points+=comm;parts.push([comm>=12?"good":"warn","Customer close",`${comm}/15 — measured presence of bounded known/unknown/next/owner/checkpoint language; not expert semantic grading.`]);
+ q("#score").textContent=`${points} / 100`;q("#verdict").textContent=points>=80?"Evidence-led escalation":points>=55?"Promising, but incomplete":"Premature or weakly supported";
+ q("#breakdown").innerHTML=parts.map(p=>`<p><b class="${p[0]}">${p[1]}:</b> ${p[2]}</p>`).join("")+`<p class="muted">Fixed truth: the enclosure detunes the antenna enough to remove link margin on the weakest units. Recommended next action: antenna/enclosure tuning review and a bounded confirmation sweep; do not replace the SoC without contrary evidence.</p>`;
+ q("#lab").classList.add("hidden");q("#result").classList.remove("hidden");q("#result").scrollIntoView({behavior:"smooth"});
+}
+function reset(){used=0;run=[];q("#diagnosis").value="";q("#message").value="";q("#result").classList.add("hidden");q("#lab").classList.remove("hidden");render()}
+q("#submit").onclick=evaluate;q("#reset").onclick=reset;q("#again").onclick=reset;render();
+</script></body></html>
