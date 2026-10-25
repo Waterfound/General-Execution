@@ -149,3 +149,44 @@ Kill or refine before further implementation if any one holds:
 Agent402 remains **DEFERRED / NONESSENTIAL**. No crypto setup is justified.
 
 No deployment, public page, outreach, account creation, paid spend, pricing claim, payment/KYC, contract, customer data, new schedule, Privacy P0 activation, merge or release occurred.
+
+
+## Direct-substitute falsification and refinement — 2026-10-25
+
+A second substitution pass found substantially stronger adjacent coverage than the initial screen:
+
+- Hardware Interview publishes a large free hardware-engineering study guide spanning RTL, verification, FPGA, embedded and analog topics: https://www.hardware-interview.com/study
+- Snubber publishes a current free hardware-interview guide explicitly covering debugging, design, first-principles reasoning and role-specific preparation: https://snubber.ai/hardware-engineering-interview-guide
+- Adaface offers AI-powered hardware-engineer mock interviews with technical and communication questions: https://www.adaface.com/mock-interview/hardware-engineer/
+- iGotAnOffer sells live hardware-engineering mock interviews with human experts. The inspected offer states roughly $50 per credit and 2–5 credits per session: https://igotanoffer.com/en/mock-interviews/hardware-engineering
+- Free debugging guidance already teaches clarify, reproduce, validate the measurement, split the system, rank hypotheses, select a cheap discriminating test and verify the fix: https://voltagelearning.com/blog/hardware-engineering-debugging-interview
+
+### Falsification
+
+The first proof—five written prompts plus self-checked rubric—is not commercially differentiated. It is reproducible with existing free guides and generic mock-interview tools. Treat that implementation as **KILLED / SUPERSEDED**, not as a product milestone.
+
+### Refined wedge
+
+The candidate survives only as an interactive **FAE diagnostic lab**:
+
+- a fixed hidden truth state;
+- measurements revealed only when the learner purchases a test from a bounded simulated time budget;
+- objective consequences for premature solutioning;
+- deterministic scoring for localization, evidence convergence and test efficiency;
+- a separate customer-escalation close;
+- replayable variants that change one physical condition.
+
+This is closer to a diagnostic game than a prompt wrapper. The private fixture now implements one enclosure-driven RF-margin case with six optional tests, a 30-minute budget and a fixed truth set.
+
+### Remaining commercial predicate
+
+The refined proof demonstrates only that a more specific interaction can be implemented without a backend. It does not prove technical-expert validity, learner improvement, completion/replay, acquisition or WTP.
+
+Advance only by answering, in order:
+
+1. Can an independent technical reviewer reach the planted root cause and agree the evidence path is physically coherent?
+2. Does the second attempt improve test efficiency or customer-close completeness?
+3. Does a real target candidate voluntarily complete and replay the private case?
+4. Only then: will a target candidate commit money or a credible paid-trial action?
+
+Current state: **GENERIC_PROMPT_PROOF_KILLED / DETERMINISTIC_DIAGNOSTIC_LAB_REFINED / PRIVATE_CAPABILITY_ONLY / DEMAND_AND_WTP_UNKNOWN / NO_PRODUCT_SELECTED**.
