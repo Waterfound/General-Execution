@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FieldSignal — private FAE rehearsal fixture</title>
+<style>
+:root{--bg:#07111f;--panel:#0d1b2d;--ink:#edf6ff;--muted:#9fb1c5;--cyan:#67e8f9;--green:#86efac;--amber:#fcd34d;--line:#253a52}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% 0,#123553 0,transparent 38%),var(--bg);color:var(--ink);font:16px/1.55 system-ui,sans-serif}
+main{max-width:920px;margin:auto;padding:48px 20px 80px}.eyebrow{color:var(--cyan);font-weight:750;letter-spacing:.12em;text-transform:uppercase;font-size:.76rem}
+h1{font-size:clamp(2.2rem,6vw,4.8rem);line-height:.97;margin:.4rem 0 1rem;max-width:800px}h2{font-size:1.35rem;margin:0 0 .5rem}
+.lede{font-size:1.2rem;color:#c8d8e8;max-width:700px}.pill{display:inline-block;border:1px solid #31516e;border-radius:999px;padding:.35rem .7rem;margin:.25rem .2rem .25rem 0;color:#c9e5f8;font-size:.85rem}
+.card{background:rgba(13,27,45,.92);border:1px solid var(--line);border-radius:18px;padding:22px;margin-top:18px;box-shadow:0 18px 55px #0005}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.fact{border-left:3px solid var(--cyan);padding-left:12px}.fact b{display:block;color:var(--cyan)}
+button{appearance:none;border:0;border-radius:12px;padding:.8rem 1rem;font-weight:750;cursor:pointer;background:var(--cyan);color:#05202a}button.secondary{background:#1a3047;color:var(--ink);border:1px solid #38536d}button:disabled{opacity:.4;cursor:not-allowed}
+textarea{width:100%;min-height:150px;margin:.8rem 0;padding:14px;border-radius:12px;border:1px solid #36506b;background:#081522;color:var(--ink);font:inherit;resize:vertical}
+.step{color:var(--amber);font-weight:750}.prompt{font-size:1.2rem}.hidden{display:none}
+.rubric label{display:block;padding:10px 0;border-bottom:1px solid var(--line)}.rubric input{margin-right:10px}
+.result{border:1px solid #28714b;background:#0c2a22}.score{font-size:2rem;color:var(--green);font-weight:800}
+small,.muted{color:var(--muted)}a{color:var(--cyan)}
+footer{margin-top:36px;color:var(--muted);font-size:.84rem}@media(max-width:680px){.grid{grid-template-columns:1fr}main{padding-top:28px}}
+</style>
+</head>
+<body>
+<main>
+<div class="eyebrow">Private synthetic product proof · no telemetry</div>
+<h1>Can you debug the customer—not just the circuit?</h1>
+<p class="lede">A five-step rehearsal for semiconductor Field Applications Engineers. It rewards disciplined discovery, discriminating tests and customer clarity—not confident guessing.</p>
+<div><span class="pill">Browser-only</span><span class="pill">Fictional case</span><span class="pill">No login</span><span class="pill">No AI score</span></div>
+
+<section class="card">
+<h2>Customer brief</h2>
+<p>A wearable prototype using a fictional low-power BLE SoC worked on an open bench. After moving into the production enclosure, some units lose packets during a 20-second burst transmission. The customer says, “Your chip is unstable. We ship in six days.”</p>
+<div class="grid">
+<div class="fact"><b>Known</b>Failure appears after enclosure integration; only some units; burst traffic.</div>
+<div class="fact"><b>Unknown</b>Power rail behavior, RF layout/enclosure effect, firmware build, temperature, antenna tuning and exact reproduction rate.</div>
+</div>
+</section>
+
+<section id="session" class="card">
+<div id="stepLabel" class="step">Step 1 of 5 · Outcome</div>
+<p id="prompt" class="prompt"></p>
+<textarea id="answer" placeholder="Answer as if the customer and hiring panel were listening…"></textarea>
+<div>
+<button id="next">Save answer & continue</button>
+<button id="reset" class="secondary">Reset</button>
+</div>
+<p><small>Answers stay in this tab and are discarded on reset or close.</small></p>
+</section>
+
+<section id="review" class="card hidden">
+<h2>Evidence-bound self-review</h2>
+<p class="muted">Check only what your actual answers demonstrate. This fixture intentionally avoids pretending that keyword matching is expert scoring.</p>
+<div class="rubric" id="rubric"></div>
+<p class="score" id="score">0 / 6</p>
+<button id="restart" class="secondary">Run the scenario again</button>
+</section>
+
+<section class="card">
+<h2>What makes this FAE-specific?</h2>
+<div class="grid">
+<div><b>Generic prep</b><p class="muted">Structure, confidence, STAR stories, coding and broad technical questions.</p></div>
+<div><b>This wedge</b><p class="muted">Customer outcome, minimum evidence, hypothesis families, discriminating next test, design-in risk and a technically honest next-step commitment.</p></div>
+</div>
+</section>
+
+<section class="card">
+<h2>Grounding boundary</h2>
+<p>The role rubric is derived from a current Nordic Semiconductor FAE posting describing customer application understanding, timely technical solutions, design-ins, value presentation and technical relationships, plus recent public candidate discussions describing customer-debug scenarios, block diagrams and communication.</p>
+<p><a href="https://careers.nordicsemi.com/jobs/7777383-field-application-engineer">Official role source</a> · <a href="https://www.reddit.com/r/ECE/comments/1qpdgx5/fast_development_programm_field_applications/">Candidate discussion</a></p>
+</section>
+
+<footer>Candidate proof only. It does not reproduce proprietary interview questions, estimate hiring probability, provide live-interview assistance or claim expert-validated scoring.</footer>
+</main>
+<script>
+const steps=[
+["Outcome","What do you say first? Clarify the customer's outcome, urgency and what “lose packets” means before proposing a cause."],
+["Reproduction","Ask for the smallest evidence packet that would make the failure reproducible and comparable."],
+["Hypotheses","Organize plausible causes into distinct families. Explain why each remains possible from the facts given."],
+["Discriminating test","Choose one next test that best separates the leading hypotheses. State what each possible result would mean."],
+["Customer close","Give a technically honest customer update: what is known, unknown, what happens next, who owns it and when the next evidence checkpoint occurs."]
+];
+const criteria=[
+"Defined the customer-visible failure and decision deadline without accepting an unverified root cause.",
+"Requested concrete reproduction conditions and measurable evidence.",
+"Separated at least three hypothesis families (for example power, RF/enclosure, firmware, environment or unit variation).",
+"Selected a test that distinguishes hypotheses rather than merely collecting more data.",
+"Explained how different test outcomes would change the next action.",
+"Closed with a bounded, honest customer commitment and evidence checkpoint."
+];
+let i=0,answers=[];
+const q=s=>document.querySelector(s);
+function render(){q("#stepLabel").textContent=`Step ${i+1} of ${steps.length} · ${steps[i][0]}`;q("#prompt").textContent=steps[i][1];q("#answer").value=answers[i]||"";q("#answer").focus()}
+function finish(){q("#session").classList.add("hidden");q("#review").classList.remove("hidden");q("#rubric").innerHTML=criteria.map((x,n)=>`<label><input type="checkbox" data-n="${n}">${x}</label>`).join("");q("#rubric").addEventListener("change",score)}
+function score(){const n=q("#rubric").querySelectorAll("input:checked").length;q("#score").textContent=`${n} / ${criteria.length}`;q("#score").style.color=n>=5?"var(--green)":n>=3?"var(--amber)":"#fca5a5"}
+q("#next").onclick=()=>{const v=q("#answer").value.trim();if(!v){q("#answer").focus();return}answers[i]=v;if(i<steps.length-1){i++;render()}else finish()};
+function reset(){i=0;answers=[];q("#review").classList.add("hidden");q("#session").classList.remove("hidden");render()}
+q("#reset").onclick=reset;q("#restart").onclick=reset;render();
+</script>
+</body>
+</html>
