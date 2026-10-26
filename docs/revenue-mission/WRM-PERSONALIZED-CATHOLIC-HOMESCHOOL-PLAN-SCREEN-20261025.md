@@ -107,3 +107,29 @@ Keep the category eligible only if public buyer evidence exposes a sharply bound
 Candidate status: **PAID AND DELIGHTFUL CATEGORY / PROPOSED JOB DIRECTLY SUBSTITUTED / IMPLEMENTATION CLOSED / MARKET SIGNAL PRESERVED**.
 
 No prototype, publication, outreach, account, curriculum ingestion, AI spend, payment, KYC, contract or recurring entitlement was used.
+
+
+## Addendum — one-time, local, printable compiler (2026-10-25)
+
+A narrower hypothesis was tested after the initial screen:
+
+> Sell a one-time, account-free local generator that compiles family names, children, subjects and selected Catholic calendar into a finished printable PDF, avoiding subscriptions and AI.
+
+This also failed substitution before build:
+
+- **The Calm Mind Lab** sells a one-time US$9.99 local HTML homeschool planner with no login or subscription, multiple children, print tools, local browser storage, backup and restore:
+  https://thecalmmindlab.com/homeschool-planner
+- **Maralito Labs** provides a free, no-sign-up homeschool planner generator with student names, subjects, school days, lesson blocks and A4 PDF output:
+  https://www.maralito.uk/tools/homeschool-planner-generator
+- **Edigo** offers free customizable multi-child planners and print-ready PDF export:
+  https://edigo.io/features/homeschool-planner
+- **Kuraplan** drafts finished printable plans from descriptions of the children and curriculum:
+  https://www.kuraplan.com/homeschool/templates/weekly-planner
+- **Homeschool.fit** offers a free planner with unlimited children and shared/per-child scheduling:
+  https://homeschool.fit/planner/free
+- GHEA sells a US$10 customizable printable planner, and editable/one-time homeschool planner products are common:
+  https://ghea.org/ghea-homeschool-planner/
+
+The privacy/no-account/one-time-purchase attributes are buyer-friendly, but they are not sufficient differentiation. Adding Catholic calendar data to this commodity compiler would return to the already crowded Catholic-planner market and would introduce source/copyright maintenance without proving a missing buyer outcome.
+
+**Addendum decision:** `NO-ACCOUNT / LOCAL / ONE-TIME / PRINTABLE` remains a preferred delivery architecture for future candidates, but not a product thesis by itself.
