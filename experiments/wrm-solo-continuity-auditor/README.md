@@ -2,7 +2,7 @@
 
 Candidate proof for one narrow job: **show a solo software founder which repository-visible operational dependencies are not covered by a successor/recovery plan**.
 
-The CLI is read-only, uses the Python standard library, scans a local repository, records secret names but never values, and emits:
+The CLI is read-only, uses the Python standard library, scans a local repository, records secret/configuration identifiers but never values, and emits:
 
 - a private metadata report containing observed workflows, schedules, providers, domains, and declared recovery controls;
 - explicit continuity gaps; and

@@ -15,6 +15,7 @@ from pathlib import Path
 
 
 SECRET_REF = re.compile(r"(?:secrets\.)([A-Z][A-Z0-9_]*)")
+ENV_KEY_REF = re.compile(r"(?m)^\s*(?:export\s+)?([A-Z][A-Z0-9_]*)\s*=")
 CRON_REF = re.compile(r"cron\s*:\s*['\"]?([^'\"\n]+)")
 USES_REF = re.compile(r"uses\s*:\s*([^\s#]+)")
 URL_REF = re.compile(r"https?://([A-Za-z0-9.-]+)")
@@ -32,6 +33,11 @@ def readable_files(root: Path):
 
 
 def provider_signals(relative: str, text: str) -> set[str]:
+    # Comment-only examples describe possible configuration, not an observed
+    # dependency. Keep prose/README evidence, but ignore shell/YAML/TOML
+    # comment lines when scanning machine configuration.
+    if Path(relative).suffix.lower() in {".yml", ".yaml", ".toml", ".env", ".example"}:
+        text = "\n".join(line for line in text.splitlines() if not line.lstrip().startswith("#"))
     haystack = f"{relative}\n{text}".lower()
     mapping = {
         "aws": ("amazonaws.com", "aws-actions/", "aws_access_key"),
@@ -39,7 +45,9 @@ def provider_signals(relative: str, text: str) -> set[str]:
         "docker": ("docker/login-action", "docker build", "docker push"),
         "github": ("github.com", "github-actions", "ghcr.io"),
         "npm": ("npm publish", "registry.npmjs.org", "node_auth_token"),
+        "paddle": ("paddle_api_key", "paddle.com", "@paddle/"),
         "pypi": ("pypa/gh-action-pypi-publish", "pypi.org"),
+        "supabase": ("supabase_url", "supabase.com", "@supabase/"),
         "vercel": ("vercel", "vercel_token"),
     }
     return {name for name, needles in mapping.items() if any(n in haystack for n in needles)}
@@ -47,6 +55,7 @@ def provider_signals(relative: str, text: str) -> set[str]:
 
 def audit(root: Path) -> dict:
     secrets: set[str] = set()
+    configuration_identifiers: set[str] = set()
     schedules: set[str] = set()
     actions: set[str] = set()
     domains: set[str] = set()
@@ -62,6 +71,9 @@ def audit(root: Path) -> dict:
         found = False
         for match in SECRET_REF.findall(text):
             secrets.add(match)
+            found = True
+        for match in ENV_KEY_REF.findall(text):
+            configuration_identifiers.add(match)
             found = True
         for match in CRON_REF.findall(text):
             schedules.add(match.strip())
@@ -105,6 +117,7 @@ def audit(root: Path) -> dict:
         "root": root.name,
         "observed": {
             "secret_identifiers_only": sorted(secrets),
+            "configuration_identifiers_only": sorted(configuration_identifiers),
             "schedules": sorted(schedules),
             "external_actions": sorted(actions),
             "domains": sorted(domains),
