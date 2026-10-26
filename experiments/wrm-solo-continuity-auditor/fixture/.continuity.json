@@ -1,0 +1,7 @@
+{
+  "successor_or_recovery_owner": "documented-outside-repository",
+  "private_repository_recovery": null,
+  "restore_test_evidence": null,
+  "domain_recovery_route": "registrar-playbook-2026-10",
+  "payment_processor_recovery": null
+}
