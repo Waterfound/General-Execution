@@ -1,0 +1,32 @@
+{
+  "pull_request": {
+    "provider": "github",
+    "repository": "getsentry/sentry-for-ai",
+    "number": 45,
+    "head_sha": "9de6d96a10d590a4af2c44e4ed9747d9bea67e7a",
+    "observed_merged_at": "2026-03-09T15:57:23Z",
+    "url": "https://github.com/getsentry/sentry-for-ai/pull/45"
+  },
+  "ai_authored": true,
+  "human_owner": null,
+  "agent_session_links": [],
+  "changed_files": [
+    "skills/sentry-react-native-sdk/SKILL.md",
+    "skills/sentry-react-native-sdk/references/error-monitoring.md",
+    "skills/sentry-react-native-sdk/references/tracing.md"
+  ],
+  "targeted_validation": true,
+  "claims": [
+    {
+      "text": "updated skill tree remains valid",
+      "requires_checks": ["Validate Skill Tree"]
+    }
+  ],
+  "checks": [
+    {"name": "Validate Skill Tree", "conclusion": "success"},
+    {"name": "Secret Scan", "conclusion": "success"},
+    {"name": "Warden", "conclusion": "success"}
+  ],
+  "review_decision": "approved",
+  "review_threads": []
+}
