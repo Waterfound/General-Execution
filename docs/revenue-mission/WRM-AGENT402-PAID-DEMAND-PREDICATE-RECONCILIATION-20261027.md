@@ -1,6 +1,6 @@
 # WRM — Agent402 paid-demand predicate reconciliation — 2026-10-27
 
-Status: **COMMERCIAL_INFORMATION_GAIN_RESTORED / EXACT_CALL_AUTHORIZED / PAYMENT_INSTRUMENT_ABSENT / NO_CHARGE / NO_PRODUCT_SELECTED**
+Status: **COMMERCIAL_INFORMATION_GAIN_RESTORED / PAYMENT_ROUTE_DECLINED / NO_CHARGE / NO_PRODUCT_SELECTED / PASSIVE**
 
 Observed Waterfound revenue: **USD 0**
 
@@ -71,16 +71,13 @@ The call still cannot establish:
 
 A returned cluster is buyer/problem evidence only. It must not be reported as demand revenue or WTP.
 
-## Current blocker
+## Waterfound decision and resulting state
 
-A bounded environment inspection on 2026-10-27 found no task-available `AGENT402_CREDITS_KEY`, x402 wallet/private-key binding or other payment credential. The unpaid 402 challenge was already verified on 2026-10-24. Repeating it adds no information.
+On 2026-10-27, Waterfound declined establishing a crypto wallet for this route and directed the mission to find another way. This is a channel constraint, not a pending human gate.
 
-The smallest exact gate is provision of **one already-funded, task-scoped payment path**:
+The exact `demand-radar` call remains analytically useful, but it is now **PASSIVE / NOT ACTIONABLE** unless a future non-crypto, already-authorized payment mechanism becomes available without wallet creation, wallet funding, credits purchase, new financial onboarding, or repeated user action. The mission must not ask Waterfound again for an x402 wallet or treat the declined route as blocking overall commercial progress.
 
-1. preferred: an existing Agent402 credits key, if one was issued earlier; or
-2. an existing x402 v2 payer with a hard per-payment ceiling of USD 0.005 and no auto-reload.
-
-No new wallet or credits purchase is authorized. The credential must be supplied through the task's normal secret mechanism, never committed, printed or repurposed from another mission.
+The unpaid 402 challenge was already verified on 2026-10-24. Repeating it adds no information. No new wallet, credits purchase, payment instrument, or credential repurposing is authorized.
 
 ## Execution contract after the gate clears
 
@@ -100,8 +97,8 @@ If the call fails without settlement, one idempotent retry may replay the same p
 
 ## Current commercial decision
 
-- Agent402 channel: **WATCH_ONLY / REAL_MACHINE_RAIL / DISTRIBUTION_UNPROVEN**
-- Authorized demand-radar call: **ACTIVE_NEXT_PREDICATE / BLOCKED_ON_EXISTING_PAYER**
+- Agent402 channel: **PASSIVE / REAL_MACHINE_RAIL / DISTRIBUTION_UNPROVEN / CRYPTO_WALLET_ROUTE_DECLINED**
+- Demand-radar call: **COMMERCIALLY_USEFUL / NOT_ACTIONABLE_WITHIN_CURRENT_NON_CRYPTO_CONSTRAINT**
 - Bestsellers call: **USEFUL_BUT_NOT_AUTHORIZED**
 - Product candidate: **none**
 - External WTP for Waterfound: **none**
