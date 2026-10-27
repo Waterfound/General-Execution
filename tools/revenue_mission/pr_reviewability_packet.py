@@ -69,8 +69,11 @@ def build_packet(payload: dict[str, Any]) -> dict[str, Any]:
     human_owner = payload.get("human_owner")
     ai_authored = bool(payload.get("ai_authored", False))
     targeted_validation = bool(payload.get("targeted_validation", False))
+    review_decision = str(payload.get("review_decision", "")).lower()
 
-    uncertainties: list[str] = []
+    uncertainties: list[str] = [
+        str(item) for item in payload.get("declared_uncertainties", [])
+    ]
     if high_risk_files and not targeted_validation:
         uncertainties.append("high-risk paths changed without targeted validation")
     if ai_authored and not human_owner:
@@ -83,10 +86,10 @@ def build_packet(payload: dict[str, Any]) -> dict[str, Any]:
         blockers.append("one or more completion claims lack passing evidence")
     if unresolved_threads:
         blockers.append("review threads remain unresolved")
+    if review_decision == "changes_requested":
+        blockers.append("native review decision remains changes requested")
     if any(value in {"failure", "cancelled", "timed_out", "action_required"} for value in checks.values()):
         blockers.append("one or more checks are non-passing")
-    if ai_authored and not human_owner:
-        blockers.append("post-merge ownership is undefined")
 
     if blockers:
         disposition = "BLOCK"
@@ -102,6 +105,7 @@ def build_packet(payload: dict[str, Any]) -> dict[str, Any]:
         "verified_claims": evidence,
         "unsupported_claims": unsupported_claims,
         "unresolved_threads": unresolved_threads,
+        "review_decision": review_decision or None,
         "high_risk_files": high_risk_files,
         "residual_uncertainties": uncertainties,
         "blockers": blockers,
