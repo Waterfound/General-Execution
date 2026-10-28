@@ -1,0 +1,42 @@
+{
+  "pull_request": {
+    "provider": "github",
+    "repository": "open-telemetry/opentelemetry-java-instrumentation",
+    "number": 20879,
+    "head_sha": "2b190d7afd8c88704c57b9cc8519acf0157b36b6",
+    "observed_merged_at": "2026-10-27T16:36:40Z",
+    "url": "https://github.com/open-telemetry/opentelemetry-java-instrumentation/pull/20879"
+  },
+  "ai_authored": true,
+  "human_owner": null,
+  "agent_session_links": [],
+  "changed_files": [
+    "CHANGELOG.md",
+    "instrumentation-api-incubator/src/main/java/io/opentelemetry/instrumentation/api/incubator/semconv/rpc/RpcAttributesGetter.java",
+    "instrumentation-api-incubator/src/main/java/io/opentelemetry/instrumentation/api/incubator/semconv/rpc/RpcCommonAttributesExtractor.java",
+    "instrumentation-api-incubator/src/test/java/io/opentelemetry/instrumentation/api/incubator/semconv/rpc/RpcAttributesExtractorTest.java",
+    "instrumentation/grpc-1.6/library/src/main/java/io/opentelemetry/instrumentation/grpc/v1_6/GrpcRpcAttributesGetter.java",
+    "instrumentation/sofa-rpc-5.4/library/src/main/java/io/opentelemetry/instrumentation/sofarpc/v5_4/SofaRpcAttributesGetter.java",
+    "instrumentation/sofa-rpc-5.4/library/src/test/java/io/opentelemetry/instrumentation/sofarpc/v5_4/SofaRpcAttributesGetterTest.java",
+    "instrumentation/thrift-0.13/library/src/main/java/io/opentelemetry/instrumentation/thrift/v0_13/internal/ThriftRpcAttributesGetter.java",
+    "instrumentation/thrift-0.13/library/src/test/java/io/opentelemetry/instrumentation/thrift/v0_13/internal/ThriftRpcAttributesGetterTest.java"
+  ],
+  "targeted_validation": true,
+  "claims": [
+    {
+      "text": "focused RPC validation and pull-request build pass",
+      "requires_checks": ["Build pull request"]
+    }
+  ],
+  "checks": [
+    {"name": "Zizmor", "conclusion": "success"},
+    {"name": "CodeQL", "conclusion": "success"},
+    {"name": "Gradle wrapper validation", "conclusion": "success"},
+    {"name": "Dependency Review", "conclusion": "success"},
+    {"name": "Build pull request", "conclusion": "success"}
+  ],
+  "review_decision": "approved",
+  "review_threads": [
+    {"id": "10-source-pinned-resolved-threads", "resolved": true}
+  ]
+}
