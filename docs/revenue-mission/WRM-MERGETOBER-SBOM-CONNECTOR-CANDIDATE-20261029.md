@@ -2,7 +2,7 @@
 
 ## Decision
 
-**Admit one narrow Mergetober proposal candidate, but stop before public issue creation or code.**
+**CLOSED before publication or build: a materially isomorphic CycloneDX/SBOM proposal now exists as `topoteretes/cognee#5731`. Do not publish, claim, implement or pursue this candidate.**
 
 Candidate job-to-be-done:
 
@@ -170,15 +170,18 @@ Kill without implementation if any occurs:
 - a truthful public blog and submission cannot be completed within authority and deadline;
 - expected payoff becomes non-positive after publication, payout and tax/onboarding requirements.
 
-## Current bounded gate
+## Closure reconciliation — 2026-10-29
 
-Publishing the new GitHub issue and requesting assignment is external commercial publication/outreach. It is not authorized by the standing envelope. Coding is also forbidden by the event until assignment.
+A fresh canonical issue search after commit `952b4ed2d764d8f8c05ede2ea33e590b03107418` found:
 
-Exact action requiring Waterfound authority:
+- `topoteretes/cognee#5731`, **[Feature]: CycloneDX SBOM dependency and provenance connector**;
+- the issue covers local schema-aware CycloneDX ingestion, stable/source-qualified identities, Package URL normalization, declared dependency preservation, snapshot lifecycle, malformed-input safety, Cognee document-source/DLT integration, end-to-end retrieval tests and a Mergetober assignment request;
+- this overlaps the candidate's buyer job, differentiator, acceptance checks and delivery surface closely enough that adding SPDX support does not create an ethically or economically distinct contribution;
+- `topoteretes/cognee#6176` explicitly cites `#5731` as the existing CycloneDX connector proposal, corroborating that the ecosystem treats it as the canonical SBOM surface.
 
-> Authorize publication of the prepared SPDX/CycloneDX Mergetober issue to `topoteretes/cognee`, limited to the title/body above and assignment request; no code, fork, PR, blog, account creation, payment/KYC, spend or contractual acceptance.
+The explicit kill criterion “a duplicate issue/PR appears” is satisfied. The earlier publication gate is withdrawn. No Waterfound authorization is requested, and no code may be started.
 
-After assignment, implementation remains machine-admissible except for any separately required public PR/blog/submission and payout onboarding gates.
+Revenue remains **USD 0**. This closure proves duplicate avoidance, not demand, WTP, assignment, merge or payment. Commercial discovery remains ACTIVE on other admissible frontiers; this candidate is PASSIVE/CLOSED.
 
 ## Privacy boundary
 
