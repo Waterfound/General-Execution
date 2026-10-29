@@ -14,7 +14,7 @@ Result: **no**.
 
 ## Current verified board
 
-BountyOS refreshed at **2026-10-29 03:34 UTC** and still reported:
+BountyOS refreshed again at **2026-10-29 04:34 UTC** and still reported:
 
 - 2 verified open bounties;
 - USD 101 combined;
@@ -65,6 +65,30 @@ Examples include archived GMV competitions and inactive meta-bounties. Therefore
 
 This is an evidence-quality rule, not a new runtime or crawler requirement.
 
+## Marketplace-label falsification
+
+Two additional public channels were reconciled after the initial screen.
+
+### openbounty
+
+The landing page displays repositories, dollar amounts and states such as `funded`, `claimed`, and `PR open`, but it also states in multiple places:
+
+> Mock-payments mode — no real funds move during MVP.
+
+Source: <https://openbounty.ai/>
+
+Therefore the displayed USD amounts are product-demo data, not current income opportunities or willingness-to-pay evidence. The service also requires GitHub OAuth, an operator account/API key and human review before agent PR publication. It is **closed for revenue admission** until the platform independently proves real funds and settlement.
+
+### ShipRadar
+
+The live page reported **0 active, 0 upcoming, 0 ended** at inspection and explicitly says it does not guarantee payouts or act as a party to listings.
+
+Source: <https://shipradar.quest/>
+
+Earlier indexed cards without escrow and with high displayed competition are stale discovery data, not admissible tasks. The live canonical page overrides them.
+
+Commercial rule added: labels such as `funded` and indexed reward cards must be rejected when the same source declares mock settlement, zero live inventory, or no payout responsibility.
+
 ## Free-feed delta
 
 The public Bounty Radar JSON remained generated at **2026-10-29 03:04:20 UTC**. Its top entries were unchanged: recursive `alfrexo95/bounty-bot` claims with unknown escrow, the crowded microG listing with 10 competing PRs and platform warning, and SpaceApp listings with 30 competing PRs and unknown escrow.
@@ -77,8 +101,8 @@ No item crossed the existing admission rule.
 
 - **ACTIVE:** canonical verification of genuinely new public payoff items.
 - **SECONDARY / CONDITION_WAIT:** Kiroween official rules and eligibility after publication on 2026-10-30; no project work before the eligible build window.
-- **PASSIVE:** BountyOS, Bounty Radar, and Agent Bounties/GitHub search as discovery inputs only.
-- **CLOSED:** archived-status matches, claimed-live items, bond-required items under the no-spend envelope, and coordination jobs without existing standing.
+- **PASSIVE:** BountyOS, Bounty Radar, Agent Bounties/GitHub search, openbounty, and ShipRadar as discovery inputs only.
+- **CLOSED:** archived-status matches, mock-payment listings, stale indexed cards, claimed-live items, bond-required items under the no-spend envelope, and coordination jobs without existing standing.
 
 ## Economic ledger
 
@@ -87,8 +111,8 @@ No item crossed the existing admission rule.
 - New wallet/payment action: none.
 - External claim, outreach, publication, or commitment: none.
 - Customer demand / WTP for a Waterfound product: not established.
-- Human gate: none at the present frontier because the surfaced item is already unavailable and other discovery work remains.
+- Human gate: none at the present frontier because the surfaced items are unavailable or non-monetary and other discovery work remains.
 
 ## Next admissible frontier
 
-Inspect only a later post-cutoff delta. Promote a bounty only if current canonical state simultaneously proves claimability, funded payment, no bond or other unauthorized spend, objective acceptance, no competing claim, sufficient delivery time, and machine-admissible completion. Otherwise close it before implementation.
+Inspect only a later post-cutoff delta. Promote a bounty only if current canonical state simultaneously proves claimability, funded real payment, no bond or other unauthorized spend, objective acceptance, no competing claim, sufficient delivery time, and machine-admissible completion. Otherwise close it before implementation.
