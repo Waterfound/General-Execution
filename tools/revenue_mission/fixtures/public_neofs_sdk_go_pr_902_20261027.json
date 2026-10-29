@@ -1,0 +1,36 @@
+{
+  "pull_request": {
+    "provider": "github",
+    "repository": "nspcc-dev/neofs-sdk-go",
+    "number": 902,
+    "head_sha": "3a349502e105fafdbd861b760827d216c31c8cfc",
+    "observed_at": "2026-10-27T15:49:02Z",
+    "url": "https://github.com/nspcc-dev/neofs-sdk-go/pull/902"
+  },
+  "ai_authored": true,
+  "human_owner": null,
+  "agent_session_links": [],
+  "changed_files": [
+    "client/client_test.go",
+    "client/common.go",
+    "client/grpc.go",
+    "client/object_get.go",
+    "client/object_put.go"
+  ],
+  "targeted_validation": false,
+  "declared_uncertainties": [
+    "in-stream wrapping lacks an end-to-end cancellation test"
+  ],
+  "claims": [
+    {
+      "text": "go vet and TestWrapCtxErr pass",
+      "requires_checks": ["neofs-sdk-go tests"]
+    }
+  ],
+  "checks": [
+    {"name": "neofs-sdk-go tests", "conclusion": "action_required"},
+    {"name": "DCO check", "conclusion": "action_required"}
+  ],
+  "review_decision": "changes_requested",
+  "review_threads": []
+}

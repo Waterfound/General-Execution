@@ -1,0 +1,13 @@
+{
+  "pull_request": {"provider": "github", "number": 17, "head_sha": "abc123"},
+  "ai_authored": true,
+  "human_owner": "maintainer@example.invalid",
+  "agent_session_links": ["https://example.invalid/session/17"],
+  "changed_files": ["src/parser.py", "tests/test_parser.py"],
+  "targeted_validation": true,
+  "claims": [
+    {"text": "parser regression tests pass", "requires_checks": ["unit-tests"]}
+  ],
+  "checks": [{"name": "unit-tests", "conclusion": "success"}],
+  "review_threads": [{"id": "T1", "resolved": true}]
+}

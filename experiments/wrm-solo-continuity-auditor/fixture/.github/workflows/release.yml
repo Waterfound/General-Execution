@@ -1,0 +1,16 @@
+name: release
+on:
+  schedule:
+    - cron: "17 3 * * 1"
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: vercel/action@v1
+        with:
+          token: ${{ secrets.VERCEL_TOKEN }}
+      - run: curl https://api.example.com/health
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm publish

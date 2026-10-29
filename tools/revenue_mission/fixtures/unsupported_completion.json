@@ -1,0 +1,13 @@
+{
+  "pull_request": {"provider": "gitlab", "number": 23, "head_sha": "def456"},
+  "ai_authored": true,
+  "human_owner": null,
+  "agent_session_links": [],
+  "changed_files": [".github/workflows/release.yml", "src/release.py"],
+  "targeted_validation": false,
+  "claims": [
+    {"text": "full regression passed", "requires_checks": ["full-regression"]}
+  ],
+  "checks": [{"name": "lint", "conclusion": "success"}],
+  "review_threads": [{"id": "T9", "resolved": false, "summary": "rollback path untested"}]
+}

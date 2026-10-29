@@ -1,0 +1,51 @@
+{
+  "claims_not_established": [
+    "a real customer paid and lost access",
+    "revenue leakage occurred",
+    "operator time was saved",
+    "willingness to try or pay"
+  ],
+  "finding_count": 2,
+  "findings": [
+    {
+      "bounded_consequence": "provider records successful delivery while application access can remain unchanged",
+      "event_type": "checkout.session.completed",
+      "evidence": [
+        "updateUserByStripeIdentity returns 0 when neither stripeCustomerId nor userId matches",
+        "handleCheckoutSessionCompleted returns updatedUsers without raising on zero",
+        "webhook route returns NextResponse.json with default HTTP 200"
+      ],
+      "id": "silent-entitlement-drop:checkout.session.completed",
+      "predicate": "paid-access mutation can affect zero users and still be acknowledged",
+      "severity": "BLOCKER"
+    },
+    {
+      "bounded_consequence": "provider records successful delivery while application access can remain unchanged",
+      "event_type": "customer.subscription.updated",
+      "evidence": [
+        "updateUserByStripeIdentity returns 0 when neither stripeCustomerId nor userId matches",
+        "handleSubscriptionUpdated returns updatedUsers without raising on zero",
+        "webhook route returns NextResponse.json with default HTTP 200"
+      ],
+      "id": "silent-entitlement-drop:customer.subscription.updated",
+      "predicate": "paid-access mutation can affect zero users and still be acknowledged",
+      "severity": "BLOCKER"
+    }
+  ],
+  "fixture": {
+    "billing_mode": "Stripe test mode",
+    "commit": "6c851ae68489d367c71c37af03ebc1dcf22c4888",
+    "license_context": "public repository; analysis only",
+    "repository": "RyanAbir/saas-billing-starter",
+    "source_files": [
+      "lib/subscription.ts",
+      "app/api/stripe/webhook/route.ts",
+      "README.md"
+    ]
+  },
+  "read_only": true,
+  "schema_version": 1,
+  "severity_counts": {
+    "BLOCKER": 2
+  }
+}

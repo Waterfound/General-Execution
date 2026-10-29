@@ -1,0 +1,41 @@
+{
+  "fixture": {
+    "repository": "RyanAbir/saas-billing-starter",
+    "commit": "6c851ae68489d367c71c37af03ebc1dcf22c4888",
+    "license_context": "public repository; analysis only",
+    "billing_mode": "Stripe test mode",
+    "source_files": [
+      "lib/subscription.ts",
+      "app/api/stripe/webhook/route.ts",
+      "README.md"
+    ]
+  },
+  "event_paths": [
+    {
+      "event_type": "checkout.session.completed",
+      "affects_paid_access": true,
+      "zero_updates_possible": true,
+      "zero_updates_is_error": false,
+      "terminal_http_status": 200,
+      "durable_retry_queue": false,
+      "evidence": [
+        "updateUserByStripeIdentity returns 0 when neither stripeCustomerId nor userId matches",
+        "handleCheckoutSessionCompleted returns updatedUsers without raising on zero",
+        "webhook route returns NextResponse.json with default HTTP 200"
+      ]
+    },
+    {
+      "event_type": "customer.subscription.updated",
+      "affects_paid_access": true,
+      "zero_updates_possible": true,
+      "zero_updates_is_error": false,
+      "terminal_http_status": 200,
+      "durable_retry_queue": false,
+      "evidence": [
+        "updateUserByStripeIdentity returns 0 when neither stripeCustomerId nor userId matches",
+        "handleSubscriptionUpdated returns updatedUsers without raising on zero",
+        "webhook route returns NextResponse.json with default HTTP 200"
+      ]
+    }
+  ]
+}
